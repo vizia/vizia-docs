@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["CommandType",""],["RenderTarget",""],["ShaderType",""]],"struct":[["Command",""],["Drawable",""],["OpenGl",""],["Vertex","Vertex struct for specifying triangle geometry"],["Void","Void renderer used for testing"]],"trait":[["Renderer","This is the main renderer trait that the Canvas draws to."]]});

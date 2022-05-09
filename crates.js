@@ -1,0 +1,1 @@
+window.ALL_CRATES = ["vizia","vizia_baseview","vizia_core","vizia_derive","vizia_winit"];

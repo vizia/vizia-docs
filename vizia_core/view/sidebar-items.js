@@ -1,0 +1,1 @@
+initSidebarItems({"trait":[["View","A view is any object which can be displayed on the screen."]],"type":[["Canvas","The canvas we will be drawing to."]]});

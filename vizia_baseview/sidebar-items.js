@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["WindowScalePolicy","The dpi scaling policy of the window"]],"struct":[["Application",""],["ParentWindow",""]]});

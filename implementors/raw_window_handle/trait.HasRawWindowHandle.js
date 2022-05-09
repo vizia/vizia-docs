@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["vizia_baseview"] = [{"text":"impl HasRawWindowHandle for <a class=\"struct\" href=\"vizia_baseview/struct.ParentWindow.html\" title=\"struct vizia_baseview::ParentWindow\">ParentWindow</a>","synthetic":false,"types":["vizia_baseview::parent_window::ParentWindow"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["FocusIn",""],["FocusOut",""],["Geo",""],["Hover",""],["Leave",""],["Move",""],["Over",""],["Press",""],["Release",""]],"trait":[["Actions","Methods to add an event handler to a view."]]});

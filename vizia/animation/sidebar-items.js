@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Animation","An id used to reference style animations stored in context."],["AnimationBuilder","A builder for constructing animations."],["KeyframeBuilder","A builder for constructing keyframes."]],"trait":[["AnimExt","Trait which provides methods for entities to manipulate linked animations"]]});

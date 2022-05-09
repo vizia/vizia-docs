@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Environment",""]],"trait":[["Env","Methods which control the environment the application will run in. This trait is implemented for Application."]]});

@@ -633,6 +633,13 @@
 <span id="628">628</span>
 <span id="629">629</span>
 <span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">convert</span>::{<span class="ident">scan_code_to_code</span>, <span class="ident">virtual_key_code_to_code</span>, <span class="ident">virtual_key_code_to_key</span>},
     <span class="ident">window::Window</span>,
@@ -1105,7 +1112,9 @@
 
 <span class="kw">impl</span> <span class="ident">WindowModifiers</span> <span class="kw">for</span> <span class="ident">Application</span> {
     <span class="kw">fn</span> <span class="ident">title</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ToString</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">title</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">title</span> <span class="op">=</span> <span class="ident">title</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>).<span class="ident">to_string</span>();
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">title</span>) <span class="op">=</span> <span class="ident">title</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>) {
+            <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">title</span> <span class="op">=</span> <span class="ident">title</span>.<span class="ident">to_string</span>();
+        }
         <span class="ident">title</span>.<span class="ident">set_or_bind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>, <span class="ident">Entity::root</span>(), <span class="op">|</span><span class="ident">cx</span>, <span class="kw">_</span>, <span class="ident">val</span><span class="op">|</span> {
             <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetTitle</span>(<span class="ident">val</span>.<span class="ident">to_string</span>()));
         });
@@ -1114,7 +1123,9 @@
     }
 
     <span class="kw">fn</span> <span class="ident">inner_size</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">WindowSize</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">size</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">inner_size</span> <span class="op">=</span> <span class="ident">size</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>).<span class="ident">into</span>();
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">size</span>) <span class="op">=</span> <span class="ident">size</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>) {
+            <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">inner_size</span> <span class="op">=</span> <span class="ident">size</span>.<span class="ident">into</span>();
+        }
         <span class="ident">size</span>.<span class="ident">set_or_bind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>, <span class="ident">Entity::root</span>(), <span class="op">|</span><span class="ident">cx</span>, <span class="kw">_</span>, <span class="ident">val</span><span class="op">|</span> {
             <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetSize</span>(<span class="ident">val</span>.<span class="ident">into</span>()));
         });
@@ -1123,8 +1134,9 @@
     }
 
     <span class="kw">fn</span> <span class="ident">min_inner_size</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">WindowSize</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">size</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">min_inner_size</span> <span class="op">=</span>
-            <span class="ident">size</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">size</span><span class="op">|</span> <span class="ident">size</span>.<span class="ident">into</span>());
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">size</span>) <span class="op">=</span> <span class="ident">size</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>) {
+            <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">min_inner_size</span> <span class="op">=</span> <span class="ident">size</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">size</span><span class="op">|</span> <span class="ident">size</span>.<span class="ident">into</span>());
+        }
         <span class="ident">size</span>.<span class="ident">set_or_bind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>, <span class="ident">Entity::root</span>(), <span class="op">|</span><span class="ident">cx</span>, <span class="kw">_</span>, <span class="ident">val</span><span class="op">|</span> {
             <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetMinSize</span>(<span class="ident">val</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">size</span><span class="op">|</span> <span class="ident">size</span>.<span class="ident">into</span>())));
         });
@@ -1134,7 +1146,7 @@
 
     <span class="kw">fn</span> <span class="ident">max_inner_size</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">WindowSize</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">size</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">max_inner_size</span> <span class="op">=</span>
-            <span class="ident">size</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">size</span><span class="op">|</span> <span class="ident">size</span>.<span class="ident">into</span>());
+            <span class="ident">size</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>).<span class="ident">unwrap_or_default</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">size</span><span class="op">|</span> <span class="ident">size</span>.<span class="ident">into</span>());
         <span class="ident">size</span>.<span class="ident">set_or_bind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>, <span class="ident">Entity::root</span>(), <span class="op">|</span><span class="ident">cx</span>, <span class="kw">_</span>, <span class="ident">val</span><span class="op">|</span> {
             <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetMaxSize</span>(<span class="ident">val</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">size</span><span class="op">|</span> <span class="ident">size</span>.<span class="ident">into</span>())));
         });
@@ -1143,7 +1155,9 @@
     }
 
     <span class="kw">fn</span> <span class="ident">position</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Position</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">position</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">position</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">position</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>).<span class="ident">into</span>());
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">position</span>) <span class="op">=</span> <span class="ident">position</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>) {
+            <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">position</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">position</span>.<span class="ident">into</span>());
+        }
         <span class="ident">position</span>.<span class="ident">set_or_bind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>, <span class="ident">Entity::root</span>(), <span class="op">|</span><span class="ident">cx</span>, <span class="kw">_</span>, <span class="ident">val</span><span class="op">|</span> {
             <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetPosition</span>(<span class="ident">val</span>.<span class="ident">into</span>()));
         });
@@ -1152,7 +1166,7 @@
     }
 
     <span class="kw">fn</span> <span class="ident">resizable</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">flag</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">resizable</span> <span class="op">=</span> <span class="ident">flag</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>);
+        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">resizable</span> <span class="op">=</span> <span class="ident">flag</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>).<span class="ident">unwrap_or_default</span>();
         <span class="ident">flag</span>.<span class="ident">set_or_bind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>, <span class="ident">Entity::root</span>(), <span class="op">|</span><span class="ident">cx</span>, <span class="kw">_</span>, <span class="ident">val</span><span class="op">|</span> {
             <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetResizable</span>(<span class="ident">val</span>));
         });
@@ -1161,7 +1175,7 @@
     }
 
     <span class="kw">fn</span> <span class="ident">minimized</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">flag</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">minimized</span> <span class="op">=</span> <span class="ident">flag</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>);
+        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">minimized</span> <span class="op">=</span> <span class="ident">flag</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>).<span class="ident">unwrap_or_default</span>();
         <span class="ident">flag</span>.<span class="ident">set_or_bind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>, <span class="ident">Entity::root</span>(), <span class="op">|</span><span class="ident">cx</span>, <span class="kw">_</span>, <span class="ident">val</span><span class="op">|</span> {
             <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetMinimized</span>(<span class="ident">val</span>));
         });
@@ -1170,7 +1184,7 @@
     }
 
     <span class="kw">fn</span> <span class="ident">maximized</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">flag</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">maximized</span> <span class="op">=</span> <span class="ident">flag</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>);
+        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">maximized</span> <span class="op">=</span> <span class="ident">flag</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>).<span class="ident">unwrap_or_default</span>();
         <span class="ident">flag</span>.<span class="ident">set_or_bind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>, <span class="ident">Entity::root</span>(), <span class="op">|</span><span class="ident">cx</span>, <span class="kw">_</span>, <span class="ident">val</span><span class="op">|</span> {
             <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetMaximized</span>(<span class="ident">val</span>));
         });
@@ -1179,7 +1193,7 @@
     }
 
     <span class="kw">fn</span> <span class="ident">visible</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">flag</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">visible</span> <span class="op">=</span> <span class="ident">flag</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>);
+        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">visible</span> <span class="op">=</span> <span class="ident">flag</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>).<span class="ident">unwrap_or_default</span>();
         <span class="ident">flag</span>.<span class="ident">set_or_bind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>, <span class="ident">Entity::root</span>(), <span class="op">|</span><span class="ident">cx</span>, <span class="kw">_</span>, <span class="ident">val</span><span class="op">|</span> {
             <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetVisible</span>(<span class="ident">val</span>));
         });
@@ -1194,7 +1208,7 @@
     }
 
     <span class="kw">fn</span> <span class="ident">decorations</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">flag</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">decorations</span> <span class="op">=</span> <span class="ident">flag</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>);
+        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">decorations</span> <span class="op">=</span> <span class="ident">flag</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>).<span class="ident">unwrap_or_default</span>();
         <span class="ident">flag</span>.<span class="ident">set_or_bind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>, <span class="ident">Entity::root</span>(), <span class="op">|</span><span class="ident">cx</span>, <span class="kw">_</span>, <span class="ident">val</span><span class="op">|</span> {
             <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetDecorations</span>(<span class="ident">val</span>));
         });
@@ -1203,7 +1217,7 @@
     }
 
     <span class="kw">fn</span> <span class="ident">always_on_top</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">flag</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">always_on_top</span> <span class="op">=</span> <span class="ident">flag</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>);
+        <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">always_on_top</span> <span class="op">=</span> <span class="ident">flag</span>.<span class="ident">get_val</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>).<span class="ident">unwrap_or_default</span>();
         <span class="ident">flag</span>.<span class="ident">set_or_bind</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>, <span class="ident">Entity::root</span>(), <span class="op">|</span><span class="ident">cx</span>, <span class="kw">_</span>, <span class="ident">val</span><span class="op">|</span> {
             <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetAlwaysOnTop</span>(<span class="ident">val</span>));
         });

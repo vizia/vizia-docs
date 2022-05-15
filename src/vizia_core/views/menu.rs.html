@@ -356,6 +356,9 @@
 <span id="351">351</span>
 <span id="352">352</span>
 <span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::cell::RefCell</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::fonts</span>::{<span class="ident">material_names::RIGHT</span>, <span class="ident">unicode_names::CHECK</span>};
@@ -383,7 +386,7 @@
         <span class="kw-2">*</span><span class="ident">data</span>.<span class="ident">counter</span>.<span class="ident">borrow_mut</span>() <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
         <span class="ident">handle</span>
             .<span class="ident">bind</span>(<span class="ident">MenuData::selected</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">handle</span>, <span class="ident">selected</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">selected</span> <span class="op">=</span> <span class="ident">selected</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>) <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">i</span>);
+                <span class="kw">let</span> <span class="ident">selected</span> <span class="op">=</span> <span class="ident">selected</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>) <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(<span class="ident">i</span>));
                 <span class="ident">handle</span>.<span class="ident">cx</span>.<span class="ident">set_selected</span>(<span class="ident">selected</span>);
                 <span class="kw">if</span> <span class="ident">selected</span> {
                     <span class="ident">on_select</span>(<span class="ident">handle</span>.<span class="ident">cx</span>);
@@ -653,17 +656,20 @@
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
         <span class="ident">A</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
-        <span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="ident">L</span>: <span class="ident">Bindable</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">bool</span><span class="op">&gt;</span>,
     {
         <span class="ident"><span class="self">Self</span>::new</span>(
             <span class="ident">cx</span>,
             <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
                 <span class="ident">HStack::new</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
                     <span class="ident">builder</span>(<span class="ident">cx</span>);
-                    <span class="ident">Label::new</span>(<span class="ident">cx</span>, <span class="string">&quot;&quot;</span>).<span class="ident">left</span>(<span class="ident">Units::Stretch</span>(<span class="number">1.0</span>)).<span class="ident">bind</span>(<span class="ident">lens</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">handle</span>, <span class="ident">lens</span><span class="op">|</span> {
-                        <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">lens</span>.<span class="ident">get_fallible</span>(<span class="ident">handle</span>.<span class="ident">cx</span>);
-                        <span class="ident">handle</span>.<span class="ident">text</span>(<span class="kw">if</span> <span class="ident">val</span> <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="bool-val">true</span>) { <span class="ident">CHECK</span> } <span class="kw">else</span> { <span class="string">&quot;&quot;</span> });
-                    });
+                    <span class="ident">Label::new</span>(<span class="ident">cx</span>, <span class="string">&quot;&quot;</span>).<span class="ident">left</span>(<span class="ident">Units::Stretch</span>(<span class="number">1.0</span>)).<span class="ident">text</span>(<span class="ident">lens</span>.<span class="ident">map_shallow</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> {
+                        <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">v</span> {
+                            <span class="ident">CHECK</span>
+                        } <span class="kw">else</span> {
+                            <span class="string">&quot;&quot;</span>
+                        }
+                    }));
                 });
             },
             <span class="ident">action</span>,

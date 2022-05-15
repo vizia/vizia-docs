@@ -171,8 +171,6 @@
 <span id="166">166</span>
 <span id="167">167</span>
 <span id="168">168</span>
-<span id="169">169</span>
-<span id="170">170</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">fluent_bundle::FluentArgs</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fluent_bundle::FluentValue</span>;
@@ -286,18 +284,18 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Localized</span> {
-    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="ident">String</span> {
         <span class="kw">let</span> <span class="ident">bundle</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">resource_manager_ref</span>().<span class="ident">current_translation</span>();
         <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="ident">bundle</span>.<span class="ident">get_message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">key</span>) {
             <span class="ident">msg</span>
         } <span class="kw">else</span> {
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;{{MISSING: {}}}&quot;</span>, <span class="self">self</span>.<span class="ident">key</span>));
+            <span class="kw">return</span> <span class="macro">format!</span>(<span class="string">&quot;{{MISSING: {}}}&quot;</span>, <span class="self">self</span>.<span class="ident">key</span>);
         };
 
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="ident">message</span>.<span class="ident">value</span>() {
             <span class="ident">value</span>
         } <span class="kw">else</span> {
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;{{MISSING: {}}}&quot;</span>, <span class="self">self</span>.<span class="ident">key</span>));
+            <span class="kw">return</span> <span class="macro">format!</span>(<span class="string">&quot;{{MISSING: {}}}&quot;</span>, <span class="self">self</span>.<span class="ident">key</span>);
         };
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">err</span> <span class="op">=</span> <span class="macro">vec!</span>[];
@@ -305,9 +303,9 @@
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">bundle</span>.<span class="ident">format_pattern</span>(<span class="ident">value</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">args</span>), <span class="kw-2">&amp;mut</span> <span class="ident">err</span>);
 
         <span class="kw">if</span> <span class="ident">err</span>.<span class="ident">is_empty</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">res</span>.<span class="ident">to_string</span>())
+            <span class="ident">res</span>.<span class="ident">to_string</span>()
         } <span class="kw">else</span> {
-            <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;{} {{ERROR: {:?}}}&quot;</span>, <span class="ident">res</span>, <span class="ident">err</span>))
+            <span class="macro">format!</span>(<span class="string">&quot;{} {{ERROR: {:?}}}&quot;</span>, <span class="ident">res</span>, <span class="ident">err</span>)
         }
     }
 
@@ -319,9 +317,7 @@
             <span class="kw">let</span> <span class="ident">lenses</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">args</span>.<span class="ident">values</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">make_clone</span>()).<span class="ident">collect</span>();
             <span class="kw">let</span> <span class="ident">self2</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
             <span class="ident">bind_recursive</span>(<span class="ident">cx</span>, <span class="kw-2">&amp;</span><span class="ident">lenses</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="ident">self2</span>.<span class="ident">get_val</span>(<span class="ident">cx</span>) {
-                    <span class="ident">closure</span>(<span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">value</span>);
-                }
+                <span class="ident">closure</span>(<span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">self2</span>.<span class="ident">get_val</span>(<span class="ident">cx</span>));
             });
         });
     }

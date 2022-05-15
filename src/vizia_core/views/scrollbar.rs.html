@@ -164,9 +164,6 @@
 <span id="159">159</span>
 <span id="160">160</span>
 <span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::views::Orientation</span>;
 
@@ -179,8 +176,8 @@
     <span class="ident">on_changing</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">f32</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L1</span>: <span class="ident">Bindable</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Scrollbar</span><span class="op">&lt;</span><span class="ident">L1</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">L2</span>: <span class="ident">Bindable</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L1</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Scrollbar</span><span class="op">&lt;</span><span class="ident">L1</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">L2</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span>(
         <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>,
         <span class="ident">value</span>: <span class="ident">L1</span>,
         <span class="ident">ratio</span>: <span class="ident">L2</span>,
@@ -200,7 +197,7 @@
             <span class="ident">Element::new</span>(<span class="ident">cx</span>)
                 .<span class="ident">class</span>(<span class="string">&quot;thumb&quot;</span>)
                 .<span class="ident">bind</span>(<span class="ident">value</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">handle</span>, <span class="ident">value</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>).<span class="ident">unwrap_or_default</span>();
+                    <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>);
                     <span class="kw">match</span> <span class="ident">orientation</span> {
                         <span class="ident">Orientation::Horizontal</span> =&gt; {
                             <span class="ident">handle</span>.<span class="ident">left</span>(<span class="ident">Units::Stretch</span>(<span class="ident">value</span>)).<span class="ident">right</span>(<span class="ident">Units::Stretch</span>(<span class="number">1.0</span> <span class="op">-</span> <span class="ident">value</span>))
@@ -211,7 +208,7 @@
                     };
                 })
                 .<span class="ident">bind</span>(<span class="ident">ratio</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">handle</span>, <span class="ident">ratio</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">ratio</span> <span class="op">=</span> <span class="ident">ratio</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>).<span class="ident">unwrap_or_default</span>();
+                    <span class="kw">let</span> <span class="ident">ratio</span> <span class="op">=</span> <span class="ident">ratio</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>);
                     <span class="kw">match</span> <span class="ident">orientation</span> {
                         <span class="ident">Orientation::Horizontal</span> =&gt; <span class="ident">handle</span>.<span class="ident">width</span>(<span class="ident">Units::Percentage</span>(<span class="ident">ratio</span> <span class="op">*</span> <span class="number">100.0</span>)),
                         <span class="ident">Orientation::Vertical</span> =&gt; <span class="ident">handle</span>.<span class="ident">height</span>(<span class="ident">Units::Percentage</span>(<span class="ident">ratio</span> <span class="op">*</span> <span class="number">100.0</span>)),
@@ -265,7 +262,7 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L1</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Bindable</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">Scrollbar</span><span class="op">&lt;</span><span class="ident">L1</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L1</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">Scrollbar</span><span class="op">&lt;</span><span class="ident">L1</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="string">&quot;scrollbar&quot;</span>)
     }
@@ -279,7 +276,7 @@
             <span class="kw">match</span> <span class="ident">window_event</span> {
                 <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
                     <span class="kw">if</span> <span class="ident">meta</span>.<span class="ident">target</span> <span class="op">!</span><span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>() {
-                        <span class="self">self</span>.<span class="ident">reference_points</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">pos</span>, <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">get</span>(<span class="ident">cx</span>).<span class="ident">unwrap_or_default</span>()));
+                        <span class="self">self</span>.<span class="ident">reference_points</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">pos</span>, <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">get</span>(<span class="ident">cx</span>)));
                         <span class="ident">cx</span>.<span class="ident">capture</span>();
                     } <span class="kw">else</span> {
                         <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">jump</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">container_and_thumb_size</span>(<span class="ident">cx</span>);
@@ -304,11 +301,8 @@
                                 }
                             }
                         };
-                        <span class="kw">let</span> <span class="ident">changed</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_new_value</span>(
-                            <span class="ident">cx</span>,
-                            <span class="ident">physical_delta</span>,
-                            <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">get</span>(<span class="ident">cx</span>).<span class="ident">unwrap_or_default</span>(),
-                        );
+                        <span class="kw">let</span> <span class="ident">changed</span> <span class="op">=</span>
+                            <span class="self">self</span>.<span class="ident">compute_new_value</span>(<span class="ident">cx</span>, <span class="ident">physical_delta</span>, <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">get</span>(<span class="ident">cx</span>));
                         <span class="self">self</span>.<span class="ident">change</span>(<span class="ident">cx</span>, <span class="ident">changed</span>);
                     }
                 }

@@ -176,6 +176,8 @@
 <span id="171">171</span>
 <span id="172">172</span>
 <span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::fonts::unicode_names::CHECK</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 
@@ -287,13 +289,15 @@
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// Checkbox::new(cx, AppData::value);</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">checked</span>: <span class="kw">impl</span> <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">bool</span><span class="op">&gt;</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">checked</span>: <span class="kw">impl</span> <span class="ident">Bindable</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">bool</span><span class="op">&gt;</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="comment">//let checked = checked.get_val_fallible(cx).unwrap_or(false);</span>
-        <span class="self">Self</span> { <span class="ident">on_toggle</span>: <span class="prelude-val">None</span> }.<span class="ident">build</span>(<span class="ident">cx</span>, <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {}).<span class="ident">bind</span>(<span class="ident">checked</span>, <span class="op">|</span><span class="ident">handle</span>, <span class="ident">checked</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">flag</span>) <span class="op">=</span> <span class="ident">checked</span>.<span class="ident">get_val_fallible</span>(<span class="ident">handle</span>.<span class="ident">cx</span>) {
-                <span class="ident">handle</span>.<span class="ident">text</span>(<span class="kw">if</span> <span class="ident">flag</span> { <span class="ident">CHECK</span> } <span class="kw">else</span> { <span class="string">&quot;&quot;</span> }).<span class="ident">checked</span>(<span class="ident">flag</span>);
+        <span class="self">Self</span> { <span class="ident">on_toggle</span>: <span class="prelude-val">None</span> }.<span class="ident">build</span>(<span class="ident">cx</span>, <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {}).<span class="ident">text</span>(<span class="ident">checked</span>.<span class="ident">map_shallow</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> {
+            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">b</span> {
+                <span class="ident">CHECK</span>
+            } <span class="kw">else</span> {
+                <span class="string">&quot;&quot;</span>
             }
-        })
+        }))
     }
 }
 

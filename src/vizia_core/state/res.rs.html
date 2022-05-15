@@ -189,20 +189,13 @@
 <span id="184">184</span>
 <span id="185">185</span>
 <span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="macro">macro_rules!</span> <span class="ident">impl_res_simple</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>:<span class="ident">ty</span>) =&gt; {
         <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> {
-            <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> {
-                <span class="kw-2">*</span><span class="self">self</span>
+            <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="self">self</span>)
             }
 
             <span class="kw">fn</span> <span class="ident">set_or_bind</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">closure</span>: <span class="ident">F</span>)
@@ -220,10 +213,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// This trait is part of the prelude.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="ident">T</span>;
-    <span class="kw">fn</span> <span class="ident">get_val_fallible</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">get_val</span>(<span class="ident">cx</span>))
-    }
+    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
     <span class="kw">fn</span> <span class="ident">set_or_bind</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">closure</span>: <span class="ident">F</span>)
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">Entity</span>, <span class="ident">T</span>);
@@ -248,15 +238,11 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">L</span>
 <span class="kw">where</span>
-    <span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">LensExt</span>,
+    <span class="ident">L</span>: <span class="ident">Bindable</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>,
     <span class="ident">T</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Data</span>,
 {
-    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="ident">T</span> {
+    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">get</span>(<span class="ident">cx</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">get_val_fallible</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">get_fallible</span>(<span class="ident">cx</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">set_or_bind</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">closure</span>: <span class="ident">F</span>)
@@ -265,7 +251,7 @@
     {
         <span class="ident">cx</span>.<span class="ident">with_current</span>(<span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
             <span class="ident">Binding::new</span>(<span class="ident">cx</span>, <span class="self">self</span>.<span class="ident">clone</span>(), <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span>, <span class="ident">val</span><span class="op">|</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span> <span class="ident">val</span>.<span class="ident">get_val_fallible</span>(<span class="ident">cx</span>) {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span> <span class="ident">val</span>.<span class="ident">get_val</span>(<span class="ident">cx</span>) {
                     (<span class="ident">closure</span>)(<span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">v</span>);
                 }
             });
@@ -274,8 +260,8 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">str</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">str</span> {
-    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">str</span> {
-        <span class="self">self</span>
+    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">str</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="self">self</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">set_or_bind</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">closure</span>: <span class="ident">F</span>)
@@ -287,8 +273,8 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">String</span> {
-    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">String</span> {
-        <span class="self">self</span>
+    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="self">self</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">set_or_bind</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">closure</span>: <span class="ident">F</span>)
@@ -300,8 +286,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">Color</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Color</span> {
-    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="ident">Color</span> {
-        <span class="kw-2">*</span><span class="self">self</span>
+    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Color</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">set_or_bind</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">closure</span>: <span class="ident">F</span>)
@@ -313,8 +299,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Units</span> {
-    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="ident">Units</span> {
-        <span class="kw-2">*</span><span class="self">self</span>
+    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">set_or_bind</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">closure</span>: <span class="ident">F</span>)
@@ -326,8 +312,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">Visibility</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Visibility</span> {
-    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="ident">Visibility</span> {
-        <span class="kw-2">*</span><span class="self">self</span>
+    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Visibility</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">set_or_bind</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">closure</span>: <span class="ident">F</span>)
@@ -339,8 +325,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">Display</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Display</span> {
-    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="ident">Display</span> {
-        <span class="kw-2">*</span><span class="self">self</span>
+    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Display</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">set_or_bind</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">closure</span>: <span class="ident">F</span>)
@@ -352,8 +338,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">LayoutType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">LayoutType</span> {
-    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="ident">LayoutType</span> {
-        <span class="kw-2">*</span><span class="self">self</span>
+    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LayoutType</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">set_or_bind</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">closure</span>: <span class="ident">F</span>)
@@ -365,8 +351,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">PositionType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PositionType</span> {
-    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="ident">PositionType</span> {
-        <span class="kw-2">*</span><span class="self">self</span>
+    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PositionType</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">set_or_bind</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">closure</span>: <span class="ident">F</span>)
@@ -378,8 +364,8 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">Res</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">T</span>)<span class="op">&gt;</span> <span class="kw">for</span> (<span class="ident">T</span>, <span class="ident">T</span>) {
-    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; (<span class="ident">T</span>, <span class="ident">T</span>) {
-        <span class="kw-2">*</span><span class="self">self</span>
+    <span class="kw">fn</span> <span class="ident">get_val</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">T</span>)<span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">set_or_bind</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">closure</span>: <span class="ident">F</span>)

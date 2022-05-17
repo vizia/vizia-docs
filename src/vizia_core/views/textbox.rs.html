@@ -757,9 +757,6 @@
 <span id="752">752</span>
 <span id="753">753</span>
 <span id="754">754</span>
-<span id="755">755</span>
-<span id="756">756</span>
-<span id="757">757</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::BoundingBox</span>;
@@ -1270,11 +1267,13 @@
                 .<span class="ident">class</span>(<span class="string">&quot;textbox_container&quot;</span>);
         });
 
-        <span class="ident">result</span>.<span class="ident">class</span>(<span class="kw">match</span> <span class="ident">kind</span> {
-            <span class="ident">TextboxKind::SingleLine</span> =&gt; <span class="string">&quot;single_line&quot;</span>,
-            <span class="ident">TextboxKind::MultiLineUnwrapped</span> =&gt; <span class="string">&quot;multi_line_unwrapped&quot;</span>,
-            <span class="ident">TextboxKind::MultiLineWrapped</span> =&gt; <span class="string">&quot;multi_line_wrapped&quot;</span>,
-        })
+        <span class="ident">result</span>
+            .<span class="ident">class</span>(<span class="kw">match</span> <span class="ident">kind</span> {
+                <span class="ident">TextboxKind::SingleLine</span> =&gt; <span class="string">&quot;single_line&quot;</span>,
+                <span class="ident">TextboxKind::MultiLineUnwrapped</span> =&gt; <span class="string">&quot;multi_line_unwrapped&quot;</span>,
+                <span class="ident">TextboxKind::MultiLineWrapped</span> =&gt; <span class="string">&quot;multi_line_wrapped&quot;</span>,
+            })
+            .<span class="ident">cursor</span>(<span class="ident">CursorIcon::Text</span>)
     }
 }
 
@@ -1333,14 +1332,9 @@
             }
 
             <span class="ident">WindowEvent::MouseMove</span>(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
-                <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetCursor</span>(<span class="ident">CursorIcon::Text</span>));
                 <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">left</span>.<span class="ident">state</span> <span class="op">==</span> <span class="ident">MouseButtonState::Pressed</span> {
                     <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::Drag</span>(<span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">cursorx</span>, <span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">cursory</span>));
                 }
-            }
-
-            <span class="ident">WindowEvent::MouseLeave</span> =&gt; {
-                <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetCursor</span>(<span class="ident">CursorIcon::Default</span>));
             }
 
             <span class="ident">WindowEvent::CharInput</span>(<span class="ident">c</span>) =&gt; {

@@ -757,6 +757,19 @@
 <span id="752">752</span>
 <span id="753">753</span>
 <span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::BoundingBox</span>;
@@ -1320,9 +1333,21 @@
 
                     <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::Hit</span>(<span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">cursorx</span>, <span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">cursory</span>));
                 } <span class="kw">else</span> {
+                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::Submit</span>);
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">data</span>::<span class="op">&lt;</span><span class="ident">L::Source</span><span class="op">&gt;</span>() {
+                        <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">view</span>(<span class="ident">source</span>, <span class="op">|</span><span class="ident">t</span><span class="op">|</span> {
+                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span> <span class="ident">t</span> {
+                                <span class="ident">t</span>.<span class="ident">to_string</span>()
+                            } <span class="kw">else</span> {
+                                <span class="string">&quot;&quot;</span>.<span class="ident">to_owned</span>()
+                            }
+                        });
+
+                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::SelectAll</span>);
+                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::InsertText</span>(<span class="ident">text</span>));
+                    };
                     <span class="ident">cx</span>.<span class="ident">release</span>();
                     <span class="ident">cx</span>.<span class="ident">set_checked</span>(<span class="bool-val">false</span>);
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::EndEdit</span>);
 
                     <span class="comment">// Forward event to hovered</span>
                     <span class="ident">cx</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
@@ -1371,6 +1396,7 @@
                         };
 
                         <span class="ident">cx</span>.<span class="ident">set_checked</span>(<span class="bool-val">false</span>);
+                        <span class="ident">cx</span>.<span class="ident">release</span>();
                     } <span class="kw">else</span> {
                         <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::InsertText</span>(<span class="string">&quot;\n&quot;</span>.<span class="ident">to_owned</span>()));
                     }

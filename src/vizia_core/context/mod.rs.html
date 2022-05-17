@@ -1189,6 +1189,23 @@
 <span id="1184">1184</span>
 <span id="1185">1185</span>
 <span id="1186">1186</span>
+<span id="1187">1187</span>
+<span id="1188">1188</span>
+<span id="1189">1189</span>
+<span id="1190">1190</span>
+<span id="1191">1191</span>
+<span id="1192">1192</span>
+<span id="1193">1193</span>
+<span id="1194">1194</span>
+<span id="1195">1195</span>
+<span id="1196">1196</span>
+<span id="1197">1197</span>
+<span id="1198">1198</span>
+<span id="1199">1199</span>
+<span id="1200">1200</span>
+<span id="1201">1201</span>
+<span id="1202">1202</span>
+<span id="1203">1203</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">draw</span>;
 <span class="kw">mod</span> <span class="ident">proxy</span>;
 
@@ -1258,6 +1275,7 @@
     <span class="ident">captured</span>: <span class="ident">Entity</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">hovered</span>: <span class="ident">Entity</span>,
     <span class="ident">focused</span>: <span class="ident">Entity</span>,
+    <span class="ident">cursor_icon_locked</span>: <span class="ident">bool</span>,
 
     <span class="ident">resource_manager</span>: <span class="ident">ResourceManager</span>,
 
@@ -1294,6 +1312,7 @@
             <span class="ident">captured</span>: <span class="ident">Entity::null</span>(),
             <span class="ident">hovered</span>: <span class="ident">Entity::root</span>(),
             <span class="ident">focused</span>: <span class="ident">Entity::root</span>(),
+            <span class="ident">cursor_icon_locked</span>: <span class="bool-val">false</span>,
             <span class="ident">resource_manager</span>: <span class="ident">ResourceManager::new</span>(),
             <span class="ident">text_context</span>: <span class="ident">TextContext::default</span>(),
 
@@ -1421,9 +1440,24 @@
     <span class="doccomment">/// Releases the mouse events capture</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">release</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="self">self</span>.<span class="ident">captured</span> <span class="op">=</span> <span class="ident">Entity::null</span>();
+    }
+
+    <span class="doccomment">/// Prevents the cursor icon from changing until the lock is released</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lock_cursor_icon</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">cursor_icon_locked</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    }
+
+    <span class="doccomment">/// Releases any cursor icon lock, allowing the cursor icon to be changed</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unlock_cursor_icon</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">cursor_icon_locked</span> <span class="op">=</span> <span class="bool-val">false</span>;
         <span class="kw">let</span> <span class="ident">hovered</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">hovered</span>;
         <span class="kw">let</span> <span class="ident">cursor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>().<span class="ident">cursor</span>.<span class="ident">get</span>(<span class="ident">hovered</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
         <span class="self">self</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetCursor</span>(<span class="ident">cursor</span>));
+    }
+
+    <span class="doccomment">/// Returns true if the cursor icon is locked</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_cursor_icon_locked</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">cursor_icon_locked</span>
     }
 
     <span class="doccomment">/// Sets application focus to the current entity</span>

@@ -198,6 +198,7 @@
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">morphorm</span>::{<span class="ident">GeometryChanged</span>, <span class="ident">PositionType</span>};
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::state::RatioLens</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::views::Orientation</span>;
 
 <span class="kw">const</span> <span class="ident">SCROLL_SENSITIVITY</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">35.0</span>;
@@ -276,7 +277,7 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Bindable</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">ScrollData</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">ScrollView</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">ScrollData</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">ScrollView</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">custom</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
         <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>,
         <span class="ident">scroll_x</span>: <span class="ident">bool</span>,
@@ -302,12 +303,12 @@
     {
         <span class="ident">VStack::new</span>(<span class="ident">cx</span>, <span class="ident">content</span>)
             .<span class="ident">class</span>(<span class="string">&quot;scroll_content&quot;</span>)
-            .<span class="ident">left</span>(<span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">map_shallow</span>(<span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
-                <span class="ident">Pixels</span>(<span class="op">-</span>(((<span class="ident">data</span>.<span class="ident">child_x</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_x</span>) <span class="op">*</span> <span class="ident">data</span>.<span class="ident">scroll_x</span>).<span class="ident">round</span>()))
-            }))
-            .<span class="ident">top</span>(<span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">map_shallow</span>(<span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
-                <span class="ident">Pixels</span>(<span class="op">-</span>((<span class="ident">data</span>.<span class="ident">child_y</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_y</span>) <span class="op">*</span> <span class="ident">data</span>.<span class="ident">scroll_y</span>).<span class="ident">round</span>())
-            }))
+            .<span class="ident">bind</span>(<span class="ident">data</span>.<span class="ident">clone</span>(), <span class="op">|</span><span class="ident">handle</span>, <span class="ident">data</span><span class="op">|</span> {
+                <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>);
+                <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> ((<span class="ident">data</span>.<span class="ident">child_x</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_x</span>) <span class="op">*</span> <span class="ident">data</span>.<span class="ident">scroll_x</span>).<span class="ident">round</span>();
+                <span class="kw">let</span> <span class="ident">top</span> <span class="op">=</span> ((<span class="ident">data</span>.<span class="ident">child_y</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_y</span>) <span class="op">*</span> <span class="ident">data</span>.<span class="ident">scroll_y</span>).<span class="ident">round</span>();
+                <span class="ident">handle</span>.<span class="ident">left</span>(<span class="ident">Units::Pixels</span>(<span class="op">-</span><span class="ident">left</span>)).<span class="ident">top</span>(<span class="ident">Units::Pixels</span>(<span class="op">-</span><span class="ident">top</span>));
+            })
             .<span class="ident">on_geo_changed</span>(<span class="op">|</span><span class="ident">cx</span>, <span class="ident">geo</span><span class="op">|</span> {
                 <span class="kw">if</span> <span class="ident">geo</span>.<span class="ident">contains</span>(<span class="ident">GeometryChanged::HEIGHT_CHANGED</span>)
                     <span class="op">|</span><span class="op">|</span> <span class="ident">geo</span>.<span class="ident">contains</span>(<span class="ident">GeometryChanged::WIDTH_CHANGED</span>)
@@ -321,8 +322,8 @@
         <span class="kw">if</span> <span class="ident">scroll_y</span> {
             <span class="ident">Scrollbar::new</span>(
                 <span class="ident">cx</span>,
-                <span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">map_shallow</span>(<span class="op">|</span><span class="ident">data</span><span class="op">|</span> <span class="ident">data</span>.<span class="ident">scroll_y</span>),
-                <span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">map_shallow</span>(<span class="op">|</span><span class="ident">data</span><span class="op">|</span> <span class="ident">data</span>.<span class="ident">parent_y</span> <span class="op">/</span> <span class="ident">data</span>.<span class="ident">child_y</span>),
+                <span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">then</span>(<span class="ident">ScrollData::scroll_y</span>),
+                <span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">then</span>(<span class="ident">RatioLens::new</span>(<span class="ident">ScrollData::parent_y</span>, <span class="ident">ScrollData::child_y</span>)),
                 <span class="ident">Orientation::Vertical</span>,
                 <span class="op">|</span><span class="ident">cx</span>, <span class="ident">value</span><span class="op">|</span> {
                     <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">ScrollEvent::SetY</span>(<span class="ident">value</span>));
@@ -333,8 +334,8 @@
         <span class="kw">if</span> <span class="ident">scroll_x</span> {
             <span class="ident">Scrollbar::new</span>(
                 <span class="ident">cx</span>,
-                <span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">map_shallow</span>(<span class="op">|</span><span class="ident">data</span><span class="op">|</span> <span class="ident">data</span>.<span class="ident">scroll_x</span>),
-                <span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">map_shallow</span>(<span class="op">|</span><span class="ident">data</span><span class="op">|</span> <span class="ident">data</span>.<span class="ident">parent_x</span> <span class="op">/</span> <span class="ident">data</span>.<span class="ident">child_x</span>),
+                <span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">then</span>(<span class="ident">ScrollData::scroll_x</span>),
+                <span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">then</span>(<span class="ident">RatioLens::new</span>(<span class="ident">ScrollData::parent_x</span>, <span class="ident">ScrollData::child_x</span>)),
                 <span class="ident">Orientation::Horizontal</span>,
                 <span class="op">|</span><span class="ident">cx</span>, <span class="ident">value</span><span class="op">|</span> {
                     <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">ScrollEvent::SetX</span>(<span class="ident">value</span>));
@@ -345,7 +346,7 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Bindable</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">ScrollData</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">ScrollView</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">ScrollData</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">ScrollView</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="string">&quot;scrollview&quot;</span>)
     }
@@ -368,18 +369,17 @@
                     <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">modifiers</span>().<span class="ident">contains</span>(<span class="ident">Modifiers::SHIFT</span>) { (<span class="op">-</span><span class="kw-2">*</span><span class="ident">y</span>, <span class="kw-2">*</span><span class="ident">x</span>) } <span class="kw">else</span> { (<span class="kw-2">*</span><span class="ident">x</span>, <span class="op">-</span><span class="kw-2">*</span><span class="ident">y</span>) };
 
                 <span class="comment">// what percentage of the negative space does this cross?</span>
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">data</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">get</span>(<span class="ident">cx</span>) {
-                    <span class="kw">if</span> <span class="ident">x</span> <span class="op">!</span><span class="op">=</span> <span class="number">0.0</span> {
-                        <span class="kw">let</span> <span class="ident">negative_space</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">child_x</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_x</span>;
-                        <span class="kw">let</span> <span class="ident">logical_delta</span> <span class="op">=</span> <span class="ident">x</span> <span class="op">*</span> <span class="ident">SCROLL_SENSITIVITY</span> <span class="op">/</span> <span class="ident">negative_space</span>;
-                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">ScrollEvent::ScrollX</span>(<span class="ident">logical_delta</span>));
-                    }
-                    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">data</span>::<span class="op">&lt;</span><span class="ident">ScrollData</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
-                    <span class="kw">if</span> <span class="ident">y</span> <span class="op">!</span><span class="op">=</span> <span class="number">0.0</span> {
-                        <span class="kw">let</span> <span class="ident">negative_space</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">child_y</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_y</span>;
-                        <span class="kw">let</span> <span class="ident">logical_delta</span> <span class="op">=</span> <span class="ident">y</span> <span class="op">*</span> <span class="ident">SCROLL_SENSITIVITY</span> <span class="op">/</span> <span class="ident">negative_space</span>;
-                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">ScrollEvent::ScrollY</span>(<span class="ident">logical_delta</span>));
-                    }
+                <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">get</span>(<span class="ident">cx</span>);
+                <span class="kw">if</span> <span class="ident">x</span> <span class="op">!</span><span class="op">=</span> <span class="number">0.0</span> {
+                    <span class="kw">let</span> <span class="ident">negative_space</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">child_x</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_x</span>;
+                    <span class="kw">let</span> <span class="ident">logical_delta</span> <span class="op">=</span> <span class="ident">x</span> <span class="op">*</span> <span class="ident">SCROLL_SENSITIVITY</span> <span class="op">/</span> <span class="ident">negative_space</span>;
+                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">ScrollEvent::ScrollX</span>(<span class="ident">logical_delta</span>));
+                }
+                <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">data</span>::<span class="op">&lt;</span><span class="ident">ScrollData</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
+                <span class="kw">if</span> <span class="ident">y</span> <span class="op">!</span><span class="op">=</span> <span class="number">0.0</span> {
+                    <span class="kw">let</span> <span class="ident">negative_space</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">child_y</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_y</span>;
+                    <span class="kw">let</span> <span class="ident">logical_delta</span> <span class="op">=</span> <span class="ident">y</span> <span class="op">*</span> <span class="ident">SCROLL_SENSITIVITY</span> <span class="op">/</span> <span class="ident">negative_space</span>;
+                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">ScrollEvent::ScrollY</span>(<span class="ident">logical_delta</span>));
                 }
             }
 

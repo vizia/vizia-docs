@@ -173,7 +173,7 @@
             <span class="ident">Binding::new</span>(<span class="ident">cx</span>, <span class="ident">lens</span>.<span class="ident">clone</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">lst</span><span class="op">|</span> <span class="ident">lst</span>.<span class="ident">len</span>()), <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span>, <span class="ident">list_len</span><span class="op">|</span> {
                 <span class="comment">// If the number of list items is different to the number of children of the ListView</span>
                 <span class="comment">// then remove and rebuild all the children</span>
-                <span class="kw">let</span> <span class="ident">list_len</span> <span class="op">=</span> <span class="ident">list_len</span>.<span class="ident">get</span>(<span class="ident">cx</span>).<span class="ident">unwrap_or</span>(<span class="number">0</span>);
+                <span class="kw">let</span> <span class="ident">list_len</span> <span class="op">=</span> <span class="ident">list_len</span>.<span class="ident">get_fallible</span>(<span class="ident">cx</span>).<span class="ident">map_or</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>);
 
                 <span class="kw">for</span> <span class="ident">index</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">list_len</span> {
                     <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">lens</span>.<span class="ident">clone</span>().<span class="ident">index</span>(<span class="ident">index</span>);

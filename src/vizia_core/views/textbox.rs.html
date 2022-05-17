@@ -770,6 +770,9 @@
 <span id="765">765</span>
 <span id="766">766</span>
 <span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::BoundingBox</span>;
@@ -1106,7 +1109,10 @@
 
             <span class="ident">TextEvent::StartEdit</span> =&gt; {
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">cx</span>.<span class="ident">is_disabled</span>() {
-                    <span class="self">self</span>.<span class="ident">edit</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                    <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">edit</span> {
+                        <span class="self">self</span>.<span class="ident">edit</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::SelectAll</span>);
+                    }
                 }
             }
 

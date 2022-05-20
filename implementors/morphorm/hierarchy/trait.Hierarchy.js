@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["vizia_core"] = [{"text":"impl&lt;'a&gt; Hierarchy&lt;'a&gt; for <a class=\"struct\" href=\"vizia_core/tree/struct.Tree.html\" title=\"struct vizia_core::tree::Tree\">Tree</a>","synthetic":false,"types":["vizia_core::tree::tree::Tree"]}];
+implementors["vizia_core"] = [{"text":"impl&lt;'a&gt; Hierarchy&lt;'a&gt; for <a class=\"struct\" href=\"vizia_core/tree/struct.Tree.html\" title=\"struct vizia_core::tree::Tree\">Tree</a>","synthetic":false,"types":["vizia_core::tree::tree_struct::Tree"]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

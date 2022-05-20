@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["vizia_core"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.60.0/std/error/trait.Error.html\" title=\"trait std::error::Error\">Error</a> for <a class=\"enum\" href=\"vizia_core/context/enum.ProxyEmitError.html\" title=\"enum vizia_core::context::ProxyEmitError\">ProxyEmitError</a>","synthetic":false,"types":["vizia_core::context::proxy::ProxyEmitError"]}];
+implementors["vizia_core"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.61.0/std/error/trait.Error.html\" title=\"trait std::error::Error\">Error</a> for <a class=\"enum\" href=\"vizia_core/context/enum.ProxyEmitError.html\" title=\"enum vizia_core::context::ProxyEmitError\">ProxyEmitError</a>","synthetic":false,"types":["vizia_core::context::proxy::ProxyEmitError"]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -353,6 +353,9 @@
 <span id="348">348</span>
 <span id="349">349</span>
 <span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::cell::RefCell</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::fonts</span>::{<span class="ident">material_names::RIGHT</span>, <span class="ident">unicode_names::CHECK</span>};
@@ -498,7 +501,7 @@
                             <span class="ident">Event::new</span>(<span class="ident">window_event</span>.<span class="ident">clone</span>())
                                 .<span class="ident">propagate</span>(<span class="ident">Propagation::Up</span>)
                                 .<span class="ident">target</span>(<span class="ident">cx</span>.<span class="ident">hovered</span>())
-                                .<span class="ident">origin</span>(<span class="ident">meta</span>.<span class="ident">origin</span>),
+                                .<span class="ident">origin</span>(<span class="ident">meta</span>.<span class="ident">origin</span>.<span class="ident">clone</span>()),
                         );
                     }
                     <span class="comment">// if we click outside the menu, close everything</span>
@@ -511,17 +514,19 @@
                         );
                     }
                 }
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="ident">WindowEvent::MouseDown</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="ident">window_event</span> {
-                <span class="comment">// capture focus on click</span>
-                <span class="ident">cx</span>.<span class="ident">capture</span>();
-                <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">MenuEvent::Activate</span>);
-                <span class="comment">// send an over event to highlight whatever we&#39;re hovered on</span>
-                <span class="ident">cx</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
-                    <span class="ident">Event::new</span>(<span class="ident">WindowEvent::MouseOver</span>)
-                        .<span class="ident">propagate</span>(<span class="ident">Propagation::Up</span>)
-                        .<span class="ident">target</span>(<span class="ident">cx</span>.<span class="ident">hovered</span>())
-                        .<span class="ident">origin</span>(<span class="ident">cx</span>.<span class="ident">current</span>()),
-                );
+            } <span class="kw">else</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="ident">WindowEvent::MouseDown</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="ident">window_event</span> {
+                    <span class="comment">// capture focus on click</span>
+                    <span class="ident">cx</span>.<span class="ident">capture</span>();
+                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">MenuEvent::Activate</span>);
+                    <span class="comment">// send an over event to highlight whatever we&#39;re hovered on</span>
+                    <span class="ident">cx</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
+                        <span class="ident">Event::new</span>(<span class="ident">WindowEvent::MouseOver</span>)
+                            .<span class="ident">propagate</span>(<span class="ident">Propagation::Up</span>)
+                            .<span class="ident">target</span>(<span class="ident">cx</span>.<span class="ident">hovered</span>())
+                            .<span class="ident">origin</span>(<span class="ident">cx</span>.<span class="ident">current</span>()),
+                    );
+                }
             }
         });
     }
@@ -692,14 +697,15 @@
     }
 
     <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
-        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="ident">meta</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">MouseButton::Left</span>) <span class="op">=</span> <span class="ident">window_event</span> {
+        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="ident">meta</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
+            <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">action</span> {
                     <span class="ident">callback</span>(<span class="ident">cx</span>);
                     <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">MenuEvent::Close</span>);
                     <span class="ident">meta</span>.<span class="ident">consume</span>();
                 }
             }
+            <span class="kw">_</span> =&gt; {}
         });
     }
 }

@@ -47,6 +47,7 @@
 <span id="42">42</span>
 <span id="43">43</span>
 <span id="44">44</span>
+<span id="45">45</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="kw">use</span> <span class="ident">morphorm::PositionType</span>;
@@ -71,14 +72,15 @@
     }
 
     <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
-        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="ident">meta</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">MouseButton::Left</span>) <span class="op">=</span> <span class="ident">window_event</span> {
+        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="ident">meta</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
+            <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
                 <span class="kw">if</span> <span class="ident">meta</span>.<span class="ident">target</span> <span class="op">==</span> <span class="ident">cx</span>.<span class="ident">current</span>() {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">on_select</span> {
                         (<span class="ident">callback</span>)(<span class="ident">cx</span>);
                     }
                 }
             }
+            <span class="kw">_</span> =&gt; {}
         });
     }
 }

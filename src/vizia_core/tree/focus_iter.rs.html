@@ -37,11 +37,11 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::style::Style</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::tree</span>::<span class="kw-2">*</span>;
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_focusable</span>(<span class="ident">style</span>: <span class="kw-2">&amp;</span><span class="ident">Style</span>, <span class="ident">node</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">bool</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_focusable</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">style</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Style</span>, <span class="ident">node</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">bool</span> {
     <span class="ident">style</span>
         .<span class="ident">abilities</span>
         .<span class="ident">get</span>(<span class="ident">node</span>)
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">abilities</span><span class="op">|</span> <span class="ident">abilities</span>.<span class="ident">contains</span>(<span class="ident">Abilities::FOCUSABLE</span>))
+        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">abilities</span><span class="op">|</span> <span class="prelude-val">Some</span>(<span class="ident">abilities</span>.<span class="ident">contains</span>(<span class="ident">Abilities::FOCUSABLE</span>)))
         .<span class="ident">unwrap_or</span>(<span class="bool-val">true</span>)
 }
 

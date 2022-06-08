@@ -145,6 +145,10 @@
 <span id="140">140</span>
 <span id="141">141</span>
 <span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// Determines the hovered entity based on the mouse cursor position.</span>
@@ -210,13 +214,14 @@
             <span class="op">&amp;&amp;</span> <span class="ident">ty</span> <span class="op">&lt;</span> (<span class="ident">clip_region</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">clip_region</span>.<span class="ident">h</span>)
         {
             <span class="ident">hovered_widget</span> <span class="op">=</span> <span class="ident">entity</span>;
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">cx</span>
+            <span class="kw">if</span> <span class="ident">cx</span>
                 .<span class="ident">style</span>()
                 .<span class="ident">pseudo_classes</span>
                 .<span class="ident">get</span>(<span class="ident">entity</span>)
                 .<span class="ident">cloned</span>()
                 .<span class="ident">unwrap_or_default</span>()
                 .<span class="ident">contains</span>(<span class="ident">PseudoClass::OVER</span>)
+                <span class="op">==</span> <span class="bool-val">false</span>
             {
                 <span class="ident">cx</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
                     <span class="ident">Event::new</span>(<span class="ident">WindowEvent::MouseOver</span>)
@@ -228,20 +233,23 @@
                     <span class="ident">pseudo_class</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::OVER</span>, <span class="bool-val">true</span>);
                 }
             }
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">cx</span>
-            .<span class="ident">style</span>()
-            .<span class="ident">pseudo_classes</span>
-            .<span class="ident">get</span>(<span class="ident">entity</span>)
-            .<span class="ident">cloned</span>()
-            .<span class="ident">unwrap_or_default</span>()
-            .<span class="ident">contains</span>(<span class="ident">PseudoClass::OVER</span>)
-        {
-            <span class="ident">cx</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
-                <span class="ident">Event::new</span>(<span class="ident">WindowEvent::MouseOut</span>).<span class="ident">target</span>(<span class="ident">entity</span>).<span class="ident">propagate</span>(<span class="ident">Propagation::Direct</span>),
-            );
+        } <span class="kw">else</span> {
+            <span class="kw">if</span> <span class="ident">cx</span>
+                .<span class="ident">style</span>()
+                .<span class="ident">pseudo_classes</span>
+                .<span class="ident">get</span>(<span class="ident">entity</span>)
+                .<span class="ident">cloned</span>()
+                .<span class="ident">unwrap_or_default</span>()
+                .<span class="ident">contains</span>(<span class="ident">PseudoClass::OVER</span>)
+                <span class="op">==</span> <span class="bool-val">true</span>
+            {
+                <span class="ident">cx</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
+                    <span class="ident">Event::new</span>(<span class="ident">WindowEvent::MouseOut</span>).<span class="ident">target</span>(<span class="ident">entity</span>).<span class="ident">propagate</span>(<span class="ident">Propagation::Direct</span>),
+                );
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_class</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-                <span class="ident">pseudo_class</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::OVER</span>, <span class="bool-val">false</span>);
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_class</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
+                    <span class="ident">pseudo_class</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::OVER</span>, <span class="bool-val">false</span>);
+                }
             }
         }
     }
@@ -264,7 +272,7 @@
         );
 
         <span class="kw">let</span> <span class="ident">cursor</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">cursor</span>.<span class="ident">get</span>(<span class="ident">hovered_widget</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">cx</span>.<span class="ident">is_cursor_icon_locked</span>() {
+        <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">captured</span>() <span class="op">==</span> <span class="ident">Entity::null</span>() {
             <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetCursor</span>(<span class="ident">cursor</span>));
         }
 

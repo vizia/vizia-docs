@@ -1177,6 +1177,12 @@
 <span id="1172">1172</span>
 <span id="1173">1173</span>
 <span id="1174">1174</span>
+<span id="1175">1175</span>
+<span id="1176">1176</span>
+<span id="1177">1177</span>
+<span id="1178">1178</span>
+<span id="1179">1179</span>
+<span id="1180">1180</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
 
 <span class="kw">use</span> <span class="ident">cssparser</span>::{
@@ -1370,9 +1376,9 @@
                     <span class="ident">selector</span>.<span class="ident">relation</span> <span class="op">=</span> <span class="ident">SelectorRelation::Ancestor</span>;
                     <span class="ident">selectors</span>.<span class="ident">push</span>(<span class="ident">selector</span>);
                     <span class="ident">selector</span> <span class="op">=</span> <span class="ident">Selector::default</span>();
-                    <span class="ident">selector</span>.<span class="ident">set_element</span>(<span class="ident">element_name</span>);
+                    <span class="ident">selector</span>.<span class="ident">set_element</span>(<span class="kw-2">&amp;</span><span class="ident">element_name</span>.<span class="ident">to_string</span>());
                 } <span class="kw">else</span> {
-                    <span class="ident">selector</span>.<span class="ident">set_element</span>(<span class="ident">element_name</span>);
+                    <span class="ident">selector</span>.<span class="ident">set_element</span>(<span class="kw-2">&amp;</span><span class="ident">element_name</span>.<span class="ident">to_string</span>());
                 }
 
                 <span class="ident">whitespace</span> <span class="op">=</span> <span class="bool-val">false</span>;
@@ -1394,7 +1400,7 @@
 
             <span class="comment">// Id</span>
             <span class="ident">Token::IDHash</span>(<span class="kw-2">ref</span> <span class="ident">id_name</span>) =&gt; {
-                <span class="ident">selector</span>.<span class="ident">set_id</span>(<span class="ident">id_name</span>);
+                <span class="ident">selector</span>.<span class="ident">set_id</span>(<span class="kw-2">&amp;</span><span class="ident">id_name</span>.<span class="ident">to_string</span>());
                 <span class="ident">whitespace</span> <span class="op">=</span> <span class="bool-val">false</span>;
             }
 
@@ -1626,7 +1632,9 @@
             <span class="string">&quot;inner-shadow-blur&quot;</span> =&gt; <span class="ident">Property::InnerShadowBlur</span>(<span class="ident">parse_units</span>(<span class="ident">input</span>)<span class="question-mark">?</span>),
             <span class="string">&quot;inner-shadow-color&quot;</span> =&gt; <span class="ident">Property::InnerShadowColor</span>(<span class="ident">parse_color</span>(<span class="ident">input</span>)<span class="question-mark">?</span>),
 
-            <span class="string">&quot;transition&quot;</span> =&gt; <span class="ident">Property::Transition</span>(<span class="ident">input</span>.<span class="ident">parse_comma_separated</span>(<span class="ident">parse_transition2</span>)<span class="question-mark">?</span>),
+            <span class="string">&quot;transition&quot;</span> =&gt; <span class="ident">Property::Transition</span>(
+                <span class="ident">input</span>.<span class="ident">parse_comma_separated</span>(<span class="op">|</span><span class="ident">parser</span><span class="op">|</span> <span class="ident">parse_transition2</span>(<span class="ident">parser</span>))<span class="question-mark">?</span>,
+            ),
 
             <span class="string">&quot;z-index&quot;</span> =&gt; <span class="ident">Property::ZIndex</span>(<span class="ident">parse_z_index</span>(<span class="ident">input</span>)<span class="question-mark">?</span>),
 
@@ -1683,7 +1691,7 @@
     <span class="ident">input</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>,
 ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PropType</span>, <span class="ident">ParseError</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">CustomParseError</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">input</span>.<span class="ident">next</span>()<span class="question-mark">?</span> {
-        <span class="ident">Token::QuotedString</span>(<span class="ident">s</span>) =&gt; <span class="kw">match</span> <span class="ident">css_string</span>(<span class="ident">s</span>) {
+        <span class="ident">Token::QuotedString</span>(<span class="ident">s</span>) =&gt; <span class="kw">match</span> <span class="ident">css_string</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>) {
             <span class="prelude-val">Some</span>(<span class="ident">string</span>) =&gt; <span class="ident">PropType::String</span>(<span class="ident">string</span>),
             <span class="prelude-val">None</span> =&gt; {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">CustomParseError::InvalidStringName</span>(<span class="ident">s</span>.<span class="ident">to_owned</span>().<span class="ident">to_string</span>()).<span class="ident">into</span>())
@@ -1718,7 +1726,7 @@
     <span class="ident">input</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>,
 ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">ParseError</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">CustomParseError</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">input</span>.<span class="ident">next</span>()<span class="question-mark">?</span> {
-        <span class="ident">Token::QuotedString</span>(<span class="ident">s</span>) =&gt; <span class="kw">match</span> <span class="ident">css_string</span>(<span class="ident">s</span>) {
+        <span class="ident">Token::QuotedString</span>(<span class="ident">s</span>) =&gt; <span class="kw">match</span> <span class="ident">css_string</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>) {
             <span class="prelude-val">Some</span>(<span class="ident">string</span>) =&gt; <span class="ident">string</span>,
             <span class="prelude-val">None</span> =&gt; {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">CustomParseError::InvalidStringName</span>(<span class="ident">s</span>.<span class="ident">to_owned</span>().<span class="ident">to_string</span>()).<span class="ident">into</span>())
@@ -1852,15 +1860,18 @@
                             <span class="ident">box_shadow</span>.<span class="ident">blur_radius</span> <span class="op">=</span> <span class="ident">units</span>;
 
                             <span class="kw">let</span> <span class="ident">next_token</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">next</span>()<span class="question-mark">?</span>;
+                            <span class="kw">match</span> <span class="ident">parse_color2</span>(<span class="ident">next_token</span>) {
+                                <span class="prelude-val">Ok</span>(<span class="ident">color</span>) =&gt; <span class="ident">box_shadow</span>.<span class="ident">color</span> <span class="op">=</span> <span class="ident">color</span>,
 
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">color</span>) <span class="op">=</span> <span class="ident">parse_color2</span>(<span class="ident">next_token</span>) {
-                                <span class="ident">box_shadow</span>.<span class="ident">color</span> <span class="op">=</span> <span class="ident">color</span>
+                                <span class="kw">_</span> =&gt; {}
                             }
                         }
                         <span class="kw">_</span> =&gt; {
                             <span class="comment">// Parse a color</span>
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">color</span>) <span class="op">=</span> <span class="ident">parse_color2</span>(<span class="ident">next_token</span>) {
-                                <span class="ident">box_shadow</span>.<span class="ident">color</span> <span class="op">=</span> <span class="ident">color</span>
+                            <span class="kw">match</span> <span class="ident">parse_color2</span>(<span class="ident">next_token</span>) {
+                                <span class="prelude-val">Ok</span>(<span class="ident">color</span>) =&gt; <span class="ident">box_shadow</span>.<span class="ident">color</span> <span class="op">=</span> <span class="ident">color</span>,
+
+                                <span class="kw">_</span> =&gt; {}
                             }
                         }
                     }
@@ -1914,8 +1925,7 @@
                 <span class="ident">kind</span>: <span class="ident">BasicParseErrorKind::UnexpectedToken</span>(<span class="ident">t</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">location</span>: <span class="ident">SourceLocation</span> { <span class="ident">line</span>: <span class="number">0</span>, <span class="ident">column</span>: <span class="number">0</span> },
             };
-
-            <span class="prelude-val">Err</span>(<span class="ident">basic_error</span>.<span class="ident">into</span>())
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">basic_error</span>.<span class="ident">into</span>());
         }
     }
 }
@@ -2250,7 +2260,7 @@
             <span class="comment">//     }</span>
             <span class="comment">// }</span>
 
-            <span class="kw">match</span> <span class="ident">css_color</span>(<span class="ident">name</span>) {
+            <span class="kw">match</span> <span class="ident">css_color</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>) {
                 <span class="prelude-val">Some</span>(<span class="ident">color</span>) =&gt; <span class="ident">color</span>,
                 <span class="prelude-val">None</span> =&gt; {
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">CustomParseError::UnrecognisedColorName</span>(
@@ -2282,10 +2292,13 @@
             <span class="comment">//     }</span>
             <span class="comment">// }</span>
 
-            <span class="kw">match</span> <span class="ident">css_color</span>(<span class="ident">name</span>) {
+            <span class="kw">match</span> <span class="ident">css_color</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>) {
                 <span class="prelude-val">Some</span>(<span class="ident">color</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">color</span>),
                 <span class="prelude-val">None</span> =&gt; {
-                    <span class="prelude-val">Err</span>(<span class="ident">CustomParseError::UnrecognisedColorName</span>(<span class="ident">name</span>.<span class="ident">to_owned</span>().<span class="ident">to_string</span>()).<span class="ident">into</span>())
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">CustomParseError::UnrecognisedColorName</span>(
+                        <span class="ident">name</span>.<span class="ident">to_owned</span>().<span class="ident">to_string</span>(),
+                    )
+                    .<span class="ident">into</span>());
                 }
             }
         }
@@ -2297,8 +2310,7 @@
                 <span class="ident">kind</span>: <span class="ident">BasicParseErrorKind::UnexpectedToken</span>(<span class="ident">t</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">location</span>: <span class="ident">SourceLocation</span> { <span class="ident">line</span>: <span class="number">0</span>, <span class="ident">column</span>: <span class="number">0</span> },
             };
-
-            <span class="prelude-val">Err</span>(<span class="ident">basic_error</span>.<span class="ident">into</span>())
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">basic_error</span>.<span class="ident">into</span>());
         }
     }
 }

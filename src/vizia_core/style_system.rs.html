@@ -788,6 +788,14 @@
 <span id="783">783</span>
 <span id="784">784</span>
 <span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::BoundingBox</span>;
 <span class="kw">use</span> <span class="ident">femtovg</span>::{<span class="ident">Align</span>, <span class="ident">Baseline</span>};
 <span class="kw">use</span> <span class="ident">morphorm::Units</span>;
@@ -893,18 +901,22 @@
 
         <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_visibility</span>(<span class="ident">parent</span>) <span class="op">==</span> <span class="ident">Visibility::Invisible</span> {
             <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">set_visibility</span>(<span class="ident">entity</span>, <span class="ident">Visibility::Invisible</span>);
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">visibility</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">visibility</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">copied</span>() {
-            <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">set_visibility</span>(<span class="ident">entity</span>, <span class="ident">visibility</span>);
         } <span class="kw">else</span> {
-            <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">set_visibility</span>(<span class="ident">entity</span>, <span class="ident">Visibility::Visible</span>);
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">visibility</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">visibility</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">copied</span>() {
+                <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">set_visibility</span>(<span class="ident">entity</span>, <span class="ident">visibility</span>);
+            } <span class="kw">else</span> {
+                <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">set_visibility</span>(<span class="ident">entity</span>, <span class="ident">Visibility::Visible</span>);
+            }
         }
 
         <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_display</span>(<span class="ident">parent</span>) <span class="op">==</span> <span class="ident">Display::None</span> {
             <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">set_display</span>(<span class="ident">entity</span>, <span class="ident">Display::None</span>);
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">display</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">display</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">copied</span>() {
-            <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">set_display</span>(<span class="ident">entity</span>, <span class="ident">display</span>);
         } <span class="kw">else</span> {
-            <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">set_display</span>(<span class="ident">entity</span>, <span class="ident">Display::Flex</span>);
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">display</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">display</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">copied</span>() {
+                <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">set_display</span>(<span class="ident">entity</span>, <span class="ident">display</span>);
+            } <span class="kw">else</span> {
+                <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">set_display</span>(<span class="ident">entity</span>, <span class="ident">Display::Flex</span>);
+            }
         }
 
         <span class="kw">let</span> <span class="ident">parent_opacity</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_opacity</span>(<span class="ident">parent</span>);
@@ -1007,9 +1019,9 @@
 
                 <span class="kw">_</span> =&gt; <span class="ident">Align::Left</span>,
             };
-
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Units::Pixels</span>(<span class="ident">px</span>) <span class="op">=</span> <span class="ident">child_right</span> {
-                <span class="ident">child_space_x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">px</span>
+            <span class="kw">match</span> <span class="ident">child_right</span> {
+                <span class="ident">Units::Pixels</span>(<span class="ident">px</span>) =&gt; <span class="ident">child_space_x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">px</span>,
+                <span class="kw">_</span> =&gt; {}
             }
 
             <span class="kw">let</span> <span class="ident">baseline</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">child_top</span> {
@@ -1041,9 +1053,9 @@
 
                 <span class="kw">_</span> =&gt; <span class="ident">Baseline::Top</span>,
             };
-
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Units::Pixels</span>(<span class="ident">px</span>) <span class="op">=</span> <span class="ident">child_bottom</span> {
-                <span class="ident">child_space_y</span> <span class="op">+</span><span class="op">=</span> <span class="ident">px</span>
+            <span class="kw">match</span> <span class="ident">child_bottom</span> {
+                <span class="ident">Units::Pixels</span>(<span class="ident">px</span>) =&gt; <span class="ident">child_space_y</span> <span class="op">+</span><span class="op">=</span> <span class="ident">px</span>,
+                <span class="kw">_</span> =&gt; {}
             }
 
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">content_width</span> <span class="op">=</span> <span class="number">0.0</span>;
@@ -1162,7 +1174,11 @@
     <span class="comment">// Universal selector always matches</span>
     <span class="kw">if</span> <span class="ident">selector</span>.<span class="ident">asterisk</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style_ref</span>().<span class="ident">pseudo_classes</span>.<span class="ident">get</span>(<span class="ident">entity</span>) {
-            <span class="kw">return</span> <span class="op">!</span>(<span class="op">!</span><span class="ident">pseudo_classes</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">pseudo_classes</span>.<span class="ident">intersects</span>(<span class="kw-2">*</span><span class="ident">pseudo_classes</span>));
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">pseudo_classes</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">pseudo_classes</span>.<span class="ident">intersects</span>(<span class="kw-2">*</span><span class="ident">pseudo_classes</span>) {
+                <span class="kw">return</span> <span class="bool-val">false</span>;
+            } <span class="kw">else</span> {
+                <span class="kw">return</span> <span class="bool-val">true</span>;
+            }
         } <span class="kw">else</span> {
             <span class="kw">return</span> <span class="bool-val">true</span>;
         }
@@ -1178,7 +1194,7 @@
     <span class="comment">// Check for element name match</span>
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">selector_element</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">selector</span>.<span class="ident">element</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">element</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">views</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">view</span><span class="op">|</span> <span class="ident">view</span>.<span class="ident">element</span>()) {
-            <span class="kw">if</span> <span class="ident">selector_element</span> <span class="op">==</span> <span class="ident">element</span> {
+            <span class="kw">if</span> <span class="ident">selector_element</span> <span class="op">!</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">element</span> {
                 <span class="kw">return</span> <span class="bool-val">false</span>;
             }
         } <span class="kw">else</span> {
@@ -1216,7 +1232,7 @@
         }
     }
 
-    <span class="bool-val">true</span>
+    <span class="kw">return</span> <span class="bool-val">true</span>;
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">apply_styles</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span>) {

@@ -116,7 +116,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">T</span>: <span class="ident">Data</span><span class="op">&gt;</span> <span class="ident">Table</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">lens</span>: <span class="ident">L</span>, <span class="ident">list_builder</span>: <span class="ident">F</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Context</span>, <span class="ident">lens</span>: <span class="ident">L</span>, <span class="ident">list_builder</span>: <span class="ident">F</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="self">Self</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">L</span>),
         <span class="op">&lt;</span><span class="ident">L</span> <span class="kw">as</span> <span class="ident">Lens</span><span class="op">&gt;</span><span class="ident">::Source</span>: <span class="ident">Model</span>,
@@ -180,7 +180,7 @@
                 <span class="ident">VStack::new</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
                     <span class="comment">//let item = item.clone();</span>
                     <span class="ident">Binding::new</span>(<span class="ident">cx</span>, <span class="ident">it</span>.<span class="ident">then</span>(<span class="ident">item</span>), <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span>, <span class="ident">l</span><span class="op">|</span> {
-                        (<span class="ident">content</span>)(<span class="ident">cx</span>, <span class="ident">index</span>, <span class="ident">l</span>);
+                        (<span class="ident">content</span>)(<span class="ident">cx</span>, <span class="ident">index</span>, <span class="ident">l</span>.<span class="ident">clone</span>());
                     });
                 });
             })

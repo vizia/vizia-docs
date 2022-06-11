@@ -1206,11 +1206,21 @@
 <span id="1201">1201</span>
 <span id="1202">1202</span>
 <span id="1203">1203</span>
+<span id="1204">1204</span>
+<span id="1205">1205</span>
+<span id="1206">1206</span>
+<span id="1207">1207</span>
+<span id="1208">1208</span>
+<span id="1209">1209</span>
+<span id="1210">1210</span>
+<span id="1211">1211</span>
+<span id="1212">1212</span>
+<span id="1213">1213</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">draw</span>;
 <span class="kw">mod</span> <span class="ident">proxy</span>;
 
 <span class="kw">use</span> <span class="ident">instant</span>::{<span class="ident">Duration</span>, <span class="ident">Instant</span>};
-<span class="kw">use</span> <span class="ident">std::any::Any</span>;
+<span class="kw">use</span> <span class="ident">std::any</span>::{<span class="ident">Any</span>, <span class="ident">TypeId</span>};
 <span class="kw">use</span> <span class="ident">std::collections::hash_map::Entry</span>;
 <span class="kw">use</span> <span class="ident">std::collections</span>::{<span class="ident">HashMap</span>, <span class="ident">HashSet</span>, <span class="ident">VecDeque</span>};
 <span class="kw">use</span> <span class="ident">std::error::Error</span>;
@@ -1256,7 +1266,7 @@
 <span class="doccomment">/// This type is part of the prelude.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Context</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">entity_manager</span>: <span class="ident">IdManager</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>,
-    <span class="ident">tree</span>: <span class="ident">Tree</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">tree</span>: <span class="ident">Tree</span>,
     <span class="ident">current</span>: <span class="ident">Entity</span>,
     <span class="doccomment">/// TODO make this private when there&#39;s no longer a need to mutate views after building</span>
     <span class="kw">pub</span> <span class="ident">views</span>: <span class="ident">FnvHashMap</span><span class="op">&lt;</span><span class="ident">Entity</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">ViewHandler</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -1267,8 +1277,7 @@
     <span class="ident">style</span>: <span class="ident">Style</span>,
     <span class="ident">cache</span>: <span class="ident">CachedData</span>,
 
-    <span class="ident">environment</span>: <span class="ident">Environment</span>,
-
+    <span class="comment">//environment: Environment,</span>
     <span class="ident">mouse</span>: <span class="ident">MouseState</span>,
     <span class="ident">modifiers</span>: <span class="ident">Modifiers</span>,
 
@@ -1289,6 +1298,8 @@
     <span class="ident">click_time</span>: <span class="ident">Instant</span>,
     <span class="ident">double_click</span>: <span class="ident">bool</span>,
     <span class="ident">click_pos</span>: (<span class="ident">f32</span>, <span class="ident">f32</span>),
+
+    <span class="kw">pub</span> <span class="ident">needs_rebuild</span>: <span class="ident">bool</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Context</span> {
@@ -1304,7 +1315,7 @@
             <span class="ident">data</span>: <span class="ident">SparseSet::new</span>(),
             <span class="ident">style</span>: <span class="ident">Style::default</span>(),
             <span class="ident">cache</span>,
-            <span class="ident">environment</span>: <span class="ident">Environment::new</span>(),
+            <span class="comment">// environment: Environment::new(),</span>
             <span class="ident">event_queue</span>: <span class="ident">VecDeque::new</span>(),
             <span class="ident">listeners</span>: <span class="ident">HashMap::default</span>(),
             <span class="ident">mouse</span>: <span class="ident">MouseState::default</span>(),
@@ -1327,7 +1338,11 @@
             <span class="ident">click_time</span>: <span class="ident">Instant::now</span>(),
             <span class="ident">double_click</span>: <span class="bool-val">false</span>,
             <span class="ident">click_pos</span>: (<span class="number">0.0</span>, <span class="number">0.0</span>),
+
+            <span class="ident">needs_rebuild</span>: <span class="bool-val">false</span>,
         };
+
+        <span class="ident">Environment::new</span>().<span class="ident">build</span>(<span class="kw-2">&amp;mut</span> <span class="ident">result</span>);
 
         <span class="ident">result</span>.<span class="ident">entity_manager</span>.<span class="ident">create</span>();
         <span class="ident">result</span>.<span class="ident">add_theme</span>(<span class="ident">DEFAULT_LAYOUT</span>);
@@ -1386,8 +1401,9 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">cache</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">environment</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Environment</span> {
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">environment</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">environment</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Environment</span> {
+        <span class="comment">//&amp;mut self.environment</span>
+        <span class="self">self</span>.<span class="ident">data</span>::<span class="op">&lt;</span><span class="ident">Environment</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>()
     }
 
     <span class="doccomment">/// The current femtovg text context. Useful when measuring or rendering fonts.</span>
@@ -1866,7 +1882,7 @@
 
         <span class="comment">// Reload the stored themes</span>
         <span class="kw">for</span> (<span class="ident">index</span>, <span class="ident">theme</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">resource_manager</span>.<span class="ident">themes</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-            <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">environment</span>.<span class="ident">include_default_theme</span> <span class="op">&amp;&amp;</span> <span class="ident">index</span> <span class="op">==</span> <span class="number">1</span> {
+            <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">environment</span>().<span class="ident">include_default_theme</span> <span class="op">&amp;&amp;</span> <span class="ident">index</span> <span class="op">==</span> <span class="number">1</span> {
                 <span class="kw">continue</span>;
             }
 
@@ -1976,7 +1992,8 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_translation</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">lang</span>: <span class="ident">LanguageIdentifier</span>, <span class="ident">ftl</span>: <span class="ident">String</span>) {
-        <span class="self">self</span>.<span class="ident">resource_manager</span>.<span class="ident">add_translation</span>(<span class="ident">lang</span>, <span class="ident">ftl</span>)
+        <span class="self">self</span>.<span class="ident">resource_manager</span>.<span class="ident">add_translation</span>(<span class="ident">lang</span>, <span class="ident">ftl</span>);
+        <span class="self">self</span>.<span class="ident">emit</span>(<span class="ident">EnvironmentEvent::SetLocale</span>(<span class="self">self</span>.<span class="ident">resource_manager</span>.<span class="ident">language</span>.<span class="ident">clone</span>()));
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">spawn</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="ident">F</span>)
@@ -2390,13 +2407,16 @@
         }
 
         <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">current</span>.<span class="ident">parent_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tree</span>) {
-            <span class="comment">//println!(&quot;Current: {} {:?}&quot;, entity, entity.parent(&amp;self.tree));</span>
+            <span class="macro">println!</span>(<span class="string">&quot;Current: {} {:?}&quot;</span>, <span class="ident">entity</span>, <span class="ident">entity</span>.<span class="ident">parent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tree</span>));
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">data_list</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">get</span>(<span class="ident">entity</span>) {
                 <span class="kw">for</span> (<span class="kw">_</span>, <span class="ident">model</span>) <span class="kw">in</span> <span class="ident">data_list</span>.<span class="ident">data</span>.<span class="ident">iter</span>() {
+                    <span class="macro">println!</span>(<span class="string">&quot;Cast: {:?}&quot;</span>, <span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>());
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">data</span>) <span class="op">=</span> <span class="ident">model</span>.<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">data</span>);
                     }
                 }
+            } <span class="kw">else</span> {
+                <span class="macro">println!</span>(<span class="string">&quot;No data list on entity: {}&quot;</span>, <span class="ident">entity</span>);
             }
 
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">view_handler</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">views</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>) {

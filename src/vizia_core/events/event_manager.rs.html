@@ -292,17 +292,17 @@
         <span class="ident">context</span>.<span class="ident">views</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">view</span>);
     }
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">type_ids</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">model_list</span>) <span class="op">=</span> <span class="ident">context</span>.<span class="ident">data</span>.<span class="ident">get</span>(<span class="ident">entity</span>) {
-        <span class="ident">type_ids</span> <span class="op">=</span> <span class="ident">model_list</span>.<span class="ident">data</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">id</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">id</span>.<span class="ident">clone</span>()).<span class="ident">collect</span>();
-    }
+    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">model_list</span>) <span class="op">=</span> <span class="ident">context</span>.<span class="ident">data</span>.<span class="ident">remove</span>(<span class="ident">entity</span>) {
+        <span class="kw">for</span> (<span class="kw">_</span>, <span class="ident">model</span>) <span class="kw">in</span> <span class="ident">model_list</span>.<span class="ident">data</span>.<span class="ident">iter_mut</span>() {
+            <span class="comment">// if event.trace {</span>
+            <span class="comment">//     println!(&quot;Event: {:?} -&gt; Model {:?}&quot;, event, ty);</span>
+            <span class="comment">// }</span>
+            <span class="ident">context</span>.<span class="ident">with_current</span>(<span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
+                <span class="ident">model</span>.<span class="ident">event</span>(<span class="ident">cx</span>, <span class="ident">event</span>);
+            });
+        }
 
-    <span class="kw">for</span> <span class="ident">type_id</span> <span class="kw">in</span> <span class="ident">type_ids</span>.<span class="ident">iter</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">model</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">data</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>).<span class="ident">unwrap</span>().<span class="ident">data</span>.<span class="ident">remove</span>(<span class="ident">type_id</span>).<span class="ident">unwrap</span>();
-        <span class="ident">context</span>.<span class="ident">with_current</span>(<span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-            <span class="ident">model</span>.<span class="ident">event</span>(<span class="ident">cx</span>, <span class="ident">event</span>);
-        });
-        <span class="ident">context</span>.<span class="ident">data</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>).<span class="ident">unwrap</span>().<span class="ident">data</span>.<span class="ident">insert</span>(<span class="kw-2">*</span><span class="ident">type_id</span>, <span class="ident">model</span>);
+        <span class="ident">context</span>.<span class="ident">data</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">model_list</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to insert data&quot;</span>);
     }
 }
 </code></pre></div>

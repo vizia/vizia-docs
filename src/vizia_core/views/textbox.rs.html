@@ -803,7 +803,7 @@
     <span class="ident">on_edit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">String</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">content_entity</span>: <span class="ident">Entity</span>,
     <span class="ident">kind</span>: <span class="ident">TextboxKind</span>,
-    <span class="ident">on_submit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">String</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">on_submit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">String</span>, <span class="ident">bool</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">TextboxData</span> {
@@ -1063,7 +1063,7 @@
     <span class="ident">SelectAll</span>,
     <span class="ident">StartEdit</span>,
     <span class="ident">EndEdit</span>,
-    <span class="ident">Submit</span>,
+    <span class="ident">Submit</span>(<span class="ident">bool</span>),
     <span class="ident">Hit</span>(<span class="ident">f32</span>, <span class="ident">f32</span>),
     <span class="ident">Drag</span>(<span class="ident">f32</span>, <span class="ident">f32</span>),
     <span class="ident">Copy</span>,
@@ -1071,7 +1071,7 @@
 
     <span class="comment">// Helpers</span>
     <span class="ident">SetOnEdit</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">String</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>),
-    <span class="ident">SetOnSubmit</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">String</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>),
+    <span class="ident">SetOnSubmit</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">String</span>, <span class="ident">bool</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>),
     <span class="ident">InitContent</span>(<span class="ident">Entity</span>, <span class="ident">TextboxKind</span>),
     <span class="ident">GeometryChanged</span>,
 }
@@ -1125,9 +1125,9 @@
                 <span class="self">self</span>.<span class="ident">edit</span> <span class="op">=</span> <span class="bool-val">false</span>;
             }
 
-            <span class="ident">TextEvent::Submit</span> =&gt; {
+            <span class="ident">TextEvent::Submit</span>(<span class="ident">flag</span>) =&gt; {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">on_submit</span>.<span class="ident">take</span>() {
-                    (<span class="ident">callback</span>)(<span class="ident">cx</span>, <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">as_str</span>().<span class="ident">to_owned</span>());
+                    (<span class="ident">callback</span>)(<span class="ident">cx</span>, <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">as_str</span>().<span class="ident">to_owned</span>(), <span class="kw-2">*</span><span class="ident">flag</span>);
 
                     <span class="self">self</span>.<span class="ident">on_submit</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>);
                 }
@@ -1313,7 +1313,7 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_submit</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">String</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
+        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">String</span>, <span class="ident">bool</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
     {
         <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">emit_to</span>(<span class="self">self</span>.<span class="ident">entity</span>, <span class="ident">TextEvent::SetOnSubmit</span>(<span class="prelude-val">Some</span>(<span class="ident">Arc::new</span>(<span class="ident">callback</span>))));
 
@@ -1345,7 +1345,7 @@
 
                     <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::Hit</span>(<span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">cursorx</span>, <span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">cursory</span>));
                 } <span class="kw">else</span> {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::Submit</span>);
+                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::Submit</span>(<span class="bool-val">false</span>));
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">data</span>::<span class="op">&lt;</span><span class="ident">L::Source</span><span class="op">&gt;</span>() {
                         <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">view</span>(<span class="ident">source</span>, <span class="op">|</span><span class="ident">t</span><span class="op">|</span> {
                             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span> <span class="ident">t</span> {
@@ -1397,7 +1397,7 @@
                     <span class="comment">//cx.emit(TextEvent::EndEdit);</span>
 
                     <span class="kw">if</span> <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">kind</span>, <span class="ident">TextboxKind::SingleLine</span>) {
-                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::Submit</span>);
+                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::Submit</span>(<span class="bool-val">true</span>));
                         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">data</span>::<span class="op">&lt;</span><span class="ident">L::Source</span><span class="op">&gt;</span>() {
                             <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">view</span>(<span class="ident">source</span>, <span class="op">|</span><span class="ident">t</span><span class="op">|</span> {
                                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span> <span class="ident">t</span> {

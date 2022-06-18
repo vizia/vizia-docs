@@ -257,29 +257,8 @@
 <span id="252">252</span>
 <span id="253">253</span>
 <span id="254">254</span>
-<span id="255">255</span>
-<span id="256">256</span>
-<span id="257">257</span>
-<span id="258">258</span>
-<span id="259">259</span>
-<span id="260">260</span>
-<span id="261">261</span>
-<span id="262">262</span>
-<span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
-
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
 
 <span class="doccomment">/// A keymap that associates key chords with actions.</span>
 <span class="doccomment">///</span>
@@ -303,7 +282,8 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// Now we can create a new keymap inside of our application and configure our key chords.</span>
 <span class="doccomment">/// We will bind `Action::One` to the key chord `A`, `Action::Two` to the key chord `CTRL+B`</span>
-<span class="doccomment">/// and `Action::Three` to the key chord `CTRL+SHIFT+C`.</span>
+<span class="doccomment">/// and `Action::Three` to the key chord `CTRL+SHIFT+C`. Every action has an associated callback</span>
+<span class="doccomment">/// function that gets triggered when the key chord is pressed.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// # use vizia_core::prelude::*;</span>
@@ -316,56 +296,23 @@
 <span class="doccomment">/// # }</span>
 <span class="doccomment">/// #</span>
 <span class="doccomment">/// let keymap = Keymap::from(vec![</span>
-<span class="doccomment">///     (Action::One, KeyChord::new(Modifiers::empty(), Code::KeyA)),</span>
-<span class="doccomment">///     (Action::Two, KeyChord::new(Modifiers::CTRL, Code::KeyB)),</span>
-<span class="doccomment">///     (Action::Three, KeyChord::new(Modifiers::CTRL | Modifiers::SHIFT, Code::KeyC)),</span>
+<span class="doccomment">///     (KeyChord::new(Modifiers::empty(), Code::KeyA), KeymapEntry::new(Action::One, |_| println!(&quot;Action One&quot;))),</span>
+<span class="doccomment">///     (KeyChord::new(Modifiers::CTRL, Code::KeyB), KeymapEntry::new(Action::Two, |_| println!(&quot;Action Two&quot;))),</span>
+<span class="doccomment">///     (KeyChord::new(Modifiers::CTRL | Modifiers::SHIFT, Code::KeyC), KeymapEntry::new(Action::Three, |_| println!(&quot;Action Three&quot;))),</span>
 <span class="doccomment">/// ]);</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// After we&#39;ve defined our key chords we can now use them inside of a custom view. Here we check if the</span>
-<span class="doccomment">/// action `Action::One` is being pressed. If it is we just print a simple message to the console,</span>
-<span class="doccomment">/// but here you could do whatever you want to.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use vizia_core::prelude::*;</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # #[derive(Debug, PartialEq, Copy, Clone)]</span>
-<span class="doccomment">/// # enum Action {</span>
-<span class="doccomment">/// #     One,</span>
-<span class="doccomment">/// #     Two,</span>
-<span class="doccomment">/// #     Three,</span>
-<span class="doccomment">/// # }</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// struct CustomView;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// impl View for CustomView {</span>
-<span class="doccomment">///     fn event(&amp;mut self, cx: &amp;mut Context, event: &amp;mut Event) {</span>
-<span class="doccomment">///         event.map(|window_event, _| match window_event {</span>
-<span class="doccomment">///             WindowEvent::KeyDown(code, _) =&gt; {</span>
-<span class="doccomment">///                 if let Some(keymap_data) = cx.data::&lt;Keymap&lt;Action&gt;&gt;() {</span>
-<span class="doccomment">///                     for action in keymap_data.pressed_actions(cx, *code) {</span>
-<span class="doccomment">///                         println!(&quot;The action {:?} is being pressed!&quot;, action);</span>
-<span class="doccomment">///                     }</span>
-<span class="doccomment">///                 }</span>
-<span class="doccomment">///             }</span>
-<span class="doccomment">///             _ =&gt; {}</span>
-<span class="doccomment">///         });</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
 <span class="doccomment">/// This type is part of the prelude.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Keymap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">T</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span>,
+    <span class="ident">T</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
 {
-    <span class="ident">actions</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">KeyChord</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">entries</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">KeyChord</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">KeymapEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Keymap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">T</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span>,
+    <span class="ident">T</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
 {
     <span class="doccomment">/// Creates a new keymap.</span>
     <span class="doccomment">///</span>
@@ -384,20 +331,20 @@
     <span class="doccomment">/// let keymap = Keymap::&lt;Action&gt;::new();</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">actions</span>: <span class="ident">HashMap::new</span>() }
+        <span class="self">Self</span> { <span class="ident">entries</span>: <span class="ident">HashMap::new</span>() }
     }
 
     <span class="doccomment">/// Inserts an entry into the keymap.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This method is for internal use only.</span>
     <span class="doccomment">/// To insert an entry into the keymap at runtime use the [`KeymapEvent::InsertAction`] event.</span>
-    <span class="kw">fn</span> <span class="ident">insert</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">action</span>: <span class="ident">T</span>, <span class="ident">chord</span>: <span class="ident">KeyChord</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">actions</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">actions</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">chord</span>) {
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">actions</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">action</span>) {
-                <span class="ident">actions</span>.<span class="ident">push</span>(<span class="ident">action</span>);
+    <span class="kw">fn</span> <span class="ident">insert</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">chord</span>: <span class="ident">KeyChord</span>, <span class="ident">keymap_entry</span>: <span class="ident">KeymapEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">actions</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">entries</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">chord</span>) {
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">actions</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">keymap_entry</span>) {
+                <span class="ident">actions</span>.<span class="ident">push</span>(<span class="ident">keymap_entry</span>);
             }
         } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">actions</span>.<span class="ident">insert</span>(<span class="ident">chord</span>, <span class="macro">vec!</span>[<span class="ident">action</span>]);
+            <span class="self">self</span>.<span class="ident">entries</span>.<span class="ident">insert</span>(<span class="ident">chord</span>, <span class="macro">vec!</span>[<span class="ident">keymap_entry</span>]);
         }
     }
 
@@ -405,11 +352,11 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This method is for internal use only.</span>
     <span class="doccomment">/// To remove an entry of the keymap at runtime use the [`KeymapEvent::RemoveAction`] event.</span>
-    <span class="kw">fn</span> <span class="ident">remove</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">action</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="ident">chord</span>: <span class="kw-2">&amp;</span><span class="ident">KeyChord</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">actions</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">actions</span>.<span class="ident">get_mut</span>(<span class="ident">chord</span>) {
+    <span class="kw">fn</span> <span class="ident">remove</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">chord</span>: <span class="kw-2">&amp;</span><span class="ident">KeyChord</span>, <span class="ident">action</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">actions</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">entries</span>.<span class="ident">get_mut</span>(<span class="ident">chord</span>) {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">index</span>) <span class="op">=</span> <span class="ident">actions</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span> <span class="op">==</span> <span class="ident">action</span>) {
                 <span class="kw">if</span> <span class="ident">actions</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> {
-                    <span class="self">self</span>.<span class="ident">actions</span>.<span class="ident">remove</span>(<span class="ident">chord</span>);
+                    <span class="self">self</span>.<span class="ident">entries</span>.<span class="ident">remove</span>(<span class="ident">chord</span>);
                 } <span class="kw">else</span> {
                     <span class="ident">actions</span>.<span class="ident">swap_remove</span>(<span class="ident">index</span>);
                 }
@@ -417,7 +364,7 @@
         }
     }
 
-    <span class="doccomment">/// Returns an iterator over every pressed action or `None` if there are no actions for that key chord.</span>
+    <span class="doccomment">/// Returns an iterator over every pressed keymap entry.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
@@ -432,22 +379,25 @@
     <span class="doccomment">/// # let cx = &amp;Context::new();</span>
     <span class="doccomment">/// # let keymap = Keymap::&lt;Action&gt;::new();</span>
     <span class="doccomment">/// #</span>
-    <span class="doccomment">/// for action in keymap.pressed_actions(cx, Code::KeyA) {</span>
-    <span class="doccomment">///     println!(&quot;The action {:?} is being pressed!&quot;, action);</span>
+    <span class="doccomment">/// for entry in keymap.pressed_actions(cx, Code::KeyA) {</span>
+    <span class="doccomment">///     println!(&quot;The action {:?} is being pressed!&quot;, entry.action());</span>
     <span class="doccomment">/// };</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pressed_actions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>, <span class="ident">code</span>: <span class="ident">Code</span>) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">actions</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">actions</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">KeyChord::new</span>(<span class="ident">cx</span>.<span class="ident">modifiers</span>(), <span class="ident">code</span>)) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pressed_actions</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>,
+        <span class="ident">code</span>: <span class="ident">Code</span>,
+    ) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">KeymapEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">actions</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">entries</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">KeyChord::new</span>(<span class="ident">cx</span>.<span class="ident">modifiers</span>(), <span class="ident">code</span>)) {
             <span class="ident">actions</span>.<span class="ident">iter</span>()
         } <span class="kw">else</span> {
             [].<span class="ident">iter</span>()
         }
     }
 
-    <span class="doccomment">/// Exports all actions and their associated key chords.</span>
+    <span class="doccomment">/// Exports all keymap entries and their associated key chords.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This is useful if you want to have a settings window and need every to access every key chord</span>
-    <span class="doccomment">/// and action of a keymap.</span>
+    <span class="doccomment">/// This is useful if you want to have a settings window and need to access every key chord</span>
+    <span class="doccomment">/// and keymap entry of a keymap.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
@@ -463,15 +413,15 @@
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// let actions_chords = keymap.export();</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// for (action, chord) in actions_chords {</span>
-    <span class="doccomment">///     println!(&quot;The key chord {:?} triggers the action {:?}!&quot;, chord, action);</span>
+    <span class="doccomment">/// for (chord, entry) in actions_chords {</span>
+    <span class="doccomment">///     println!(&quot;The key chord {:?} triggers the action {:?}!&quot;, chord, entry.action());</span>
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">export</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">KeyChord</span>)<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">export</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="ident">KeyChord</span>, <span class="kw-2">&amp;</span><span class="ident">KeymapEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vec</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="kw">for</span> (<span class="ident">chord</span>, <span class="ident">actions</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">actions</span>.<span class="ident">iter</span>() {
-            <span class="kw">for</span> <span class="ident">action</span> <span class="kw">in</span> <span class="ident">actions</span> {
-                <span class="ident">vec</span>.<span class="ident">push</span>((<span class="kw-2">*</span><span class="ident">action</span>, <span class="kw-2">*</span><span class="ident">chord</span>));
+        <span class="kw">for</span> (<span class="ident">chord</span>, <span class="ident">entries</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">entries</span>.<span class="ident">iter</span>() {
+            <span class="kw">for</span> <span class="ident">entry</span> <span class="kw">in</span> <span class="ident">entries</span> {
+                <span class="ident">vec</span>.<span class="ident">push</span>((<span class="ident">chord</span>, <span class="ident">entry</span>));
             }
         }
         <span class="ident">vec</span>
@@ -480,24 +430,34 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Model</span> <span class="kw">for</span> <span class="ident">Keymap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">T</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span>,
+    <span class="ident">T</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
 {
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
+    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">keymap_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">keymap_event</span> {
-            <span class="ident">KeymapEvent::InsertAction</span>(<span class="ident">action</span>, <span class="ident">chord</span>) =&gt; <span class="self">self</span>.<span class="ident">insert</span>(<span class="kw-2">*</span><span class="ident">action</span>, <span class="kw-2">*</span><span class="ident">chord</span>),
-            <span class="ident">KeymapEvent::RemoveAction</span>(<span class="ident">action</span>, <span class="ident">chord</span>) =&gt; <span class="self">self</span>.<span class="ident">remove</span>(<span class="ident">action</span>, <span class="ident">chord</span>),
+            <span class="ident">KeymapEvent::InsertAction</span>(<span class="ident">chord</span>, <span class="ident">entry</span>) =&gt; <span class="self">self</span>.<span class="ident">insert</span>(<span class="kw-2">*</span><span class="ident">chord</span>, <span class="kw-2">*</span><span class="ident">entry</span>),
+            <span class="ident">KeymapEvent::RemoveAction</span>(<span class="ident">chord</span>, <span class="ident">action</span>) =&gt; <span class="self">self</span>.<span class="ident">remove</span>(<span class="ident">chord</span>, <span class="ident">action</span>),
         });
+        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
+            <span class="ident">WindowEvent::KeyDown</span>(<span class="ident">code</span>, <span class="kw">_</span>) =&gt; {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">entries</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">entries</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">KeyChord::new</span>(<span class="ident">cx</span>.<span class="ident">modifiers</span>(), <span class="kw-2">*</span><span class="ident">code</span>)) {
+                    <span class="kw">for</span> <span class="ident">entry</span> <span class="kw">in</span> <span class="ident">entries</span> {
+                        (<span class="ident">entry</span>.<span class="ident">on_action</span>())(<span class="ident">cx</span>)
+                    }
+                }
+            }
+            <span class="kw">_</span> =&gt; {}
+        })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">KeyChord</span>)<span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Keymap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">KeyChord</span>, <span class="ident">KeymapEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>)<span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Keymap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">T</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span>,
+    <span class="ident">T</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
 {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">KeyChord</span>)<span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">KeyChord</span>, <span class="ident">KeymapEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>)<span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">keymap</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::new</span>();
-        <span class="kw">for</span> (<span class="ident">action</span>, <span class="ident">chord</span>) <span class="kw">in</span> <span class="ident">vec</span> {
-            <span class="ident">keymap</span>.<span class="ident">insert</span>(<span class="ident">action</span>, <span class="ident">chord</span>);
+        <span class="kw">for</span> (<span class="ident">chord</span>, <span class="ident">entry</span>) <span class="kw">in</span> <span class="ident">vec</span> {
+            <span class="ident">keymap</span>.<span class="ident">insert</span>(<span class="ident">chord</span>, <span class="ident">entry</span>);
         }
         <span class="ident">keymap</span>
     }
@@ -508,7 +468,7 @@
 <span class="doccomment">/// This type is part of the prelude.</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">KeymapEvent</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">T</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span>,
+    <span class="ident">T</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
 {
     <span class="doccomment">/// Inserts an entry into the [`Keymap`].</span>
     <span class="doccomment">///</span>
@@ -525,11 +485,11 @@
     <span class="doccomment">/// # let cx = &amp;mut Context::new();</span>
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// cx.emit(KeymapEvent::InsertAction(</span>
-    <span class="doccomment">///     Action::One,</span>
     <span class="doccomment">///     KeyChord::new(Modifiers::empty(), Code::KeyA),</span>
+    <span class="doccomment">///     KeymapEntry::new(Action::One, |_| println!(&quot;Action One&quot;)),</span>
     <span class="doccomment">/// ));</span>
     <span class="doccomment">/// ```</span>
-    <span class="ident">InsertAction</span>(<span class="ident">T</span>, <span class="ident">KeyChord</span>),
+    <span class="ident">InsertAction</span>(<span class="ident">KeyChord</span>, <span class="ident">KeymapEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>),
     <span class="doccomment">/// Removes an entry from the [`Keymap`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
@@ -545,11 +505,11 @@
     <span class="doccomment">/// # let cx = &amp;mut Context::new();</span>
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// cx.emit(KeymapEvent::RemoveAction(</span>
-    <span class="doccomment">///     Action::One,</span>
     <span class="doccomment">///     KeyChord::new(Modifiers::empty(), Code::KeyA),</span>
+    <span class="doccomment">///     Action::One,</span>
     <span class="doccomment">/// ));</span>
     <span class="doccomment">/// ```</span>
-    <span class="ident">RemoveAction</span>(<span class="ident">T</span>, <span class="ident">KeyChord</span>),
+    <span class="ident">RemoveAction</span>(<span class="ident">KeyChord</span>, <span class="ident">T</span>),
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0 (fe5b13d68 2022-05-18)" ></div>

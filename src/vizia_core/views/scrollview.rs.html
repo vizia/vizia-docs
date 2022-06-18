@@ -195,11 +195,6 @@
 <span id="190">190</span>
 <span id="191">191</span>
 <span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
-<span id="196">196</span>
-<span id="197">197</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">morphorm</span>::{<span class="ident">GeometryChanged</span>, <span class="ident">PositionType</span>};
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
@@ -309,15 +304,10 @@
         <span class="ident">VStack::new</span>(<span class="ident">cx</span>, <span class="ident">content</span>)
             .<span class="ident">class</span>(<span class="string">&quot;scroll_content&quot;</span>)
             .<span class="ident">bind</span>(<span class="ident">data</span>.<span class="ident">clone</span>(), <span class="op">|</span><span class="ident">handle</span>, <span class="ident">data</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">dpi_factor</span> <span class="op">=</span> <span class="ident">handle</span>.<span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">dpi_factor</span>;
-                <span class="kw">if</span> <span class="ident">dpi_factor</span> <span class="op">&gt;</span> <span class="number">0.0</span> {
-                    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>);
-                    <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> ((<span class="ident">data</span>.<span class="ident">child_x</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_x</span>) <span class="op">*</span> <span class="ident">data</span>.<span class="ident">scroll_x</span>).<span class="ident">round</span>()
-                        <span class="op">/</span> <span class="ident">handle</span>.<span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
-                    <span class="kw">let</span> <span class="ident">top</span> <span class="op">=</span> ((<span class="ident">data</span>.<span class="ident">child_y</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_y</span>) <span class="op">*</span> <span class="ident">data</span>.<span class="ident">scroll_y</span>).<span class="ident">round</span>()
-                        <span class="op">/</span> <span class="ident">handle</span>.<span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
-                    <span class="ident">handle</span>.<span class="ident">left</span>(<span class="ident">Units::Pixels</span>(<span class="op">-</span><span class="ident">left</span>.<span class="ident">abs</span>())).<span class="ident">top</span>(<span class="ident">Units::Pixels</span>(<span class="op">-</span><span class="ident">top</span>.<span class="ident">abs</span>()));
-                }
+                <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>);
+                <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> ((<span class="ident">data</span>.<span class="ident">child_x</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_x</span>) <span class="op">*</span> <span class="ident">data</span>.<span class="ident">scroll_x</span>).<span class="ident">round</span>();
+                <span class="kw">let</span> <span class="ident">top</span> <span class="op">=</span> ((<span class="ident">data</span>.<span class="ident">child_y</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_y</span>) <span class="op">*</span> <span class="ident">data</span>.<span class="ident">scroll_y</span>).<span class="ident">round</span>();
+                <span class="ident">handle</span>.<span class="ident">left</span>(<span class="ident">Units::Pixels</span>(<span class="op">-</span><span class="ident">left</span>)).<span class="ident">top</span>(<span class="ident">Units::Pixels</span>(<span class="op">-</span><span class="ident">top</span>));
             })
             .<span class="ident">on_geo_changed</span>(<span class="op">|</span><span class="ident">cx</span>, <span class="ident">geo</span><span class="op">|</span> {
                 <span class="kw">if</span> <span class="ident">geo</span>.<span class="ident">contains</span>(<span class="ident">GeometryChanged::HEIGHT_CHANGED</span>)

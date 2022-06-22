@@ -94,6 +94,28 @@
 <span id="89">89</span>
 <span id="90">90</span>
 <span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::entity::Entity</span>;
 
 <span class="doccomment">/// A mouse button.</span>
@@ -101,9 +123,13 @@
 <span class="doccomment">/// This type is part of the prelude.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">MouseButton</span> {
+    <span class="doccomment">/// The left mouse button.</span>
     <span class="ident">Left</span>,
+    <span class="doccomment">/// The right mouse button.</span>
     <span class="ident">Right</span>,
+    <span class="doccomment">/// The middle mouse button.</span>
     <span class="ident">Middle</span>,
+    <span class="doccomment">/// Another mouse button with the associated button number.</span>
     <span class="ident">Other</span>(<span class="ident">u16</span>),
 }
 
@@ -112,22 +138,24 @@
 <span class="doccomment">/// This type is part of the prelude.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">MouseButtonState</span> {
+    <span class="doccomment">/// Represents a pressed mouse button.</span>
     <span class="ident">Pressed</span>,
+    <span class="doccomment">/// Represents a released mouse button.</span>
     <span class="ident">Released</span>,
 }
 
 <span class="doccomment">/// Data which describes the current state of a mouse button.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MouseButtonData</span> {
-    <span class="doccomment">/// The state of the mouse button (pressed/released)</span>
+    <span class="doccomment">/// The state of the mouse button (pressed/released).</span>
     <span class="kw">pub</span> <span class="ident">state</span>: <span class="ident">MouseButtonState</span>,
-    <span class="doccomment">/// The position of the mouse cursor when the mouse button was last pressed</span>
+    <span class="doccomment">/// The position of the mouse cursor when the mouse button was last pressed.</span>
     <span class="kw">pub</span> <span class="ident">pos_down</span>: (<span class="ident">f32</span>, <span class="ident">f32</span>),
-    <span class="doccomment">/// The position of the mouse cursor when the mouse button was last released</span>
+    <span class="doccomment">/// The position of the mouse cursor when the mouse button was last released.</span>
     <span class="kw">pub</span> <span class="ident">pos_up</span>: (<span class="ident">f32</span>, <span class="ident">f32</span>),
-    <span class="doccomment">/// The hovered entity when the mouse button was last pressed</span>
+    <span class="doccomment">/// The hovered entity when the mouse button was last pressed.</span>
     <span class="kw">pub</span> <span class="ident">pressed</span>: <span class="ident">Entity</span>,
-    <span class="doccomment">/// The hovered entity when the mouse button was last released</span>
+    <span class="doccomment">/// The hovered entity when the mouse button was last released.</span>
     <span class="kw">pub</span> <span class="ident">released</span>: <span class="ident">Entity</span>,
 }
 
@@ -146,11 +174,19 @@
 <span class="doccomment">/// The current state of the mouse cursor and buttons.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MouseState</span> {
+    <span class="doccomment">/// The horizontal mouse cursor position of the frame.</span>
     <span class="kw">pub</span> <span class="ident">cursorx</span>: <span class="ident">f32</span>,
+    <span class="doccomment">/// The vertical mouse cursor position of the frame.</span>
     <span class="kw">pub</span> <span class="ident">cursory</span>: <span class="ident">f32</span>,
-
+    <span class="doccomment">/// The horizontal mouse cursor position of the previous frame.</span>
+    <span class="kw">pub</span> <span class="ident">previous_cursorx</span>: <span class="ident">f32</span>,
+    <span class="doccomment">/// The vertical mouse cursor position of the previous frame.</span>
+    <span class="kw">pub</span> <span class="ident">previous_cursory</span>: <span class="ident">f32</span>,
+    <span class="doccomment">/// The state of the left mouse button.</span>
     <span class="kw">pub</span> <span class="ident">left</span>: <span class="ident">MouseButtonData</span>,
+    <span class="doccomment">/// The state of the right mouse button.</span>
     <span class="kw">pub</span> <span class="ident">right</span>: <span class="ident">MouseButtonData</span>,
+    <span class="doccomment">/// The state of the middle mouse button.</span>
     <span class="kw">pub</span> <span class="ident">middle</span>: <span class="ident">MouseButtonData</span>,
 }
 
@@ -159,6 +195,8 @@
         <span class="ident">MouseState</span> {
             <span class="ident">cursorx</span>: <span class="op">-</span><span class="number">1.0</span>,
             <span class="ident">cursory</span>: <span class="op">-</span><span class="number">1.0</span>,
+            <span class="ident">previous_cursorx</span>: <span class="op">-</span><span class="number">1.0</span>,
+            <span class="ident">previous_cursory</span>: <span class="op">-</span><span class="number">1.0</span>,
             <span class="ident">left</span>: <span class="ident">MouseButtonData::default</span>(),
             <span class="ident">right</span>: <span class="ident">MouseButtonData::default</span>(),
             <span class="ident">middle</span>: <span class="ident">MouseButtonData::default</span>(),
@@ -167,6 +205,12 @@
 }
 
 <span class="kw">impl</span> <span class="ident">MouseState</span> {
+    <span class="doccomment">/// Returns the delta of the mouse cursor position of the current and previous frame.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">frame_delta</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
+        (<span class="self">self</span>.<span class="ident">cursorx</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">previous_cursorx</span>, <span class="self">self</span>.<span class="ident">cursory</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">previous_cursory</span>)
+    }
+
+    <span class="doccomment">/// Returns the delta of the mouse cursor position of the current frame and the frame the `button` got pressed.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">delta</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">button</span>: <span class="ident">MouseButton</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
         <span class="kw">match</span> <span class="ident">button</span> {
             <span class="ident">MouseButton::Left</span> =&gt; {

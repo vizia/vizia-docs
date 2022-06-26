@@ -184,14 +184,10 @@
 <span id="179">179</span>
 <span id="180">180</span>
 <span id="181">181</span>
-<span id="182">182</span>
-<span id="183">183</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::VecDeque</span>, <span class="ident">marker::PhantomData</span>};
-
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::GenerationalId</span>;
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::GenerationalId</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::VecDeque</span>, <span class="ident">marker::PhantomData</span>};
 
 <span class="kw">const</span> <span class="ident">MINIMUM_FREE_INDICES</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1024</span>;
-
 <span class="kw">const</span> <span class="ident">IDX_MAX</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="ident">std::u32::MAX</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">8</span>;
 
 <span class="doccomment">/// The IdManager is responsible for allocating generational IDs.</span>
@@ -237,7 +233,7 @@
             <span class="ident">idx</span>
         };
 
-        <span class="ident">I::new</span>(<span class="ident">index</span> <span class="kw">as</span> <span class="ident">usize</span>, <span class="self">self</span>.<span class="ident">generation</span>[<span class="ident">index</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="kw">as</span> <span class="ident">usize</span>)
+        <span class="ident">I::new</span>(<span class="ident">index</span>, <span class="self">self</span>.<span class="ident">generation</span>[<span class="ident">index</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="kw">as</span> <span class="ident">u32</span>)
     }
 
     <span class="doccomment">/// Destroys an ID returning false if the ID has already been destroyed.</span>
@@ -247,7 +243,7 @@
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_alive</span>(<span class="ident">id</span>) {
             <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">id</span>.<span class="ident">index</span>();
             <span class="macro">assert!</span>(<span class="ident">index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">generation</span>.<span class="ident">len</span>(), <span class="string">&quot;ID is invalid&quot;</span>);
-            <span class="macro">assert!</span>(<span class="self">self</span>.<span class="ident">generation</span>[<span class="ident">index</span>] <span class="op">!</span><span class="op">=</span> <span class="ident">std::u8::MAX</span>, <span class="string">&quot;ID generation is at maximum&quot;</span>);
+            <span class="macro">assert!</span>(<span class="self">self</span>.<span class="ident">generation</span>[<span class="ident">index</span>] <span class="op">!</span><span class="op">=</span> <span class="ident">u8::MAX</span>, <span class="string">&quot;ID generation is at maximum&quot;</span>);
             <span class="self">self</span>.<span class="ident">generation</span>[<span class="ident">index</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
             <span class="self">self</span>.<span class="ident">free_list</span>.<span class="ident">push_back</span>(<span class="ident">index</span> <span class="kw">as</span> <span class="ident">u32</span>);
             <span class="bool-val">true</span>

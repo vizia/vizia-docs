@@ -625,6 +625,7 @@
 <span id="620">620</span>
 <span id="621">621</span>
 <span id="622">622</span>
+<span id="623">623</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">convert</span>::{<span class="ident">scan_code_to_code</span>, <span class="ident">virtual_key_code_to_code</span>, <span class="ident">virtual_key_code_to_key</span>},
     <span class="ident">window::Window</span>,
@@ -1221,7 +1222,8 @@
 <span class="kw">impl</span> <span class="ident">Env</span> <span class="kw">for</span> <span class="ident">Application</span> {
     <span class="kw">fn</span> <span class="ident">ignore_default_styles</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">environment</span>().<span class="ident">include_default_theme</span> {
-            <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">environment</span>().<span class="ident">include_default_theme</span> <span class="op">=</span> <span class="bool-val">false</span>;
+            <span class="comment">//self.context.environment().include_default_theme = false;</span>
+            <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">emit</span>(<span class="ident">EnvironmentEvent::IncludeDefaultTheme</span>(<span class="bool-val">false</span>));
             <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">reload_styles</span>().<span class="ident">expect</span>(<span class="string">&quot;Failed to reload styles&quot;</span>);
         }
 

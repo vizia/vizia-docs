@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["vizia_core"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.62.0/alloc/string/trait.ToString.html\" title=\"trait alloc::string::ToString\">ToString</a> for <a class=\"struct\" href=\"vizia_core/style/struct.Color.html\" title=\"struct vizia_core::style::Color\">Color</a>","synthetic":false,"types":["vizia_core::style::color::Color"]}];
+implementors["vizia_core"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.62.1/alloc/string/trait.ToString.html\" title=\"trait alloc::string::ToString\">ToString</a> for <a class=\"struct\" href=\"vizia_core/style/struct.Color.html\" title=\"struct vizia_core::style::Color\">Color</a>","synthetic":false,"types":["vizia_core::style::color::Color"]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

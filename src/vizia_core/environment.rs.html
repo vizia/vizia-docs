@@ -52,6 +52,13 @@
 <span id="47">47</span>
 <span id="48">48</span>
 <span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">unic_langid::LanguageIdentifier</span>;
 <span class="kw">use</span> <span class="ident">vizia_derive::Lens</span>;
 
@@ -72,14 +79,16 @@
 
 <span class="kw">impl</span> <span class="ident">Environment</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">locale</span>: <span class="ident">LanguageIdentifier::default</span>(), <span class="ident">include_default_theme</span>: <span class="bool-val">true</span> }
+        <span class="kw">let</span> <span class="ident">locale</span> <span class="op">=</span> <span class="ident">sys_locale::get_locale</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="ident">l</span>.<span class="ident">parse</span>().<span class="ident">ok</span>()).<span class="ident">flatten</span>().<span class="ident">unwrap_or_default</span>();
+
+        <span class="self">Self</span> { <span class="ident">locale</span>, <span class="ident">include_default_theme</span>: <span class="bool-val">true</span> }
     }
 }
 
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">EnvironmentEvent</span> {
     <span class="ident">IncludeDefaultTheme</span>(<span class="ident">bool</span>),
     <span class="ident">SetLocale</span>(<span class="ident">LanguageIdentifier</span>),
-    <span class="comment">//UseSystemLocale,</span>
+    <span class="ident">UseSystemLocale</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Model</span> <span class="kw">for</span> <span class="ident">Environment</span> {
@@ -92,6 +101,11 @@
             <span class="ident">EnvironmentEvent::SetLocale</span>(<span class="ident">locale</span>) =&gt; {
                 <span class="self">self</span>.<span class="ident">locale</span> <span class="op">=</span> <span class="ident">locale</span>.<span class="ident">clone</span>();
             }
+
+            <span class="ident">EnvironmentEvent::UseSystemLocale</span> =&gt; {
+                <span class="self">self</span>.<span class="ident">locale</span> <span class="op">=</span>
+                    <span class="ident">sys_locale::get_locale</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="ident">l</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>()).<span class="ident">unwrap_or_default</span>();
+            }
         });
     }
 }
@@ -102,5 +116,5 @@
     <span class="kw">fn</span> <span class="ident">ignore_default_styles</span>(<span class="self">self</span>) -&gt; <span class="self">Self</span>;
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0 (a8314ef7d 2022-06-27)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.1 (e092d0b6b 2022-07-16)" ></div>
 </body></html>

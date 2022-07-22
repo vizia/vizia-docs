@@ -234,6 +234,15 @@
 <span id="229">229</span>
 <span id="230">230</span>
 <span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">application::ApplicationRunner</span>, <span class="ident">Renderer</span>};
 <span class="kw">use</span> <span class="ident">baseview::gl::GlConfig</span>;
 <span class="kw">use</span> <span class="ident">baseview</span>::{
@@ -286,6 +295,7 @@
         <span class="ident">scale_policy</span>: <span class="ident">WindowScalePolicy</span>,
         <span class="ident">app</span>: <span class="ident">F</span>,
         <span class="ident">on_idle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">ignore_default_theme</span>: <span class="ident">bool</span>,
     ) -&gt; <span class="ident">WindowHandle</span>
     <span class="kw">where</span>
         <span class="ident">P</span>: <span class="ident">HasRawWindowHandle</span>,
@@ -308,9 +318,11 @@
             <span class="kw">move</span> <span class="op">|</span><span class="ident">window</span>: <span class="kw-2">&amp;mut</span> <span class="ident">baseview::Window</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">|</span> -&gt; <span class="ident">ViziaWindow</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">Context::new</span>();
 
+                <span class="ident">context</span>.<span class="ident">ignore_default_theme</span> <span class="op">=</span> <span class="ident">ignore_default_theme</span>;
+
                 <span class="ident">context</span>.<span class="ident">add_theme</span>(<span class="ident">DEFAULT_LAYOUT</span>);
 
-                <span class="kw">if</span> <span class="ident">context</span>.<span class="ident">environment</span>().<span class="ident">include_default_theme</span> {
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">ignore_default_theme</span> {
                     <span class="ident">context</span>.<span class="ident">add_theme</span>(<span class="ident">DEFAULT_THEME</span>);
                 }
 
@@ -335,6 +347,7 @@
         <span class="ident">scale_policy</span>: <span class="ident">WindowScalePolicy</span>,
         <span class="ident">app</span>: <span class="ident">F</span>,
         <span class="ident">on_idle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">ignore_default_theme</span>: <span class="ident">bool</span>,
     ) -&gt; <span class="ident">WindowHandle</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
@@ -355,9 +368,11 @@
             <span class="kw">move</span> <span class="op">|</span><span class="ident">window</span>: <span class="kw-2">&amp;mut</span> <span class="ident">baseview::Window</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">|</span> -&gt; <span class="ident">ViziaWindow</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">Context::new</span>();
 
+                <span class="ident">context</span>.<span class="ident">ignore_default_theme</span> <span class="op">=</span> <span class="ident">ignore_default_theme</span>;
+
                 <span class="ident">context</span>.<span class="ident">add_theme</span>(<span class="ident">DEFAULT_LAYOUT</span>);
 
-                <span class="kw">if</span> <span class="ident">context</span>.<span class="ident">environment</span>().<span class="ident">include_default_theme</span> {
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">ignore_default_theme</span> {
                     <span class="ident">context</span>.<span class="ident">add_theme</span>(<span class="ident">DEFAULT_THEME</span>);
                 }
 
@@ -382,6 +397,7 @@
         <span class="ident">scale_policy</span>: <span class="ident">WindowScalePolicy</span>,
         <span class="ident">app</span>: <span class="ident">F</span>,
         <span class="ident">on_idle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">ignore_default_theme</span>: <span class="ident">bool</span>,
     ) <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
         <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span>,
@@ -401,9 +417,11 @@
             <span class="kw">move</span> <span class="op">|</span><span class="ident">window</span>: <span class="kw-2">&amp;mut</span> <span class="ident">baseview::Window</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">|</span> -&gt; <span class="ident">ViziaWindow</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">Context::new</span>();
 
+                <span class="ident">context</span>.<span class="ident">ignore_default_theme</span> <span class="op">=</span> <span class="ident">ignore_default_theme</span>;
+
                 <span class="ident">context</span>.<span class="ident">add_theme</span>(<span class="ident">DEFAULT_LAYOUT</span>);
 
-                <span class="kw">if</span> <span class="ident">context</span>.<span class="ident">environment</span>().<span class="ident">include_default_theme</span> {
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">ignore_default_theme</span> {
                     <span class="ident">context</span>.<span class="ident">add_theme</span>(<span class="ident">DEFAULT_THEME</span>);
                 }
 

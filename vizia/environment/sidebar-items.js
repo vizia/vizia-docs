@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["EnvironmentEvent",""]],"mod":[["environment_derived_lenses","Derived lenses for [`Environment`]."]],"struct":[["Environment",""]],"trait":[["Env","Methods which control the environment the application will run in. This trait is implemented for Application."]]});
+initSidebarItems({"enum":[["EnvironmentEvent",""]],"mod":[["environment_derived_lenses","Derived lenses for [`Environment`]."]],"struct":[["Environment",""]]});

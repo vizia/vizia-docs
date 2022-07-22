@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["include_default_theme","Lens for the field `include_default_theme` on `Environment`."],["locale","Lens for the field `locale` on `Environment`."],["root",""]]});
+initSidebarItems({"struct":[["locale","Lens for the field `locale` on `Environment`."],["root",""]]});

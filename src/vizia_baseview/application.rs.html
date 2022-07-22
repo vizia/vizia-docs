@@ -492,6 +492,17 @@
 <span id="487">487</span>
 <span id="488">488</span>
 <span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::window::ViziaWindow</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Renderer</span>;
 <span class="kw">use</span> <span class="ident">baseview</span>::{<span class="ident">WindowHandle</span>, <span class="ident">WindowScalePolicy</span>};
@@ -512,6 +523,7 @@
     <span class="ident">window_description</span>: <span class="ident">WindowDescription</span>,
     <span class="ident">scale_policy</span>: <span class="ident">WindowScalePolicy</span>,
     <span class="ident">on_idle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">ignore_default_theme</span>: <span class="ident">bool</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="ident">Application</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>
@@ -525,6 +537,7 @@
             <span class="ident">window_description</span>: <span class="ident">WindowDescription::new</span>(),
             <span class="ident">scale_policy</span>: <span class="ident">WindowScalePolicy::SystemScaleFactor</span>,
             <span class="ident">on_idle</span>: <span class="prelude-val">None</span>,
+            <span class="ident">ignore_default_theme</span>: <span class="bool-val">false</span>,
         }
     }
 
@@ -547,6 +560,12 @@
         <span class="self">self</span>
     }
 
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ignore_default_theme</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">ignore_default_theme</span> <span class="op">=</span> <span class="bool-val">true</span>;
+
+        <span class="self">self</span>
+    }
+
     <span class="doccomment">/// Open a new window that blocks the current thread until the window is destroyed.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Do **not** use this in the context of audio plugins, unless it is compiled as a</span>
@@ -559,6 +578,7 @@
             <span class="self">self</span>.<span class="ident">scale_policy</span>,
             <span class="self">self</span>.<span class="ident">app</span>,
             <span class="self">self</span>.<span class="ident">on_idle</span>,
+            <span class="self">self</span>.<span class="ident">ignore_default_theme</span>,
         )
     }
 
@@ -576,6 +596,7 @@
             <span class="self">self</span>.<span class="ident">scale_policy</span>,
             <span class="self">self</span>.<span class="ident">app</span>,
             <span class="self">self</span>.<span class="ident">on_idle</span>,
+            <span class="self">self</span>.<span class="ident">ignore_default_theme</span>,
         )
     }
 
@@ -591,6 +612,7 @@
             <span class="self">self</span>.<span class="ident">scale_policy</span>,
             <span class="self">self</span>.<span class="ident">app</span>,
             <span class="self">self</span>.<span class="ident">on_idle</span>,
+            <span class="self">self</span>.<span class="ident">ignore_default_theme</span>,
         )
     }
 

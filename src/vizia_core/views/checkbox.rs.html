@@ -176,6 +176,24 @@
 <span id="171">171</span>
 <span id="172">172</span>
 <span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::fonts::unicode_names::CHECK</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 
@@ -289,11 +307,14 @@
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">checked</span>: <span class="kw">impl</span> <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">bool</span><span class="op">&gt;</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="comment">//let checked = checked.get_val_fallible(cx).unwrap_or(false);</span>
-        <span class="self">Self</span> { <span class="ident">on_toggle</span>: <span class="prelude-val">None</span> }.<span class="ident">build</span>(<span class="ident">cx</span>, <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {}).<span class="ident">bind</span>(<span class="ident">checked</span>, <span class="op">|</span><span class="ident">handle</span>, <span class="ident">checked</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">flag</span>) <span class="op">=</span> <span class="ident">checked</span>.<span class="ident">get_val_fallible</span>(<span class="ident">handle</span>.<span class="ident">cx</span>) {
-                <span class="ident">handle</span>.<span class="ident">text</span>(<span class="kw">if</span> <span class="ident">flag</span> { <span class="ident">CHECK</span> } <span class="kw">else</span> { <span class="string">&quot;&quot;</span> }).<span class="ident">checked</span>(<span class="ident">flag</span>);
-            }
-        })
+        <span class="self">Self</span> { <span class="ident">on_toggle</span>: <span class="prelude-val">None</span> }
+            .<span class="ident">build</span>(<span class="ident">cx</span>, <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {})
+            .<span class="ident">bind</span>(<span class="ident">checked</span>, <span class="op">|</span><span class="ident">handle</span>, <span class="ident">checked</span><span class="op">|</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">flag</span>) <span class="op">=</span> <span class="ident">checked</span>.<span class="ident">get_val_fallible</span>(<span class="ident">handle</span>.<span class="ident">cx</span>) {
+                    <span class="ident">handle</span>.<span class="ident">text</span>(<span class="kw">if</span> <span class="ident">flag</span> { <span class="ident">CHECK</span> } <span class="kw">else</span> { <span class="string">&quot;&quot;</span> }).<span class="ident">checked</span>(<span class="ident">flag</span>);
+                }
+            })
+            .<span class="ident">cursor</span>(<span class="ident">CursorIcon::Hand</span>)
     }
 }
 
@@ -337,14 +358,29 @@
 
     <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="ident">meta</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
-            <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">meta</span>.<span class="ident">target</span> <span class="op">==</span> <span class="ident">cx</span>.<span class="ident">current</span>() {
+            <span class="ident">WindowEvent::MouseUp</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
+                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">left</span>.<span class="ident">pressed</span> <span class="op">==</span> <span class="ident">cx</span>.<span class="ident">current</span>()
+                    <span class="op">&amp;&amp;</span> <span class="ident">meta</span>.<span class="ident">target</span> <span class="op">==</span> <span class="ident">cx</span>.<span class="ident">current</span>()
+                    <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">cx</span>.<span class="ident">is_disabled</span>()
+                {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">on_toggle</span> {
                         (<span class="ident">callback</span>)(<span class="ident">cx</span>);
                     }
                 }
             }
 
+            <span class="comment">// TODO: Should this be done manually like this or should disabled controls always revert to default cursor icon?</span>
+            <span class="comment">// TODO: This doesn&#39;t work in it&#39;s current form. Commented out in favour of setting mouse cursor in hover system.</span>
+            <span class="comment">// WindowEvent::MouseEnter =&gt; {</span>
+            <span class="comment">//     if meta.target == cx.current() &amp;&amp; cx.is_disabled() {</span>
+            <span class="comment">//         println!(&quot;Enter: {}&quot;, cx.current());</span>
+            <span class="comment">//         // After context and modifiers change this will become:</span>
+            <span class="comment">//         // cx.cursor(CursorIcon::Default);</span>
+            <span class="comment">//         let current = cx.current();</span>
+            <span class="comment">//         cx.style().cursor.insert(current, CursorIcon::Default);</span>
+            <span class="comment">//         cx.need_redraw();</span>
+            <span class="comment">//     }</span>
+            <span class="comment">// }</span>
             <span class="kw">_</span> =&gt; {}
         });
     }

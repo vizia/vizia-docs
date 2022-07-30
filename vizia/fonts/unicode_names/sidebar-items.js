@@ -1,1 +1,1 @@
-initSidebarItems({"constant":[["CHECK",""],["PLUS",""]]});
+initSidebarItems({"constant":[["CANCEL",""],["CHECK",""],["PLUS",""]]});

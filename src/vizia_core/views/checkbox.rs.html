@@ -194,16 +194,47 @@
 <span id="189">189</span>
 <span id="190">190</span>
 <span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::fonts::unicode_names::CHECK</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// A checkbox used to display and toggle boolean state.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Clicking on the checkbox with the left mouse button triggers the `on_toggle` callback.</span>
-<span class="doccomment">/// The checkbox cannot be used without being bound to some data, because it will not accept</span>
-<span class="doccomment">/// a raw bool as an argument.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Basic checkbox</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The checkbox must bound to some boolean data.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # use vizia_core::prelude::*;</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// # #[derive(Lens)]</span>
+<span class="doccomment">/// # struct AppData {</span>
+<span class="doccomment">/// #     value: bool,</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// # impl Model for AppData {}</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// # let cx = &amp;mut Context::new();</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// # AppData { value: false }.build(cx);</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// Checkbox::new(cx, AppData::value);</span>
+<span class="doccomment">/// ```</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ## Checkbox with an action</span>
 <span class="doccomment">///</span>
@@ -231,33 +262,10 @@
 <span class="doccomment">/// Checkbox::new(cx, AppData::value).on_toggle(|cx| cx.emit(AppEvent::ToggleValue));</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// ## Checkbox without an action</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// A checkbox can be used without a callback and therefore do nothing when pressed.</span>
-<span class="doccomment">/// This is useful for prototyping and testing out the different styling options of</span>
-<span class="doccomment">/// a checkbox without having to add a callback.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use vizia_core::prelude::*;</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # #[derive(Lens)]</span>
-<span class="doccomment">/// # struct AppData {</span>
-<span class="doccomment">/// #     value: bool,</span>
-<span class="doccomment">/// # }</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # impl Model for AppData {}</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # let cx = &amp;mut Context::new();</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # AppData { value: false }.build(cx);</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// Checkbox::new(cx, AppData::value);</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
 <span class="doccomment">/// ## Checkbox with a label</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// A checkbox is usually used with a label next to it describing what data the checkbox</span>
-<span class="doccomment">/// is bound to or what the checkbox does when pressed. This can for example be done by</span>
+<span class="doccomment">/// is bound to or what the checkbox does when pressed. This can be done, for example, by</span>
 <span class="doccomment">/// wrapping the checkbox in an [`HStack`](crate::prelude::HStack) and adding a [`Label`](crate::prelude::Label)</span>
 <span class="doccomment">/// to it.</span>
 <span class="doccomment">///</span>
@@ -279,6 +287,34 @@
 <span class="doccomment">///     Checkbox::new(cx, AppData::value);</span>
 <span class="doccomment">///     Label::new(cx, &quot;Press me&quot;);</span>
 <span class="doccomment">/// });</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Custom checkbox</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The `text` modifier combined with a `map` on the lens can be used to customize the icon used by the checkbox.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # use vizia_core::prelude::*;</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// # #[derive(Lens)]</span>
+<span class="doccomment">/// # struct AppData {</span>
+<span class="doccomment">/// #     value: bool,</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// # impl Model for AppData {}</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// # enum AppEvent {</span>
+<span class="doccomment">/// #     ToggleValue,</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// # let cx = &amp;mut Context::new();</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// # AppData { value: false }.build(cx);</span>
+<span class="doccomment">/// # use vizia_core::fonts::unicode_names::CANCEL;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Checkbox::new(cx, AppData::value)</span>
+<span class="doccomment">///     .on_toggle(|cx| cx.emit(AppEvent::ToggleValue))</span>
+<span class="doccomment">///     .text(AppData::value.map(|flag| if *flag {CANCEL} else {&quot;&quot;}));</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Checkbox</span> {
     <span class="ident">on_toggle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -369,18 +405,6 @@
                 }
             }
 
-            <span class="comment">// TODO: Should this be done manually like this or should disabled controls always revert to default cursor icon?</span>
-            <span class="comment">// TODO: This doesn&#39;t work in it&#39;s current form. Commented out in favour of setting mouse cursor in hover system.</span>
-            <span class="comment">// WindowEvent::MouseEnter =&gt; {</span>
-            <span class="comment">//     if meta.target == cx.current() &amp;&amp; cx.is_disabled() {</span>
-            <span class="comment">//         println!(&quot;Enter: {}&quot;, cx.current());</span>
-            <span class="comment">//         // After context and modifiers change this will become:</span>
-            <span class="comment">//         // cx.cursor(CursorIcon::Default);</span>
-            <span class="comment">//         let current = cx.current();</span>
-            <span class="comment">//         cx.style().cursor.insert(current, CursorIcon::Default);</span>
-            <span class="comment">//         cx.need_redraw();</span>
-            <span class="comment">//     }</span>
-            <span class="comment">// }</span>
             <span class="kw">_</span> =&gt; {}
         });
     }

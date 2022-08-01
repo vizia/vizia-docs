@@ -426,6 +426,20 @@
 <span id="421">421</span>
 <span id="422">422</span>
 <span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
 
 <span class="kw">use</span> <span class="ident">morphorm</span>::{<span class="ident">LayoutType</span>, <span class="ident">PositionType</span>, <span class="ident">Units</span>};
@@ -695,6 +709,20 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">focusable</span>(<span class="self">self</span>, <span class="ident">state</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">abilities</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">abilities</span>.<span class="ident">get_mut</span>(<span class="self">self</span>.<span class="ident">entity</span>) {
             <span class="ident">abilities</span>.<span class="ident">set</span>(<span class="ident">Abilities::FOCUSABLE</span>, <span class="ident">state</span>);
+            <span class="comment">// If an element is not focusable then it can&#39;t be keyboard navigatable</span>
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">state</span> {
+                <span class="ident">abilities</span>.<span class="ident">set</span>(<span class="ident">Abilities::KEYBOARD_NAVIGATABLE</span>, <span class="bool-val">false</span>);
+            }
+        }
+
+        <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">need_restyle</span>();
+
+        <span class="self">self</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keyboard_navigatable</span>(<span class="self">self</span>, <span class="ident">state</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">abilities</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">abilities</span>.<span class="ident">get_mut</span>(<span class="self">self</span>.<span class="ident">entity</span>) {
+            <span class="ident">abilities</span>.<span class="ident">set</span>(<span class="ident">Abilities::KEYBOARD_NAVIGATABLE</span>, <span class="ident">state</span>);
         }
 
         <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">need_restyle</span>();

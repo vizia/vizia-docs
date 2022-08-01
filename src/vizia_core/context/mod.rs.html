@@ -1224,6 +1224,26 @@
 <span id="1219">1219</span>
 <span id="1220">1220</span>
 <span id="1221">1221</span>
+<span id="1222">1222</span>
+<span id="1223">1223</span>
+<span id="1224">1224</span>
+<span id="1225">1225</span>
+<span id="1226">1226</span>
+<span id="1227">1227</span>
+<span id="1228">1228</span>
+<span id="1229">1229</span>
+<span id="1230">1230</span>
+<span id="1231">1231</span>
+<span id="1232">1232</span>
+<span id="1233">1233</span>
+<span id="1234">1234</span>
+<span id="1235">1235</span>
+<span id="1236">1236</span>
+<span id="1237">1237</span>
+<span id="1238">1238</span>
+<span id="1239">1239</span>
+<span id="1240">1240</span>
+<span id="1241">1241</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">draw</span>;
 <span class="kw">mod</span> <span class="ident">proxy</span>;
 
@@ -1262,7 +1282,7 @@
     <span class="ident">apply_text_constraints</span>, <span class="ident">apply_visibility</span>, <span class="ident">apply_z_ordering</span>,
 };
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::tree</span>::{
-    <span class="ident">focus_backward</span>, <span class="ident">focus_forward</span>, <span class="ident">is_focusable</span>, <span class="ident">TreeDepthIterator</span>, <span class="ident">TreeExt</span>, <span class="ident">TreeIterator</span>,
+    <span class="ident">focus_backward</span>, <span class="ident">focus_forward</span>, <span class="ident">is_navigatable</span>, <span class="ident">TreeDepthIterator</span>, <span class="ident">TreeExt</span>, <span class="ident">TreeIterator</span>,
 };
 
 <span class="kw">static</span> <span class="ident">DEFAULT_THEME</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str!</span>(<span class="string">&quot;../../resources/themes/default_theme.css&quot;</span>);
@@ -1484,7 +1504,23 @@
 
     <span class="doccomment">/// Sets application focus to the current entity</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">focus</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">focused</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>;
+        <span class="kw">let</span> <span class="ident">old_focus</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">focused</span>;
+        <span class="kw">let</span> <span class="ident">new_focus</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>().<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">old_focus</span>) {
+            <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::FOCUS</span>, <span class="bool-val">false</span>);
+        }
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">current</span> <span class="op">!</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">focused</span> {
+            <span class="self">self</span>.<span class="ident">emit_to</span>(<span class="ident">old_focus</span>, <span class="ident">WindowEvent::FocusOut</span>);
+            <span class="self">self</span>.<span class="ident">emit_to</span>(<span class="ident">new_focus</span>, <span class="ident">WindowEvent::FocusIn</span>);
+            <span class="self">self</span>.<span class="ident">focused</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>;
+        }
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>().<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">new_focus</span>) {
+            <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::FOCUS</span>, <span class="bool-val">true</span>);
+        }
+
+        <span class="self">self</span>.<span class="ident">style</span>().<span class="ident">needs_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="self">self</span>.<span class="ident">style</span>().<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="self">self</span>.<span class="ident">style</span>().<span class="ident">needs_restyle</span> <span class="op">=</span> <span class="bool-val">true</span>;
     }
 
     <span class="doccomment">/// Sets the active flag of the current entity</span>
@@ -2341,7 +2377,7 @@
                             <span class="ident">prev_focused</span>
                         } <span class="kw">else</span> {
                             <span class="ident">TreeIterator::full</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tree</span>)
-                                .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">is_focusable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">style</span>, <span class="kw-2">*</span><span class="ident">node</span>))
+                                .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">is_navigatable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">style</span>, <span class="kw-2">*</span><span class="ident">node</span>))
                                 .<span class="ident">next_back</span>()
                                 .<span class="ident">unwrap_or</span>(<span class="ident">Entity::root</span>())
                         };
@@ -2359,7 +2395,10 @@
                         {
                             <span class="ident">next_focused</span>
                         } <span class="kw">else</span> {
-                            <span class="ident">Entity::root</span>()
+                            <span class="ident">TreeIterator::full</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tree</span>)
+                                .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">is_navigatable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">style</span>, <span class="kw-2">*</span><span class="ident">node</span>))
+                                .<span class="ident">next</span>()
+                                .<span class="ident">unwrap_or</span>(<span class="ident">Entity::root</span>())
                         };
 
                         <span class="kw">if</span> <span class="ident">next_focused</span> <span class="op">!</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">focused</span> {
@@ -2378,6 +2417,7 @@
 
                     <span class="self">self</span>.<span class="ident">style</span>().<span class="ident">needs_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
                     <span class="self">self</span>.<span class="ident">style</span>().<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                    <span class="self">self</span>.<span class="ident">style</span>().<span class="ident">needs_restyle</span> <span class="op">=</span> <span class="bool-val">true</span>;
                 }
 
                 <span class="self">self</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(<span class="ident">Event::new</span>(<span class="ident">event</span>).<span class="ident">target</span>(<span class="self">self</span>.<span class="ident">focused</span>));

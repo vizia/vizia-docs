@@ -286,6 +286,22 @@
 <span id="281">281</span>
 <span id="282">282</span>
 <span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::any::Any</span>;
 <span class="kw">use</span> <span class="ident">std::collections</span>::{<span class="ident">HashMap</span>, <span class="ident">HashSet</span>, <span class="ident">VecDeque</span>};
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;clipboard&quot;</span>)]</span>
@@ -423,7 +439,23 @@
 
     <span class="doccomment">/// Sets application focus to the current entity.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">focus</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">focused</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>;
+        <span class="kw">let</span> <span class="ident">old_focus</span> <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">focused</span>;
+        <span class="kw">let</span> <span class="ident">new_focus</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">old_focus</span>) {
+            <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::FOCUS</span>, <span class="bool-val">false</span>);
+        }
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">current</span> <span class="op">!</span><span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">focused</span> {
+            <span class="self">self</span>.<span class="ident">emit_to</span>(<span class="ident">old_focus</span>, <span class="ident">WindowEvent::FocusOut</span>);
+            <span class="self">self</span>.<span class="ident">emit_to</span>(<span class="ident">new_focus</span>, <span class="ident">WindowEvent::FocusIn</span>);
+            <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">focused</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>;
+        }
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">new_focus</span>) {
+            <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::FOCUS</span>, <span class="bool-val">true</span>);
+        }
+
+        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_restyle</span> <span class="op">=</span> <span class="bool-val">true</span>;
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hovered</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Entity</span> {

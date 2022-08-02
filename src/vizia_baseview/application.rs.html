@@ -644,7 +644,6 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ApplicationRunner</span> {
     <span class="ident">context</span>: <span class="ident">Context</span>,
     <span class="ident">event_manager</span>: <span class="ident">EventManager</span>,
-    <span class="ident">canvas</span>: <span class="ident">Canvas</span><span class="op">&lt;</span><span class="ident">Renderer</span><span class="op">&gt;</span>,
     <span class="ident">should_redraw</span>: <span class="ident">bool</span>,
     <span class="ident">scale_policy</span>: <span class="ident">WindowScalePolicy</span>,
     <span class="ident">scale_factor</span>: <span class="ident">f64</span>,
@@ -710,10 +709,11 @@
 
         <span class="ident">context</span>.<span class="ident">cache</span>().<span class="ident">set_clip_region</span>(<span class="ident">Entity::root</span>(), <span class="ident">bounding_box</span>);
 
+        <span class="ident">context</span>.<span class="ident">canvases</span>.<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="ident">canvas</span>);
+
         <span class="ident">ApplicationRunner</span> {
             <span class="ident">event_manager</span>,
             <span class="ident">context</span>,
-            <span class="ident">canvas</span>,
             <span class="ident">should_redraw</span>: <span class="bool-val">true</span>,
             <span class="ident">scale_policy</span>,
             <span class="ident">scale_factor</span>: <span class="ident">scale</span>,
@@ -774,7 +774,7 @@
         <span class="comment">//if let Some(window) = window_view.downcast_mut::&lt;Window&gt;() {</span>
 
         <span class="comment">// Load resources</span>
-        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">synchronize_fonts</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">canvas</span>);
+        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">synchronize_fonts</span>();
 
         <span class="comment">//}</span>
 
@@ -816,7 +816,7 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">render</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">draw</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">canvas</span>);
+        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">draw</span>();
         <span class="self">self</span>.<span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">false</span>;
     }
 

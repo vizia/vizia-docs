@@ -421,7 +421,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Model</span> <span class="kw">for</span> <span class="ident">MenuData</span> {
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
+    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">menu_event</span>, <span class="ident">meta</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">menu_event</span> {
             <span class="ident">MenuEvent::SetSelected</span>(<span class="ident">sel</span>) =&gt; {
                 <span class="self">self</span>.<span class="ident">selected</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">sel</span>;
@@ -434,7 +434,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Model</span> <span class="kw">for</span> <span class="ident">MenuControllerData</span> {
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
+    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">menu_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">menu_event</span> {
             <span class="ident">MenuEvent::Close</span> =&gt; {
                 <span class="self">self</span>.<span class="ident">active</span> <span class="op">=</span> <span class="bool-val">false</span>;
@@ -475,13 +475,13 @@
         <span class="prelude-val">Some</span>(<span class="string">&quot;menucontroller&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
+    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="kw">let</span> <span class="ident">active</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">data</span>::<span class="op">&lt;</span><span class="ident">MenuControllerData</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>().<span class="ident">active</span>;
 
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="ident">meta</span><span class="op">|</span> {
             <span class="kw">if</span> <span class="ident">active</span> {
                 <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-                <span class="kw">let</span> <span class="ident">is_child</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">hovered</span>().<span class="ident">is_descendant_of</span>(<span class="ident">cx</span>.<span class="ident">tree</span>(), <span class="ident">current</span>);
+                <span class="kw">let</span> <span class="ident">is_child</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">hovered</span>().<span class="ident">is_descendant_of</span>(<span class="ident">cx</span>.<span class="ident">tree</span>, <span class="ident">current</span>);
                 <span class="comment">// we capture focus in order to see clicks outside the menus, but we don&#39;t want</span>
                 <span class="comment">// to deprive our children of their events.</span>
                 <span class="comment">// We also want mouse scroll events to be seen by everyone</span>
@@ -609,14 +609,14 @@
 <span class="doccomment">/// A MenuButton is an entry in a menu that can be clicked to perform some action. It has various</span>
 <span class="doccomment">/// constructors depending on whether you want to make this button show a check icon conditionally.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MenuButton</span> {
-    <span class="ident">action</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">action</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">MenuButton</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">A</span><span class="op">&gt;</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">contents</span>: <span class="ident">F</span>, <span class="ident">action</span>: <span class="ident">A</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Over</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
-        <span class="ident">A</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
+        <span class="ident">A</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>),
     {
         <span class="ident">setup_menu_entry</span>(
             <span class="self">Self</span> { <span class="ident">action</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">action</span>)) }.<span class="ident">build</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
@@ -633,7 +633,7 @@
         <span class="ident">action</span>: <span class="ident">A</span>,
     ) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Over</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">A</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
+        <span class="ident">A</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>),
     {
         <span class="ident"><span class="self">Self</span>::new</span>(
             <span class="ident">cx</span>,
@@ -652,7 +652,7 @@
     ) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Over</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
-        <span class="ident">A</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
+        <span class="ident">A</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>),
         <span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">bool</span><span class="op">&gt;</span>,
     {
         <span class="ident"><span class="self">Self</span>::new</span>(
@@ -677,7 +677,7 @@
         <span class="ident">lens</span>: <span class="ident">L</span>,
     ) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Over</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">A</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
+        <span class="ident">A</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>),
         <span class="ident">L</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">bool</span><span class="op">&gt;</span>,
     {
         <span class="ident"><span class="self">Self</span>::new_check</span>(
@@ -696,7 +696,7 @@
         <span class="prelude-val">Some</span>(<span class="string">&quot;menubutton&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
+    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="ident">meta</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
             <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">action</span> {

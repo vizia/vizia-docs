@@ -173,7 +173,7 @@
 
     <span class="ident">reference_points</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">f32</span>, <span class="ident">f32</span>)<span class="op">&gt;</span>,
 
-    <span class="ident">on_changing</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">f32</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">on_changing</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">f32</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L1</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Scrollbar</span><span class="op">&lt;</span><span class="ident">L1</span><span class="op">&gt;</span> {
@@ -185,7 +185,7 @@
         <span class="ident">callback</span>: <span class="ident">F</span>,
     ) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">f32</span>),
+        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">f32</span>),
     {
         <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">Self</span> {
             <span class="ident">value</span>: <span class="ident">value</span>.<span class="ident">clone</span>(),
@@ -222,27 +222,27 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">container_and_thumb_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
+    <span class="kw">fn</span> <span class="ident">container_and_thumb_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
         <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-        <span class="kw">let</span> <span class="ident">child</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>().<span class="ident">get_child</span>(<span class="ident">current</span>, <span class="number">0</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">child</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">get_child</span>(<span class="ident">current</span>, <span class="number">0</span>).<span class="ident">unwrap</span>();
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">orientation</span> {
-            <span class="ident">Orientation::Horizontal</span> =&gt; (<span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">current</span>), <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">child</span>)),
-            <span class="ident">Orientation::Vertical</span> =&gt; (<span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_height</span>(<span class="ident">current</span>), <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_height</span>(<span class="ident">child</span>)),
+            <span class="ident">Orientation::Horizontal</span> =&gt; (<span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">current</span>), <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">child</span>)),
+            <span class="ident">Orientation::Vertical</span> =&gt; (<span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">current</span>), <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">child</span>)),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">thumb_bounds</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>, <span class="ident">f32</span>, <span class="ident">f32</span>) {
+    <span class="kw">fn</span> <span class="ident">thumb_bounds</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>, <span class="ident">f32</span>, <span class="ident">f32</span>) {
         <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-        <span class="kw">let</span> <span class="ident">child</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>().<span class="ident">get_child</span>(<span class="ident">current</span>, <span class="number">0</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">child</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">get_child</span>(<span class="ident">current</span>, <span class="number">0</span>).<span class="ident">unwrap</span>();
         (
-            <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_posx</span>(<span class="ident">child</span>),
-            <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_posy</span>(<span class="ident">child</span>),
-            <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">child</span>),
-            <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_height</span>(<span class="ident">child</span>),
+            <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posx</span>(<span class="ident">child</span>),
+            <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posy</span>(<span class="ident">child</span>),
+            <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">child</span>),
+            <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">child</span>),
         )
     }
 
-    <span class="kw">fn</span> <span class="ident">compute_new_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">physical_delta</span>: <span class="ident">f32</span>, <span class="ident">value_ref</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
+    <span class="kw">fn</span> <span class="ident">compute_new_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">physical_delta</span>: <span class="ident">f32</span>, <span class="ident">value_ref</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
         <span class="comment">// delta is moving within the negative space of the thumb: (1 - ratio) * container</span>
         <span class="kw">let</span> (<span class="ident">size</span>, <span class="ident">thumb_size</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">container_and_thumb_size</span>(<span class="ident">cx</span>);
         <span class="kw">let</span> <span class="ident">negative_space</span> <span class="op">=</span> <span class="ident">size</span> <span class="op">-</span> <span class="ident">thumb_size</span>;
@@ -255,7 +255,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">change</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">new_val</span>: <span class="ident">f32</span>) {
+    <span class="kw">fn</span> <span class="ident">change</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">new_val</span>: <span class="ident">f32</span>) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">on_changing</span> {
             <span class="ident">callback</span>(<span class="ident">cx</span>, <span class="ident">new_val</span>.<span class="ident">clamp</span>(<span class="number">0.0</span>, <span class="number">1.0</span>));
         }
@@ -267,11 +267,11 @@
         <span class="prelude-val">Some</span>(<span class="string">&quot;scrollbar&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
+    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="ident">meta</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">orientation</span> {
-                <span class="ident">Orientation::Horizontal</span> =&gt; <span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">cursorx</span>,
-                <span class="ident">Orientation::Vertical</span> =&gt; <span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">cursory</span>,
+                <span class="ident">Orientation::Horizontal</span> =&gt; <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span>,
+                <span class="ident">Orientation::Vertical</span> =&gt; <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span>,
             };
             <span class="kw">match</span> <span class="ident">window_event</span> {
                 <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
@@ -283,18 +283,18 @@
                         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">ty</span>, <span class="ident">tw</span>, <span class="ident">th</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">thumb_bounds</span>(<span class="ident">cx</span>);
                         <span class="kw">let</span> <span class="ident">physical_delta</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">orientation</span> {
                             <span class="ident">Orientation::Horizontal</span> =&gt; {
-                                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">cursorx</span> <span class="op">&lt;</span> <span class="ident">tx</span> {
+                                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span> <span class="op">&lt;</span> <span class="ident">tx</span> {
                                     <span class="op">-</span><span class="ident">jump</span>
-                                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">cursorx</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">tx</span> <span class="op">+</span> <span class="ident">tw</span> {
+                                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">tx</span> <span class="op">+</span> <span class="ident">tw</span> {
                                     <span class="ident">jump</span>
                                 } <span class="kw">else</span> {
                                     <span class="kw">return</span>;
                                 }
                             }
                             <span class="ident">Orientation::Vertical</span> =&gt; {
-                                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">cursory</span> <span class="op">&lt;</span> <span class="ident">ty</span> {
+                                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span> <span class="op">&lt;</span> <span class="ident">ty</span> {
                                     <span class="op">-</span><span class="ident">jump</span>
-                                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">cursory</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">ty</span> <span class="op">+</span> <span class="ident">th</span> {
+                                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">ty</span> <span class="op">+</span> <span class="ident">th</span> {
                                     <span class="ident">jump</span>
                                 } <span class="kw">else</span> {
                                     <span class="kw">return</span>;

@@ -574,18 +574,6 @@
 <span id="569">569</span>
 <span id="570">570</span>
 <span id="571">571</span>
-<span id="572">572</span>
-<span id="573">573</span>
-<span id="574">574</span>
-<span id="575">575</span>
-<span id="576">576</span>
-<span id="577">577</span>
-<span id="578">578</span>
-<span id="579">579</span>
-<span id="580">580</span>
-<span id="581">581</span>
-<span id="582">582</span>
-<span id="583">583</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">femtovg</span>::{<span class="ident">LineCap</span>, <span class="ident">Paint</span>, <span class="ident">Path</span>, <span class="ident">Solidity</span>};
 <span class="kw">use</span> <span class="ident">morphorm</span>::{<span class="ident">Hierarchy</span>, <span class="ident">Units</span>};
 
@@ -609,7 +597,7 @@
     <span class="ident">wheel_scalar</span>: <span class="ident">f32</span>,
     <span class="ident">modifier_scalar</span>: <span class="ident">f32</span>,
 
-    <span class="ident">on_changing</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">f32</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">on_changing</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">f32</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Knob</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
@@ -695,7 +683,7 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Knob</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_changing</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">f32</span>),
+        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">f32</span>),
     {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">view</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">views</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">entity</span>) {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">knob</span>) <span class="op">=</span> <span class="ident">view</span>.<span class="ident">downcast_mut</span>::<span class="op">&lt;</span><span class="ident">Knob</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>() {
@@ -712,8 +700,8 @@
         <span class="prelude-val">Some</span>(<span class="string">&quot;knob&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
-        <span class="kw">let</span> <span class="ident">move_virtual_slider</span> <span class="op">=</span> <span class="op">|</span><span class="ident">self_ref</span>: <span class="kw-2">&amp;mut</span> <span class="self">Self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">new_normal</span>: <span class="ident">f32</span><span class="op">|</span> {
+    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
+        <span class="kw">let</span> <span class="ident">move_virtual_slider</span> <span class="op">=</span> <span class="op">|</span><span class="ident">self_ref</span>: <span class="kw-2">&amp;mut</span> <span class="self">Self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">new_normal</span>: <span class="ident">f32</span><span class="op">|</span> {
             <span class="ident">self_ref</span>.<span class="ident">continuous_normal</span> <span class="op">=</span> <span class="ident">new_normal</span>.<span class="ident">clamp</span>(<span class="number">0.0</span>, <span class="number">1.0</span>);
 
             <span class="comment">// TODO - Remove when done</span>
@@ -735,7 +723,7 @@
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
             <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">button</span>) <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">button</span> <span class="op">==</span> <span class="ident">MouseButton::Left</span> =&gt; {
                 <span class="self">self</span>.<span class="ident">is_dragging</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                <span class="self">self</span>.<span class="ident">prev_drag_y</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">left</span>.<span class="ident">pos_down</span>.<span class="number">1</span>;
+                <span class="self">self</span>.<span class="ident">prev_drag_y</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pos_down</span>.<span class="number">1</span>;
 
                 <span class="ident">cx</span>.<span class="ident">capture</span>();
                 <span class="ident">cx</span>.<span class="ident">focus</span>();
@@ -769,7 +757,7 @@
 
                     <span class="self">self</span>.<span class="ident">prev_drag_y</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">y</span>;
 
-                    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">modifiers</span>().<span class="ident">contains</span>(<span class="ident">Modifiers::SHIFT</span>) {
+                    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::SHIFT</span>) {
                         <span class="ident">delta_normal</span> <span class="kw-2">*</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">modifier_scalar</span>;
                     }
 
@@ -839,35 +827,31 @@
 }
 <span class="kw">impl</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">Ticks</span> {
     <span class="kw">fn</span> <span class="ident">draw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">DrawContext</span>, <span class="ident">canvas</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Canvas</span>) {
-        <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-        <span class="kw">let</span> <span class="ident">opacity</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_opacity</span>(<span class="ident">current</span>);
+        <span class="kw">let</span> <span class="ident">opacity</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">opacity</span>();
 
         <span class="comment">//let mut background_color: femtovg::Color = cx.current.get_background_color(cx).into();</span>
         <span class="comment">// background_color.set_alphaf(background_color.a * opacity);</span>
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">foreground_color</span>: <span class="ident">femtovg::Color</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">background_color</span>(<span class="ident">current</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">into</span>();
+            <span class="ident">cx</span>.<span class="ident">background_color</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">into</span>();
         <span class="ident">foreground_color</span>.<span class="ident">set_alphaf</span>(<span class="ident">foreground_color</span>.<span class="ident">a</span> <span class="op">*</span> <span class="ident">opacity</span>);
 
         <span class="comment">// let background_color = femtovg::Color::rgb(54, 54, 54);</span>
         <span class="comment">//et mut foreground_color = femtovg::Color::rgb(50, 50, 200);</span>
 
-        <span class="kw">let</span> <span class="ident">posx</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_posx</span>(<span class="ident">current</span>);
-        <span class="kw">let</span> <span class="ident">posy</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_posy</span>(<span class="ident">current</span>);
-        <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">current</span>);
-        <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_height</span>(<span class="ident">current</span>);
+        <span class="kw">let</span> <span class="ident">bounds</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">bounds</span>();
 
         <span class="comment">// Clalculate arc center</span>
-        <span class="kw">let</span> <span class="ident">centerx</span> <span class="op">=</span> <span class="ident">posx</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">width</span>;
-        <span class="kw">let</span> <span class="ident">centery</span> <span class="op">=</span> <span class="ident">posy</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">height</span>;
+        <span class="kw">let</span> <span class="ident">centerx</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">bounds</span>.<span class="ident">w</span>;
+        <span class="kw">let</span> <span class="ident">centery</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">bounds</span>.<span class="ident">h</span>;
 
         <span class="comment">// Convert start and end angles to radians and rotate origin direction to be upwards instead of to the right</span>
         <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">angle_start</span>.<span class="ident">to_radians</span>() <span class="op">-</span> <span class="ident">PI</span> <span class="op">/</span> <span class="number">2.0</span>;
         <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">angle_end</span>.<span class="ident">to_radians</span>() <span class="op">-</span> <span class="ident">PI</span> <span class="op">/</span> <span class="number">2.0</span>;
 
-        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>().<span class="ident">parent</span>(<span class="ident">current</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">parent</span>(<span class="ident">cx</span>.<span class="ident">current</span>).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">parent_width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">parent</span>);
+        <span class="kw">let</span> <span class="ident">parent_width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">parent</span>);
 
         <span class="comment">// Convert radius and span into screen coordinates</span>
         <span class="kw">let</span> <span class="ident">radius</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">radius</span>.<span class="ident">value_or</span>(<span class="ident">parent_width</span> <span class="op">/</span> <span class="number">2.0</span>, <span class="number">0.0</span>);
@@ -937,35 +921,31 @@
 }
 <span class="kw">impl</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">TickKnob</span> {
     <span class="kw">fn</span> <span class="ident">draw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">DrawContext</span>, <span class="ident">canvas</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Canvas</span>) {
-        <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-        <span class="kw">let</span> <span class="ident">opacity</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_opacity</span>(<span class="ident">current</span>);
+        <span class="kw">let</span> <span class="ident">opacity</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">opacity</span>();
 
         <span class="comment">//let mut background_color: femtovg::Color = cx.current.get_background_color(cx).into();</span>
         <span class="comment">// background_color.set_alphaf(background_color.a * opacity);</span>
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">foreground_color</span>: <span class="ident">femtovg::Color</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">background_color</span>(<span class="ident">current</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">into</span>();
+            <span class="ident">cx</span>.<span class="ident">background_color</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">into</span>();
         <span class="ident">foreground_color</span>.<span class="ident">set_alphaf</span>(<span class="ident">foreground_color</span>.<span class="ident">a</span> <span class="op">*</span> <span class="ident">opacity</span>);
 
         <span class="kw">let</span> <span class="ident">background_color</span> <span class="op">=</span> <span class="ident">femtovg::Color::rgb</span>(<span class="number">54</span>, <span class="number">54</span>, <span class="number">54</span>);
         <span class="comment">//et mut foreground_color = femtovg::Color::rgb(50, 50, 200);</span>
 
-        <span class="kw">let</span> <span class="ident">posx</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_posx</span>(<span class="ident">current</span>);
-        <span class="kw">let</span> <span class="ident">posy</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_posy</span>(<span class="ident">current</span>);
-        <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">current</span>);
-        <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_height</span>(<span class="ident">current</span>);
+        <span class="kw">let</span> <span class="ident">bounds</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">bounds</span>();
 
         <span class="comment">// Clalculate arc center</span>
-        <span class="kw">let</span> <span class="ident">centerx</span> <span class="op">=</span> <span class="ident">posx</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">width</span>;
-        <span class="kw">let</span> <span class="ident">centery</span> <span class="op">=</span> <span class="ident">posy</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">height</span>;
+        <span class="kw">let</span> <span class="ident">centerx</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">bounds</span>.<span class="ident">w</span>;
+        <span class="kw">let</span> <span class="ident">centery</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">bounds</span>.<span class="ident">h</span>;
 
         <span class="comment">// Convert start and end angles to radians and rotate origin direction to be upwards instead of to the right</span>
         <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">angle_start</span>.<span class="ident">to_radians</span>() <span class="op">-</span> <span class="ident">PI</span> <span class="op">/</span> <span class="number">2.0</span>;
         <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">angle_end</span>.<span class="ident">to_radians</span>() <span class="op">-</span> <span class="ident">PI</span> <span class="op">/</span> <span class="number">2.0</span>;
 
-        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>().<span class="ident">parent</span>(<span class="ident">current</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">parent</span>(<span class="ident">cx</span>.<span class="ident">current</span>).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">parent_width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">parent</span>);
+        <span class="kw">let</span> <span class="ident">parent_width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">parent</span>);
 
         <span class="comment">// Convert radius and span into screen coordinates</span>
         <span class="kw">let</span> <span class="ident">radius</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">radius</span>.<span class="ident">value_or</span>(<span class="ident">parent_width</span> <span class="op">/</span> <span class="number">2.0</span>, <span class="number">0.0</span>);
@@ -1067,35 +1047,31 @@
 
 <span class="kw">impl</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">ArcTrack</span> {
     <span class="kw">fn</span> <span class="ident">draw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">DrawContext</span>, <span class="ident">canvas</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Canvas</span>) {
-        <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-        <span class="kw">let</span> <span class="ident">opacity</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_opacity</span>(<span class="ident">current</span>);
+        <span class="kw">let</span> <span class="ident">opacity</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">opacity</span>();
 
         <span class="comment">//let mut background_color: femtovg::Color = cx.current.get_background_color(cx).into();</span>
         <span class="comment">// background_color.set_alphaf(background_color.a * opacity);</span>
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">foreground_color</span>: <span class="ident">femtovg::Color</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">background_color</span>(<span class="ident">current</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">into</span>();
+            <span class="ident">cx</span>.<span class="ident">background_color</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">into</span>();
         <span class="ident">foreground_color</span>.<span class="ident">set_alphaf</span>(<span class="ident">foreground_color</span>.<span class="ident">a</span> <span class="op">*</span> <span class="ident">opacity</span>);
 
         <span class="kw">let</span> <span class="ident">background_color</span> <span class="op">=</span> <span class="ident">femtovg::Color::rgb</span>(<span class="number">54</span>, <span class="number">54</span>, <span class="number">54</span>);
         <span class="comment">//et mut foreground_color = femtovg::Color::rgb(50, 50, 200);</span>
 
-        <span class="kw">let</span> <span class="ident">posx</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_posx</span>(<span class="ident">current</span>);
-        <span class="kw">let</span> <span class="ident">posy</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_posy</span>(<span class="ident">current</span>);
-        <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">current</span>);
-        <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_height</span>(<span class="ident">current</span>);
+        <span class="kw">let</span> <span class="ident">bounds</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">bounds</span>();
 
         <span class="comment">// Calculate arc center</span>
-        <span class="kw">let</span> <span class="ident">centerx</span> <span class="op">=</span> <span class="ident">posx</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">width</span>;
-        <span class="kw">let</span> <span class="ident">centery</span> <span class="op">=</span> <span class="ident">posy</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">height</span>;
+        <span class="kw">let</span> <span class="ident">centerx</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">bounds</span>.<span class="ident">w</span>;
+        <span class="kw">let</span> <span class="ident">centery</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">bounds</span>.<span class="ident">h</span>;
 
         <span class="comment">// Convert start and end angles to radians and rotate origin direction to be upwards instead of to the right</span>
         <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">angle_start</span>.<span class="ident">to_radians</span>() <span class="op">-</span> <span class="ident">PI</span> <span class="op">/</span> <span class="number">2.0</span>;
         <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">angle_end</span>.<span class="ident">to_radians</span>() <span class="op">-</span> <span class="ident">PI</span> <span class="op">/</span> <span class="number">2.0</span>;
 
-        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>().<span class="ident">parent</span>(<span class="ident">current</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">parent</span>(<span class="ident">cx</span>.<span class="ident">current</span>).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">parent_width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">parent</span>);
+        <span class="kw">let</span> <span class="ident">parent_width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">parent</span>);
 
         <span class="comment">// Convert radius and span into screen coordinates</span>
         <span class="kw">let</span> <span class="ident">radius</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">radius</span>.<span class="ident">value_or</span>(<span class="ident">parent_width</span> <span class="op">/</span> <span class="number">2.0</span>, <span class="number">0.0</span>);

@@ -943,24 +943,11 @@
 <span id="938">938</span>
 <span id="939">939</span>
 <span id="940">940</span>
-<span id="941">941</span>
-<span id="942">942</span>
-<span id="943">943</span>
-<span id="944">944</span>
-<span id="945">945</span>
-<span id="946">946</span>
-<span id="947">947</span>
-<span id="948">948</span>
-<span id="949">949</span>
 </pre><pre class="rust"><code><span class="doccomment">//! The cache is a store for intermediate data produced while computing state, notably layout</span>
 <span class="doccomment">//! results. The main type here is CachedData, usually accessed via `cx.cache`.</span>
 
-<span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
-<span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
-<span class="kw">use</span> <span class="ident">std::ops::Range</span>;
-
-<span class="kw">use</span> <span class="ident">femtovg::ImageId</span>;
 <span class="kw">use</span> <span class="ident">morphorm::GeometryChanged</span>;
+<span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::storage::sparse_set::SparseSet</span>;
@@ -1255,10 +1242,7 @@
     <span class="ident">stack_child</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span>(<span class="ident">bool</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>,
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">geometry_changed</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">GeometryChanged</span><span class="op">&gt;</span>,
-
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">shadow_image</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Entity</span>, (<span class="ident">ImageId</span>, <span class="ident">ImageId</span>)<span class="op">&gt;</span>,
-
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">text_lines</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">femtovg::TextMetrics</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="comment">//pub(crate) text_lines: SparseSet&lt;Vec&lt;(Range&lt;usize&gt;, femtovg::TextMetrics)&gt;&gt;,</span>
 }
 
 <span class="kw">impl</span> <span class="ident">CachedData</span> {
@@ -1333,8 +1317,6 @@
         <span class="self">self</span>.<span class="ident">geometry_changed</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
 
         <span class="self">self</span>.<span class="ident">abilities</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-
-        <span class="self">self</span>.<span class="ident">text_lines</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
     }
 
     <span class="comment">// For getters and setters it&#39;s safe to use unwrap because every entity must have a position and size.</span>

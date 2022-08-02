@@ -357,7 +357,6 @@
 <span id="352">352</span>
 <span id="353">353</span>
 <span id="354">354</span>
-<span id="355">355</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">marker::PhantomData</span>, <span class="ident">ops::Range</span>};
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
@@ -430,7 +429,7 @@
     <span class="ident">p</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
     <span class="ident">is_dragging</span>: <span class="ident">bool</span>,
     <span class="ident">internal</span>: <span class="ident">SliderDataInternal</span>,
-    <span class="ident">on_changing</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">f32</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">on_changing</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">f32</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="ident">Slider</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>
@@ -508,8 +507,8 @@
                         .<span class="ident">on_geo_changed</span>(<span class="op">|</span><span class="ident">cx</span>, <span class="ident">geo</span><span class="op">|</span> {
                             <span class="kw">if</span> <span class="ident">geo</span>.<span class="ident">contains</span>(<span class="ident">GeometryChanged::WIDTH_CHANGED</span>) {
                                 <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-                                <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">current</span>);
-                                <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_height</span>(<span class="ident">current</span>);
+                                <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">current</span>);
+                                <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">current</span>);
                                 <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">SliderEventInternal::SetThumbSize</span>(<span class="ident">width</span>, <span class="ident">height</span>));
                             }
                         })
@@ -542,7 +541,7 @@
         <span class="prelude-val">Some</span>(<span class="string">&quot;slider&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
+    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">slider_event_internal</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">slider_event_internal</span> {
             <span class="ident">SliderEventInternal::SetThumbSize</span>(<span class="ident">width</span>, <span class="ident">height</span>) =&gt; <span class="kw">match</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">orientation</span> {
                 <span class="ident">Orientation::Horizontal</span> =&gt; {
@@ -562,8 +561,8 @@
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
             <span class="ident">WindowEvent::GeometryChanged</span>(<span class="kw">_</span>) =&gt; {
                 <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-                <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">current</span>);
-                <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_height</span>(<span class="ident">current</span>);
+                <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">current</span>);
+                <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">current</span>);
 
                 <span class="kw">if</span> <span class="ident">width</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">height</span> {
                     <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">orientation</span> <span class="op">=</span> <span class="ident">Orientation::Horizontal</span>;
@@ -584,19 +583,18 @@
                 <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">end</span>;
 
                 <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-                <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">current</span>);
-                <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_height</span>(<span class="ident">current</span>);
-                <span class="kw">let</span> <span class="ident">posx</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_posx</span>(<span class="ident">current</span>);
-                <span class="kw">let</span> <span class="ident">posy</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_posy</span>(<span class="ident">current</span>);
+                <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">current</span>);
+                <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">current</span>);
+                <span class="kw">let</span> <span class="ident">posx</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posx</span>(<span class="ident">current</span>);
+                <span class="kw">let</span> <span class="ident">posy</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posy</span>(<span class="ident">current</span>);
 
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dx</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">orientation</span> {
                     <span class="ident">Orientation::Horizontal</span> =&gt; {
-                        (<span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">left</span>.<span class="ident">pos_down</span>.<span class="number">0</span> <span class="op">-</span> <span class="ident">posx</span> <span class="op">-</span> <span class="ident">thumb_size</span> <span class="op">/</span> <span class="number">2.0</span>)
-                            <span class="op">/</span> (<span class="ident">width</span> <span class="op">-</span> <span class="ident">thumb_size</span>)
+                        (<span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pos_down</span>.<span class="number">0</span> <span class="op">-</span> <span class="ident">posx</span> <span class="op">-</span> <span class="ident">thumb_size</span> <span class="op">/</span> <span class="number">2.0</span>) <span class="op">/</span> (<span class="ident">width</span> <span class="op">-</span> <span class="ident">thumb_size</span>)
                     }
 
                     <span class="ident">Orientation::Vertical</span> =&gt; {
-                        (<span class="ident">height</span> <span class="op">-</span> (<span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">left</span>.<span class="ident">pos_down</span>.<span class="number">1</span> <span class="op">-</span> <span class="ident">posy</span>) <span class="op">-</span> <span class="ident">thumb_size</span> <span class="op">/</span> <span class="number">2.0</span>)
+                        (<span class="ident">height</span> <span class="op">-</span> (<span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pos_down</span>.<span class="number">1</span> <span class="op">-</span> <span class="ident">posy</span>) <span class="op">-</span> <span class="ident">thumb_size</span> <span class="op">/</span> <span class="number">2.0</span>)
                             <span class="op">/</span> (<span class="ident">height</span> <span class="op">-</span> <span class="ident">thumb_size</span>)
                     }
                 };
@@ -626,10 +624,10 @@
                     <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">end</span>;
 
                     <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-                    <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">current</span>);
-                    <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_height</span>(<span class="ident">current</span>);
-                    <span class="kw">let</span> <span class="ident">posx</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_posx</span>(<span class="ident">current</span>);
-                    <span class="kw">let</span> <span class="ident">posy</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_posy</span>(<span class="ident">current</span>);
+                    <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">current</span>);
+                    <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">current</span>);
+                    <span class="kw">let</span> <span class="ident">posx</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posx</span>(<span class="ident">current</span>);
+                    <span class="kw">let</span> <span class="ident">posy</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posy</span>(<span class="ident">current</span>);
 
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dx</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">orientation</span> {
                         <span class="ident">Orientation::Horizontal</span> =&gt; {
@@ -681,7 +679,7 @@
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_changing</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">f32</span>),
+        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">f32</span>),
     {
         <span class="self">self</span>.<span class="ident">modify</span>(<span class="op">|</span><span class="ident">slider</span><span class="op">|</span> <span class="ident">slider</span>.<span class="ident">on_changing</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">callback</span>)))
     }

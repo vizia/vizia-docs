@@ -317,7 +317,7 @@
 <span class="doccomment">///     .text(AppData::value.map(|flag| if *flag {CANCEL} else {&quot;&quot;}));</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Checkbox</span> {
-    <span class="ident">on_toggle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">on_toggle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Checkbox</span> {
@@ -381,7 +381,7 @@
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_toggle</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
+        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>),
     {
         <span class="self">self</span>.<span class="ident">modify</span>(<span class="op">|</span><span class="ident">checkbox</span><span class="op">|</span> <span class="ident">checkbox</span>.<span class="ident">on_toggle</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">callback</span>)))
     }
@@ -392,10 +392,10 @@
         <span class="prelude-val">Some</span>(<span class="string">&quot;checkbox&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
+    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="ident">meta</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
             <span class="ident">WindowEvent::MouseUp</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>().<span class="ident">left</span>.<span class="ident">pressed</span> <span class="op">==</span> <span class="ident">cx</span>.<span class="ident">current</span>()
+                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pressed</span> <span class="op">==</span> <span class="ident">cx</span>.<span class="ident">current</span>()
                     <span class="op">&amp;&amp;</span> <span class="ident">meta</span>.<span class="ident">target</span> <span class="op">==</span> <span class="ident">cx</span>.<span class="ident">current</span>()
                     <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">cx</span>.<span class="ident">is_disabled</span>()
                 {

@@ -49,7 +49,7 @@
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">unic_langid::LanguageIdentifier</span>;
 <span class="kw">use</span> <span class="ident">vizia_derive::Lens</span>;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">context::Context</span>, <span class="ident">events::Event</span>, <span class="ident">state::Lens</span>, <span class="ident">state::Model</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">context::EventContext</span>, <span class="ident">events::Event</span>, <span class="ident">state::Lens</span>, <span class="ident">state::Model</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Lens</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Environment</span> {
@@ -76,7 +76,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Model</span> <span class="kw">for</span> <span class="ident">Environment</span> {
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
+    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">event</span> {
             <span class="ident">EnvironmentEvent::SetLocale</span>(<span class="ident">locale</span>) =&gt; {
                 <span class="self">self</span>.<span class="ident">locale</span> <span class="op">=</span> <span class="ident">locale</span>.<span class="ident">clone</span>();

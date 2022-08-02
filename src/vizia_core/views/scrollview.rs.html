@@ -228,7 +228,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Model</span> <span class="kw">for</span> <span class="ident">ScrollData</span> {
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
+    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">scroll_update</span>, <span class="ident">meta</span><span class="op">|</span> {
             <span class="kw">match</span> <span class="ident">scroll_update</span> {
                 <span class="ident">ScrollEvent::ScrollX</span>(<span class="ident">f</span>) =&gt; <span class="self">self</span>.<span class="ident">scroll_x</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">scroll_x</span> <span class="op">+</span> <span class="kw-2">*</span><span class="ident">f</span>).<span class="ident">clamp</span>(<span class="number">0.0</span>, <span class="number">1.0</span>),
@@ -324,8 +324,8 @@
                     <span class="op">|</span><span class="op">|</span> <span class="ident">geo</span>.<span class="ident">contains</span>(<span class="ident">GeometryChanged::WIDTH_CHANGED</span>)
                 {
                     <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-                    <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">current</span>);
-                    <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_height</span>(<span class="ident">current</span>);
+                    <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">current</span>);
+                    <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">current</span>);
                     <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">ScrollEvent::ChildGeo</span>(<span class="ident">width</span>, <span class="ident">height</span>));
                 }
             });
@@ -361,22 +361,22 @@
         <span class="prelude-val">Some</span>(<span class="string">&quot;scrollview&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
+    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
             <span class="ident">WindowEvent::GeometryChanged</span>(<span class="ident">geo</span>) =&gt; {
                 <span class="kw">if</span> <span class="ident">geo</span>.<span class="ident">contains</span>(<span class="ident">GeometryChanged::HEIGHT_CHANGED</span>)
                     <span class="op">|</span><span class="op">|</span> <span class="ident">geo</span>.<span class="ident">contains</span>(<span class="ident">GeometryChanged::WIDTH_CHANGED</span>)
                 {
                     <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-                    <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_width</span>(<span class="ident">current</span>);
-                    <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">get_height</span>(<span class="ident">current</span>);
+                    <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">current</span>);
+                    <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">current</span>);
                     <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">ScrollEvent::ParentGeo</span>(<span class="ident">width</span>, <span class="ident">height</span>));
                 }
             }
 
             <span class="ident">WindowEvent::MouseScroll</span>(<span class="ident">x</span>, <span class="ident">y</span>) =&gt; {
                 <span class="kw">let</span> (<span class="ident">x</span>, <span class="ident">y</span>) <span class="op">=</span>
-                    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">modifiers</span>().<span class="ident">contains</span>(<span class="ident">Modifiers::SHIFT</span>) { (<span class="op">-</span><span class="kw-2">*</span><span class="ident">y</span>, <span class="kw-2">*</span><span class="ident">x</span>) } <span class="kw">else</span> { (<span class="kw-2">*</span><span class="ident">x</span>, <span class="op">-</span><span class="kw-2">*</span><span class="ident">y</span>) };
+                    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::SHIFT</span>) { (<span class="op">-</span><span class="kw-2">*</span><span class="ident">y</span>, <span class="kw-2">*</span><span class="ident">x</span>) } <span class="kw">else</span> { (<span class="kw-2">*</span><span class="ident">x</span>, <span class="op">-</span><span class="kw-2">*</span><span class="ident">y</span>) };
 
                 <span class="comment">// what percentage of the negative space does this cross?</span>
                 <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">get</span>(<span class="ident">cx</span>);

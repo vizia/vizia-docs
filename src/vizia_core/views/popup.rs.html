@@ -125,7 +125,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Model</span> <span class="kw">for</span> <span class="ident">PopupData</span> {
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
+    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">popup_event</span>, <span class="ident">meta</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">popup_event</span> {
             <span class="ident">PopupEvent::Open</span> =&gt; {
                 <span class="self">self</span>.<span class="ident">is_open</span> <span class="op">=</span> <span class="bool-val">true</span>;
@@ -183,7 +183,7 @@
     <span class="doccomment">/// closing it.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_blur</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
+        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>),
     {
         <span class="kw">let</span> <span class="ident">focus_event</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="ident">f</span>);
         <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">with_current</span>(<span class="self">self</span>.<span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {

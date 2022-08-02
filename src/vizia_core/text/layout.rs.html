@@ -212,6 +212,9 @@
 <span id="207">207</span>
 <span id="208">208</span>
 <span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">unicode_bidi</span>::{<span class="ident">bidi_class</span>, <span class="ident">BidiClass</span>};
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
@@ -234,18 +237,21 @@
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_paint_draw</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">DrawContext</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">Paint</span> {
-    <span class="kw">let</span> <span class="ident">font</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">font</span>(<span class="ident">entity</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">as_str</span>()).<span class="ident">unwrap_or</span>(<span class="string">&quot;&quot;</span>);
+    <span class="kw">let</span> <span class="ident">font</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">font</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">as_str</span>()).<span class="ident">unwrap_or</span>(<span class="string">&quot;&quot;</span>);
     <span class="kw">let</span> <span class="ident">font_size</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">font_size</span>(<span class="ident">entity</span>);
 
-    <span class="ident">text_paint</span>(<span class="ident">font</span>, <span class="ident">cx</span>.<span class="ident">default_font</span>(), <span class="ident">cx</span>.<span class="ident">resource_manager</span>(), <span class="ident">font_size</span>)
+    <span class="ident">text_paint</span>(<span class="ident">font</span>, <span class="ident">cx</span>.<span class="ident">default_font</span>(), <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">resource_manager</span>, <span class="ident">font_size</span>)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_paint_general</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">Paint</span> {
-    <span class="kw">let</span> <span class="ident">font</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style_ref</span>().<span class="ident">font</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">as_str</span>()).<span class="ident">unwrap_or</span>(<span class="string">&quot;&quot;</span>);
-    <span class="kw">let</span> <span class="ident">font_size</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style_ref</span>().<span class="ident">font_size</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">copied</span>().<span class="ident">unwrap_or</span>(<span class="number">16.0</span>)
-        <span class="op">*</span> <span class="ident">cx</span>.<span class="ident">style_ref</span>().<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_paint_general</span>(
+    <span class="ident">style</span>: <span class="kw-2">&amp;</span><span class="ident">Style</span>,
+    <span class="ident">resource_manager</span>: <span class="kw-2">&amp;</span><span class="ident">ResourceManager</span>,
+    <span class="ident">entity</span>: <span class="ident">Entity</span>,
+) -&gt; <span class="ident">Paint</span> {
+    <span class="kw">let</span> <span class="ident">font</span> <span class="op">=</span> <span class="ident">style</span>.<span class="ident">font</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">as_str</span>()).<span class="ident">unwrap_or</span>(<span class="string">&quot;&quot;</span>);
+    <span class="kw">let</span> <span class="ident">font_size</span> <span class="op">=</span> <span class="ident">style</span>.<span class="ident">font_size</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">copied</span>().<span class="ident">unwrap_or</span>(<span class="number">16.0</span>) <span class="op">*</span> <span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
 
-    <span class="ident">text_paint</span>(<span class="ident">font</span>, <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">style_ref</span>().<span class="ident">default_font</span>, <span class="ident">cx</span>.<span class="ident">resource_manager_ref</span>(), <span class="ident">font_size</span>)
+    <span class="ident">text_paint</span>(<span class="ident">font</span>, <span class="kw-2">&amp;</span><span class="ident">style</span>.<span class="ident">default_font</span>, <span class="kw-2">&amp;</span><span class="ident">resource_manager</span>, <span class="ident">font_size</span>)
 }
 
 <span class="kw">fn</span> <span class="ident">text_paint</span>(

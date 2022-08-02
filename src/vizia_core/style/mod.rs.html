@@ -1123,6 +1123,53 @@
 <span id="1118">1118</span>
 <span id="1119">1119</span>
 <span id="1120">1120</span>
+<span id="1121">1121</span>
+<span id="1122">1122</span>
+<span id="1123">1123</span>
+<span id="1124">1124</span>
+<span id="1125">1125</span>
+<span id="1126">1126</span>
+<span id="1127">1127</span>
+<span id="1128">1128</span>
+<span id="1129">1129</span>
+<span id="1130">1130</span>
+<span id="1131">1131</span>
+<span id="1132">1132</span>
+<span id="1133">1133</span>
+<span id="1134">1134</span>
+<span id="1135">1135</span>
+<span id="1136">1136</span>
+<span id="1137">1137</span>
+<span id="1138">1138</span>
+<span id="1139">1139</span>
+<span id="1140">1140</span>
+<span id="1141">1141</span>
+<span id="1142">1142</span>
+<span id="1143">1143</span>
+<span id="1144">1144</span>
+<span id="1145">1145</span>
+<span id="1146">1146</span>
+<span id="1147">1147</span>
+<span id="1148">1148</span>
+<span id="1149">1149</span>
+<span id="1150">1150</span>
+<span id="1151">1151</span>
+<span id="1152">1152</span>
+<span id="1153">1153</span>
+<span id="1154">1154</span>
+<span id="1155">1155</span>
+<span id="1156">1156</span>
+<span id="1157">1157</span>
+<span id="1158">1158</span>
+<span id="1159">1159</span>
+<span id="1160">1160</span>
+<span id="1161">1161</span>
+<span id="1162">1162</span>
+<span id="1163">1163</span>
+<span id="1164">1164</span>
+<span id="1165">1165</span>
+<span id="1166">1166</span>
+<span id="1167">1167</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id::GenerationalId</span>;
 <span class="kw">use</span> <span class="ident">morphorm</span>::{<span class="ident">LayoutType</span>, <span class="ident">PositionType</span>, <span class="ident">Units</span>};
 <span class="kw">use</span> <span class="ident">std::collections</span>::{<span class="ident">HashMap</span>, <span class="ident">HashSet</span>};
@@ -1258,6 +1305,11 @@
     <span class="kw">pub</span> <span class="ident">border_radius_top_right</span>: <span class="ident">AnimatableSet</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">border_radius_bottom_left</span>: <span class="ident">AnimatableSet</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">border_radius_bottom_right</span>: <span class="ident">AnimatableSet</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span>,
+
+    <span class="comment">// Outline</span>
+    <span class="kw">pub</span> <span class="ident">outline_width</span>: <span class="ident">AnimatableSet</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">outline_color</span>: <span class="ident">AnimatableSet</span><span class="op">&lt;</span><span class="ident">Color</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">outline_offset</span>: <span class="ident">AnimatableSet</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span>,
 
     <span class="comment">// Focus Order</span>
     <span class="kw">pub</span> <span class="ident">focus_order</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">FocusOrder</span><span class="op">&gt;</span>,
@@ -1586,6 +1638,18 @@
 
                     <span class="ident">Property::BorderBottomRightRadius</span>(<span class="ident">value</span>) =&gt; {
                         <span class="self">self</span>.<span class="ident">border_radius_bottom_right</span>.<span class="ident">insert_rule</span>(<span class="ident">rule_id</span>, <span class="ident">value</span>);
+                    }
+
+                    <span class="ident">Property::OutlineWidth</span>(<span class="ident">value</span>) =&gt; {
+                        <span class="self">self</span>.<span class="ident">outline_width</span>.<span class="ident">insert_rule</span>(<span class="ident">rule_id</span>, <span class="ident">value</span>);
+                    }
+
+                    <span class="ident">Property::OutlineColor</span>(<span class="ident">value</span>) =&gt; {
+                        <span class="self">self</span>.<span class="ident">outline_color</span>.<span class="ident">insert_rule</span>(<span class="ident">rule_id</span>, <span class="ident">value</span>);
+                    }
+
+                    <span class="ident">Property::OutlineOffset</span>(<span class="ident">value</span>) =&gt; {
+                        <span class="self">self</span>.<span class="ident">outline_offset</span>.<span class="ident">insert_rule</span>(<span class="ident">rule_id</span>, <span class="ident">value</span>);
                     }
 
                     <span class="comment">// Font</span>
@@ -1973,6 +2037,36 @@
                                         <span class="self">self</span>.<span class="ident">add_transition</span>(<span class="ident">transition</span>),
                                     );
                                     <span class="self">self</span>.<span class="ident">outer_shadow_color</span>.<span class="ident">insert_transition</span>(<span class="ident">rule_id</span>, <span class="ident">animation</span>);
+                                    <span class="self">self</span>.<span class="ident">transitions</span>.<span class="ident">insert</span>(<span class="ident">rule_id</span>, <span class="ident">animation</span>);
+                                }
+
+                                <span class="string">&quot;outline-width&quot;</span> =&gt; {
+                                    <span class="kw">let</span> <span class="ident">animation</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">animation_manager</span>.<span class="ident">create</span>();
+                                    <span class="self">self</span>.<span class="ident">outline_width</span>.<span class="ident">insert_animation</span>(
+                                        <span class="ident">animation</span>,
+                                        <span class="self">self</span>.<span class="ident">add_transition</span>(<span class="ident">transition</span>),
+                                    );
+                                    <span class="self">self</span>.<span class="ident">outline_width</span>.<span class="ident">insert_transition</span>(<span class="ident">rule_id</span>, <span class="ident">animation</span>);
+                                    <span class="self">self</span>.<span class="ident">transitions</span>.<span class="ident">insert</span>(<span class="ident">rule_id</span>, <span class="ident">animation</span>);
+                                }
+
+                                <span class="string">&quot;outline-color&quot;</span> =&gt; {
+                                    <span class="kw">let</span> <span class="ident">animation</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">animation_manager</span>.<span class="ident">create</span>();
+                                    <span class="self">self</span>.<span class="ident">outline_color</span>.<span class="ident">insert_animation</span>(
+                                        <span class="ident">animation</span>,
+                                        <span class="self">self</span>.<span class="ident">add_transition</span>(<span class="ident">transition</span>),
+                                    );
+                                    <span class="self">self</span>.<span class="ident">outline_color</span>.<span class="ident">insert_transition</span>(<span class="ident">rule_id</span>, <span class="ident">animation</span>);
+                                    <span class="self">self</span>.<span class="ident">transitions</span>.<span class="ident">insert</span>(<span class="ident">rule_id</span>, <span class="ident">animation</span>);
+                                }
+
+                                <span class="string">&quot;outline-offset&quot;</span> =&gt; {
+                                    <span class="kw">let</span> <span class="ident">animation</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">animation_manager</span>.<span class="ident">create</span>();
+                                    <span class="self">self</span>.<span class="ident">outline_offset</span>.<span class="ident">insert_animation</span>(
+                                        <span class="ident">animation</span>,
+                                        <span class="self">self</span>.<span class="ident">add_transition</span>(<span class="ident">transition</span>),
+                                    );
+                                    <span class="self">self</span>.<span class="ident">outline_offset</span>.<span class="ident">insert_transition</span>(<span class="ident">rule_id</span>, <span class="ident">animation</span>);
                                     <span class="self">self</span>.<span class="ident">transitions</span>.<span class="ident">insert</span>(<span class="ident">rule_id</span>, <span class="ident">animation</span>);
                                 }
 

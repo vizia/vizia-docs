@@ -1222,6 +1222,20 @@
 <span id="1217">1217</span>
 <span id="1218">1218</span>
 <span id="1219">1219</span>
+<span id="1220">1220</span>
+<span id="1221">1221</span>
+<span id="1222">1222</span>
+<span id="1223">1223</span>
+<span id="1224">1224</span>
+<span id="1225">1225</span>
+<span id="1226">1226</span>
+<span id="1227">1227</span>
+<span id="1228">1228</span>
+<span id="1229">1229</span>
+<span id="1230">1230</span>
+<span id="1231">1231</span>
+<span id="1232">1232</span>
+<span id="1233">1233</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">draw</span>;
 <span class="kw">mod</span> <span class="ident">event</span>;
 <span class="kw">mod</span> <span class="ident">proxy</span>;
@@ -1283,6 +1297,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">event_queue</span>: <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">listeners</span>:
         <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Entity</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">ViewHandler</span>, <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">global_listeners</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">style</span>: <span class="ident">Style</span>,
     <span class="ident">cache</span>: <span class="ident">CachedData</span>,
     <span class="kw">pub</span> <span class="ident">draw_cache</span>: <span class="ident">DrawCache</span>,
@@ -1331,6 +1346,7 @@
             <span class="comment">// environment: Environment::new(),</span>
             <span class="ident">event_queue</span>: <span class="ident">VecDeque::new</span>(),
             <span class="ident">listeners</span>: <span class="ident">HashMap::default</span>(),
+            <span class="ident">global_listeners</span>: <span class="macro">vec!</span>[],
             <span class="ident">mouse</span>: <span class="ident">MouseState::default</span>(),
             <span class="ident">modifiers</span>: <span class="ident">Modifiers::empty</span>(),
             <span class="ident">captured</span>: <span class="ident">Entity::null</span>(),
@@ -1730,6 +1746,18 @@
                 }
             }),
         );
+    }
+
+    <span class="doccomment">/// Adds a global listener to the application.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Global listeners have the first opportunity to handle every event that is sent in an</span>
+    <span class="doccomment">/// application. They will *never* be removed. If you need a listener tied to the lifetime of a</span>
+    <span class="doccomment">/// view, use `add_listener`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_global_listener</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">listener</span>: <span class="ident">F</span>)
+    <span class="kw">where</span>
+        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>),
+    {
+        <span class="self">self</span>.<span class="ident">global_listeners</span>.<span class="ident">push</span>(<span class="ident">Box::new</span>(<span class="ident">listener</span>));
     }
 
     <span class="doccomment">/// Add a font from memory to the application.</span>

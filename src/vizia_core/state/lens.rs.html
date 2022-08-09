@@ -360,12 +360,16 @@
 <span id="355">355</span>
 <span id="356">356</span>
 <span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::any::TypeId</span>;
 <span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Formatter</span>};
 <span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
 <span class="kw">use</span> <span class="ident">std::ops::Deref</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
+
+<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">next_uuid</span>, <span class="ident">StoreId</span>};
 
 <span class="doccomment">/// A Lens allows the construction of a reference to a piece of some data, e.g. a field of a struct.</span>
 <span class="doccomment">///</span>
@@ -382,11 +386,11 @@
 }
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait</span> <span class="ident">LensCache</span>: <span class="ident">Lens</span> {
-    <span class="kw">fn</span> <span class="ident">cache_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TypeId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">cache_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">StoreId</span> {
         <span class="kw">if</span> <span class="ident">std::mem::size_of</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>() <span class="op">==</span> <span class="number">0</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>())
+            <span class="ident">StoreId::Type</span>(<span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>())
         } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
+            <span class="ident">StoreId::UUID</span>(<span class="ident">next_uuid</span>())
         }
     }
 }

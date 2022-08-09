@@ -152,13 +152,23 @@
 <span id="147">147</span>
 <span id="148">148</span>
 <span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any</span>::{<span class="ident">Any</span>, <span class="ident">TypeId</span>},
     <span class="ident">collections::HashMap</span>,
 };
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::state::Store</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">events::ViewHandler</span>, <span class="ident">prelude</span>::<span class="kw-2">*</span>};
+
+<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::StoreId</span>;
 
 <span class="doccomment">/// A trait implemented by application data in order to mutate in response to events.</span>
 <span class="doccomment">///</span>
@@ -215,20 +225,13 @@
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">data_list</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">data</span>.<span class="ident">get_mut</span>(<span class="ident">cx</span>.<span class="ident">current</span>()) {
-            <span class="ident">data_list</span>.<span class="ident">data</span>.<span class="ident">insert</span>(<span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>(), <span class="ident">Box::new</span>(<span class="self">self</span>));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">model_data_store</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">data</span>.<span class="ident">get_mut</span>(<span class="ident">cx</span>.<span class="ident">current</span>()) {
+            <span class="ident">model_data_store</span>.<span class="ident">models</span>.<span class="ident">insert</span>(<span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>(), <span class="ident">Box::new</span>(<span class="self">self</span>));
         } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data_list</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">TypeId</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">ModelData</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
-            <span class="ident">data_list</span>.<span class="ident">insert</span>(<span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>(), <span class="ident">Box::new</span>(<span class="self">self</span>));
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">models</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">TypeId</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">ModelData</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
+            <span class="ident">models</span>.<span class="ident">insert</span>(<span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>(), <span class="ident">Box::new</span>(<span class="self">self</span>));
             <span class="ident">cx</span>.<span class="ident">data</span>
-                .<span class="ident">insert</span>(
-                    <span class="ident">cx</span>.<span class="ident">current</span>(),
-                    <span class="ident">ModelDataStore</span> {
-                        <span class="ident">data</span>: <span class="ident">data_list</span>,
-                        <span class="ident">lenses_dedup</span>: <span class="ident">HashMap::default</span>(),
-                        <span class="ident">lenses_dup</span>: <span class="macro">vec!</span>[],
-                    },
-                )
+                .<span class="ident">insert</span>(<span class="ident">cx</span>.<span class="ident">current</span>(), <span class="ident">ModelDataStore</span> { <span class="ident">models</span>, <span class="ident">stores</span>: <span class="ident">HashMap::default</span>() })
                 .<span class="ident">expect</span>(<span class="string">&quot;Failed to add data&quot;</span>);
         }
     }
@@ -295,12 +298,25 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ModelDataStore</span> {
-    <span class="kw">pub</span> <span class="ident">data</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">TypeId</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">ModelData</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">lenses_dedup</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">TypeId</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Store</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">lenses_dup</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Store</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">models</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">TypeId</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">ModelData</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">stores</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">StoreId</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Store</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Model</span> <span class="kw">for</span> () {}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">ModelOrView</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="ident">Model</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw">dyn</span> <span class="ident">ModelData</span>),
+    <span class="ident">View</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw">dyn</span> <span class="ident">ViewHandler</span>),
+}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ModelOrView</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">downcast_ref</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident">ModelOrView::Model</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">downcast_ref</span>(),
+            <span class="ident">ModelOrView::View</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>.<span class="ident">downcast_ref</span>(),
+        }
+    }
+}
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.1 (e092d0b6b 2022-07-16)" ></div>
 </body></html>

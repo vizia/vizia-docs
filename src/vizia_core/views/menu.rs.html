@@ -356,6 +356,9 @@
 <span id="351">351</span>
 <span id="352">352</span>
 <span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::cell::RefCell</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::fonts</span>::{<span class="ident">material_names::RIGHT</span>, <span class="ident">unicode_names::CHECK</span>};
@@ -460,13 +463,16 @@
             <span class="macro">panic!</span>(<span class="string">&quot;Building a MenuController inside a MenuController. This is illegal.&quot;</span>)
         }
 
-        <span class="self">Self</span> {}.<span class="ident">build</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-            <span class="ident">MenuControllerData</span> { <span class="ident">active</span> }.<span class="ident">build</span>(<span class="ident">cx</span>);
-            <span class="kw">if</span> <span class="ident">active</span> {
-                <span class="ident">cx</span>.<span class="ident">capture</span>();
-            }
-            <span class="ident">builder</span>(<span class="ident">cx</span>);
-        })
+        <span class="self">Self</span> {}
+            .<span class="ident">build</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
+                <span class="ident">MenuControllerData</span> { <span class="ident">active</span> }.<span class="ident">build</span>(<span class="ident">cx</span>);
+                <span class="ident">builder</span>(<span class="ident">cx</span>);
+            })
+            .<span class="ident">on_build</span>(<span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
+                <span class="kw">if</span> <span class="ident">active</span> {
+                    <span class="ident">cx</span>.<span class="ident">capture</span>();
+                }
+            })
     }
 }
 

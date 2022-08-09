@@ -391,118 +391,6 @@
 <span id="386">386</span>
 <span id="387">387</span>
 <span id="388">388</span>
-<span id="389">389</span>
-<span id="390">390</span>
-<span id="391">391</span>
-<span id="392">392</span>
-<span id="393">393</span>
-<span id="394">394</span>
-<span id="395">395</span>
-<span id="396">396</span>
-<span id="397">397</span>
-<span id="398">398</span>
-<span id="399">399</span>
-<span id="400">400</span>
-<span id="401">401</span>
-<span id="402">402</span>
-<span id="403">403</span>
-<span id="404">404</span>
-<span id="405">405</span>
-<span id="406">406</span>
-<span id="407">407</span>
-<span id="408">408</span>
-<span id="409">409</span>
-<span id="410">410</span>
-<span id="411">411</span>
-<span id="412">412</span>
-<span id="413">413</span>
-<span id="414">414</span>
-<span id="415">415</span>
-<span id="416">416</span>
-<span id="417">417</span>
-<span id="418">418</span>
-<span id="419">419</span>
-<span id="420">420</span>
-<span id="421">421</span>
-<span id="422">422</span>
-<span id="423">423</span>
-<span id="424">424</span>
-<span id="425">425</span>
-<span id="426">426</span>
-<span id="427">427</span>
-<span id="428">428</span>
-<span id="429">429</span>
-<span id="430">430</span>
-<span id="431">431</span>
-<span id="432">432</span>
-<span id="433">433</span>
-<span id="434">434</span>
-<span id="435">435</span>
-<span id="436">436</span>
-<span id="437">437</span>
-<span id="438">438</span>
-<span id="439">439</span>
-<span id="440">440</span>
-<span id="441">441</span>
-<span id="442">442</span>
-<span id="443">443</span>
-<span id="444">444</span>
-<span id="445">445</span>
-<span id="446">446</span>
-<span id="447">447</span>
-<span id="448">448</span>
-<span id="449">449</span>
-<span id="450">450</span>
-<span id="451">451</span>
-<span id="452">452</span>
-<span id="453">453</span>
-<span id="454">454</span>
-<span id="455">455</span>
-<span id="456">456</span>
-<span id="457">457</span>
-<span id="458">458</span>
-<span id="459">459</span>
-<span id="460">460</span>
-<span id="461">461</span>
-<span id="462">462</span>
-<span id="463">463</span>
-<span id="464">464</span>
-<span id="465">465</span>
-<span id="466">466</span>
-<span id="467">467</span>
-<span id="468">468</span>
-<span id="469">469</span>
-<span id="470">470</span>
-<span id="471">471</span>
-<span id="472">472</span>
-<span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
-<span id="476">476</span>
-<span id="477">477</span>
-<span id="478">478</span>
-<span id="479">479</span>
-<span id="480">480</span>
-<span id="481">481</span>
-<span id="482">482</span>
-<span id="483">483</span>
-<span id="484">484</span>
-<span id="485">485</span>
-<span id="486">486</span>
-<span id="487">487</span>
-<span id="488">488</span>
-<span id="489">489</span>
-<span id="490">490</span>
-<span id="491">491</span>
-<span id="492">492</span>
-<span id="493">493</span>
-<span id="494">494</span>
-<span id="495">495</span>
-<span id="496">496</span>
-<span id="497">497</span>
-<span id="498">498</span>
-<span id="499">499</span>
-<span id="500">500</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::window::ViziaWindow</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Renderer</span>;
 <span class="kw">use</span> <span class="ident">baseview</span>::{<span class="ident">WindowHandle</span>, <span class="ident">WindowScalePolicy</span>};
@@ -511,8 +399,8 @@
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::proxy::queue_get</span>;
 <span class="kw">use</span> <span class="ident">vizia_core::cache::BoundingBox</span>;
+<span class="kw">use</span> <span class="ident">vizia_core::context::backend</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">vizia_core::events::EventManager</span>;
-<span class="kw">use</span> <span class="ident">vizia_core::fonts</span>;
 <span class="kw">use</span> <span class="ident">vizia_core::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Application</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>
@@ -541,6 +429,11 @@
         }
     }
 
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ignore_default_theme</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">ignore_default_theme</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="self">self</span>
+    }
+
     <span class="doccomment">/// Change the window&#39;s scale policy. Not part of [`new()`][Self::new] to keep the same</span>
     <span class="doccomment">/// signature as the winit backend.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_scale_policy</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">scale_policy</span>: <span class="ident">WindowScalePolicy</span>) -&gt; <span class="self">Self</span> {
@@ -556,12 +449,6 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inner_size</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">size</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">WindowSize</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">window_description</span>.<span class="ident">inner_size</span> <span class="op">=</span> <span class="ident">size</span>.<span class="ident">into</span>();
-
-        <span class="self">self</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ignore_default_theme</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">ignore_default_theme</span> <span class="op">=</span> <span class="bool-val">true</span>;
 
         <span class="self">self</span>
     }
@@ -656,192 +543,88 @@
         <span class="ident">scale_policy</span>: <span class="ident">WindowScalePolicy</span>,
         <span class="ident">renderer</span>: <span class="ident">Renderer</span>,
     ) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cx</span> <span class="op">=</span> <span class="ident">BackendContext::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">context</span>);
+
         <span class="kw">let</span> <span class="ident">event_manager</span> <span class="op">=</span> <span class="ident">EventManager::new</span>();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">canvas</span> <span class="op">=</span> <span class="ident">Canvas::new</span>(<span class="ident">renderer</span>).<span class="ident">expect</span>(<span class="string">&quot;Cannot create canvas&quot;</span>);
+        <span class="kw">let</span> <span class="ident">canvas</span> <span class="op">=</span> <span class="ident">Canvas::new</span>(<span class="ident">renderer</span>).<span class="ident">expect</span>(<span class="string">&quot;Cannot create canvas&quot;</span>);
 
         <span class="comment">// Assume scale for now until there is an event with a new one.</span>
-        <span class="kw">let</span> <span class="ident">scale</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">scale_policy</span> {
+        <span class="kw">let</span> <span class="ident">scale_factor</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">scale_policy</span> {
             <span class="ident">WindowScalePolicy::ScaleFactor</span>(<span class="ident">scale</span>) =&gt; <span class="ident">scale</span>,
             <span class="ident">WindowScalePolicy::SystemScaleFactor</span> =&gt; <span class="number">1.0</span>,
         };
 
-        <span class="ident">context</span>.<span class="ident">style</span>().<span class="ident">dpi_factor</span> <span class="op">=</span> <span class="ident">scale</span>;
-
-        <span class="kw">let</span> <span class="ident">logical_size</span> <span class="op">=</span> <span class="ident">win_desc</span>.<span class="ident">inner_size</span>;
-        <span class="kw">let</span> <span class="ident">physical_size</span> <span class="op">=</span> <span class="ident">WindowSize</span> {
-            <span class="ident">width</span>: (<span class="ident">logical_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">*</span> <span class="ident">scale</span>).<span class="ident">round</span>() <span class="kw">as</span> <span class="ident">u32</span>,
-            <span class="ident">height</span>: (<span class="ident">logical_size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">*</span> <span class="ident">scale</span>).<span class="ident">round</span>() <span class="kw">as</span> <span class="ident">u32</span>,
-        };
-
-        <span class="ident">canvas</span>.<span class="ident">set_size</span>(<span class="ident">physical_size</span>.<span class="ident">width</span>, <span class="ident">physical_size</span>.<span class="ident">height</span>, <span class="number">1.0</span>);
-
-        <span class="kw">let</span> <span class="ident">regular_font</span> <span class="op">=</span> <span class="ident">fonts::ROBOTO_REGULAR</span>;
-        <span class="kw">let</span> <span class="ident">bold_font</span> <span class="op">=</span> <span class="ident">fonts::ROBOTO_BOLD</span>;
-        <span class="kw">let</span> <span class="ident">icon_font</span> <span class="op">=</span> <span class="ident">fonts::ENTYPO</span>;
-        <span class="kw">let</span> <span class="ident">emoji_font</span> <span class="op">=</span> <span class="ident">fonts::OPEN_SANS_EMOJI</span>;
-        <span class="kw">let</span> <span class="ident">arabic_font</span> <span class="op">=</span> <span class="ident">fonts::AMIRI_REGULAR</span>;
-        <span class="kw">let</span> <span class="ident">material_font</span> <span class="op">=</span> <span class="ident">fonts::MATERIAL_ICONS_REGULAR</span>;
-
-        <span class="ident">context</span>.<span class="ident">add_font_mem</span>(<span class="string">&quot;roboto&quot;</span>, <span class="ident">regular_font</span>);
-        <span class="ident">context</span>.<span class="ident">add_font_mem</span>(<span class="string">&quot;roboto-bold&quot;</span>, <span class="ident">bold_font</span>);
-        <span class="ident">context</span>.<span class="ident">add_font_mem</span>(<span class="string">&quot;icons&quot;</span>, <span class="ident">icon_font</span>);
-        <span class="ident">context</span>.<span class="ident">add_font_mem</span>(<span class="string">&quot;emoji&quot;</span>, <span class="ident">emoji_font</span>);
-        <span class="ident">context</span>.<span class="ident">add_font_mem</span>(<span class="string">&quot;arabic&quot;</span>, <span class="ident">arabic_font</span>);
-        <span class="ident">context</span>.<span class="ident">add_font_mem</span>(<span class="string">&quot;material&quot;</span>, <span class="ident">material_font</span>);
-
-        <span class="ident">context</span>.<span class="ident">style</span>().<span class="ident">default_font</span> <span class="op">=</span> <span class="string">&quot;roboto&quot;</span>.<span class="ident">to_string</span>();
-
-        <span class="comment">//canvas.scale(scale as f32, scale as f32);</span>
-
-        <span class="ident">context</span>.<span class="ident">style</span>().<span class="ident">width</span>.<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="ident">Units::Pixels</span>(<span class="ident">logical_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">f32</span>));
-        <span class="ident">context</span>.<span class="ident">style</span>().<span class="ident">height</span>.<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="ident">Units::Pixels</span>(<span class="ident">logical_size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">f32</span>));
-
-        <span class="ident">context</span>.<span class="ident">style</span>().<span class="ident">disabled</span>.<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="bool-val">false</span>);
-
-        <span class="ident">context</span>.<span class="ident">cache</span>().<span class="ident">set_width</span>(<span class="ident">Entity::root</span>(), <span class="ident">physical_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">f32</span>);
-        <span class="ident">context</span>.<span class="ident">cache</span>().<span class="ident">set_height</span>(<span class="ident">Entity::root</span>(), <span class="ident">physical_size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">f32</span>);
-        <span class="ident">context</span>.<span class="ident">cache</span>().<span class="ident">set_opacity</span>(<span class="ident">Entity::root</span>(), <span class="number">1.0</span>);
-
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bounding_box</span> <span class="op">=</span> <span class="ident">BoundingBox::default</span>();
-        <span class="ident">bounding_box</span>.<span class="ident">w</span> <span class="op">=</span> <span class="ident">physical_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">f32</span>;
-        <span class="ident">bounding_box</span>.<span class="ident">h</span> <span class="op">=</span> <span class="ident">physical_size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">f32</span>;
-
-        <span class="ident">context</span>.<span class="ident">cache</span>().<span class="ident">set_clip_region</span>(<span class="ident">Entity::root</span>(), <span class="ident">bounding_box</span>);
-
-        <span class="ident">context</span>.<span class="ident">canvases</span>.<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="ident">canvas</span>);
+        <span class="ident">cx</span>.<span class="ident">add_main_window</span>(<span class="kw-2">&amp;</span><span class="ident">win_desc</span>, <span class="ident">canvas</span>, <span class="ident">scale_factor</span> <span class="kw">as</span> <span class="ident">f32</span>);
 
         <span class="ident">ApplicationRunner</span> {
             <span class="ident">event_manager</span>,
             <span class="ident">context</span>,
             <span class="ident">should_redraw</span>: <span class="bool-val">true</span>,
             <span class="ident">scale_policy</span>,
-            <span class="ident">scale_factor</span>: <span class="ident">scale</span>,
+            <span class="ident">scale_factor</span>,
         }
     }
-
-    <span class="comment">/*
-    pub fn get_window(&amp;self) -&gt; Entity {
-        self.Entity::root()
-    }
-
-    pub fn get_state(&amp;mut self) -&gt; &amp;mut State {
-        &amp;mut self.context
-    }
-
-    pub fn get_event_manager(&amp;mut self) -&gt; &amp;mut EventManager {
-        &amp;mut self.event_manager
-    }
-    */</span>
-
-    <span class="comment">// pub fn update_data(&amp;mut self) {</span>
-    <span class="comment">//     // Data Updates</span>
-    <span class="comment">//     let mut observers: Vec&lt;Entity&gt; = Vec::new();</span>
-    <span class="comment">//     for model_list in self.context.data.model_data.dense.iter().map(|entry| &amp;entry.value){</span>
-    <span class="comment">//         for (_, model) in model_list.iter() {</span>
-    <span class="comment">//             //println!(&quot;Lenses: {:?}&quot;, context.lenses.len());</span>
-    <span class="comment">//             for (_, lens) in self.context.lenses.iter_mut() {</span>
-    <span class="comment">//                 if lens.update(model) {</span>
-    <span class="comment">//                     observers.extend(lens.observers().iter());</span>
-    <span class="comment">//                 }</span>
-    <span class="comment">//             }</span>
-    <span class="comment">//         }</span>
-    <span class="comment">//     }</span>
-
-    <span class="comment">//     for observer in observers.iter() {</span>
-    <span class="comment">//         if let Some(mut view) = self.context.views.remove(observer) {</span>
-    <span class="comment">//             let prev = self.context.current;</span>
-    <span class="comment">//             self.context.current = *observer;</span>
-    <span class="comment">//             let prev_count = self.context.count;</span>
-    <span class="comment">//             self.context.count = 0;</span>
-    <span class="comment">//             view.body(&amp;mut self.context);</span>
-    <span class="comment">//             self.context.current = prev;</span>
-    <span class="comment">//             self.context.count = prev_count;</span>
-
-    <span class="comment">//             self.context.style.needs_redraw = true;</span>
-
-    <span class="comment">//             self.context.views.insert(*observer, view);</span>
-    <span class="comment">//         }</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_frame_update</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">event</span>) <span class="op">=</span> <span class="ident">queue_get</span>() {
-            <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">emit_custom</span>(<span class="ident">event</span>);
-        }
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cx</span> <span class="op">=</span> <span class="ident">BackendContext::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>);
 
-        <span class="comment">//if let Some(mut window_view) = context.views.remove(&amp;Entity::root()) {</span>
-        <span class="comment">//if let Some(window) = window_view.downcast_mut::&lt;Window&gt;() {</span>
+        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">event</span>) <span class="op">=</span> <span class="ident">queue_get</span>() {
+            <span class="ident">cx</span>.<span class="ident">send_event</span>(<span class="ident">event</span>);
+        }
 
         <span class="comment">// Load resources</span>
-        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">synchronize_fonts</span>();
-
-        <span class="comment">//}</span>
-
-        <span class="comment">//context.views.insert(Entity::root(), window_view);</span>
-        <span class="comment">//}</span>
+        <span class="ident">cx</span>.<span class="ident">synchronize_fonts</span>();
 
         <span class="comment">// Events</span>
-        <span class="kw">while</span> <span class="self">self</span>.<span class="ident">event_manager</span>.<span class="ident">flush_events</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>) {}
+        <span class="kw">while</span> <span class="self">self</span>.<span class="ident">event_manager</span>.<span class="ident">flush_events</span>(<span class="kw-2">&amp;mut</span> <span class="ident">cx</span>.<span class="ident">context</span>()) {}
 
-        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">process_data_updates</span>();
-        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">process_style_updates</span>();
+        <span class="ident">cx</span>.<span class="ident">load_images</span>();
 
-        <span class="comment">// if self.context.has_animations() {</span>
-        <span class="comment">//     if let Some(window_event_handler) = self.context.views.remove(&amp;Entity::root()) {</span>
-        <span class="comment">//         if let Some(window) = window_event_handler.downcast_ref::&lt;Window&gt;() {</span>
-        <span class="comment">//             window.handle.window().request_redraw();</span>
-        <span class="comment">//         }</span>
+        <span class="ident">cx</span>.<span class="ident">process_data_updates</span>();
+        <span class="ident">cx</span>.<span class="ident">process_style_updates</span>();
 
-        <span class="comment">//         context.views.insert(Entity::root(), window_event_handler);</span>
-        <span class="comment">//     }</span>
-        <span class="comment">// } else {</span>
-        <span class="comment">//     if should_poll {</span>
-        <span class="comment">//         *control_flow = ControlFlow::Poll;</span>
-        <span class="comment">//     } else {</span>
-        <span class="comment">//         *control_flow = ControlFlow::Wait;</span>
-        <span class="comment">//     }</span>
-        <span class="comment">// }</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">has_animations</span>() {
-            <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">apply_animations</span>();
-        }
+        <span class="ident">cx</span>.<span class="ident">apply_animations</span>();
 
-        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">process_visual_updates</span>();
+        <span class="ident">cx</span>.<span class="ident">process_visual_updates</span>();
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">style</span>().<span class="ident">needs_redraw</span> {
-            <span class="comment">//     // TODO - Move this to EventManager</span>
+        <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">needs_redraw</span> {
+            <span class="comment">// TODO - Move this to EventManager</span>
             <span class="self">self</span>.<span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
-            <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">style</span>().<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">false</span>;
+            <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">false</span>;
         }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">render</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">draw</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cx</span> <span class="op">=</span> <span class="ident">BackendContext::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>);
+        <span class="ident">cx</span>.<span class="ident">draw</span>();
         <span class="self">self</span>.<span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">false</span>;
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">handle_event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">event</span>: <span class="ident">baseview::Event</span>, <span class="ident">should_quit</span>: <span class="kw-2">&amp;mut</span> <span class="ident">bool</span>) {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cx</span> <span class="op">=</span> <span class="ident">BackendContext::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>);
+
         <span class="kw">if</span> <span class="ident">requests_exit</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>) {
-            <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">emit_custom</span>(<span class="ident">Event::new</span>(<span class="ident">WindowEvent::WindowClose</span>));
+            <span class="ident">cx</span>.<span class="ident">send_event</span>(<span class="ident">Event::new</span>(<span class="ident">WindowEvent::WindowClose</span>));
             <span class="kw-2">*</span><span class="ident">should_quit</span> <span class="op">=</span> <span class="bool-val">true</span>;
         }
 
         <span class="kw">match</span> <span class="ident">event</span> {
             <span class="ident">baseview::Event::Mouse</span>(<span class="ident">event</span>) =&gt; <span class="kw">match</span> <span class="ident">event</span> {
                 <span class="ident">baseview::MouseEvent::CursorMoved</span> { <span class="ident">position</span> } =&gt; {
-                    <span class="kw">let</span> <span class="ident">physical_posx</span> <span class="op">=</span> <span class="ident">position</span>.<span class="ident">x</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">style</span>().<span class="ident">dpi_factor</span>;
-                    <span class="kw">let</span> <span class="ident">physical_posy</span> <span class="op">=</span> <span class="ident">position</span>.<span class="ident">y</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">style</span>().<span class="ident">dpi_factor</span>;
+                    <span class="kw">let</span> <span class="ident">physical_posx</span> <span class="op">=</span> <span class="ident">position</span>.<span class="ident">x</span> <span class="op">*</span> <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">dpi_factor</span>;
+                    <span class="kw">let</span> <span class="ident">physical_posy</span> <span class="op">=</span> <span class="ident">position</span>.<span class="ident">y</span> <span class="op">*</span> <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">dpi_factor</span>;
                     <span class="kw">let</span> <span class="ident">cursorx</span> <span class="op">=</span> (<span class="ident">physical_posx</span>) <span class="kw">as</span> <span class="ident">f32</span>;
                     <span class="kw">let</span> <span class="ident">cursory</span> <span class="op">=</span> (<span class="ident">physical_posy</span>) <span class="kw">as</span> <span class="ident">f32</span>;
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::MouseMove</span>(<span class="ident">cursorx</span>, <span class="ident">cursory</span>));
+                    <span class="ident">cx</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::MouseMove</span>(<span class="ident">cursorx</span>, <span class="ident">cursory</span>));
                 }
                 <span class="ident">baseview::MouseEvent::ButtonPressed</span>(<span class="ident">button</span>) =&gt; {
                     <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">translate_mouse_button</span>(<span class="ident">button</span>);
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::MouseDown</span>(<span class="ident">b</span>));
+                    <span class="ident">cx</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::MouseDown</span>(<span class="ident">b</span>));
                 }
                 <span class="ident">baseview::MouseEvent::ButtonReleased</span>(<span class="ident">button</span>) =&gt; {
                     <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">translate_mouse_button</span>(<span class="ident">button</span>);
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::MouseUp</span>(<span class="ident">b</span>));
+                    <span class="ident">cx</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::MouseUp</span>(<span class="ident">b</span>));
                 }
                 <span class="ident">baseview::MouseEvent::WheelScrolled</span>(<span class="ident">scroll_delta</span>) =&gt; {
                     <span class="kw">let</span> (<span class="ident">lines_x</span>, <span class="ident">lines_y</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">scroll_delta</span> {
@@ -864,7 +647,7 @@
                         ),
                     };
 
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::MouseScroll</span>(<span class="ident">lines_x</span>, <span class="ident">lines_y</span>));
+                    <span class="ident">cx</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::MouseScroll</span>(<span class="ident">lines_x</span>, <span class="ident">lines_y</span>));
                 }
                 <span class="kw">_</span> =&gt; {}
             },
@@ -876,36 +659,34 @@
 
                 <span class="kw">match</span> <span class="ident">event</span>.<span class="ident">code</span> {
                     <span class="ident">Code::ShiftLeft</span> <span class="op">|</span> <span class="ident">Code::ShiftRight</span> =&gt; {
-                        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">modifiers_mut</span>().<span class="ident">set</span>(<span class="ident">Modifiers::SHIFT</span>, <span class="ident">pressed</span>)
+                        <span class="ident">cx</span>.<span class="ident">modifiers</span>().<span class="ident">set</span>(<span class="ident">Modifiers::SHIFT</span>, <span class="ident">pressed</span>)
                     }
                     <span class="ident">Code::ControlLeft</span> <span class="op">|</span> <span class="ident">Code::ControlRight</span> =&gt; {
-                        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">modifiers_mut</span>().<span class="ident">set</span>(<span class="ident">Modifiers::CTRL</span>, <span class="ident">pressed</span>)
+                        <span class="ident">cx</span>.<span class="ident">modifiers</span>().<span class="ident">set</span>(<span class="ident">Modifiers::CTRL</span>, <span class="ident">pressed</span>)
                     }
-                    <span class="ident">Code::AltLeft</span> <span class="op">|</span> <span class="ident">Code::AltRight</span> =&gt; {
-                        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">modifiers_mut</span>().<span class="ident">set</span>(<span class="ident">Modifiers::ALT</span>, <span class="ident">pressed</span>)
-                    }
+                    <span class="ident">Code::AltLeft</span> <span class="op">|</span> <span class="ident">Code::AltRight</span> =&gt; <span class="ident">cx</span>.<span class="ident">modifiers</span>().<span class="ident">set</span>(<span class="ident">Modifiers::ALT</span>, <span class="ident">pressed</span>),
                     <span class="ident">Code::MetaLeft</span> <span class="op">|</span> <span class="ident">Code::MetaRight</span> =&gt; {
-                        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">modifiers_mut</span>().<span class="ident">set</span>(<span class="ident">Modifiers::LOGO</span>, <span class="ident">pressed</span>)
+                        <span class="ident">cx</span>.<span class="ident">modifiers</span>().<span class="ident">set</span>(<span class="ident">Modifiers::LOGO</span>, <span class="ident">pressed</span>)
                     }
                     <span class="kw">_</span> =&gt; (),
                 }
 
                 <span class="kw">match</span> <span class="ident">s</span> {
                     <span class="ident">MouseButtonState::Pressed</span> =&gt; {
-                        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::KeyDown</span>(
+                        <span class="ident">cx</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::KeyDown</span>(
                             <span class="ident">event</span>.<span class="ident">code</span>,
                             <span class="prelude-val">Some</span>(<span class="ident">event</span>.<span class="ident">key</span>.<span class="ident">clone</span>()),
                         ));
 
                         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">keyboard_types::Key::Character</span>(<span class="ident">written</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">event</span>.<span class="ident">key</span> {
                             <span class="kw">for</span> <span class="ident">chr</span> <span class="kw">in</span> <span class="ident">written</span>.<span class="ident">chars</span>() {
-                                <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::CharInput</span>(<span class="ident">chr</span>));
+                                <span class="ident">cx</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::CharInput</span>(<span class="ident">chr</span>));
                             }
                         }
                     }
 
                     <span class="ident">MouseButtonState::Released</span> =&gt; {
-                        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::KeyUp</span>(
+                        <span class="ident">cx</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::KeyUp</span>(
                             <span class="ident">event</span>.<span class="ident">code</span>,
                             <span class="prelude-val">Some</span>(<span class="ident">event</span>.<span class="ident">key</span>.<span class="ident">clone</span>()),
                         ));
@@ -914,9 +695,9 @@
             }
             <span class="ident">baseview::Event::Window</span>(<span class="ident">event</span>) =&gt; <span class="kw">match</span> <span class="ident">event</span> {
                 <span class="ident">baseview::WindowEvent::Focused</span> =&gt; {
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">need_restyle</span>();
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">need_relayout</span>();
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">need_redraw</span>();
+                    <span class="ident">cx</span>.<span class="number">0</span>.<span class="ident">need_restyle</span>();
+                    <span class="ident">cx</span>.<span class="number">0</span>.<span class="ident">need_relayout</span>();
+                    <span class="ident">cx</span>.<span class="number">0</span>.<span class="ident">need_redraw</span>();
                 }
                 <span class="ident">baseview::WindowEvent::Resized</span>(<span class="ident">window_info</span>) =&gt; {
                     <span class="self">self</span>.<span class="ident">scale_factor</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">scale_policy</span> {
@@ -924,7 +705,7 @@
                         <span class="ident">WindowScalePolicy::SystemScaleFactor</span> =&gt; <span class="ident">window_info</span>.<span class="ident">scale</span>(),
                     };
 
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">style</span>().<span class="ident">dpi_factor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">scale_factor</span>;
+                    <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">dpi_factor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">scale_factor</span>;
 
                     <span class="kw">let</span> <span class="ident">logical_size</span> <span class="op">=</span> (
                         (<span class="ident">window_info</span>.<span class="ident">physical_size</span>().<span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="self">self</span>.<span class="ident">scale_factor</span>),
@@ -934,30 +715,24 @@
                     <span class="kw">let</span> <span class="ident">physical_size</span> <span class="op">=</span>
                         (<span class="ident">window_info</span>.<span class="ident">physical_size</span>().<span class="ident">width</span>, <span class="ident">window_info</span>.<span class="ident">physical_size</span>().<span class="ident">height</span>);
 
-                    <span class="self">self</span>.<span class="ident">context</span>
-                        .<span class="ident">style</span>()
-                        .<span class="ident">width</span>
-                        .<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="ident">Units::Pixels</span>(<span class="ident">logical_size</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">f32</span>));
-                    <span class="self">self</span>.<span class="ident">context</span>
-                        .<span class="ident">style</span>()
-                        .<span class="ident">height</span>
-                        .<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="ident">Units::Pixels</span>(<span class="ident">logical_size</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">f32</span>));
+                    <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">width</span>.<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="ident">Units::Pixels</span>(<span class="ident">logical_size</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">f32</span>));
+                    <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">height</span>.<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="ident">Units::Pixels</span>(<span class="ident">logical_size</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">f32</span>));
 
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">cache</span>().<span class="ident">set_width</span>(<span class="ident">Entity::root</span>(), <span class="ident">physical_size</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">f32</span>);
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">cache</span>().<span class="ident">set_height</span>(<span class="ident">Entity::root</span>(), <span class="ident">physical_size</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">f32</span>);
+                    <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">set_width</span>(<span class="ident">Entity::root</span>(), <span class="ident">physical_size</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">f32</span>);
+                    <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">set_height</span>(<span class="ident">Entity::root</span>(), <span class="ident">physical_size</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">f32</span>);
 
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bounding_box</span> <span class="op">=</span> <span class="ident">BoundingBox::default</span>();
                     <span class="ident">bounding_box</span>.<span class="ident">w</span> <span class="op">=</span> <span class="ident">physical_size</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">f32</span>;
                     <span class="ident">bounding_box</span>.<span class="ident">h</span> <span class="op">=</span> <span class="ident">physical_size</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">f32</span>;
 
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">cache</span>().<span class="ident">set_clip_region</span>(<span class="ident">Entity::root</span>(), <span class="ident">bounding_box</span>);
+                    <span class="ident">cx</span>.<span class="ident">cache</span>().<span class="ident">set_clip_region</span>(<span class="ident">Entity::root</span>(), <span class="ident">bounding_box</span>);
 
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">need_restyle</span>();
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">need_relayout</span>();
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">need_redraw</span>();
+                    <span class="ident">cx</span>.<span class="number">0</span>.<span class="ident">need_restyle</span>();
+                    <span class="ident">cx</span>.<span class="number">0</span>.<span class="ident">need_relayout</span>();
+                    <span class="ident">cx</span>.<span class="number">0</span>.<span class="ident">need_redraw</span>();
                 }
                 <span class="ident">baseview::WindowEvent::WillClose</span> =&gt; {
-                    <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">emit_custom</span>(<span class="ident">Event::new</span>(<span class="ident">WindowEvent::WindowClose</span>));
+                    <span class="ident">cx</span>.<span class="ident">send_event</span>(<span class="ident">Event::new</span>(<span class="ident">WindowEvent::WindowClose</span>));
                 }
                 <span class="kw">_</span> =&gt; {}
             },
@@ -965,8 +740,9 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">handle_idle</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">on_idle</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cx</span> <span class="op">=</span> <span class="ident">BackendContext::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>);
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">idle_callback</span>) <span class="op">=</span> <span class="ident">on_idle</span> {
-            <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">set_current</span>(<span class="ident">Entity::root</span>());
+            <span class="ident">cx</span>.<span class="ident">set_current</span>(<span class="ident">Entity::root</span>());
             (<span class="ident">idle_callback</span>)(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">context</span>);
         }
     }

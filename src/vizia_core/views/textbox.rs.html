@@ -781,6 +781,8 @@
 <span id="776">776</span>
 <span id="777">777</span>
 <span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::BoundingBox</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id::GenerationalId</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
@@ -1117,7 +1119,7 @@
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">cx</span>.<span class="ident">is_disabled</span>() {
                     <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">edit</span> {
                         <span class="self">self</span>.<span class="ident">edit</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                        <span class="ident">cx</span>.<span class="ident">focus</span>();
+                        <span class="ident">cx</span>.<span class="ident">focus_with_visibility</span>(<span class="bool-val">false</span>);
                         <span class="ident">cx</span>.<span class="ident">capture</span>();
                         <span class="ident">cx</span>.<span class="ident">set_checked</span>(<span class="bool-val">true</span>);
                         <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::SelectAll</span>);
@@ -1304,6 +1306,7 @@
                 <span class="ident">TextboxKind::MultiLineWrapped</span> =&gt; <span class="string">&quot;multi_line_wrapped&quot;</span>,
             })
             .<span class="ident">cursor</span>(<span class="ident">CursorIcon::Text</span>)
+            .<span class="ident">keyboard_navigatable</span>(<span class="bool-val">true</span>)
     }
 }
 
@@ -1340,11 +1343,11 @@
         <span class="comment">//let caret = cx.tree.get_child(cx.current, 1).unwrap();</span>
 
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
-            <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">button</span>) <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">button</span> <span class="op">==</span> <span class="ident">MouseButton::Left</span> =&gt; {
+            <span class="ident">WindowEvent::TriggerDown</span> { <span class="ident">mouse</span> } =&gt; {
                 <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">is_over</span>() {
                     <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::StartEdit</span>);
 
-                    <span class="ident">cx</span>.<span class="ident">focus</span>();
+                    <span class="ident">cx</span>.<span class="ident">focus_with_visibility</span>(<span class="op">!</span><span class="ident">mouse</span>);
                     <span class="ident">cx</span>.<span class="ident">capture</span>();
                     <span class="ident">cx</span>.<span class="ident">set_checked</span>(<span class="bool-val">true</span>);
                     <span class="ident">cx</span>.<span class="ident">lock_cursor_icon</span>();
@@ -1369,12 +1372,12 @@
 
                     <span class="comment">// Forward event to hovered</span>
                     <span class="ident">cx</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
-                        <span class="ident">Event::new</span>(<span class="ident">WindowEvent::MouseDown</span>(<span class="ident">MouseButton::Left</span>)).<span class="ident">target</span>(<span class="ident">cx</span>.<span class="ident">hovered</span>()),
+                        <span class="ident">Event::new</span>(<span class="ident">WindowEvent::TriggerDown</span> { <span class="ident">mouse</span>: <span class="bool-val">true</span> }).<span class="ident">target</span>(<span class="ident">cx</span>.<span class="ident">hovered</span>()),
                     );
                 }
             }
 
-            <span class="ident">WindowEvent::MouseUp</span>(<span class="ident">button</span>) <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">button</span> <span class="op">==</span> <span class="ident">MouseButton::Left</span> =&gt; {
+            <span class="ident">WindowEvent::TriggerUp</span> { .. } =&gt; {
                 <span class="ident">cx</span>.<span class="ident">unlock_cursor_icon</span>();
             }
 
@@ -1387,6 +1390,7 @@
             <span class="ident">WindowEvent::CharInput</span>(<span class="ident">c</span>) =&gt; {
                 <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="string">&#39;\u{1b}&#39;</span> <span class="op">&amp;&amp;</span> <span class="comment">// Escape</span>
                             <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="string">&#39;\u{8}&#39;</span> <span class="op">&amp;&amp;</span> <span class="comment">// Backspace</span>
+                            <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="string">&#39;\u{9}&#39;</span> <span class="op">&amp;&amp;</span> <span class="comment">// Tab</span>
                             <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="string">&#39;\u{7f}&#39;</span> <span class="op">&amp;&amp;</span> <span class="comment">// Delete</span>
                             <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="string">&#39;\u{0d}&#39;</span> <span class="op">&amp;&amp;</span> <span class="comment">// Carriage return</span>
                             <span class="op">!</span><span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::CTRL</span>)

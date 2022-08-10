@@ -359,6 +359,9 @@
 <span id="354">354</span>
 <span id="355">355</span>
 <span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::cell::RefCell</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::fonts</span>::{<span class="ident">material_names::RIGHT</span>, <span class="ident">unicode_names::CHECK</span>};
@@ -385,6 +388,7 @@
         <span class="kw">let</span> <span class="ident">i</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">data</span>.<span class="ident">counter</span>.<span class="ident">borrow</span>();
         <span class="kw-2">*</span><span class="ident">data</span>.<span class="ident">counter</span>.<span class="ident">borrow_mut</span>() <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
         <span class="ident">handle</span>
+            .<span class="ident">keyboard_navigatable</span>(<span class="bool-val">true</span>)
             .<span class="ident">bind</span>(<span class="ident">MenuData::selected</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">handle</span>, <span class="ident">selected</span><span class="op">|</span> {
                 <span class="kw">let</span> <span class="ident">selected</span> <span class="op">=</span> <span class="ident">selected</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>) <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">i</span>);
                 <span class="ident">handle</span>.<span class="ident">cx</span>.<span class="ident">set_selected</span>(<span class="ident">selected</span>);
@@ -496,8 +500,8 @@
                         <span class="op">&amp;&amp;</span> <span class="macro">matches!</span>(
                             <span class="ident">window_event</span>,
                             <span class="ident">WindowEvent::MouseMove</span>(<span class="kw">_</span>, <span class="kw">_</span>)
-                                <span class="op">|</span> <span class="ident">WindowEvent::MouseDown</span>(<span class="kw">_</span>)
-                                <span class="op">|</span> <span class="ident">WindowEvent::MouseUp</span>(<span class="kw">_</span>)
+                                <span class="op">|</span> <span class="ident">WindowEvent::TriggerDown</span> { .. }
+                                <span class="op">|</span> <span class="ident">WindowEvent::TriggerUp</span> { .. }
                                 <span class="op">|</span> <span class="ident">WindowEvent::MouseScroll</span>(<span class="kw">_</span>, <span class="kw">_</span>)
                                 <span class="op">|</span> <span class="ident">WindowEvent::MouseDoubleClick</span>(<span class="kw">_</span>)
                         ))
@@ -521,7 +525,7 @@
                     }
                 }
             } <span class="kw">else</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="ident">WindowEvent::MouseDown</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="ident">window_event</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="ident">WindowEvent::TriggerDown</span> { .. } <span class="op">=</span> <span class="ident">window_event</span> {
                     <span class="comment">// capture focus on click</span>
                     <span class="ident">cx</span>.<span class="ident">capture</span>();
                     <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">MenuEvent::Activate</span>);
@@ -625,9 +629,11 @@
         <span class="ident">A</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>),
     {
         <span class="ident">setup_menu_entry</span>(
-            <span class="self">Self</span> { <span class="ident">action</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">action</span>)) }.<span class="ident">build</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-                <span class="ident">contents</span>(<span class="ident">cx</span>);
-            }),
+            <span class="self">Self</span> { <span class="ident">action</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">action</span>)) }
+                .<span class="ident">build</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
+                    <span class="ident">contents</span>(<span class="ident">cx</span>);
+                })
+                .<span class="ident">keyboard_navigatable</span>(<span class="bool-val">true</span>),
             <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {},
             <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {},
         )
@@ -704,7 +710,7 @@
 
     <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="ident">meta</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
-            <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
+            <span class="ident">WindowEvent::TriggerDown</span> { .. } =&gt; {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">action</span> {
                     <span class="ident">callback</span>(<span class="ident">cx</span>);
                     <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">MenuEvent::Close</span>);

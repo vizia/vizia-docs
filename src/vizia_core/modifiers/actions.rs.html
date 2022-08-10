@@ -637,7 +637,6 @@
 <span id="632">632</span>
 <span id="633">633</span>
 <span id="634">634</span>
-<span id="635">635</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::events::ViewHandler</span>;
@@ -684,10 +683,9 @@
         <span class="self">self</span>.<span class="ident">view</span>.<span class="ident">event</span>(<span class="ident">cx</span>, <span class="ident">event</span>);
 
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
-            <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">current</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">cx</span>.<span class="ident">hovered</span>()
-                    <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">cx</span>.<span class="ident">hovered</span>().<span class="ident">is_descendant_of</span>(<span class="ident">cx</span>.<span class="ident">tree</span>, <span class="ident">cx</span>.<span class="ident">current</span>())
-                {
+            <span class="ident">WindowEvent::TriggerDown</span> { <span class="ident">mouse</span> } =&gt; {
+                <span class="kw">let</span> <span class="ident">over</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">mouse</span> { <span class="ident">cx</span>.<span class="ident">hovered</span>() } <span class="kw">else</span> { <span class="ident">cx</span>.<span class="ident">focused</span>() };
+                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">current</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">over</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">over</span>.<span class="ident">is_descendant_of</span>(<span class="ident">cx</span>.<span class="ident">tree</span>, <span class="ident">cx</span>.<span class="ident">current</span>()) {
                     <span class="kw">return</span>;
                 }
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">action</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">action</span> {
@@ -743,7 +741,7 @@
         <span class="self">self</span>.<span class="ident">view</span>.<span class="ident">event</span>(<span class="ident">cx</span>, <span class="ident">event</span>);
 
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="ident">meta</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
-            <span class="ident">WindowEvent::MouseUp</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
+            <span class="ident">WindowEvent::TriggerDown</span> { .. } =&gt; {
                 <span class="kw">if</span> <span class="ident">meta</span>.<span class="ident">target</span> <span class="op">==</span> <span class="ident">cx</span>.<span class="ident">current</span>() {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">action</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">action</span> {
                         (<span class="ident">action</span>)(<span class="ident">cx</span>);
@@ -1194,14 +1192,14 @@
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>),
     {
-        <span class="ident">Press::new</span>(<span class="self">self</span>, <span class="ident">action</span>)
+        <span class="ident">Press::new</span>(<span class="self">self</span>.<span class="ident">keyboard_navigatable</span>(<span class="bool-val">true</span>), <span class="ident">action</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">on_release</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">action</span>: <span class="ident">F</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Release</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::View</span><span class="op">&gt;</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>),
     {
-        <span class="ident">Release::new</span>(<span class="self">self</span>, <span class="ident">action</span>)
+        <span class="ident">Release::new</span>(<span class="self">self</span>.<span class="ident">keyboard_navigatable</span>(<span class="bool-val">true</span>), <span class="ident">action</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">on_hover</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">action</span>: <span class="ident">F</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Hover</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::View</span><span class="op">&gt;</span><span class="op">&gt;</span>
@@ -1236,14 +1234,14 @@
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>),
     {
-        <span class="ident">FocusIn::new</span>(<span class="self">self</span>, <span class="ident">action</span>)
+        <span class="ident">FocusIn::new</span>(<span class="self">self</span>.<span class="ident">keyboard_navigatable</span>(<span class="bool-val">true</span>), <span class="ident">action</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">on_focus_out</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">action</span>: <span class="ident">F</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">FocusOut</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::View</span><span class="op">&gt;</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>),
     {
-        <span class="ident">FocusOut::new</span>(<span class="self">self</span>, <span class="ident">action</span>)
+        <span class="ident">FocusOut::new</span>(<span class="self">self</span>.<span class="ident">keyboard_navigatable</span>(<span class="bool-val">true</span>), <span class="ident">action</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">on_geo_changed</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">action</span>: <span class="ident">F</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Geo</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::View</span><span class="op">&gt;</span><span class="op">&gt;</span>

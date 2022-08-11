@@ -1,1 +1,1 @@
-initSidebarItems({});
+initSidebarItems({"fn":[["has_animations",""]]});

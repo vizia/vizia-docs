@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["BackendContext",""]]});
+initSidebarItems({"fn":[["has_animations",""]],"struct":[["BackendContext",""]]});

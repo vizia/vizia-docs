@@ -544,10 +544,6 @@
 <span id="539">539</span>
 <span id="540">540</span>
 <span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
-<span id="544">544</span>
-<span id="545">545</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">convert</span>::{<span class="ident">scan_code_to_code</span>, <span class="ident">virtual_key_code_to_code</span>, <span class="ident">virtual_key_code_to_key</span>},
     <span class="ident">window::Window</span>,
@@ -730,12 +726,10 @@
                     <span class="comment">// Events</span>
                     <span class="kw">while</span> <span class="ident">event_manager</span>.<span class="ident">flush_events</span>(<span class="ident">cx</span>.<span class="number">0</span>) {}
 
-                    <span class="ident">cx</span>.<span class="ident">load_images</span>();
-
                     <span class="ident">cx</span>.<span class="ident">process_data_updates</span>();
                     <span class="ident">cx</span>.<span class="ident">process_style_updates</span>();
 
-                    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">has_animations</span>() {
+                    <span class="kw">if</span> <span class="ident">has_animations</span>(<span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="number">0</span>) {
                         <span class="kw-2">*</span><span class="ident">stored_control_flow</span>.<span class="ident">borrow_mut</span>() <span class="op">=</span> <span class="ident">ControlFlow::Poll</span>;
 
                         <span class="comment">//context.insert_event(Event::new(WindowEvent::Relayout).target(Entity::root()));</span>
@@ -749,8 +743,6 @@
                             <span class="ident">cx</span>.<span class="ident">views</span>().<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="ident">window_event_handler</span>);
                         }
                     }
-
-                    <span class="ident">cx</span>.<span class="ident">apply_animations</span>();
 
                     <span class="ident">cx</span>.<span class="ident">process_visual_updates</span>();
 

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["GeometryChanged","Flags which determine if the geometry needs to be calculated before layout, and whether the geometry has changed after layout"]]});
+window.SIDEBAR_ITEMS = {"struct":[["GeometryChanged","Flags which determine if the geometry needs to be calculated before layout, and whether the geometry has changed after layout"]]};

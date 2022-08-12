@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["BoundingBox","Respresents an axis-aligned bounding box of an entity."],["CachedData","Stores data which can be cached between system runs."]]});
+window.SIDEBAR_ITEMS = {"struct":[["BoundingBox","Respresents an axis-aligned bounding box of an entity."],["CachedData","Stores data which can be cached between system runs."]]};

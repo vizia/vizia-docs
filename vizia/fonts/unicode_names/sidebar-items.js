@@ -1,1 +1,1 @@
-initSidebarItems({"constant":[["CANCEL",""],["CHECK",""],["PLUS",""]]});
+window.SIDEBAR_ITEMS = {"constant":[["CANCEL",""],["CHECK",""],["PLUS",""]]};

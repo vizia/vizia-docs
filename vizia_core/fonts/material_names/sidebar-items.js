@@ -1,1 +1,1 @@
-initSidebarItems({"constant":[["DOWN",""],["LEFT",""],["RIGHT",""],["UP",""]]});
+window.SIDEBAR_ITEMS = {"constant":[["DOWN",""],["LEFT",""],["RIGHT",""],["UP",""]]};

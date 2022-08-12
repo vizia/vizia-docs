@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["idx_to_pos",""],["measure_text_lines",""],["pos_to_idx",""],["text_layout",""],["text_paint_draw",""],["text_paint_general",""]]});
+window.SIDEBAR_ITEMS = {"fn":[["idx_to_pos",""],["measure_text_lines",""],["pos_to_idx",""],["text_layout",""],["text_paint_draw",""],["text_paint_general",""]]};

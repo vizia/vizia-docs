@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["EnvironmentEvent",""]],"mod":[["environment_derived_lenses","Derived lenses for [`Environment`]."]],"struct":[["Environment",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["EnvironmentEvent",""]],"mod":[["environment_derived_lenses","Derived lenses for [`Environment`]."]],"struct":[["Environment",""]]};

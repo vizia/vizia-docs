@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["FontOrId",""],["ImageOrId",""],["ImageRetentionPolicy",""]],"struct":[["ResourceManager",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["FontOrId",""],["ImageOrId",""],["ImageRetentionPolicy",""]],"struct":[["ResourceManager",""]]};

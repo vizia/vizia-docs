@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["has_animations",""]]});
+window.SIDEBAR_ITEMS = {"fn":[["has_animations",""]]};

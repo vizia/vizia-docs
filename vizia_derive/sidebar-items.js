@@ -1,1 +1,1 @@
-initSidebarItems({"derive":[["Data",""],["Lens",""]]});
+window.SIDEBAR_ITEMS = {"derive":[["Data",""],["Lens",""]]};

@@ -537,6 +537,7 @@
 <span id="531">531</span>
 <span id="532">532</span>
 <span id="533">533</span>
+<span id="534">534</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::collections::HashSet</span>;
 
 <span class="kw">use</span> <span class="ident">femtovg</span>::{<span class="ident">renderer::OpenGl</span>, <span class="ident">Canvas</span>};
@@ -899,9 +900,13 @@
                         {
                             <span class="self">self</span>.<span class="ident">with_current</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">hovered</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> <span class="ident">cx</span>.<span class="ident">focus_with_visibility</span>(<span class="bool-val">false</span>));
                         }
-                        <span class="self">self</span>.<span class="ident">with_current</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">hovered</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-                            <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::TriggerDown</span> { <span class="ident">mouse</span>: <span class="bool-val">true</span> })
-                        });
+
+                        <span class="self">self</span>.<span class="ident">dispatch_direct_or_up</span>(
+                            <span class="ident">WindowEvent::TriggerDown</span> { <span class="ident">mouse</span>: <span class="bool-val">true</span> },
+                            <span class="self">self</span>.<span class="number">0</span>.<span class="ident">captured</span>,
+                            <span class="self">self</span>.<span class="number">0</span>.<span class="ident">triggered</span>,
+                            <span class="bool-val">true</span>,
+                        );
                     }
                     <span class="ident">MouseButton::Right</span> =&gt; {
                         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">mouse</span>.<span class="ident">right</span>.<span class="ident">pos_down</span> <span class="op">=</span> (<span class="self">self</span>.<span class="number">0</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span>, <span class="self">self</span>.<span class="number">0</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span>);
@@ -1030,7 +1035,7 @@
                     <span class="self">self</span>.<span class="ident">style</span>().<span class="ident">needs_restyle</span> <span class="op">=</span> <span class="bool-val">true</span>;
                 }
 
-                <span class="kw">if</span> <span class="macro">matches!</span>(<span class="kw-2">*</span><span class="ident">code</span>, <span class="ident">Code::Enter</span> <span class="op">|</span> <span class="ident">Code::NumpadEnter</span> <span class="op">|</span> <span class="ident">Code::Space</span>) {
+                <span class="kw">if</span> <span class="macro">matches!</span>(<span class="kw-2">*</span><span class="ident">code</span>, <span class="ident">Code::Space</span>) {
                     <span class="self">self</span>.<span class="number">0</span>.<span class="ident">triggered</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">focused</span>;
                     <span class="self">self</span>.<span class="number">0</span>.<span class="ident">with_current</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">focused</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
                         <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::TriggerDown</span> { <span class="ident">mouse</span>: <span class="bool-val">false</span> })
@@ -1040,10 +1045,7 @@
                 <span class="self">self</span>.<span class="number">0</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(<span class="ident">Event::new</span>(<span class="ident">event</span>).<span class="ident">target</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">focused</span>));
             }
             <span class="ident">WindowEvent::KeyUp</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span> <span class="ident">WindowEvent::CharInput</span>(<span class="kw">_</span>) =&gt; {
-                <span class="kw">if</span> <span class="macro">matches!</span>(
-                    <span class="ident">event</span>,
-                    <span class="ident">WindowEvent::KeyUp</span>(<span class="ident">Code::Enter</span> <span class="op">|</span> <span class="ident">Code::NumpadEnter</span> <span class="op">|</span> <span class="ident">Code::Space</span>, <span class="kw">_</span>)
-                ) {
+                <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">WindowEvent::KeyUp</span>(<span class="ident">Code::Space</span>, <span class="kw">_</span>)) {
                     <span class="self">self</span>.<span class="number">0</span>.<span class="ident">with_current</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">triggered</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
                         <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::TriggerUp</span> { <span class="ident">mouse</span>: <span class="bool-val">false</span> })
                     });

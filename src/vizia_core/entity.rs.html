@@ -27,10 +27,6 @@
 <span id="21">21</span>
 <span id="22">22</span>
 <span id="23">23</span>
-<span id="24">24</span>
-<span id="25">25</span>
-<span id="26">26</span>
-<span id="27">27</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">vizia_id</span>::{
     <span class="ident">impl_generational_id</span>, <span class="ident">GenerationalId</span>, <span class="ident">GENERATIONAL_ID_GENERATION_MASK</span>,
     <span class="ident">GENERATIONAL_ID_INDEX_BITS</span>, <span class="ident">GENERATIONAL_ID_INDEX_MASK</span>,
@@ -41,21 +37,17 @@
 <span class="doccomment">/// Rather than having widgets own their data, all state is stored in a single database and</span>
 <span class="doccomment">/// is stored and loaded using entities.</span>
 <span class="doccomment">///</span>
+<span class="doccomment">/// The [root entity] represents the main window and is always valid. It can be used to set</span>
+<span class="doccomment">/// properties on the primary window, such as background color, as well as sending events</span>
+<span class="doccomment">/// to the window such as [`Restyle`] and [`Redraw`] events.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [root entity]: GenerationalId::root()</span>
+<span class="doccomment">/// [`Restyle`]: crate::prelude::WindowEvent::Restyle</span>
+<span class="doccomment">/// [`Redraw`]: crate::prelude::WindowEvent::Redraw</span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// This type is part of the prelude.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Entity</span>(<span class="ident">u32</span>);
-
-<span class="kw">impl</span> <span class="ident">Entity</span> {
-    <span class="doccomment">/// Creates a new root entity.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The root entity represents the main window and is always valid. It can be used to set</span>
-    <span class="doccomment">/// properties on the primary window, such as background color, as well as sending events</span>
-    <span class="doccomment">/// to the window such as [`Restyle`](crate::prelude::WindowEvent::Restyle) and</span>
-    <span class="doccomment">/// [`Redraw`](crate::prelude::WindowEvent::Redraw) events.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">root</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="number">0</span>)
-    }
-}
 
 <span class="macro">impl_generational_id!</span>(<span class="ident">Entity</span>);
 </code></pre></div>

@@ -541,12 +541,17 @@
 <span id="535">535</span>
 <span id="536">536</span>
 <span id="537">537</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::layout::LayoutTreeIterator</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::style</span>::{<span class="ident">Rule</span>, <span class="ident">Selector</span>, <span class="ident">SelectorRelation</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::tree::TreeExt</span>;
+<span class="kw">use</span> <span class="ident">vizia_id::GenerationalId</span>;
+<span class="kw">use</span> <span class="ident">vizia_storage</span>::{<span class="ident">LayoutTreeIterator</span>, <span class="ident">TreeExt</span>};
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inline_inheritance_system</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span>) {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inline_inheritance_system</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>) {
     <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">tree</span>.<span class="ident">into_iter</span>() {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">get_layout_parent</span>(<span class="ident">entity</span>) {
             <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">disabled</span>.<span class="ident">inherit_inline</span>(<span class="ident">entity</span>, <span class="ident">parent</span>);
@@ -560,7 +565,7 @@
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shared_inheritance_system</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span>) {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shared_inheritance_system</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>) {
     <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">tree</span>.<span class="ident">into_iter</span>() {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">get_layout_parent</span>(<span class="ident">entity</span>) {
             <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">font_color</span>.<span class="ident">inherit_shared</span>(<span class="ident">entity</span>, <span class="ident">parent</span>);
@@ -678,7 +683,12 @@
     <span class="kw">return</span> <span class="bool-val">true</span>;
 }
 
-<span class="kw">fn</span> <span class="ident">compute_matched_rules</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>, <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">matched_rules</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) {
+<span class="kw">fn</span> <span class="ident">compute_matched_rules</span>(
+    <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>,
+    <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>,
+    <span class="ident">entity</span>: <span class="ident">Entity</span>,
+    <span class="ident">matched_rules</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>,
+) {
     <span class="comment">// Loop through all of the style rules</span>
     <span class="lifetime">&#39;rule_loop</span>: <span class="kw">for</span> <span class="ident">rule</span> <span class="kw">in</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">rules</span>.<span class="ident">iter</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">relation_entity</span> <span class="op">=</span> <span class="ident">entity</span>;
@@ -1031,7 +1041,7 @@
 }
 
 <span class="comment">// Iterate tree and determine the matched style rules for each entity. Link the entity to the style data.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">style_system</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span>) {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">style_system</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>) {
     <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">needs_restyle</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev_entity</span> <span class="op">=</span> <span class="prelude-val">None</span>;
 

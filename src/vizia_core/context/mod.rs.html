@@ -571,14 +571,14 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::CachedData</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::environment::Environment</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::events::ViewHandler</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::input</span>::{<span class="ident">Modifiers</span>, <span class="ident">MouseState</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::resource</span>::{<span class="ident">FontOrId</span>, <span class="ident">ImageOrId</span>, <span class="ident">ImageRetentionPolicy</span>, <span class="ident">ResourceManager</span>, <span class="ident">StoredImage</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::state</span>::{<span class="ident">BindingHandler</span>, <span class="ident">ModelDataStore</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::style::Style</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::tree::TreeExt</span>;
 <span class="kw">use</span> <span class="ident">vizia_id</span>::{<span class="ident">GenerationalId</span>, <span class="ident">IdManager</span>};
+<span class="kw">use</span> <span class="ident">vizia_input</span>::{<span class="ident">Modifiers</span>, <span class="ident">MouseState</span>};
 <span class="kw">use</span> <span class="ident">vizia_storage::SparseSet</span>;
+<span class="kw">use</span> <span class="ident">vizia_storage::TreeExt</span>;
 
 <span class="kw">static</span> <span class="ident">DEFAULT_THEME</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str!</span>(<span class="string">&quot;../../resources/themes/default_theme.css&quot;</span>);
 <span class="kw">static</span> <span class="ident">DEFAULT_LAYOUT</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str!</span>(<span class="string">&quot;../../resources/themes/default_layout.css&quot;</span>);
@@ -589,7 +589,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Context</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">entity_manager</span>: <span class="ident">IdManager</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">entity_identifiers</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Entity</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">tree</span>: <span class="ident">Tree</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">tree</span>: <span class="ident">Tree</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">current</span>: <span class="ident">Entity</span>,
     <span class="doccomment">/// TODO make this private when there&#39;s no longer a need to mutate views after building</span>
     <span class="kw">pub</span> <span class="ident">views</span>: <span class="ident">FnvHashMap</span><span class="op">&lt;</span><span class="ident">Entity</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">ViewHandler</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -605,7 +605,7 @@
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">canvases</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Entity</span>, <span class="ident"><span class="kw">crate</span>::prelude::Canvas</span><span class="op">&gt;</span>,
     <span class="comment">//environment: Environment,</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">mouse</span>: <span class="ident">MouseState</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">mouse</span>: <span class="ident">MouseState</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">modifiers</span>: <span class="ident">Modifiers</span>,
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">captured</span>: <span class="ident">Entity</span>,

@@ -358,7 +358,59 @@
 <span id="352">352</span>
 <span id="353">353</span>
 <span id="354">354</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">marker::PhantomData</span>, <span class="ident">ops::Range</span>};
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::ops::Range</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::views::Orientation</span>;
@@ -367,6 +419,7 @@
 <span class="kw">enum</span> <span class="ident">SliderEventInternal</span> {
     <span class="ident">SetThumbSize</span>(<span class="ident">f32</span>, <span class="ident">f32</span>),
     <span class="ident">SetRange</span>(<span class="ident">Range</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>),
+    <span class="ident">SetKeyboardFraction</span>(<span class="ident">f32</span>),
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Data</span>)]</span>
@@ -375,6 +428,7 @@
     <span class="kw">pub</span> <span class="ident">size</span>: <span class="ident">f32</span>,
     <span class="kw">pub</span> <span class="ident">thumb_size</span>: <span class="ident">f32</span>,
     <span class="kw">pub</span> <span class="ident">range</span>: <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">keyboard_fraction</span>: <span class="ident">f32</span>,
 }
 
 <span class="doccomment">/// The slider control can be used to select from a continuous set of values.</span>
@@ -427,7 +481,7 @@
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Lens</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Slider</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&gt;</span> {
-    <span class="ident">p</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
+    <span class="ident">lens</span>: <span class="ident">L</span>,
     <span class="ident">is_dragging</span>: <span class="ident">bool</span>,
     <span class="ident">internal</span>: <span class="ident">SliderDataInternal</span>,
     <span class="ident">on_changing</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">f32</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -457,7 +511,7 @@
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">lens</span>: <span class="ident">L</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="self">Self</span> {
-            <span class="ident">p</span>: <span class="ident">PhantomData::default</span>(),
+            <span class="ident">lens</span>: <span class="ident">lens</span>.<span class="ident">clone</span>(),
             <span class="ident">is_dragging</span>: <span class="bool-val">false</span>,
 
             <span class="ident">internal</span>: <span class="ident">SliderDataInternal</span> {
@@ -465,6 +519,7 @@
                 <span class="ident">thumb_size</span>: <span class="number">0.0</span>,
                 <span class="ident">size</span>: <span class="number">0.0</span>,
                 <span class="ident">range</span>: <span class="number">0.0</span>..<span class="number">1.0</span>,
+                <span class="ident">keyboard_fraction</span>: <span class="number">0.1</span>,
             },
 
             <span class="ident">on_changing</span>: <span class="prelude-val">None</span>,
@@ -534,10 +589,11 @@
                 });
             });
         })
+        .<span class="ident">keyboard_navigatable</span>(<span class="bool-val">true</span>)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&gt;</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">Slider</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">Slider</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="string">&quot;slider&quot;</span>)
     }
@@ -556,6 +612,10 @@
 
             <span class="ident">SliderEventInternal::SetRange</span>(<span class="ident">range</span>) =&gt; {
                 <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span> <span class="op">=</span> <span class="ident">range</span>.<span class="ident">clone</span>();
+            }
+
+            <span class="ident">SliderEventInternal::SetKeyboardFraction</span>(<span class="ident">keyboard_fraction</span>) =&gt; {
+                <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">keyboard_fraction</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">keyboard_fraction</span>;
             }
         });
 
@@ -578,6 +638,7 @@
                 <span class="self">self</span>.<span class="ident">is_dragging</span> <span class="op">=</span> <span class="bool-val">true</span>;
                 <span class="ident">cx</span>.<span class="ident">capture</span>();
                 <span class="ident">cx</span>.<span class="ident">set_active</span>(<span class="bool-val">true</span>);
+                <span class="ident">cx</span>.<span class="ident">focus_with_visibility</span>(<span class="bool-val">false</span>);
 
                 <span class="kw">let</span> <span class="ident">thumb_size</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">thumb_size</span>;
                 <span class="kw">let</span> <span class="ident">min</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">start</span>;
@@ -650,6 +711,24 @@
                 }
             }
 
+            <span class="ident">WindowEvent::KeyDown</span>(<span class="ident">Code::ArrowUp</span> <span class="op">|</span> <span class="ident">Code::ArrowRight</span>, <span class="kw">_</span>) =&gt; {
+                <span class="kw">let</span> <span class="ident">min</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">start</span>;
+                <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">end</span>;
+                <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">get</span>(<span class="ident">cx</span>) <span class="op">+</span> <span class="number">0.1</span> <span class="op">*</span> (<span class="ident">max</span> <span class="op">-</span> <span class="ident">min</span>)).<span class="ident">clamp</span>(<span class="ident">min</span>, <span class="ident">max</span>);
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">on_changing</span> {
+                    (<span class="ident">callback</span>)(<span class="ident">cx</span>, <span class="ident">val</span>);
+                }
+            }
+
+            <span class="ident">WindowEvent::KeyDown</span>(<span class="ident">Code::ArrowDown</span> <span class="op">|</span> <span class="ident">Code::ArrowLeft</span>, <span class="kw">_</span>) =&gt; {
+                <span class="kw">let</span> <span class="ident">min</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">start</span>;
+                <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">end</span>;
+                <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">get</span>(<span class="ident">cx</span>) <span class="op">-</span> <span class="number">0.1</span> <span class="op">*</span> (<span class="ident">max</span> <span class="op">-</span> <span class="ident">min</span>)).<span class="ident">clamp</span>(<span class="ident">min</span>, <span class="ident">max</span>);
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">on_changing</span> {
+                    (<span class="ident">callback</span>)(<span class="ident">cx</span>, <span class="ident">val</span>);
+                }
+            }
+
             <span class="kw">_</span> =&gt; {}
         });
     }
@@ -708,6 +787,31 @@
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">range</span>(<span class="self">self</span>, <span class="ident">range</span>: <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">emit_to</span>(<span class="self">self</span>.<span class="ident">entity</span>, <span class="ident">SliderEventInternal::SetRange</span>(<span class="ident">range</span>));
+
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Sets the fraction of a slider that a press of an arrow key will change.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// # use vizia_core::prelude::*;</span>
+    <span class="doccomment">/// # use vizia_derive::*;</span>
+    <span class="doccomment">/// # let mut cx = &amp;mut Context::new();</span>
+    <span class="doccomment">/// # #[derive(Lens, Default)]</span>
+    <span class="doccomment">/// # pub struct AppData {</span>
+    <span class="doccomment">/// #     value: f32,</span>
+    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// # impl Model for AppData {}</span>
+    <span class="doccomment">/// # AppData::default().build(cx);</span>
+    <span class="doccomment">/// Slider::new(cx, AppData::value)</span>
+    <span class="doccomment">///     .keyboard_fraction(0.05)</span>
+    <span class="doccomment">///     .on_changing(|cx, value| {</span>
+    <span class="doccomment">///         println!(&quot;Slider on_changing: {}&quot;, value);</span>
+    <span class="doccomment">///     });</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keyboard_fraction</span>(<span class="self">self</span>, <span class="ident">keyboard_fraction</span>: <span class="ident">f32</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">emit_to</span>(<span class="self">self</span>.<span class="ident">entity</span>, <span class="ident">SliderEventInternal::SetKeyboardFraction</span>(<span class="ident">keyboard_fraction</span>));
 
         <span class="self">self</span>
     }

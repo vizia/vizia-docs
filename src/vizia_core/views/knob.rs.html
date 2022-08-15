@@ -575,6 +575,21 @@
 <span id="569">569</span>
 <span id="570">570</span>
 <span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">femtovg</span>::{<span class="ident">LineCap</span>, <span class="ident">Paint</span>, <span class="ident">Path</span>, <span class="ident">Solidity</span>};
 <span class="kw">use</span> <span class="ident">morphorm</span>::{<span class="ident">Hierarchy</span>, <span class="ident">Units</span>};
 
@@ -582,6 +597,7 @@
 
 <span class="kw">static</span> <span class="ident">DEFAULT_DRAG_SCALAR</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">0.0042</span>;
 <span class="kw">static</span> <span class="ident">DEFAULT_WHEEL_SCALAR</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">0.005</span>;
+<span class="kw">static</span> <span class="ident">DEFAULT_ARROW_SCALAR</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">0.1</span>;
 <span class="kw">static</span> <span class="ident">DEFAULT_MODIFIER_SCALAR</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">0.04</span>;
 
 <span class="kw">use</span> <span class="ident">std::f32::consts::PI</span>;
@@ -596,6 +612,7 @@
 
     <span class="ident">drag_scalar</span>: <span class="ident">f32</span>,
     <span class="ident">wheel_scalar</span>: <span class="ident">f32</span>,
+    <span class="ident">arrow_scalar</span>: <span class="ident">f32</span>,
     <span class="ident">modifier_scalar</span>: <span class="ident">f32</span>,
 
     <span class="ident">on_changing</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">f32</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -618,6 +635,7 @@
 
             <span class="ident">drag_scalar</span>: <span class="ident">DEFAULT_DRAG_SCALAR</span>,
             <span class="ident">wheel_scalar</span>: <span class="ident">DEFAULT_WHEEL_SCALAR</span>,
+            <span class="ident">arrow_scalar</span>: <span class="ident">DEFAULT_ARROW_SCALAR</span>,
             <span class="ident">modifier_scalar</span>: <span class="ident">DEFAULT_MODIFIER_SCALAR</span>,
 
             <span class="ident">on_changing</span>: <span class="prelude-val">None</span>,
@@ -648,6 +666,7 @@
                 <span class="comment">//     .rotate(30.0);</span>
             });
         })
+        .<span class="ident">keyboard_navigatable</span>(<span class="bool-val">true</span>)
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">custom</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">T</span><span class="op">&gt;</span>(
@@ -669,6 +688,7 @@
 
             <span class="ident">drag_scalar</span>: <span class="ident">DEFAULT_DRAG_SCALAR</span>,
             <span class="ident">wheel_scalar</span>: <span class="ident">DEFAULT_WHEEL_SCALAR</span>,
+            <span class="ident">arrow_scalar</span>: <span class="ident">DEFAULT_ARROW_SCALAR</span>,
             <span class="ident">modifier_scalar</span>: <span class="ident">DEFAULT_MODIFIER_SCALAR</span>,
 
             <span class="ident">on_changing</span>: <span class="prelude-val">None</span>,
@@ -727,7 +747,7 @@
                 <span class="self">self</span>.<span class="ident">prev_drag_y</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pos_down</span>.<span class="number">1</span>;
 
                 <span class="ident">cx</span>.<span class="ident">capture</span>();
-                <span class="ident">cx</span>.<span class="ident">focus</span>();
+                <span class="ident">cx</span>.<span class="ident">focus_with_visibility</span>(<span class="bool-val">false</span>);
 
                 <span class="self">self</span>.<span class="ident">continuous_normal</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">get</span>(<span class="ident">cx</span>);
 
@@ -783,6 +803,16 @@
                 <span class="self">self</span>.<span class="ident">is_dragging</span> <span class="op">=</span> <span class="bool-val">false</span>;
 
                 <span class="ident">move_virtual_slider</span>(<span class="self">self</span>, <span class="ident">cx</span>, <span class="self">self</span>.<span class="ident">default_normal</span>);
+            }
+
+            <span class="ident">WindowEvent::KeyDown</span>(<span class="ident">Code::ArrowUp</span> <span class="op">|</span> <span class="ident">Code::ArrowRight</span>, <span class="kw">_</span>) =&gt; {
+                <span class="self">self</span>.<span class="ident">continuous_normal</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">get</span>(<span class="ident">cx</span>);
+                <span class="ident">move_virtual_slider</span>(<span class="self">self</span>, <span class="ident">cx</span>, <span class="self">self</span>.<span class="ident">continuous_normal</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">arrow_scalar</span>);
+            }
+
+            <span class="ident">WindowEvent::KeyDown</span>(<span class="ident">Code::ArrowDown</span> <span class="op">|</span> <span class="ident">Code::ArrowLeft</span>, <span class="kw">_</span>) =&gt; {
+                <span class="self">self</span>.<span class="ident">continuous_normal</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">get</span>(<span class="ident">cx</span>);
+                <span class="ident">move_virtual_slider</span>(<span class="self">self</span>, <span class="ident">cx</span>, <span class="self">self</span>.<span class="ident">continuous_normal</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">arrow_scalar</span>);
             }
 
             <span class="kw">_</span> =&gt; {}

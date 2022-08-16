@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["focus_backward",""],["focus_forward",""],["is_navigatable",""]]};
+window.SIDEBAR_ITEMS = {"fn":[["focus_backward",""],["focus_forward",""],["is_focusable","Is the entity focusable - some focusable entities are not in the tab order."],["is_navigatable","Should the user be able to navigate to the entity with tab?"]]};

@@ -391,6 +391,24 @@
 <span id="385">385</span>
 <span id="386">386</span>
 <span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::window::ViziaWindow</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Renderer</span>;
 <span class="kw">use</span> <span class="ident">baseview</span>::{<span class="ident">WindowHandle</span>, <span class="ident">WindowScalePolicy</span>};
@@ -413,6 +431,8 @@
     <span class="ident">scale_policy</span>: <span class="ident">WindowScalePolicy</span>,
     <span class="ident">on_idle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">ignore_default_theme</span>: <span class="ident">bool</span>,
+    <span class="ident">text_shaping_run_cache_size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+    <span class="ident">text_shaped_words_cache_size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="ident">Application</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>
@@ -427,6 +447,8 @@
             <span class="ident">scale_policy</span>: <span class="ident">WindowScalePolicy::SystemScaleFactor</span>,
             <span class="ident">on_idle</span>: <span class="prelude-val">None</span>,
             <span class="ident">ignore_default_theme</span>: <span class="bool-val">false</span>,
+            <span class="ident">text_shaping_run_cache_size</span>: <span class="prelude-val">None</span>,
+            <span class="ident">text_shaped_words_cache_size</span>: <span class="prelude-val">None</span>,
         }
     }
 
@@ -467,6 +489,8 @@
             <span class="self">self</span>.<span class="ident">app</span>,
             <span class="self">self</span>.<span class="ident">on_idle</span>,
             <span class="self">self</span>.<span class="ident">ignore_default_theme</span>,
+            <span class="self">self</span>.<span class="ident">text_shaping_run_cache_size</span>,
+            <span class="self">self</span>.<span class="ident">text_shaped_words_cache_size</span>,
         )
     }
 
@@ -525,6 +549,18 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_idle</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">on_idle</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">callback</span>));
 
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Resize the cache used for rendering text lines</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_shaping_run_cache</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">size</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">text_shaping_run_cache_size</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">size</span>);
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Resize the cache used for rendering words</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_shaped_words_cache</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">size</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">text_shaped_words_cache_size</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">size</span>);
         <span class="self">self</span>
     }
 }

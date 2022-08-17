@@ -251,6 +251,16 @@
 <span id="245">245</span>
 <span id="246">246</span>
 <span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">application::ApplicationRunner</span>, <span class="ident">Renderer</span>};
 <span class="kw">use</span> <span class="ident">baseview::gl::GlConfig</span>;
 <span class="kw">use</span> <span class="ident">baseview</span>::{
@@ -411,6 +421,8 @@
         <span class="ident">app</span>: <span class="ident">F</span>,
         <span class="ident">on_idle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">ignore_default_theme</span>: <span class="ident">bool</span>,
+        <span class="ident">text_shaping_run_cache_size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+        <span class="ident">text_shaped_words_cache_size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
     ) <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
         <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span>,
@@ -429,6 +441,14 @@
             <span class="ident">window_settings</span>,
             <span class="kw">move</span> <span class="op">|</span><span class="ident">window</span>: <span class="kw-2">&amp;mut</span> <span class="ident">baseview::Window</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">|</span> -&gt; <span class="ident">ViziaWindow</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">Context::new</span>();
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">size</span>) <span class="op">=</span> <span class="ident">text_shaped_words_cache_size</span> {
+                    <span class="ident">BackendContext::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">context</span>)
+                        .<span class="ident">text_context</span>()
+                        .<span class="ident">resize_shaped_words_cache</span>(<span class="ident">size</span>);
+                }
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">size</span>) <span class="op">=</span> <span class="ident">text_shaping_run_cache_size</span> {
+                    <span class="ident">BackendContext::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">context</span>).<span class="ident">text_context</span>().<span class="ident">resize_shaping_run_cache</span>(<span class="ident">size</span>);
+                }
 
                 <span class="ident">context</span>.<span class="ident">ignore_default_theme</span> <span class="op">=</span> <span class="ident">ignore_default_theme</span>;
 

@@ -216,6 +216,7 @@
 <span id="210">210</span>
 <span id="211">211</span>
 <span id="212">212</span>
+<span id="213">213</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">unicode_bidi</span>::{<span class="ident">bidi_class</span>, <span class="ident">BidiClass</span>};
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
@@ -410,11 +411,12 @@
     <span class="ident">x</span>: <span class="ident">f32</span>,
     <span class="ident">y</span>: <span class="ident">f32</span>,
     <span class="ident">cache</span>: <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> (<span class="ident">Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">TextMetrics</span>)<span class="op">&gt;</span>,
+    <span class="ident">single_line</span>: <span class="ident">bool</span>,
 ) -&gt; <span class="ident">usize</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last</span> <span class="op">=</span> <span class="number">0</span>;
     <span class="comment">// first: what line is it?</span>
     <span class="kw">for</span> (<span class="ident">line_range</span>, <span class="ident">line_metrics</span>) <span class="kw">in</span> <span class="ident">cache</span> {
-        <span class="kw">if</span> <span class="ident">y</span> <span class="op">&lt;</span> <span class="ident">line_metrics</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">line_metrics</span>.<span class="ident">height</span>() {
+        <span class="kw">if</span> <span class="ident">y</span> <span class="op">&lt;</span> <span class="ident">line_metrics</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">line_metrics</span>.<span class="ident">height</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">single_line</span> {
             <span class="comment">// it&#39;s me!</span>
             <span class="kw">for</span> <span class="ident">glyph</span> <span class="kw">in</span> <span class="ident">line_metrics</span>.<span class="ident">glyphs</span>.<span class="ident">iter</span>() {
                 <span class="kw">if</span> <span class="ident">x</span> <span class="op">&lt;</span> <span class="ident">glyph</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">glyph</span>.<span class="ident">advance_x</span> <span class="op">/</span> <span class="number">2.0</span> {

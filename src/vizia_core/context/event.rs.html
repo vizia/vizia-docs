@@ -380,6 +380,8 @@
 <span id="374">374</span>
 <span id="375">375</span>
 <span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::any</span>::{<span class="ident">Any</span>, <span class="ident">TypeId</span>};
 <span class="kw">use</span> <span class="ident">std::collections</span>::{<span class="ident">HashMap</span>, <span class="ident">HashSet</span>, <span class="ident">VecDeque</span>};
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;clipboard&quot;</span>)]</span>
@@ -524,7 +526,9 @@
 
     <span class="doccomment">/// Release mouse input capture for current entity.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">release</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">captured</span> <span class="op">=</span> <span class="ident">Entity::null</span>();
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">current</span> <span class="op">==</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">captured</span> {
+            <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">captured</span> <span class="op">=</span> <span class="ident">Entity::null</span>();
+        }
     }
 
     <span class="doccomment">/// Enables or disables pseudoclasses for the focus of an entity</span>

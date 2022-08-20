@@ -108,6 +108,64 @@
 <span id="102">102</span>
 <span id="103">103</span>
 <span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">unicode_segmentation</span>::{<span class="ident">GraphemeCursor</span>, <span class="ident">UnicodeSegmentation</span>};
 
 <span class="kw">use</span> <span class="ident">std::ops::Range</span>;
@@ -128,6 +186,9 @@
 
     <span class="comment">// fn prev_codepoint_offset(&amp;self, from: usize) -&gt; Option&lt;usize&gt;;</span>
     <span class="comment">// fn next_codepoint_offset(&amp;self, from: usize) -&gt; Option&lt;usize&gt;;</span>
+
+    <span class="kw">fn</span> <span class="ident">word_around</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">pos</span>: <span class="ident">usize</span>) -&gt; <span class="ident">core::ops::RangeInclusive</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">paragraph_around</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">pos</span>: <span class="ident">usize</span>) -&gt; <span class="ident">core::ops::RangeInclusive</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>;
 }
 
 <span class="kw">impl</span> <span class="ident">EditableText</span> <span class="kw">for</span> <span class="ident">String</span> {
@@ -199,6 +260,61 @@
             <span class="ident">offset</span> <span class="op">+</span><span class="op">=</span> <span class="ident">next_grapheme</span>.<span class="ident">len</span>();
         }
         <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">len</span>())
+    }
+
+    <span class="kw">fn</span> <span class="ident">word_around</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">pos</span>: <span class="ident">usize</span>) -&gt; <span class="ident">core::ops::RangeInclusive</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">start</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">end</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">len</span>();
+        <span class="kw">let</span> <span class="ident">selecting_whitespace</span> <span class="op">=</span> <span class="self">self</span>[<span class="ident">pos</span>..]
+            .<span class="ident">chars</span>()
+            .<span class="ident">next</span>()
+            .<span class="ident">map</span>(<span class="ident">char::is_whitespace</span>)
+            .<span class="ident">or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="self">self</span>[..<span class="ident">pos</span>].<span class="ident">chars</span>().<span class="ident">rev</span>().<span class="ident">next</span>().<span class="ident">map</span>(<span class="ident">char::is_whitespace</span>));
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">pos</span>;
+        <span class="kw">for</span> <span class="ident">prev_grapheme</span> <span class="kw">in</span> <span class="self">self</span>[<span class="number">0</span>..<span class="ident">pos</span>].<span class="ident">graphemes</span>(<span class="bool-val">true</span>).<span class="ident">rev</span>() {
+            <span class="kw">let</span> <span class="ident">is_whitespace</span> <span class="op">=</span> <span class="ident">prev_grapheme</span>.<span class="ident">chars</span>().<span class="ident">next</span>().<span class="ident">map</span>(<span class="ident">char::is_whitespace</span>);
+            <span class="kw">if</span> <span class="ident">is_whitespace</span> <span class="op">!</span><span class="op">=</span> <span class="ident">selecting_whitespace</span> {
+                <span class="ident">start</span> <span class="op">=</span> <span class="ident">offset</span>;
+                <span class="kw">break</span>;
+            }
+            <span class="ident">offset</span> <span class="op">-</span><span class="op">=</span> <span class="ident">prev_grapheme</span>.<span class="ident">len</span>();
+        }
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">pos</span>;
+        <span class="kw">for</span> <span class="ident">next_grapheme</span> <span class="kw">in</span> <span class="self">self</span>[<span class="ident">pos</span>..].<span class="ident">graphemes</span>(<span class="bool-val">true</span>) {
+            <span class="kw">let</span> <span class="ident">is_whitespace</span> <span class="op">=</span> <span class="ident">next_grapheme</span>.<span class="ident">chars</span>().<span class="ident">next</span>().<span class="ident">map</span>(<span class="ident">char::is_whitespace</span>);
+            <span class="kw">if</span> <span class="ident">is_whitespace</span> <span class="op">!</span><span class="op">=</span> <span class="ident">selecting_whitespace</span> {
+                <span class="ident">end</span> <span class="op">=</span> <span class="ident">offset</span>;
+                <span class="kw">break</span>;
+            }
+            <span class="ident">offset</span> <span class="op">+</span><span class="op">=</span> <span class="ident">next_grapheme</span>.<span class="ident">len</span>();
+        }
+        <span class="ident">start</span>..<span class="op">=</span><span class="ident">end</span>
+    }
+
+    <span class="kw">fn</span> <span class="ident">paragraph_around</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">pos</span>: <span class="ident">usize</span>) -&gt; <span class="ident">core::ops::RangeInclusive</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">start</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">end</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">len</span>();
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">pos</span>;
+        <span class="kw">for</span> <span class="ident">prev_grapheme</span> <span class="kw">in</span> <span class="self">self</span>[<span class="number">0</span>..<span class="ident">pos</span>].<span class="ident">graphemes</span>(<span class="bool-val">true</span>).<span class="ident">rev</span>() {
+            <span class="kw">if</span> <span class="ident">prev_grapheme</span> <span class="op">==</span> <span class="string">&quot;\n&quot;</span> {
+                <span class="ident">start</span> <span class="op">=</span> <span class="ident">offset</span>;
+                <span class="kw">break</span>;
+            }
+            <span class="ident">offset</span> <span class="op">-</span><span class="op">=</span> <span class="ident">prev_grapheme</span>.<span class="ident">len</span>();
+        }
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">pos</span>;
+        <span class="kw">for</span> <span class="ident">next_grapheme</span> <span class="kw">in</span> <span class="self">self</span>[<span class="ident">pos</span>..].<span class="ident">graphemes</span>(<span class="bool-val">true</span>) {
+            <span class="kw">if</span> <span class="ident">next_grapheme</span> <span class="op">==</span> <span class="string">&quot;\n&quot;</span> {
+                <span class="ident">end</span> <span class="op">=</span> <span class="ident">offset</span>;
+                <span class="kw">break</span>;
+            }
+            <span class="ident">offset</span> <span class="op">+</span><span class="op">=</span> <span class="ident">next_grapheme</span>.<span class="ident">len</span>();
+        }
+        <span class="ident">start</span>..<span class="op">=</span><span class="ident">end</span>
     }
 }
 

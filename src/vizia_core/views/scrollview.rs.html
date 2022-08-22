@@ -201,6 +201,20 @@
 <span id="195">195</span>
 <span id="196">196</span>
 <span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">morphorm</span>::{<span class="ident">GeometryChanged</span>, <span class="ident">PositionType</span>};
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
@@ -209,7 +223,7 @@
 
 <span class="kw">const</span> <span class="ident">SCROLL_SENSITIVITY</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">35.0</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Lens</span>, <span class="ident">Data</span>, <span class="ident">Clone</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Lens</span>, <span class="ident">Data</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ScrollData</span> {
     <span class="kw">pub</span> <span class="ident">scroll_x</span>: <span class="ident">f32</span>,
     <span class="kw">pub</span> <span class="ident">scroll_y</span>: <span class="ident">f32</span>,
@@ -228,6 +242,18 @@
     <span class="ident">ParentGeo</span>(<span class="ident">f32</span>, <span class="ident">f32</span>),
 }
 
+<span class="kw">impl</span> <span class="ident">ScrollData</span> {
+    <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">child_x</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">parent_x</span> {
+            <span class="self">self</span>.<span class="ident">scroll_x</span> <span class="op">=</span> <span class="number">0.0</span>;
+        }
+
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">child_y</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">parent_y</span> {
+            <span class="self">self</span>.<span class="ident">scroll_y</span> <span class="op">=</span> <span class="number">0.0</span>;
+        }
+    }
+}
+
 <span class="kw">impl</span> <span class="ident">Model</span> <span class="kw">for</span> <span class="ident">ScrollData</span> {
     <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
         <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">scroll_update</span>, <span class="ident">meta</span><span class="op">|</span> {
@@ -239,10 +265,12 @@
                 <span class="ident">ScrollEvent::ChildGeo</span>(<span class="ident">x</span>, <span class="ident">y</span>) =&gt; {
                     <span class="self">self</span>.<span class="ident">child_x</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">x</span>;
                     <span class="self">self</span>.<span class="ident">child_y</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">y</span>;
+                    <span class="self">self</span>.<span class="ident">reset</span>();
                 }
                 <span class="ident">ScrollEvent::ParentGeo</span>(<span class="ident">x</span>, <span class="ident">y</span>) =&gt; {
                     <span class="self">self</span>.<span class="ident">parent_x</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">x</span>;
                     <span class="self">self</span>.<span class="ident">parent_y</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">y</span>;
+                    <span class="self">self</span>.<span class="ident">reset</span>();
                 }
             }
 

@@ -162,12 +162,6 @@
 <span id="156">156</span>
 <span id="157">157</span>
 <span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::entity::Entity</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">any::Any</span>, <span class="ident">fmt::Debug</span>};
 <span class="kw">use</span> <span class="ident">vizia_id::GenerationalId</span>;
@@ -189,30 +183,6 @@
     <span class="ident">Direct</span>,
 }
 
-<span class="doccomment">/// The content of an event.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// A message can be any static type.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This trait is part of the prelude.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Message</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span> {
-    <span class="doccomment">/// A `&amp;dyn Any` can be cast to a reference to a concrete type.</span>
-    <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Any</span>;
-}
-
-<span class="kw">impl</span> <span class="kw">dyn</span> <span class="ident">Message</span> {
-    <span class="doccomment">/// Casts a message to the specified type if the message is of that type.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">downcast</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Message</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">as_any</span>().<span class="ident">downcast_ref</span>()
-    }
-}
-
-<span class="comment">// Implements message for any static type that implements Send</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span> <span class="ident">Message</span> <span class="kw">for</span> <span class="ident">S</span> {
-    <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Any</span> {
-        <span class="self">self</span>
-    }
-}
-
 <span class="doccomment">/// A wrapper around a message, providing metadata on how the event travels through the tree.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This type is part of the prelude.</span>
@@ -220,7 +190,7 @@
     <span class="doccomment">/// The meta data of the event</span>
     <span class="kw">pub</span> <span class="ident">meta</span>: <span class="ident">EventMeta</span>,
     <span class="doccomment">/// The message of the event</span>
-    <span class="ident">message</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Message</span><span class="op">&gt;</span>,
+    <span class="ident">message</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Event</span> {
@@ -242,9 +212,9 @@
     <span class="doccomment">/// Creates a new event with a specified message</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span>(<span class="ident">message</span>: <span class="ident">M</span>) -&gt; <span class="self">Self</span>
     <span class="kw">where</span>
-        <span class="ident">M</span>: <span class="ident">Message</span>,
+        <span class="ident">M</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span>,
     {
-        <span class="ident">Event</span> { <span class="ident">meta</span>: <span class="ident">Default::default</span>(), <span class="ident">message</span>: <span class="ident">Box::new</span>(<span class="ident">message</span>) }
+        <span class="ident">Event</span> { <span class="ident">meta</span>: <span class="ident">Default::default</span>(), <span class="ident">message</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">message</span>)) }
     }
 
     <span class="doccomment">/// Sets the target of the event.</span>
@@ -281,12 +251,30 @@
     <span class="doccomment">/// the downcasted message and the event meta data get passed into `f`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span><span class="op">&lt;</span><span class="ident">M</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>)
     <span class="kw">where</span>
-        <span class="ident">M</span>: <span class="ident">Message</span>,
+        <span class="ident">M</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span>,
         <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">M</span>, <span class="kw-2">&amp;mut</span> <span class="ident">EventMeta</span>),
     {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">message</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">downcast</span>() {
-            (<span class="ident">f</span>)(<span class="ident">message</span>, <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">meta</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">message</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">message</span> {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">message</span>) <span class="op">=</span> <span class="ident">message</span>.<span class="ident">as_ref</span>().<span class="ident">downcast_ref</span>() {
+                (<span class="ident">f</span>)(<span class="ident">message</span>, <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">meta</span>);
+            }
         }
+    }
+
+    <span class="doccomment">/// Tries to downcast the event message to the specified type. If the downcast was successful,</span>
+    <span class="doccomment">/// return the message by value and consume the event. Otherwise, do nothing.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">take</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">message</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">message</span> {
+            <span class="kw">if</span> <span class="ident">message</span>.<span class="ident">as_ref</span>().<span class="ident">is</span>::<span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span>() {
+                <span class="comment">// Safe to unwrap because we already checked it exists</span>
+                <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
+                <span class="comment">// Safe to unwrap because we already checked it can be cast to M</span>
+                <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">downcast</span>().<span class="ident">unwrap</span>();
+                <span class="self">self</span>.<span class="ident">meta</span>.<span class="ident">consume</span>();
+                <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">v</span>);
+            }
+        }
+        <span class="prelude-val">None</span>
     }
 }
 

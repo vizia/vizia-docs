@@ -40,6 +40,20 @@
 <span id="34">34</span>
 <span id="35">35</span>
 <span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
 
 <span class="comment">// Adapted from Druid</span>
@@ -61,6 +75,8 @@
 <span class="kw">mod</span> <span class="ident">attr</span>;
 <span class="kw">mod</span> <span class="ident">data</span>;
 <span class="kw">mod</span> <span class="ident">lens</span>;
+<span class="kw">mod</span> <span class="ident">model</span>;
+<span class="kw">mod</span> <span class="ident">ray</span>;
 
 <span class="kw">use</span> <span class="ident">proc_macro::TokenStream</span>;
 <span class="kw">use</span> <span class="ident">syn::parse_macro_input</span>;
@@ -75,6 +91,18 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">derive_lens</span>(<span class="ident">input</span>: <span class="ident">TokenStream</span>) -&gt; <span class="ident">TokenStream</span> {
     <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="macro">parse_macro_input!</span>(<span class="ident">input</span> <span class="kw">as</span> <span class="ident">syn::DeriveInput</span>);
     <span class="ident">lens::derive_lens_impl</span>(<span class="ident">input</span>).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">err</span>.<span class="ident">to_compile_error</span>()).<span class="ident">into</span>()
+}
+
+<span class="attribute">#[<span class="ident">proc_macro_derive</span>(<span class="ident">Setter</span>, <span class="ident">attributes</span>(<span class="ident">setter</span>))]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">derive_ray</span>(<span class="ident">input</span>: <span class="ident">TokenStream</span>) -&gt; <span class="ident">TokenStream</span> {
+    <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="macro">parse_macro_input!</span>(<span class="ident">input</span> <span class="kw">as</span> <span class="ident">syn::DeriveInput</span>);
+    <span class="ident">ray::derive_ray_impl</span>(<span class="ident">input</span>).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">err</span>.<span class="ident">to_compile_error</span>()).<span class="ident">into</span>()
+}
+
+<span class="attribute">#[<span class="ident">proc_macro_derive</span>(<span class="ident">Model</span>, <span class="ident">attributes</span>(<span class="ident">model</span>))]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">derive_model</span>(<span class="ident">input</span>: <span class="ident">TokenStream</span>) -&gt; <span class="ident">TokenStream</span> {
+    <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="macro">parse_macro_input!</span>(<span class="ident">input</span> <span class="kw">as</span> <span class="ident">syn::DeriveInput</span>);
+    <span class="ident">model::derive_model_impl</span>(<span class="ident">input</span>).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">err</span>.<span class="ident">to_compile_error</span>()).<span class="ident">into</span>()
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>

@@ -372,23 +372,23 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">properties</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Property</span><span class="op">&gt;</span>,
 }
 
-<span class="comment">// impl std::fmt::Display for StyleRule {</span>
-<span class="comment">//     fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter&lt;&#39;_&gt;) -&gt; std::fmt::Result {</span>
-<span class="comment">//         for selector in self.selectors.iter() {</span>
-<span class="comment">//             write!(f, &quot;{}&quot;, selector)?;</span>
-<span class="comment">//         }</span>
+<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">StyleRule</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
+        <span class="kw">for</span> <span class="ident">selector</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">selectors</span>.<span class="ident">iter</span>() {
+            <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">selector</span>)<span class="question-mark">?</span>;
+        }
 
-<span class="comment">//         write!(f, &quot; {{\n&quot;)?;</span>
+        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot; {{\n&quot;</span>)<span class="question-mark">?</span>;
 
-<span class="comment">//         for property in self.properties.iter() {</span>
-<span class="comment">//             write!(f, &quot;    {}\n&quot;, property)?;</span>
-<span class="comment">//         }</span>
+        <span class="kw">for</span> <span class="ident">property</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">properties</span>.<span class="ident">iter</span>() {
+            <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;    {}\n&quot;</span>, <span class="ident">property</span>)<span class="question-mark">?</span>;
+        }
 
-<span class="comment">//         write!(f, &quot;}}\n\n&quot;)?;</span>
+        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;}}\n&quot;</span>)<span class="question-mark">?</span>;
 
-<span class="comment">//         Ok(())</span>
-<span class="comment">//     }</span>
-<span class="comment">// }</span>
+        <span class="prelude-val">Ok</span>(())
+    }
+}
 
 <span class="kw">impl</span> <span class="ident">StyleRule</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">specificity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Specificity</span> {

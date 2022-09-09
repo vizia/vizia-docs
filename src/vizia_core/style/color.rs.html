@@ -259,8 +259,10 @@
 <span id="253">253</span>
 <span id="254">254</span>
 <span id="255">255</span>
+<span id="256">256</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::animation::Interpolator</span>;
 <span class="kw">use</span> <span class="ident">std::fmt</span>;
+<span class="kw">use</span> <span class="ident">std::fmt::Formatter</span>;
 
 <span class="doccomment">/// Describes a color.</span>
 <span class="doccomment">///</span>
@@ -269,6 +271,18 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Color</span> {
     <span class="kw">pub</span> <span class="ident">data</span>: <span class="ident">u32</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">Color</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">a</span>() <span class="op">==</span> <span class="number">0</span> {
+            <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;transparent&quot;</span>)
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">a</span>() <span class="op">==</span> <span class="number">255</span> {
+            <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;#{:02x}{:02x}{:02x}&quot;</span>, <span class="self">self</span>.<span class="ident">r</span>(), <span class="self">self</span>.<span class="ident">g</span>(), <span class="self">self</span>.<span class="ident">b</span>())
+        } <span class="kw">else</span> {
+            <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;#{:02x}{:02x}{:02x}{:02x}&quot;</span>, <span class="self">self</span>.<span class="ident">r</span>(), <span class="self">self</span>.<span class="ident">g</span>(), <span class="self">self</span>.<span class="ident">b</span>(), <span class="self">self</span>.<span class="ident">a</span>())
+        }
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">Color</span> {
@@ -342,18 +356,6 @@
 
     <span class="kw">fn</span> <span class="ident">interp</span>(<span class="ident">start_color</span>: <span class="ident">u8</span>, <span class="ident">end_color</span>: <span class="ident">u8</span>, <span class="ident">scale</span>: <span class="ident">f64</span>) -&gt; <span class="ident">u8</span> {
         (<span class="ident">end_color</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">-</span> <span class="ident">start_color</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">mul_add</span>(<span class="ident">scale</span>, <span class="ident">start_color</span> <span class="kw">as</span> <span class="ident">f64</span>) <span class="kw">as</span> <span class="ident">u8</span>
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">ToString</span> <span class="kw">for</span> <span class="ident">Color</span> {
-    <span class="kw">fn</span> <span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">String</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">a</span>() <span class="op">==</span> <span class="number">0</span> {
-            <span class="kw">return</span> <span class="ident">String::from</span>(<span class="string">&quot;transparent&quot;</span>);
-        }
-
-        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>;
-
-        <span class="macro">format!</span>(<span class="string">&quot;#{:x}&quot;</span>, <span class="ident">data</span>)
     }
 }
 

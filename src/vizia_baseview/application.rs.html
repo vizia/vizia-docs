@@ -403,12 +403,6 @@
 <span id="397">397</span>
 <span id="398">398</span>
 <span id="399">399</span>
-<span id="400">400</span>
-<span id="401">401</span>
-<span id="402">402</span>
-<span id="403">403</span>
-<span id="404">404</span>
-<span id="405">405</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::window::ViziaWindow</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Renderer</span>;
 <span class="kw">use</span> <span class="ident">baseview</span>::{<span class="ident">WindowHandle</span>, <span class="ident">WindowScalePolicy</span>};
@@ -651,15 +645,15 @@
                     <span class="kw">let</span> <span class="ident">physical_posy</span> <span class="op">=</span> <span class="ident">position</span>.<span class="ident">y</span> <span class="op">*</span> <span class="ident">cx</span>.<span class="ident">style</span>().<span class="ident">dpi_factor</span>;
                     <span class="kw">let</span> <span class="ident">cursorx</span> <span class="op">=</span> (<span class="ident">physical_posx</span>) <span class="kw">as</span> <span class="ident">f32</span>;
                     <span class="kw">let</span> <span class="ident">cursory</span> <span class="op">=</span> (<span class="ident">physical_posy</span>) <span class="kw">as</span> <span class="ident">f32</span>;
-                    <span class="ident">cx</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::MouseMove</span>(<span class="ident">cursorx</span>, <span class="ident">cursory</span>));
+                    <span class="ident">cx</span>.<span class="ident">emit_origin</span>(<span class="ident">WindowEvent::MouseMove</span>(<span class="ident">cursorx</span>, <span class="ident">cursory</span>));
                 }
                 <span class="ident">baseview::MouseEvent::ButtonPressed</span>(<span class="ident">button</span>) =&gt; {
                     <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">translate_mouse_button</span>(<span class="ident">button</span>);
-                    <span class="ident">cx</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::MouseDown</span>(<span class="ident">b</span>));
+                    <span class="ident">cx</span>.<span class="ident">emit_origin</span>(<span class="ident">WindowEvent::MouseDown</span>(<span class="ident">b</span>));
                 }
                 <span class="ident">baseview::MouseEvent::ButtonReleased</span>(<span class="ident">button</span>) =&gt; {
                     <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">translate_mouse_button</span>(<span class="ident">button</span>);
-                    <span class="ident">cx</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::MouseUp</span>(<span class="ident">b</span>));
+                    <span class="ident">cx</span>.<span class="ident">emit_origin</span>(<span class="ident">WindowEvent::MouseUp</span>(<span class="ident">b</span>));
                 }
                 <span class="ident">baseview::MouseEvent::WheelScrolled</span>(<span class="ident">scroll_delta</span>) =&gt; {
                     <span class="kw">let</span> (<span class="ident">lines_x</span>, <span class="ident">lines_y</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">scroll_delta</span> {
@@ -682,7 +676,7 @@
                         ),
                     };
 
-                    <span class="ident">cx</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::MouseScroll</span>(<span class="ident">lines_x</span>, <span class="ident">lines_y</span>));
+                    <span class="ident">cx</span>.<span class="ident">emit_origin</span>(<span class="ident">WindowEvent::MouseScroll</span>(<span class="ident">lines_x</span>, <span class="ident">lines_y</span>));
                 }
                 <span class="kw">_</span> =&gt; {}
             },
@@ -708,23 +702,17 @@
 
                 <span class="kw">match</span> <span class="ident">s</span> {
                     <span class="ident">MouseButtonState::Pressed</span> =&gt; {
-                        <span class="ident">cx</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::KeyDown</span>(
-                            <span class="ident">event</span>.<span class="ident">code</span>,
-                            <span class="prelude-val">Some</span>(<span class="ident">event</span>.<span class="ident">key</span>.<span class="ident">clone</span>()),
-                        ));
+                        <span class="ident">cx</span>.<span class="ident">emit_origin</span>(<span class="ident">WindowEvent::KeyDown</span>(<span class="ident">event</span>.<span class="ident">code</span>, <span class="prelude-val">Some</span>(<span class="ident">event</span>.<span class="ident">key</span>.<span class="ident">clone</span>())));
 
                         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">vizia_input::Key::Character</span>(<span class="ident">written</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">event</span>.<span class="ident">key</span> {
                             <span class="kw">for</span> <span class="ident">chr</span> <span class="kw">in</span> <span class="ident">written</span>.<span class="ident">chars</span>() {
-                                <span class="ident">cx</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::CharInput</span>(<span class="ident">chr</span>));
+                                <span class="ident">cx</span>.<span class="ident">emit_origin</span>(<span class="ident">WindowEvent::CharInput</span>(<span class="ident">chr</span>));
                             }
                         }
                     }
 
                     <span class="ident">MouseButtonState::Released</span> =&gt; {
-                        <span class="ident">cx</span>.<span class="ident">dispatch_system_event</span>(<span class="ident">WindowEvent::KeyUp</span>(
-                            <span class="ident">event</span>.<span class="ident">code</span>,
-                            <span class="prelude-val">Some</span>(<span class="ident">event</span>.<span class="ident">key</span>.<span class="ident">clone</span>()),
-                        ));
+                        <span class="ident">cx</span>.<span class="ident">emit_origin</span>(<span class="ident">WindowEvent::KeyUp</span>(<span class="ident">event</span>.<span class="ident">code</span>, <span class="prelude-val">Some</span>(<span class="ident">event</span>.<span class="ident">key</span>.<span class="ident">clone</span>())));
                     }
                 }
             }

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"trait":[["WindowModifiers","Methods for building a window."]]};
+window.SIDEBAR_ITEMS = {"mod":[["vizia_window",""]],"trait":[["WindowModifiers","Methods for building a window."]]};

@@ -511,6 +511,52 @@
 <span id="511">511</span>
 <span id="512">512</span>
 <span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::context::InternalEvent</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::events::EventMeta</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
@@ -713,6 +759,11 @@
                     <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pos_down</span> <span class="op">=</span> (<span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span>, <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span>);
                     <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pressed</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">hovered</span>;
                     <span class="ident">context</span>.<span class="ident">triggered</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">hovered</span>;
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span>
+                        <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">context</span>.<span class="ident">triggered</span>)
+                    {
+                        <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::ACTIVE</span>, <span class="bool-val">true</span>);
+                    }
                     <span class="kw">let</span> <span class="ident">focusable</span> <span class="op">=</span> <span class="ident">context</span>
                         .<span class="ident">style</span>
                         .<span class="ident">abilities</span>
@@ -742,7 +793,7 @@
             <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">button</span>, <span class="ident">MouseButton::Left</span>) {
                 <span class="ident">emit_direct_or_up</span>(
                     <span class="ident">context</span>,
-                    <span class="ident">WindowEvent::TriggerDown</span> { <span class="ident">mouse</span>: <span class="bool-val">true</span> },
+                    <span class="ident">WindowEvent::PressDown</span> { <span class="ident">mouse</span>: <span class="bool-val">true</span> },
                     <span class="ident">context</span>.<span class="ident">captured</span>,
                     <span class="ident">context</span>.<span class="ident">triggered</span>,
                     <span class="bool-val">true</span>,
@@ -793,13 +844,24 @@
             }
 
             <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">button</span>, <span class="ident">MouseButton::Left</span>) {
-                <span class="ident">emit_direct_or_up</span>(
-                    <span class="ident">context</span>,
-                    <span class="ident">WindowEvent::TriggerUp</span> { <span class="ident">mouse</span>: <span class="bool-val">true</span> },
-                    <span class="ident">context</span>.<span class="ident">captured</span>,
-                    <span class="ident">context</span>.<span class="ident">triggered</span>,
-                    <span class="bool-val">true</span>,
-                );
+                <span class="kw">if</span> <span class="ident">context</span>.<span class="ident">hovered</span> <span class="op">==</span> <span class="ident">context</span>.<span class="ident">triggered</span> {
+                    <span class="ident">emit_direct_or_up</span>(
+                        <span class="ident">context</span>,
+                        <span class="ident">WindowEvent::Press</span> { <span class="ident">mouse</span>: <span class="bool-val">true</span> },
+                        <span class="ident">context</span>.<span class="ident">captured</span>,
+                        <span class="ident">context</span>.<span class="ident">triggered</span>,
+                        <span class="bool-val">true</span>,
+                    );
+                }
+
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span>
+                    <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">context</span>.<span class="ident">triggered</span>)
+                {
+                    <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::ACTIVE</span>, <span class="bool-val">false</span>);
+                }
+                <span class="ident">context</span>.<span class="ident">need_restyle</span>();
+
+                <span class="ident">context</span>.<span class="ident">triggered</span> <span class="op">=</span> <span class="ident">Entity::null</span>();
             }
 
             <span class="ident">mutate_direct_or_up</span>(<span class="ident">meta</span>, <span class="ident">context</span>.<span class="ident">captured</span>, <span class="ident">context</span>.<span class="ident">hovered</span>, <span class="bool-val">true</span>);
@@ -939,6 +1001,14 @@
                                 .<span class="ident">target</span>(<span class="ident">prev_focused</span>)
                                 .<span class="ident">origin</span>(<span class="ident">Entity::root</span>()),
                         );
+
+                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span>
+                            <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">context</span>.<span class="ident">triggered</span>)
+                        {
+                            <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::ACTIVE</span>, <span class="bool-val">false</span>);
+                        }
+                        <span class="ident">context</span>.<span class="ident">need_restyle</span>();
+                        <span class="ident">context</span>.<span class="ident">triggered</span> <span class="op">=</span> <span class="ident">Entity::null</span>();
                     }
                 } <span class="kw">else</span> {
                     <span class="kw">let</span> <span class="ident">next_focused</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">next_focused</span>) <span class="op">=</span>
@@ -963,6 +1033,14 @@
                                 .<span class="ident">target</span>(<span class="ident">next_focused</span>)
                                 .<span class="ident">origin</span>(<span class="ident">Entity::root</span>()),
                         );
+
+                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span>
+                            <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">context</span>.<span class="ident">triggered</span>)
+                        {
+                            <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::ACTIVE</span>, <span class="bool-val">false</span>);
+                        }
+                        <span class="ident">context</span>.<span class="ident">need_restyle</span>();
+                        <span class="ident">context</span>.<span class="ident">triggered</span> <span class="op">=</span> <span class="ident">Entity::null</span>();
                     }
                 }
 
@@ -973,17 +1051,31 @@
 
             <span class="kw">if</span> <span class="macro">matches!</span>(<span class="kw-2">*</span><span class="ident">code</span>, <span class="ident">Code::Enter</span> <span class="op">|</span> <span class="ident">Code::NumpadEnter</span> <span class="op">|</span> <span class="ident">Code::Space</span>) {
                 <span class="ident">context</span>.<span class="ident">triggered</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">focused</span>;
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span>
+                    <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">context</span>.<span class="ident">triggered</span>)
+                {
+                    <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::ACTIVE</span>, <span class="bool-val">true</span>);
+                }
                 <span class="ident">context</span>.<span class="ident">with_current</span>(<span class="ident">context</span>.<span class="ident">focused</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::TriggerDown</span> { <span class="ident">mouse</span>: <span class="bool-val">false</span> })
+                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::PressDown</span> { <span class="ident">mouse</span>: <span class="bool-val">false</span> })
                 });
             }
         }
         <span class="ident">WindowEvent::KeyUp</span>(<span class="ident">code</span>, <span class="kw">_</span>) =&gt; {
             <span class="ident">meta</span>.<span class="ident">target</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">focused</span>;
             <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">code</span>, <span class="ident">Code::Enter</span> <span class="op">|</span> <span class="ident">Code::NumpadEnter</span> <span class="op">|</span> <span class="ident">Code::Space</span>) {
-                <span class="ident">context</span>.<span class="ident">with_current</span>(<span class="ident">context</span>.<span class="ident">triggered</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::TriggerUp</span> { <span class="ident">mouse</span>: <span class="bool-val">false</span> })
-                });
+                <span class="kw">if</span> <span class="ident">context</span>.<span class="ident">focused</span> <span class="op">==</span> <span class="ident">context</span>.<span class="ident">triggered</span> {
+                    <span class="ident">context</span>.<span class="ident">with_current</span>(<span class="ident">context</span>.<span class="ident">triggered</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
+                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::Press</span> { <span class="ident">mouse</span>: <span class="bool-val">false</span> })
+                    });
+                }
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span>
+                    <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">context</span>.<span class="ident">triggered</span>)
+                {
+                    <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::ACTIVE</span>, <span class="bool-val">false</span>);
+                }
+                <span class="ident">context</span>.<span class="ident">need_restyle</span>();
+                <span class="ident">context</span>.<span class="ident">triggered</span> <span class="op">=</span> <span class="ident">Entity::null</span>();
             }
         }
         <span class="ident">WindowEvent::CharInput</span>(<span class="kw">_</span>) =&gt; {

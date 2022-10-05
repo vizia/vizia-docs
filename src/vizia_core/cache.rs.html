@@ -938,6 +938,20 @@
 <span id="938">938</span>
 <span id="939">939</span>
 <span id="940">940</span>
+<span id="941">941</span>
+<span id="942">942</span>
+<span id="943">943</span>
+<span id="944">944</span>
+<span id="945">945</span>
+<span id="946">946</span>
+<span id="947">947</span>
+<span id="948">948</span>
+<span id="949">949</span>
+<span id="950">950</span>
+<span id="951">951</span>
+<span id="952">952</span>
+<span id="953">953</span>
+<span id="954">954</span>
 </pre><pre class="rust"><code><span class="doccomment">//! The cache is a store for intermediate data produced while computing state, notably layout</span>
 <span class="doccomment">//! results. The main type here is CachedData, usually accessed via `cx.cache`.</span>
 
@@ -1682,12 +1696,26 @@
     <span class="comment">//     }</span>
     <span class="comment">// }</span>
 
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_hoverability</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">bool</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">abilities</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">abilities</span>.<span class="ident">get</span>(<span class="ident">entity</span>) {
+            <span class="ident">abilities</span>.<span class="ident">contains</span>(<span class="ident">Abilities::HOVERABLE</span>)
+        } <span class="kw">else</span> {
+            <span class="bool-val">false</span>
+        }
+    }
+
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_visibility</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">Visibility</span> {
         <span class="self">self</span>.<span class="ident">visibility</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>()
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">Display</span> {
         <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>()
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_hoverability</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">bool</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">abilities</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">abilities</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
+            <span class="ident">abilities</span>.<span class="ident">set</span>(<span class="ident">Abilities::HOVERABLE</span>, <span class="ident">val</span>);
+        }
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_visibility</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">Visibility</span>) {

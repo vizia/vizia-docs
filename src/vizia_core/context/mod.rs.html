@@ -560,6 +560,7 @@
 <span id="560">560</span>
 <span id="561">561</span>
 <span id="562">562</span>
+<span id="563">563</span>
 </pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">backend</span>;
 <span class="kw">mod</span> <span class="ident">draw</span>;
 <span class="kw">mod</span> <span class="ident">event</span>;
@@ -569,6 +570,7 @@
 <span class="kw">use</span> <span class="ident">std::any</span>::{<span class="ident">Any</span>, <span class="ident">TypeId</span>};
 <span class="kw">use</span> <span class="ident">std::collections::hash_map::Entry</span>;
 <span class="kw">use</span> <span class="ident">std::collections</span>::{<span class="ident">HashMap</span>, <span class="ident">HashSet</span>, <span class="ident">VecDeque</span>};
+<span class="kw">use</span> <span class="ident">std::path::Path</span>;
 <span class="kw">use</span> <span class="ident">std::sync::Mutex</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;clipboard&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;x11&quot;</span>))]</span>
@@ -968,9 +970,9 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_stylesheet</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">std::io::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">style_string</span> <span class="op">=</span> <span class="ident">std::fs::read_to_string</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">resource_manager</span>.<span class="ident">stylesheets</span>.<span class="ident">push</span>(<span class="ident">path</span>.<span class="ident">to_owned</span>());
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_stylesheet</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">path</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">std::io::Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">style_string</span> <span class="op">=</span> <span class="ident">std::fs::read_to_string</span>(<span class="ident">path</span>.<span class="ident">as_ref</span>())<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">resource_manager</span>.<span class="ident">stylesheets</span>.<span class="ident">push</span>(<span class="ident">path</span>.<span class="ident">as_ref</span>().<span class="ident">to_owned</span>());
         <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">parse_theme</span>(<span class="kw-2">&amp;</span><span class="ident">style_string</span>);
 
         <span class="prelude-val">Ok</span>(())

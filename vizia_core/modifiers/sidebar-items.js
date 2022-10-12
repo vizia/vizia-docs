@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"trait":[["ActionModifiers","Modifiers which add an action callback to a view."]]};
+window.SIDEBAR_ITEMS = {"trait":[["AbilityModifiers","Modifiers for changing the abilities of a view."],["ActionModifiers","Modifiers which add an action callback to a view."],["LayoutModifiers","Modifiers for changing the layout properties of a view."],["StyleModifiers","Modifiers for changing the style properties of a view."],["TextModifiers","Modifiers for changing the text properties of a view."]]};

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/state/store.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>store.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/state/store.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>store.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -76,83 +76,83 @@
 <span id="76">76</span>
 <span id="77">77</span>
 <span id="78">78</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">any::TypeId</span>, <span class="ident">collections::HashSet</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>std::{any::TypeId, collections::HashSet};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::ModelOrView</span>;
+<span class="kw">use </span><span class="kw">super</span>::ModelOrView;
 
-<span class="kw">use</span> <span class="ident">std::sync::atomic</span>::{<span class="ident">AtomicU64</span>, <span class="ident">Ordering</span>};
+<span class="kw">use </span>std::sync::atomic::{AtomicU64, Ordering};
 
-<span class="comment">// Generates a unique ID</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_uuid</span>() -&gt; <span class="ident">u64</span> {
-    <span class="kw">static</span> <span class="ident">UUID</span>: <span class="ident">AtomicU64</span> <span class="op">=</span> <span class="ident">AtomicU64::new</span>(<span class="number">0</span>);
-    <span class="ident">UUID</span>.<span class="ident">fetch_add</span>(<span class="number">1</span>, <span class="ident">Ordering::Relaxed</span>)
+<span class="comment">// Generates a unique ID
+</span><span class="kw">pub fn </span>next_uuid() -&gt; u64 {
+    <span class="kw">static </span>UUID: AtomicU64 = AtomicU64::new(<span class="number">0</span>);
+    UUID.fetch_add(<span class="number">1</span>, Ordering::Relaxed)
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">StoreId</span> {
-    <span class="ident">Type</span>(<span class="ident">TypeId</span>),
-    <span class="ident">UUID</span>(<span class="ident">u64</span>),
+<span class="attribute">#[derive(Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>StoreId {
+    Type(TypeId),
+    UUID(u64),
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait</span> <span class="ident">Store</span> {
-    <span class="kw">fn</span> <span class="ident">update</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">model</span>: <span class="ident">ModelOrView</span>) -&gt; <span class="ident">bool</span>;
-    <span class="kw">fn</span> <span class="ident">observers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>;
-    <span class="kw">fn</span> <span class="ident">add_observer</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">observer</span>: <span class="ident">Entity</span>);
-    <span class="kw">fn</span> <span class="ident">remove_observer</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">observer</span>: <span class="kw-2">&amp;</span><span class="ident">Entity</span>);
-    <span class="kw">fn</span> <span class="ident">num_observers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span>;
-    <span class="kw">fn</span> <span class="ident">entity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Entity</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>Store {
+    <span class="kw">fn </span>update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, model: ModelOrView) -&gt; bool;
+    <span class="kw">fn </span>observers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HashSet&lt;Entity&gt;;
+    <span class="kw">fn </span>add_observer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, observer: Entity);
+    <span class="kw">fn </span>remove_observer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, observer: <span class="kw-2">&amp;</span>Entity);
+    <span class="kw">fn </span>num_observers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize;
+    <span class="kw">fn </span>entity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity;
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">BasicStore</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="comment">// The entity which declared the binding</span>
-    <span class="kw">pub</span> <span class="ident">entity</span>: <span class="ident">Entity</span>,
-    <span class="kw">pub</span> <span class="ident">lens</span>: <span class="ident">L</span>,
-    <span class="kw">pub</span> <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">observers</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>,
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>BasicStore&lt;L: Lens, T&gt; {
+    <span class="comment">// The entity which declared the binding
+    </span><span class="kw">pub </span>entity: Entity,
+    <span class="kw">pub </span>lens: L,
+    <span class="kw">pub </span>old: <span class="prelude-ty">Option</span>&lt;T&gt;,
+    <span class="kw">pub </span>observers: HashSet&lt;Entity&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Store</span> <span class="kw">for</span> <span class="ident">BasicStore</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>,
-    <span class="op">&lt;</span><span class="ident">L</span> <span class="kw">as</span> <span class="ident">Lens</span><span class="op">&gt;</span><span class="ident">::Target</span>: <span class="ident">Data</span>,
+<span class="kw">impl</span>&lt;L: Lens, T&gt; Store <span class="kw">for </span>BasicStore&lt;L, T&gt;
+<span class="kw">where
+    </span>L: Lens&lt;Target = T&gt;,
+    &lt;L <span class="kw">as </span>Lens&gt;::Target: Data,
 {
-    <span class="kw">fn</span> <span class="ident">entity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Entity</span> {
-        <span class="self">self</span>.<span class="ident">entity</span>
+    <span class="kw">fn </span>entity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
+        <span class="self">self</span>.entity
     }
 
-    <span class="kw">fn</span> <span class="ident">update</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">model</span>: <span class="ident">ModelOrView</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">data</span>) <span class="op">=</span> <span class="ident">model</span>.<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">L::Source</span><span class="op">&gt;</span>() {
-            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">view</span>(<span class="ident">data</span>, <span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="kw">match</span> (<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">old</span>, <span class="ident">t</span>) {
-                (<span class="prelude-val">Some</span>(<span class="ident">a</span>), <span class="prelude-val">Some</span>(<span class="ident">b</span>)) <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">same</span>(<span class="ident">b</span>) =&gt; <span class="prelude-val">None</span>,
+    <span class="kw">fn </span>update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, model: ModelOrView) -&gt; bool {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(data) = model.downcast_ref::&lt;L::Source&gt;() {
+            <span class="kw">let </span>result = <span class="self">self</span>.lens.view(data, |t| <span class="kw">match </span>(<span class="kw-2">&amp;</span><span class="self">self</span>.old, t) {
+                (<span class="prelude-val">Some</span>(a), <span class="prelude-val">Some</span>(b)) <span class="kw">if </span>a.same(b) =&gt; <span class="prelude-val">None</span>,
                 (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">None</span>,
-                <span class="kw">_</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">t</span>.<span class="ident">cloned</span>()),
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">Some</span>(t.cloned()),
             });
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">new_data</span>) <span class="op">=</span> <span class="ident">result</span> {
-                <span class="self">self</span>.<span class="ident">old</span> <span class="op">=</span> <span class="ident">new_data</span>;
-                <span class="kw">return</span> <span class="bool-val">true</span>;
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(new_data) = result {
+                <span class="self">self</span>.old = new_data;
+                <span class="kw">return </span><span class="bool-val">true</span>;
             }
         }
 
-        <span class="bool-val">false</span>
+        <span class="bool-val">false
+    </span>}
+
+    <span class="kw">fn </span>observers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HashSet&lt;Entity&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.observers
     }
 
-    <span class="kw">fn</span> <span class="ident">observers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">observers</span>
+    <span class="kw">fn </span>add_observer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, observer: Entity) {
+        <span class="self">self</span>.observers.insert(observer);
     }
 
-    <span class="kw">fn</span> <span class="ident">add_observer</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">observer</span>: <span class="ident">Entity</span>) {
-        <span class="self">self</span>.<span class="ident">observers</span>.<span class="ident">insert</span>(<span class="ident">observer</span>);
+    <span class="kw">fn </span>remove_observer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, observer: <span class="kw-2">&amp;</span>Entity) {
+        <span class="self">self</span>.observers.remove(observer);
     }
 
-    <span class="kw">fn</span> <span class="ident">remove_observer</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">observer</span>: <span class="kw-2">&amp;</span><span class="ident">Entity</span>) {
-        <span class="self">self</span>.<span class="ident">observers</span>.<span class="ident">remove</span>(<span class="ident">observer</span>);
-    }
-
-    <span class="kw">fn</span> <span class="ident">num_observers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">observers</span>.<span class="ident">len</span>()
+    <span class="kw">fn </span>num_observers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.observers.len()
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/environment.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>environment.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../vizia_core/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/environment.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>environment.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../vizia_core/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -41,48 +41,48 @@
 <span id="41">41</span>
 <span id="42">42</span>
 <span id="43">43</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">unic_langid::LanguageIdentifier</span>;
-<span class="kw">use</span> <span class="ident">vizia_derive::Lens</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>unic_langid::LanguageIdentifier;
+<span class="kw">use </span>vizia_derive::Lens;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">context::EventContext</span>, <span class="ident">events::Event</span>, <span class="ident">state::Lens</span>, <span class="ident">state::Model</span>};
+<span class="kw">use crate</span>::{context::EventContext, events::Event, state::Lens, state::Model};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Lens</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Environment</span> {
-    <span class="kw">pub</span> <span class="ident">locale</span>: <span class="ident">LanguageIdentifier</span>,
+<span class="attribute">#[derive(Lens)]
+</span><span class="kw">pub struct </span>Environment {
+    <span class="kw">pub </span>locale: LanguageIdentifier,
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Environment</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">Environment::new</span>()
+<span class="kw">impl </span>Default <span class="kw">for </span>Environment {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        Environment::new()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Environment</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">locale</span> <span class="op">=</span> <span class="ident">sys_locale::get_locale</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="ident">l</span>.<span class="ident">parse</span>().<span class="ident">ok</span>()).<span class="ident">flatten</span>().<span class="ident">unwrap_or_default</span>();
+<span class="kw">impl </span>Environment {
+    <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>locale = sys_locale::get_locale().map(|l| l.parse().ok()).flatten().unwrap_or_default();
 
-        <span class="self">Self</span> { <span class="ident">locale</span> }
+        <span class="self">Self </span>{ locale }
     }
 }
 
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">EnvironmentEvent</span> {
-    <span class="ident">SetLocale</span>(<span class="ident">LanguageIdentifier</span>),
-    <span class="ident">UseSystemLocale</span>,
+<span class="kw">pub enum </span>EnvironmentEvent {
+    SetLocale(LanguageIdentifier),
+    UseSystemLocale,
 }
 
-<span class="kw">impl</span> <span class="ident">Model</span> <span class="kw">for</span> <span class="ident">Environment</span> {
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
-        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">event</span> {
-            <span class="ident">EnvironmentEvent::SetLocale</span>(<span class="ident">locale</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">locale</span> <span class="op">=</span> <span class="ident">locale</span>.<span class="ident">clone</span>();
+<span class="kw">impl </span>Model <span class="kw">for </span>Environment {
+    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
+        event.map(|event, <span class="kw">_</span>| <span class="kw">match </span>event {
+            EnvironmentEvent::SetLocale(locale) =&gt; {
+                <span class="self">self</span>.locale = locale.clone();
             }
 
-            <span class="ident">EnvironmentEvent::UseSystemLocale</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">locale</span> <span class="op">=</span>
-                    <span class="ident">sys_locale::get_locale</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="ident">l</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>()).<span class="ident">unwrap_or_default</span>();
+            EnvironmentEvent::UseSystemLocale =&gt; {
+                <span class="self">self</span>.locale =
+                    sys_locale::get_locale().map(|l| l.parse().unwrap()).unwrap_or_default();
             }
         });
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

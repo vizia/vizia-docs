@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/scrollbar.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>scrollbar.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/scrollbar.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>scrollbar.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -159,166 +159,166 @@
 <span id="159">159</span>
 <span id="160">160</span>
 <span id="161">161</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::views::Orientation</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::views::Orientation;
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Scrollbar</span><span class="op">&lt;</span><span class="ident">L1</span><span class="op">&gt;</span> {
-    <span class="ident">value</span>: <span class="ident">L1</span>,
-    <span class="ident">orientation</span>: <span class="ident">Orientation</span>,
+<span class="kw">pub struct </span>Scrollbar&lt;L1&gt; {
+    value: L1,
+    orientation: Orientation,
 
-    <span class="ident">reference_points</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">f32</span>, <span class="ident">f32</span>)<span class="op">&gt;</span>,
+    reference_points: <span class="prelude-ty">Option</span>&lt;(f32, f32)&gt;,
 
-    <span class="ident">on_changing</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">f32</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
+    on_changing: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, f32)&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L1</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Scrollbar</span><span class="op">&lt;</span><span class="ident">L1</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">L2</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span>(
-        <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>,
-        <span class="ident">value</span>: <span class="ident">L1</span>,
-        <span class="ident">ratio</span>: <span class="ident">L2</span>,
-        <span class="ident">orientation</span>: <span class="ident">Orientation</span>,
-        <span class="ident">callback</span>: <span class="ident">F</span>,
-    ) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">f32</span>),
+<span class="kw">impl</span>&lt;L1: Lens&lt;Target = f32&gt;&gt; Scrollbar&lt;L1&gt; {
+    <span class="kw">pub fn </span>new&lt;F, L2: Lens&lt;Target = f32&gt;&gt;(
+        cx: <span class="kw-2">&amp;mut </span>Context,
+        value: L1,
+        ratio: L2,
+        orientation: Orientation,
+        callback: F,
+    ) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, f32),
     {
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">Self</span> {
-            <span class="ident">value</span>: <span class="ident">value</span>.<span class="ident">clone</span>(),
-            <span class="ident">orientation</span>,
-            <span class="ident">reference_points</span>: <span class="prelude-val">None</span>,
-            <span class="ident">on_changing</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">callback</span>)),
+        <span class="kw">let </span>result = <span class="self">Self </span>{
+            value: value.clone(),
+            orientation,
+            reference_points: <span class="prelude-val">None</span>,
+            on_changing: <span class="prelude-val">Some</span>(Box::new(callback)),
         }
-        .<span class="ident">build</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-            <span class="ident">Element::new</span>(<span class="ident">cx</span>)
-                .<span class="ident">class</span>(<span class="string">&quot;thumb&quot;</span>)
-                .<span class="ident">bind</span>(<span class="ident">value</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">handle</span>, <span class="ident">value</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>);
-                    <span class="kw">match</span> <span class="ident">orientation</span> {
-                        <span class="ident">Orientation::Horizontal</span> =&gt; {
-                            <span class="ident">handle</span>.<span class="ident">left</span>(<span class="ident">Units::Stretch</span>(<span class="ident">value</span>)).<span class="ident">right</span>(<span class="ident">Units::Stretch</span>(<span class="number">1.0</span> <span class="op">-</span> <span class="ident">value</span>))
+        .build(cx, <span class="kw">move </span>|cx| {
+            Element::new(cx)
+                .class(<span class="string">&quot;thumb&quot;</span>)
+                .bind(value, <span class="kw">move </span>|handle, value| {
+                    <span class="kw">let </span>value = value.get(handle.cx);
+                    <span class="kw">match </span>orientation {
+                        Orientation::Horizontal =&gt; {
+                            handle.left(Units::Stretch(value)).right(Units::Stretch(<span class="number">1.0 </span>- value))
                         }
-                        <span class="ident">Orientation::Vertical</span> =&gt; {
-                            <span class="ident">handle</span>.<span class="ident">top</span>(<span class="ident">Units::Stretch</span>(<span class="ident">value</span>)).<span class="ident">bottom</span>(<span class="ident">Units::Stretch</span>(<span class="number">1.0</span> <span class="op">-</span> <span class="ident">value</span>))
+                        Orientation::Vertical =&gt; {
+                            handle.top(Units::Stretch(value)).bottom(Units::Stretch(<span class="number">1.0 </span>- value))
                         }
                     };
                 })
-                .<span class="ident">bind</span>(<span class="ident">ratio</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">handle</span>, <span class="ident">ratio</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">ratio</span> <span class="op">=</span> <span class="ident">ratio</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>);
-                    <span class="kw">match</span> <span class="ident">orientation</span> {
-                        <span class="ident">Orientation::Horizontal</span> =&gt; <span class="ident">handle</span>.<span class="ident">width</span>(<span class="ident">Units::Percentage</span>(<span class="ident">ratio</span> <span class="op">*</span> <span class="number">100.0</span>)),
-                        <span class="ident">Orientation::Vertical</span> =&gt; <span class="ident">handle</span>.<span class="ident">height</span>(<span class="ident">Units::Percentage</span>(<span class="ident">ratio</span> <span class="op">*</span> <span class="number">100.0</span>)),
+                .bind(ratio, <span class="kw">move </span>|handle, ratio| {
+                    <span class="kw">let </span>ratio = ratio.get(handle.cx);
+                    <span class="kw">match </span>orientation {
+                        Orientation::Horizontal =&gt; handle.width(Units::Percentage(ratio * <span class="number">100.0</span>)),
+                        Orientation::Vertical =&gt; handle.height(Units::Percentage(ratio * <span class="number">100.0</span>)),
                     };
                 });
         });
 
-        <span class="kw">match</span> <span class="ident">orientation</span> {
-            <span class="ident">Orientation::Horizontal</span> =&gt; <span class="ident">result</span>.<span class="ident">class</span>(<span class="string">&quot;horizontal&quot;</span>),
-            <span class="ident">Orientation::Vertical</span> =&gt; <span class="ident">result</span>.<span class="ident">class</span>(<span class="string">&quot;vertical&quot;</span>),
+        <span class="kw">match </span>orientation {
+            Orientation::Horizontal =&gt; result.class(<span class="string">&quot;horizontal&quot;</span>),
+            Orientation::Vertical =&gt; result.class(<span class="string">&quot;vertical&quot;</span>),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">container_and_thumb_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
-        <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-        <span class="kw">let</span> <span class="ident">child</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">get_child</span>(<span class="ident">current</span>, <span class="number">0</span>).<span class="ident">unwrap</span>();
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">orientation</span> {
-            <span class="ident">Orientation::Horizontal</span> =&gt; (<span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">current</span>), <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">child</span>)),
-            <span class="ident">Orientation::Vertical</span> =&gt; (<span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">current</span>), <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">child</span>)),
+    <span class="kw">fn </span>container_and_thumb_size(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) -&gt; (f32, f32) {
+        <span class="kw">let </span>current = cx.current();
+        <span class="kw">let </span>child = cx.tree.get_child(current, <span class="number">0</span>).unwrap();
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.orientation {
+            Orientation::Horizontal =&gt; (cx.cache.get_width(current), cx.cache.get_width(child)),
+            Orientation::Vertical =&gt; (cx.cache.get_height(current), cx.cache.get_height(child)),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">thumb_bounds</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>, <span class="ident">f32</span>, <span class="ident">f32</span>) {
-        <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-        <span class="kw">let</span> <span class="ident">child</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">get_child</span>(<span class="ident">current</span>, <span class="number">0</span>).<span class="ident">unwrap</span>();
+    <span class="kw">fn </span>thumb_bounds(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) -&gt; (f32, f32, f32, f32) {
+        <span class="kw">let </span>current = cx.current();
+        <span class="kw">let </span>child = cx.tree.get_child(current, <span class="number">0</span>).unwrap();
         (
-            <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posx</span>(<span class="ident">child</span>),
-            <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posy</span>(<span class="ident">child</span>),
-            <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">child</span>),
-            <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">child</span>),
+            cx.cache.get_posx(child),
+            cx.cache.get_posy(child),
+            cx.cache.get_width(child),
+            cx.cache.get_height(child),
         )
     }
 
-    <span class="kw">fn</span> <span class="ident">compute_new_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">physical_delta</span>: <span class="ident">f32</span>, <span class="ident">value_ref</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="comment">// delta is moving within the negative space of the thumb: (1 - ratio) * container</span>
-        <span class="kw">let</span> (<span class="ident">size</span>, <span class="ident">thumb_size</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">container_and_thumb_size</span>(<span class="ident">cx</span>);
-        <span class="kw">let</span> <span class="ident">negative_space</span> <span class="op">=</span> <span class="ident">size</span> <span class="op">-</span> <span class="ident">thumb_size</span>;
-        <span class="kw">if</span> <span class="ident">negative_space</span> <span class="op">==</span> <span class="number">0.0</span> {
-            <span class="ident">value_ref</span>
-        } <span class="kw">else</span> {
-            <span class="comment">// what percentage of negative space have we crossed?</span>
-            <span class="kw">let</span> <span class="ident">logical_delta</span> <span class="op">=</span> <span class="ident">physical_delta</span> <span class="op">/</span> <span class="ident">negative_space</span>;
-            <span class="ident">value_ref</span> <span class="op">+</span> <span class="ident">logical_delta</span>
+    <span class="kw">fn </span>compute_new_value(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, physical_delta: f32, value_ref: f32) -&gt; f32 {
+        <span class="comment">// delta is moving within the negative space of the thumb: (1 - ratio) * container
+        </span><span class="kw">let </span>(size, thumb_size) = <span class="self">self</span>.container_and_thumb_size(cx);
+        <span class="kw">let </span>negative_space = size - thumb_size;
+        <span class="kw">if </span>negative_space == <span class="number">0.0 </span>{
+            value_ref
+        } <span class="kw">else </span>{
+            <span class="comment">// what percentage of negative space have we crossed?
+            </span><span class="kw">let </span>logical_delta = physical_delta / negative_space;
+            value_ref + logical_delta
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">change</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">new_val</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">on_changing</span> {
-            <span class="ident">callback</span>(<span class="ident">cx</span>, <span class="ident">new_val</span>.<span class="ident">clamp</span>(<span class="number">0.0</span>, <span class="number">1.0</span>));
+    <span class="kw">fn </span>change(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, new_val: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_changing {
+            callback(cx, new_val.clamp(<span class="number">0.0</span>, <span class="number">1.0</span>));
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L1</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">Scrollbar</span><span class="op">&lt;</span><span class="ident">L1</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;L1: <span class="lifetime">&#39;static </span>+ Lens&lt;Target = f32&gt;&gt; View <span class="kw">for </span>Scrollbar&lt;L1&gt; {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">&quot;scrollbar&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
-        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="ident">meta</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">orientation</span> {
-                <span class="ident">Orientation::Horizontal</span> =&gt; <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span>,
-                <span class="ident">Orientation::Vertical</span> =&gt; <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span>,
+    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
+        event.map(|window_event, meta| {
+            <span class="kw">let </span>pos = <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.orientation {
+                Orientation::Horizontal =&gt; cx.mouse.cursorx,
+                Orientation::Vertical =&gt; cx.mouse.cursory,
             };
-            <span class="kw">match</span> <span class="ident">window_event</span> {
-                <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
-                    <span class="kw">if</span> <span class="ident">meta</span>.<span class="ident">target</span> <span class="op">!</span><span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>() {
-                        <span class="self">self</span>.<span class="ident">reference_points</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">pos</span>, <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">get</span>(<span class="ident">cx</span>)));
-                        <span class="ident">cx</span>.<span class="ident">capture</span>();
-                    } <span class="kw">else</span> {
-                        <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">jump</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">container_and_thumb_size</span>(<span class="ident">cx</span>);
-                        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">ty</span>, <span class="ident">tw</span>, <span class="ident">th</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">thumb_bounds</span>(<span class="ident">cx</span>);
-                        <span class="kw">let</span> <span class="ident">physical_delta</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">orientation</span> {
-                            <span class="ident">Orientation::Horizontal</span> =&gt; {
-                                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span> <span class="op">&lt;</span> <span class="ident">tx</span> {
-                                    <span class="op">-</span><span class="ident">jump</span>
-                                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">tx</span> <span class="op">+</span> <span class="ident">tw</span> {
-                                    <span class="ident">jump</span>
-                                } <span class="kw">else</span> {
+            <span class="kw">match </span>window_event {
+                WindowEvent::MouseDown(MouseButton::Left) =&gt; {
+                    <span class="kw">if </span>meta.target != cx.current() {
+                        <span class="self">self</span>.reference_points = <span class="prelude-val">Some</span>((pos, <span class="self">self</span>.value.get(cx)));
+                        cx.capture();
+                    } <span class="kw">else </span>{
+                        <span class="kw">let </span>(<span class="kw">_</span>, jump) = <span class="self">self</span>.container_and_thumb_size(cx);
+                        <span class="kw">let </span>(tx, ty, tw, th) = <span class="self">self</span>.thumb_bounds(cx);
+                        <span class="kw">let </span>physical_delta = <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.orientation {
+                            Orientation::Horizontal =&gt; {
+                                <span class="kw">if </span>cx.mouse.cursorx &lt; tx {
+                                    -jump
+                                } <span class="kw">else if </span>cx.mouse.cursorx &gt;= tx + tw {
+                                    jump
+                                } <span class="kw">else </span>{
                                     <span class="kw">return</span>;
                                 }
                             }
-                            <span class="ident">Orientation::Vertical</span> =&gt; {
-                                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span> <span class="op">&lt;</span> <span class="ident">ty</span> {
-                                    <span class="op">-</span><span class="ident">jump</span>
-                                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">ty</span> <span class="op">+</span> <span class="ident">th</span> {
-                                    <span class="ident">jump</span>
-                                } <span class="kw">else</span> {
+                            Orientation::Vertical =&gt; {
+                                <span class="kw">if </span>cx.mouse.cursory &lt; ty {
+                                    -jump
+                                } <span class="kw">else if </span>cx.mouse.cursory &gt;= ty + th {
+                                    jump
+                                } <span class="kw">else </span>{
                                     <span class="kw">return</span>;
                                 }
                             }
                         };
-                        <span class="kw">let</span> <span class="ident">changed</span> <span class="op">=</span>
-                            <span class="self">self</span>.<span class="ident">compute_new_value</span>(<span class="ident">cx</span>, <span class="ident">physical_delta</span>, <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">get</span>(<span class="ident">cx</span>));
-                        <span class="self">self</span>.<span class="ident">change</span>(<span class="ident">cx</span>, <span class="ident">changed</span>);
+                        <span class="kw">let </span>changed =
+                            <span class="self">self</span>.compute_new_value(cx, physical_delta, <span class="self">self</span>.value.get(cx));
+                        <span class="self">self</span>.change(cx, changed);
                     }
                 }
 
-                <span class="ident">WindowEvent::MouseUp</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">reference_points</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-                    <span class="ident">cx</span>.<span class="ident">release</span>();
+                WindowEvent::MouseUp(MouseButton::Left) =&gt; {
+                    <span class="self">self</span>.reference_points = <span class="prelude-val">None</span>;
+                    cx.release();
                 }
 
-                <span class="ident">WindowEvent::MouseMove</span>(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">mouse_ref</span>, <span class="ident">value_ref</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">reference_points</span> {
-                        <span class="kw">let</span> <span class="ident">physical_delta</span> <span class="op">=</span> <span class="ident">pos</span> <span class="op">-</span> <span class="ident">mouse_ref</span>;
-                        <span class="kw">let</span> <span class="ident">changed</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">compute_new_value</span>(<span class="ident">cx</span>, <span class="ident">physical_delta</span>, <span class="ident">value_ref</span>);
-                        <span class="self">self</span>.<span class="ident">change</span>(<span class="ident">cx</span>, <span class="ident">changed</span>);
+                WindowEvent::MouseMove(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>((mouse_ref, value_ref)) = <span class="self">self</span>.reference_points {
+                        <span class="kw">let </span>physical_delta = pos - mouse_ref;
+                        <span class="kw">let </span>changed = <span class="self">self</span>.compute_new_value(cx, physical_delta, value_ref);
+                        <span class="self">self</span>.change(cx, changed);
                     }
                 }
 
-                <span class="kw">_</span> =&gt; {}
+                <span class="kw">_ </span>=&gt; {}
             }
         });
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

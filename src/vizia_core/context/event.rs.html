@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/event.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/event.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -376,383 +376,383 @@
 <span id="376">376</span>
 <span id="377">377</span>
 <span id="378">378</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::any</span>::{<span class="ident">Any</span>, <span class="ident">TypeId</span>};
-<span class="kw">use</span> <span class="ident">std::collections</span>::{<span class="ident">HashMap</span>, <span class="ident">HashSet</span>, <span class="ident">VecDeque</span>};
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;clipboard&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">std::error::Error</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
+<span class="kw">use </span>std::collections::{HashMap, HashSet, VecDeque};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+</span><span class="kw">use </span>std::error::Error;
 
-<span class="kw">use</span> <span class="ident">femtovg::TextContext</span>;
-<span class="kw">use</span> <span class="ident">fnv::FnvHashMap</span>;
+<span class="kw">use </span>femtovg::TextContext;
+<span class="kw">use </span>fnv::FnvHashMap;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::CachedData</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::events::ViewHandler</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::resource::ResourceManager</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::state::ModelDataStore</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::style::Style</span>;
-<span class="kw">use</span> <span class="ident">vizia_id::GenerationalId</span>;
-<span class="kw">use</span> <span class="ident">vizia_input</span>::{<span class="ident">Modifiers</span>, <span class="ident">MouseState</span>};
-<span class="kw">use</span> <span class="ident">vizia_storage::SparseSet</span>;
+<span class="kw">use </span><span class="kw">crate</span>::cache::CachedData;
+<span class="kw">use </span><span class="kw">crate</span>::events::ViewHandler;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::resource::ResourceManager;
+<span class="kw">use </span><span class="kw">crate</span>::state::ModelDataStore;
+<span class="kw">use </span><span class="kw">crate</span>::style::Style;
+<span class="kw">use </span>vizia_id::GenerationalId;
+<span class="kw">use </span>vizia_input::{Modifiers, MouseState};
+<span class="kw">use </span>vizia_storage::SparseSet;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;clipboard&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">copypasta::ClipboardProvider</span>;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+</span><span class="kw">use </span>copypasta::ClipboardProvider;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::DrawCache</span>;
+<span class="kw">use </span><span class="kw">super</span>::DrawCache;
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EventContext</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">current</span>: <span class="ident">Entity</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">captured</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Entity</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">focused</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Entity</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">hovered</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Entity</span>,
-    <span class="kw">pub</span> <span class="ident">style</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Style</span>,
-    <span class="ident">entity_identifiers</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Entity</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">cache</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">CachedData</span>,
-    <span class="kw">pub</span> <span class="ident">draw_cache</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">DrawCache</span>,
-    <span class="kw">pub</span> <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Tree</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">ModelDataStore</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">views</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">FnvHashMap</span><span class="op">&lt;</span><span class="ident">Entity</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">ViewHandler</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">listeners</span>:
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Entity</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">ViewHandler</span>, <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">resource_manager</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">ResourceManager</span>,
-    <span class="kw">pub</span> <span class="ident">text_context</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">TextContext</span>,
-    <span class="kw">pub</span> <span class="ident">modifiers</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Modifiers</span>,
-    <span class="kw">pub</span> <span class="ident">mouse</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">MouseState</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">event_queue</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>,
-    <span class="ident">cursor_icon_locked</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;clipboard&quot;</span>)]</span>
-    <span class="ident">clipboard</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">ClipboardProvider</span><span class="op">&gt;</span>,
-    <span class="ident">event_proxy</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident"><span class="kw">crate</span>::context::EventProxy</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">pub struct </span>EventContext&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) current: Entity,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) captured: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Entity,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) focused: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Entity,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) hovered: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Entity,
+    <span class="kw">pub </span>style: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Style,
+    entity_identifiers: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>HashMap&lt;String, Entity&gt;,
+    <span class="kw">pub </span>cache: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>CachedData,
+    <span class="kw">pub </span>draw_cache: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>DrawCache,
+    <span class="kw">pub </span>tree: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Tree&lt;Entity&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>SparseSet&lt;ModelDataStore&gt;,
+    <span class="kw">pub </span>views: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
+    listeners:
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>ViewHandler, <span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event)&gt;&gt;,
+    <span class="kw">pub </span>resource_manager: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ResourceManager,
+    <span class="kw">pub </span>text_context: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>TextContext,
+    <span class="kw">pub </span>modifiers: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Modifiers,
+    <span class="kw">pub </span>mouse: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>MouseState&lt;Entity&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) event_queue: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>VecDeque&lt;Event&gt;,
+    cursor_icon_locked: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>bool,
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+    </span>clipboard: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Box&lt;<span class="kw">dyn </span>ClipboardProvider&gt;,
+    event_proxy: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span><span class="kw">crate</span>::context::EventProxy&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">EventContext</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Context</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">current</span>: <span class="ident">cx</span>.<span class="ident">current</span>,
-            <span class="ident">captured</span>: <span class="kw-2">&amp;mut</span> <span class="ident">cx</span>.<span class="ident">captured</span>,
-            <span class="ident">focused</span>: <span class="kw-2">&amp;mut</span> <span class="ident">cx</span>.<span class="ident">focused</span>,
-            <span class="ident">hovered</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">hovered</span>,
-            <span class="ident">entity_identifiers</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">entity_identifiers</span>,
-            <span class="ident">style</span>: <span class="kw-2">&amp;mut</span> <span class="ident">cx</span>.<span class="ident">style</span>,
-            <span class="ident">cache</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">cache</span>,
-            <span class="ident">draw_cache</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">draw_cache</span>,
-            <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">tree</span>,
-            <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">data</span>,
-            <span class="ident">views</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">views</span>,
-            <span class="ident">listeners</span>: <span class="kw-2">&amp;mut</span> <span class="ident">cx</span>.<span class="ident">listeners</span>,
-            <span class="ident">resource_manager</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">resource_manager</span>,
-            <span class="ident">text_context</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">text_context</span>,
-            <span class="ident">modifiers</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">modifiers</span>,
-            <span class="ident">mouse</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">mouse</span>,
-            <span class="ident">event_queue</span>: <span class="kw-2">&amp;mut</span> <span class="ident">cx</span>.<span class="ident">event_queue</span>,
-            <span class="ident">cursor_icon_locked</span>: <span class="kw-2">&amp;mut</span> <span class="ident">cx</span>.<span class="ident">cursor_icon_locked</span>,
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;clipboard&quot;</span>)]</span>
-            <span class="ident">clipboard</span>: <span class="kw-2">&amp;mut</span> <span class="ident">cx</span>.<span class="ident">clipboard</span>,
-            <span class="ident">event_proxy</span>: <span class="kw-2">&amp;mut</span> <span class="ident">cx</span>.<span class="ident">event_proxy</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; EventContext&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            current: cx.current,
+            captured: <span class="kw-2">&amp;mut </span>cx.captured,
+            focused: <span class="kw-2">&amp;mut </span>cx.focused,
+            hovered: <span class="kw-2">&amp;</span>cx.hovered,
+            entity_identifiers: <span class="kw-2">&amp;</span>cx.entity_identifiers,
+            style: <span class="kw-2">&amp;mut </span>cx.style,
+            cache: <span class="kw-2">&amp;</span>cx.cache,
+            draw_cache: <span class="kw-2">&amp;</span>cx.draw_cache,
+            tree: <span class="kw-2">&amp;</span>cx.tree,
+            data: <span class="kw-2">&amp;</span>cx.data,
+            views: <span class="kw-2">&amp;</span>cx.views,
+            listeners: <span class="kw-2">&amp;mut </span>cx.listeners,
+            resource_manager: <span class="kw-2">&amp;</span>cx.resource_manager,
+            text_context: <span class="kw-2">&amp;</span>cx.text_context,
+            modifiers: <span class="kw-2">&amp;</span>cx.modifiers,
+            mouse: <span class="kw-2">&amp;</span>cx.mouse,
+            event_queue: <span class="kw-2">&amp;mut </span>cx.event_queue,
+            cursor_icon_locked: <span class="kw-2">&amp;mut </span>cx.cursor_icon_locked,
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+            </span>clipboard: <span class="kw-2">&amp;mut </span>cx.clipboard,
+            event_proxy: <span class="kw-2">&amp;mut </span>cx.event_proxy,
         }
     }
 
-    <span class="doccomment">/// Finds the entity that identifier identifies</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">resolve_entity_identifier</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">identity</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">entity_identifiers</span>.<span class="ident">get</span>(<span class="ident">identity</span>).<span class="ident">cloned</span>()
+    <span class="doccomment">/// Finds the entity that identifier identifies
+    </span><span class="kw">pub fn </span>resolve_entity_identifier(<span class="kw-2">&amp;</span><span class="self">self</span>, identity: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;Entity&gt; {
+        <span class="self">self</span>.entity_identifiers.get(identity).cloned()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Entity</span> {
-        <span class="self">self</span>.<span class="ident">current</span>
+    <span class="kw">pub fn </span>current(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
+        <span class="self">self</span>.current
     }
 
-    <span class="doccomment">/// Send an event containing a message up the tree from the current entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">emit</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">message</span>: <span class="ident">M</span>) {
-        <span class="self">self</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
-            <span class="ident">Event::new</span>(<span class="ident">message</span>)
-                .<span class="ident">target</span>(<span class="self">self</span>.<span class="ident">current</span>)
-                .<span class="ident">origin</span>(<span class="self">self</span>.<span class="ident">current</span>)
-                .<span class="ident">propagate</span>(<span class="ident">Propagation::Up</span>),
+    <span class="doccomment">/// Send an event containing a message up the tree from the current entity.
+    </span><span class="kw">pub fn </span>emit&lt;M: Any + Send&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M) {
+        <span class="self">self</span>.event_queue.push_back(
+            Event::new(message)
+                .target(<span class="self">self</span>.current)
+                .origin(<span class="self">self</span>.current)
+                .propagate(Propagation::Up),
         );
     }
 
-    <span class="doccomment">/// Send an event containing a message directly to a specified entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">emit_to</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">target</span>: <span class="ident">Entity</span>, <span class="ident">message</span>: <span class="ident">M</span>) {
-        <span class="self">self</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
-            <span class="ident">Event::new</span>(<span class="ident">message</span>).<span class="ident">target</span>(<span class="ident">target</span>).<span class="ident">origin</span>(<span class="self">self</span>.<span class="ident">current</span>).<span class="ident">propagate</span>(<span class="ident">Propagation::Direct</span>),
+    <span class="doccomment">/// Send an event containing a message directly to a specified entity.
+    </span><span class="kw">pub fn </span>emit_to&lt;M: Any + Send&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, target: Entity, message: M) {
+        <span class="self">self</span>.event_queue.push_back(
+            Event::new(message).target(target).origin(<span class="self">self</span>.current).propagate(Propagation::Direct),
         );
     }
 
-    <span class="doccomment">/// Send an event with custom origin and propagation information.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">emit_custom</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">event</span>: <span class="ident">Event</span>) {
-        <span class="self">self</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(<span class="ident">event</span>);
+    <span class="doccomment">/// Send an event with custom origin and propagation information.
+    </span><span class="kw">pub fn </span>emit_custom(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: Event) {
+        <span class="self">self</span>.event_queue.push_back(event);
     }
 
-    <span class="doccomment">/// Add a listener to an entity.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// A listener can be used to handle events which would not normally propagate to the entity.</span>
-    <span class="doccomment">/// For example, mouse events when a different entity has captured them. Useful for things like</span>
-    <span class="doccomment">/// closing a popup when clicking outside of its bounding box.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_listener</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">W</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">listener</span>: <span class="ident">F</span>)
-    <span class="kw">where</span>
-        <span class="ident">W</span>: <span class="ident">View</span>,
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">W</span>, <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>),
+    <span class="doccomment">/// Add a listener to an entity.
+    ///
+    /// A listener can be used to handle events which would not normally propagate to the entity.
+    /// For example, mouse events when a different entity has captured them. Useful for things like
+    /// closing a popup when clicking outside of its bounding box.
+    </span><span class="kw">pub fn </span>add_listener&lt;F, W&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, listener: F)
+    <span class="kw">where
+        </span>W: View,
+        F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>W, <span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event),
     {
-        <span class="self">self</span>.<span class="ident">listeners</span>.<span class="ident">insert</span>(
-            <span class="self">self</span>.<span class="ident">current</span>,
-            <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">event_handler</span>, <span class="ident">context</span>, <span class="ident">event</span><span class="op">|</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">widget</span>) <span class="op">=</span> <span class="ident">event_handler</span>.<span class="ident">downcast_mut</span>::<span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>() {
-                    (<span class="ident">listener</span>)(<span class="ident">widget</span>, <span class="ident">context</span>, <span class="ident">event</span>);
+        <span class="self">self</span>.listeners.insert(
+            <span class="self">self</span>.current,
+            Box::new(<span class="kw">move </span>|event_handler, context, event| {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(widget) = event_handler.downcast_mut::&lt;W&gt;() {
+                    (listener)(widget, context, event);
                 }
             }),
         );
     }
 
-    <span class="doccomment">/// Set the active state for the current entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_active</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">active</span>: <span class="ident">bool</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="self">self</span>.<span class="ident">current</span>) {
-            <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::ACTIVE</span>, <span class="ident">active</span>);
+    <span class="doccomment">/// Set the active state for the current entity.
+    </span><span class="kw">pub fn </span>set_active(<span class="kw-2">&amp;mut </span><span class="self">self</span>, active: bool) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = <span class="self">self</span>.style.pseudo_classes.get_mut(<span class="self">self</span>.current) {
+            pseudo_classes.set(PseudoClass::ACTIVE, active);
         }
 
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_restyle</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_relayout = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="doccomment">/// Capture mouse input for the current entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">capture</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">captured</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>;
+    <span class="doccomment">/// Capture mouse input for the current entity.
+    </span><span class="kw">pub fn </span>capture(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw-2">*</span><span class="self">self</span>.captured = <span class="self">self</span>.current;
     }
 
-    <span class="doccomment">/// Release mouse input capture for current entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">release</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">current</span> <span class="op">==</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">captured</span> {
-            <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">captured</span> <span class="op">=</span> <span class="ident">Entity::null</span>();
+    <span class="doccomment">/// Release mouse input capture for current entity.
+    </span><span class="kw">pub fn </span>release(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">if </span><span class="self">self</span>.current == <span class="kw-2">*</span><span class="self">self</span>.captured {
+            <span class="kw-2">*</span><span class="self">self</span>.captured = Entity::null();
         }
     }
 
-    <span class="doccomment">/// Enables or disables pseudoclasses for the focus of an entity</span>
-    <span class="kw">fn</span> <span class="ident">set_focus_pseudo_classes</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">focused</span>: <span class="ident">Entity</span>, <span class="ident">enabled</span>: <span class="ident">bool</span>, <span class="ident">focus_visible</span>: <span class="ident">bool</span>) {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-        <span class="kw">if</span> <span class="ident">enabled</span> {
+    <span class="doccomment">/// Enables or disables pseudoclasses for the focus of an entity
+    </span><span class="kw">fn </span>set_focus_pseudo_classes(<span class="kw-2">&amp;mut </span><span class="self">self</span>, focused: Entity, enabled: bool, focus_visible: bool) {
+        <span class="attribute">#[cfg(debug_assertions)]
+        </span><span class="kw">if </span>enabled {
             <span class="macro">println!</span>(
                 <span class="string">&quot;Focus changed to {:?} parent: {:?}, view: {}, posx: {}, posy: {} width: {} height: {}&quot;</span>,
-                <span class="ident">focused</span>,
-                <span class="self">self</span>.<span class="ident">tree</span>.<span class="ident">get_parent</span>(<span class="ident">focused</span>),
-                <span class="self">self</span>.<span class="ident">views</span>
-                    .<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">focused</span>)
-                    .<span class="ident">map_or</span>(<span class="string">&quot;&lt;None&gt;&quot;</span>, <span class="op">|</span><span class="ident">view</span><span class="op">|</span> <span class="ident">view</span>.<span class="ident">element</span>().<span class="ident">unwrap_or</span>(<span class="string">&quot;&lt;Unnamed&gt;&quot;</span>)),
-                <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">get_posx</span>(<span class="ident">focused</span>),
-                <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">get_posy</span>(<span class="ident">focused</span>),
-                <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">focused</span>),
-                <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">focused</span>),
+                focused,
+                <span class="self">self</span>.tree.get_parent(focused),
+                <span class="self">self</span>.views
+                    .get(<span class="kw-2">&amp;</span>focused)
+                    .map_or(<span class="string">&quot;&lt;None&gt;&quot;</span>, |view| view.element().unwrap_or(<span class="string">&quot;&lt;Unnamed&gt;&quot;</span>)),
+                <span class="self">self</span>.cache.get_posx(focused),
+                <span class="self">self</span>.cache.get_posy(focused),
+                <span class="self">self</span>.cache.get_width(focused),
+                <span class="self">self</span>.cache.get_height(focused),
             );
         }
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">focused</span>) {
-            <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::FOCUS</span>, <span class="ident">enabled</span>);
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">enabled</span> <span class="op">|</span><span class="op">|</span> <span class="ident">focus_visible</span> {
-                <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::FOCUS_VISIBLE</span>, <span class="ident">enabled</span>);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = <span class="self">self</span>.style.pseudo_classes.get_mut(focused) {
+            pseudo_classes.set(PseudoClass::FOCUS, enabled);
+            <span class="kw">if </span>!enabled || focus_visible {
+                pseudo_classes.set(PseudoClass::FOCUS_VISIBLE, enabled);
             }
         }
 
-        <span class="kw">for</span> <span class="ident">ancestor</span> <span class="kw">in</span> <span class="ident">focused</span>.<span class="ident">parent_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tree</span>) {
-            <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="ident">ancestor</span>;
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-                <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::FOCUS_WITHIN</span>, <span class="ident">enabled</span>);
+        <span class="kw">for </span>ancestor <span class="kw">in </span>focused.parent_iter(<span class="kw-2">&amp;</span><span class="self">self</span>.tree) {
+            <span class="kw">let </span>entity = ancestor;
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = <span class="self">self</span>.style.pseudo_classes.get_mut(entity) {
+                pseudo_classes.set(PseudoClass::FOCUS_WITHIN, enabled);
             }
         }
     }
 
-    <span class="doccomment">/// Sets application focus to the current entity with the specified focus visiblity</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">focus_with_visibility</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">focus_visible</span>: <span class="ident">bool</span>) {
-        <span class="kw">let</span> <span class="ident">old_focus</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">focused</span>();
-        <span class="kw">let</span> <span class="ident">new_focus</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>();
-        <span class="self">self</span>.<span class="ident">set_focus_pseudo_classes</span>(<span class="ident">old_focus</span>, <span class="bool-val">false</span>, <span class="ident">focus_visible</span>);
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">current</span>() <span class="op">!</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">focused</span>() {
-            <span class="self">self</span>.<span class="ident">emit_to</span>(<span class="ident">old_focus</span>, <span class="ident">WindowEvent::FocusOut</span>);
-            <span class="self">self</span>.<span class="ident">emit_to</span>(<span class="ident">new_focus</span>, <span class="ident">WindowEvent::FocusIn</span>);
-            <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">focused</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>();
+    <span class="doccomment">/// Sets application focus to the current entity with the specified focus visiblity
+    </span><span class="kw">pub fn </span>focus_with_visibility(<span class="kw-2">&amp;mut </span><span class="self">self</span>, focus_visible: bool) {
+        <span class="kw">let </span>old_focus = <span class="self">self</span>.focused();
+        <span class="kw">let </span>new_focus = <span class="self">self</span>.current();
+        <span class="self">self</span>.set_focus_pseudo_classes(old_focus, <span class="bool-val">false</span>, focus_visible);
+        <span class="kw">if </span><span class="self">self</span>.current() != <span class="self">self</span>.focused() {
+            <span class="self">self</span>.emit_to(old_focus, WindowEvent::FocusOut);
+            <span class="self">self</span>.emit_to(new_focus, WindowEvent::FocusIn);
+            <span class="kw-2">*</span><span class="self">self</span>.focused = <span class="self">self</span>.current();
         }
-        <span class="self">self</span>.<span class="ident">set_focus_pseudo_classes</span>(<span class="ident">new_focus</span>, <span class="bool-val">true</span>, <span class="ident">focus_visible</span>);
+        <span class="self">self</span>.set_focus_pseudo_classes(new_focus, <span class="bool-val">true</span>, focus_visible);
 
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_restyle</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_relayout = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
     }
 
-    <span class="doccomment">/// Sets application focus to the current entity using the previous focus visibility.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">focus</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">let</span> <span class="ident">focused</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">focused</span>();
-        <span class="kw">let</span> <span class="ident">old_focus_visible</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">style</span>
-            .<span class="ident">pseudo_classes</span>
-            .<span class="ident">get_mut</span>(<span class="ident">focused</span>)
-            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">class</span><span class="op">|</span> <span class="ident">class</span>.<span class="ident">contains</span>(<span class="ident">PseudoClass::FOCUS_VISIBLE</span>))
-            .<span class="ident">is_some</span>();
-        <span class="self">self</span>.<span class="ident">focus_with_visibility</span>(<span class="ident">old_focus_visible</span>)
+    <span class="doccomment">/// Sets application focus to the current entity using the previous focus visibility.
+    </span><span class="kw">pub fn </span>focus(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let </span>focused = <span class="self">self</span>.focused();
+        <span class="kw">let </span>old_focus_visible = <span class="self">self
+            </span>.style
+            .pseudo_classes
+            .get_mut(focused)
+            .filter(|class| class.contains(PseudoClass::FOCUS_VISIBLE))
+            .is_some();
+        <span class="self">self</span>.focus_with_visibility(old_focus_visible)
     }
 
-    <span class="doccomment">/// Return the currently hovered entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hovered</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Entity</span> {
-        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">hovered</span>
+    <span class="doccomment">/// Return the currently hovered entity.
+    </span><span class="kw">pub fn </span>hovered(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
+        <span class="kw-2">*</span><span class="self">self</span>.hovered
     }
 
-    <span class="doccomment">/// Return the currently focused entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">focused</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Entity</span> {
-        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">focused</span>
+    <span class="doccomment">/// Return the currently focused entity.
+    </span><span class="kw">pub fn </span>focused(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
+        <span class="kw-2">*</span><span class="self">self</span>.focused
     }
 
-    <span class="doccomment">/// Returns true if the current entity is disabled.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_disabled</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">disabled</span>.<span class="ident">get</span>(<span class="self">self</span>.<span class="ident">current</span>()).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>()
+    <span class="doccomment">/// Returns true if the current entity is disabled.
+    </span><span class="kw">pub fn </span>is_disabled(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.style.disabled.get(<span class="self">self</span>.current()).cloned().unwrap_or_default()
     }
 
-    <span class="doccomment">/// Returns true if the mouse cursor is over the current entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_over</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get</span>(<span class="self">self</span>.<span class="ident">current</span>) {
-            <span class="ident">pseudo_classes</span>.<span class="ident">contains</span>(<span class="ident">PseudoClass::OVER</span>)
-        } <span class="kw">else</span> {
-            <span class="bool-val">false</span>
-        }
+    <span class="doccomment">/// Returns true if the mouse cursor is over the current entity.
+    </span><span class="kw">pub fn </span>is_over(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = <span class="self">self</span>.style.pseudo_classes.get(<span class="self">self</span>.current) {
+            pseudo_classes.contains(PseudoClass::OVER)
+        } <span class="kw">else </span>{
+            <span class="bool-val">false
+        </span>}
     }
 
-    <span class="doccomment">/// Prevents the cursor icon from changing until the lock is released.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lock_cursor_icon</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">cursor_icon_locked</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="doccomment">/// Prevents the cursor icon from changing until the lock is released.
+    </span><span class="kw">pub fn </span>lock_cursor_icon(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw-2">*</span><span class="self">self</span>.cursor_icon_locked = <span class="bool-val">true</span>;
     }
 
-    <span class="doccomment">/// Releases any cursor icon lock, allowing the cursor icon to be changed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unlock_cursor_icon</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">cursor_icon_locked</span> <span class="op">=</span> <span class="bool-val">false</span>;
-        <span class="kw">let</span> <span class="ident">hovered</span> <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">hovered</span>;
-        <span class="kw">let</span> <span class="ident">cursor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">cursor</span>.<span class="ident">get</span>(<span class="ident">hovered</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
-        <span class="self">self</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::SetCursor</span>(<span class="ident">cursor</span>));
+    <span class="doccomment">/// Releases any cursor icon lock, allowing the cursor icon to be changed.
+    </span><span class="kw">pub fn </span>unlock_cursor_icon(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw-2">*</span><span class="self">self</span>.cursor_icon_locked = <span class="bool-val">false</span>;
+        <span class="kw">let </span>hovered = <span class="kw-2">*</span><span class="self">self</span>.hovered;
+        <span class="kw">let </span>cursor = <span class="self">self</span>.style.cursor.get(hovered).cloned().unwrap_or_default();
+        <span class="self">self</span>.emit(WindowEvent::SetCursor(cursor));
     }
 
-    <span class="doccomment">/// Returns true if the cursor icon is locked.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_cursor_icon_locked</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">cursor_icon_locked</span>
+    <span class="doccomment">/// Returns true if the cursor icon is locked.
+    </span><span class="kw">pub fn </span>is_cursor_icon_locked(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="kw-2">*</span><span class="self">self</span>.cursor_icon_locked
     }
 
-    <span class="doccomment">/// Sets the hover flag of the current entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_hover</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">flag</span>: <span class="ident">bool</span>) {
-        <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>();
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">current</span>) {
-            <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::HOVER</span>, <span class="ident">flag</span>);
-        }
-
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_restyle</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
-    }
-
-    <span class="doccomment">/// Sets the checked flag of the current entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_checked</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">flag</span>: <span class="ident">bool</span>) {
-        <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>();
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">current</span>) {
-            <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::CHECKED</span>, <span class="ident">flag</span>);
+    <span class="doccomment">/// Sets the hover flag of the current entity.
+    </span><span class="kw">pub fn </span>set_hover(<span class="kw-2">&amp;mut </span><span class="self">self</span>, flag: bool) {
+        <span class="kw">let </span>current = <span class="self">self</span>.current();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = <span class="self">self</span>.style.pseudo_classes.get_mut(current) {
+            pseudo_classes.set(PseudoClass::HOVER, flag);
         }
 
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_restyle</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_relayout = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="doccomment">/// Sets the checked flag of the current entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_selected</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">flag</span>: <span class="ident">bool</span>) {
-        <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>();
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">current</span>) {
-            <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::SELECTED</span>, <span class="ident">flag</span>);
+    <span class="doccomment">/// Sets the checked flag of the current entity.
+    </span><span class="kw">pub fn </span>set_checked(<span class="kw-2">&amp;mut </span><span class="self">self</span>, flag: bool) {
+        <span class="kw">let </span>current = <span class="self">self</span>.current();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = <span class="self">self</span>.style.pseudo_classes.get_mut(current) {
+            pseudo_classes.set(PseudoClass::CHECKED, flag);
         }
 
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_restyle</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_relayout = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="doccomment">/// Get the contents of the system clipboard. This may fail for a variety of backend-specific</span>
-    <span class="doccomment">/// reasons.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;clipboard&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_clipboard</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">clipboard</span>.<span class="ident">get_contents</span>()
+    <span class="doccomment">/// Sets the checked flag of the current entity.
+    </span><span class="kw">pub fn </span>set_selected(<span class="kw-2">&amp;mut </span><span class="self">self</span>, flag: bool) {
+        <span class="kw">let </span>current = <span class="self">self</span>.current();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = <span class="self">self</span>.style.pseudo_classes.get_mut(current) {
+            pseudo_classes.set(PseudoClass::SELECTED, flag);
+        }
+
+        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_relayout = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="doccomment">/// Set the contents of the system clipboard. This may fail for a variety of backend-specific</span>
-    <span class="doccomment">/// reasons.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;clipboard&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_clipboard</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">text</span>: <span class="ident">String</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">clipboard</span>.<span class="ident">set_contents</span>(<span class="ident">text</span>)
+    <span class="doccomment">/// Get the contents of the system clipboard. This may fail for a variety of backend-specific
+    /// reasons.
+    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+    </span><span class="kw">pub fn </span>get_clipboard(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;String, Box&lt;<span class="kw">dyn </span>Error + Send + Sync + <span class="lifetime">&#39;static</span>&gt;&gt; {
+        <span class="self">self</span>.clipboard.get_contents()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">toggle_class</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">class_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">applied</span>: <span class="ident">bool</span>) {
-        <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current</span>();
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">class_list</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">classes</span>.<span class="ident">get_mut</span>(<span class="ident">current</span>) {
-            <span class="kw">if</span> <span class="ident">applied</span> {
-                <span class="ident">class_list</span>.<span class="ident">insert</span>(<span class="ident">class_name</span>.<span class="ident">to_string</span>());
-            } <span class="kw">else</span> {
-                <span class="ident">class_list</span>.<span class="ident">remove</span>(<span class="ident">class_name</span>);
+    <span class="doccomment">/// Set the contents of the system clipboard. This may fail for a variety of backend-specific
+    /// reasons.
+    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+    </span><span class="kw">pub fn </span>set_clipboard(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        text: String,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error + Send + Sync + <span class="lifetime">&#39;static</span>&gt;&gt; {
+        <span class="self">self</span>.clipboard.set_contents(text)
+    }
+
+    <span class="kw">pub fn </span>toggle_class(<span class="kw-2">&amp;mut </span><span class="self">self</span>, class_name: <span class="kw-2">&amp;</span>str, applied: bool) {
+        <span class="kw">let </span>current = <span class="self">self</span>.current();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(class_list) = <span class="self">self</span>.style.classes.get_mut(current) {
+            <span class="kw">if </span>applied {
+                class_list.insert(class_name.to_string());
+            } <span class="kw">else </span>{
+                class_list.remove(class_name);
             }
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">applied</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">class_list</span> <span class="op">=</span> <span class="ident">HashSet::new</span>();
-            <span class="ident">class_list</span>.<span class="ident">insert</span>(<span class="ident">class_name</span>.<span class="ident">to_string</span>());
-            <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">classes</span>.<span class="ident">insert</span>(<span class="ident">current</span>, <span class="ident">class_list</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to insert class name&quot;</span>);
+        } <span class="kw">else if </span>applied {
+            <span class="kw">let </span><span class="kw-2">mut </span>class_list = HashSet::new();
+            class_list.insert(class_name.to_string());
+            <span class="self">self</span>.style.classes.insert(current, class_list).expect(<span class="string">&quot;Failed to insert class name&quot;</span>);
         }
 
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_restyle</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_relayout = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">play_animation</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">animation</span>: <span class="ident">Animation</span>) {
-        <span class="self">self</span>.<span class="ident">current</span>.<span class="ident">play_animation</span>(<span class="self">self</span>, <span class="ident">animation</span>);
+    <span class="kw">pub fn </span>play_animation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, animation: Animation) {
+        <span class="self">self</span>.current.play_animation(<span class="self">self</span>, animation);
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">environment</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Environment</span> {
-        <span class="self">self</span>.<span class="ident">data</span>::<span class="op">&lt;</span><span class="ident">Environment</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>()
+    <span class="kw">pub fn </span>environment(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Environment {
+        <span class="self">self</span>.data::&lt;Environment&gt;().unwrap()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">needs_redraw</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">pub fn </span>needs_redraw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">spawn</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="ident">F</span>)
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">ContextProxy</span>),
+    <span class="kw">pub fn </span>spawn&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, target: F)
+    <span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ Send + FnOnce(<span class="kw-2">&amp;mut </span>ContextProxy),
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cxp</span> <span class="op">=</span> <span class="ident">ContextProxy</span> {
-            <span class="ident">current</span>: <span class="self">self</span>.<span class="ident">current</span>,
-            <span class="ident">event_proxy</span>: <span class="self">self</span>.<span class="ident">event_proxy</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">make_clone</span>()),
+        <span class="kw">let </span><span class="kw-2">mut </span>cxp = ContextProxy {
+            current: <span class="self">self</span>.current,
+            event_proxy: <span class="self">self</span>.event_proxy.as_ref().map(|p| p.make_clone()),
         };
 
-        <span class="ident">std::thread::spawn</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> <span class="ident">target</span>(<span class="kw-2">&amp;mut</span> <span class="ident">cxp</span>));
+        std::thread::spawn(<span class="kw">move </span>|| target(<span class="kw-2">&amp;mut </span>cxp));
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">scale_factor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>
+    <span class="kw">pub fn </span>scale_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.style.dpi_factor <span class="kw">as </span>f32
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">DataContext</span> <span class="kw">for</span> <span class="ident">EventContext</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">data</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="comment">// Return data for the static model.</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span> <span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Any</span><span class="op">&gt;</span><span class="ident">::downcast_ref</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span>()) {
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>);
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DataContext <span class="kw">for </span>EventContext&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>data&lt;T: <span class="lifetime">&#39;static</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
+        <span class="comment">// Return data for the static model.
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(t) = &lt;<span class="kw">dyn </span>Any&gt;::downcast_ref::&lt;T&gt;(<span class="kw-2">&amp;</span>()) {
+            <span class="kw">return </span><span class="prelude-val">Some</span>(t);
         }
 
-        <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">current</span>.<span class="ident">parent_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tree</span>) {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">model_data_store</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">get</span>(<span class="ident">entity</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">model</span>) <span class="op">=</span> <span class="ident">model_data_store</span>.<span class="ident">models</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>()) {
-                    <span class="kw">return</span> <span class="ident">model</span>.<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>();
+        <span class="kw">for </span>entity <span class="kw">in </span><span class="self">self</span>.current.parent_iter(<span class="kw-2">&amp;</span><span class="self">self</span>.tree) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = <span class="self">self</span>.data.get(entity) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(model) = model_data_store.models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;T&gt;()) {
+                    <span class="kw">return </span>model.downcast_ref::&lt;T&gt;();
                 }
             }
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">view_handler</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">views</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">data</span>) <span class="op">=</span> <span class="ident">view_handler</span>.<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() {
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">data</span>);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = <span class="self">self</span>.views.get(<span class="kw-2">&amp;</span>entity) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(data) = view_handler.downcast_ref::&lt;T&gt;() {
+                    <span class="kw">return </span><span class="prelude-val">Some</span>(data);
                 }
             }
         }
 
-        <span class="prelude-val">None</span>
-    }
+        <span class="prelude-val">None
+    </span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

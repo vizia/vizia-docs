@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/scrollview.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>scrollview.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/scrollview.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>scrollview.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -209,216 +209,216 @@
 <span id="209">209</span>
 <span id="210">210</span>
 <span id="211">211</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">morphorm</span>::{<span class="ident">GeometryChanged</span>, <span class="ident">PositionType</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>morphorm::{GeometryChanged, PositionType};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::state::RatioLens</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::views::Orientation</span>;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::state::RatioLens;
+<span class="kw">use </span><span class="kw">crate</span>::views::Orientation;
 
-<span class="kw">const</span> <span class="ident">SCROLL_SENSITIVITY</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">35.0</span>;
+<span class="kw">const </span>SCROLL_SENSITIVITY: f32 = <span class="number">35.0</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Lens</span>, <span class="ident">Data</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ScrollData</span> {
-    <span class="kw">pub</span> <span class="ident">scroll_x</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">scroll_y</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">child_x</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">child_y</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">parent_x</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">parent_y</span>: <span class="ident">f32</span>,
+<span class="attribute">#[derive(Lens, Data, Clone, Debug)]
+</span><span class="kw">pub struct </span>ScrollData {
+    <span class="kw">pub </span>scroll_x: f32,
+    <span class="kw">pub </span>scroll_y: f32,
+    <span class="kw">pub </span>child_x: f32,
+    <span class="kw">pub </span>child_y: f32,
+    <span class="kw">pub </span>parent_x: f32,
+    <span class="kw">pub </span>parent_y: f32,
 }
 
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ScrollEvent</span> {
-    <span class="ident">SetX</span>(<span class="ident">f32</span>),
-    <span class="ident">SetY</span>(<span class="ident">f32</span>),
-    <span class="ident">ScrollX</span>(<span class="ident">f32</span>),
-    <span class="ident">ScrollY</span>(<span class="ident">f32</span>),
-    <span class="ident">ChildGeo</span>(<span class="ident">f32</span>, <span class="ident">f32</span>),
-    <span class="ident">ParentGeo</span>(<span class="ident">f32</span>, <span class="ident">f32</span>),
+<span class="kw">pub enum </span>ScrollEvent {
+    SetX(f32),
+    SetY(f32),
+    ScrollX(f32),
+    ScrollY(f32),
+    ChildGeo(f32, f32),
+    ParentGeo(f32, f32),
 }
 
-<span class="kw">impl</span> <span class="ident">ScrollData</span> {
-    <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">child_x</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">parent_x</span> {
-            <span class="self">self</span>.<span class="ident">scroll_x</span> <span class="op">=</span> <span class="number">0.0</span>;
+<span class="kw">impl </span>ScrollData {
+    <span class="kw">fn </span>reset(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">if </span><span class="self">self</span>.child_x == <span class="self">self</span>.parent_x {
+            <span class="self">self</span>.scroll_x = <span class="number">0.0</span>;
         }
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">child_y</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">parent_y</span> {
-            <span class="self">self</span>.<span class="ident">scroll_y</span> <span class="op">=</span> <span class="number">0.0</span>;
+        <span class="kw">if </span><span class="self">self</span>.child_y == <span class="self">self</span>.parent_y {
+            <span class="self">self</span>.scroll_y = <span class="number">0.0</span>;
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Model</span> <span class="kw">for</span> <span class="ident">ScrollData</span> {
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
-        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">scroll_update</span>, <span class="ident">meta</span><span class="op">|</span> {
-            <span class="kw">match</span> <span class="ident">scroll_update</span> {
-                <span class="ident">ScrollEvent::ScrollX</span>(<span class="ident">f</span>) =&gt; <span class="self">self</span>.<span class="ident">scroll_x</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">scroll_x</span> <span class="op">+</span> <span class="kw-2">*</span><span class="ident">f</span>).<span class="ident">clamp</span>(<span class="number">0.0</span>, <span class="number">1.0</span>),
-                <span class="ident">ScrollEvent::ScrollY</span>(<span class="ident">f</span>) =&gt; <span class="self">self</span>.<span class="ident">scroll_y</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">scroll_y</span> <span class="op">+</span> <span class="kw-2">*</span><span class="ident">f</span>).<span class="ident">clamp</span>(<span class="number">0.0</span>, <span class="number">1.0</span>),
-                <span class="ident">ScrollEvent::SetX</span>(<span class="ident">f</span>) =&gt; <span class="self">self</span>.<span class="ident">scroll_x</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">f</span>,
-                <span class="ident">ScrollEvent::SetY</span>(<span class="ident">f</span>) =&gt; <span class="self">self</span>.<span class="ident">scroll_y</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">f</span>,
-                <span class="ident">ScrollEvent::ChildGeo</span>(<span class="ident">x</span>, <span class="ident">y</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">child_x</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">x</span>;
-                    <span class="self">self</span>.<span class="ident">child_y</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">y</span>;
-                    <span class="self">self</span>.<span class="ident">reset</span>();
+<span class="kw">impl </span>Model <span class="kw">for </span>ScrollData {
+    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
+        event.map(|scroll_update, meta| {
+            <span class="kw">match </span>scroll_update {
+                ScrollEvent::ScrollX(f) =&gt; <span class="self">self</span>.scroll_x = (<span class="self">self</span>.scroll_x + <span class="kw-2">*</span>f).clamp(<span class="number">0.0</span>, <span class="number">1.0</span>),
+                ScrollEvent::ScrollY(f) =&gt; <span class="self">self</span>.scroll_y = (<span class="self">self</span>.scroll_y + <span class="kw-2">*</span>f).clamp(<span class="number">0.0</span>, <span class="number">1.0</span>),
+                ScrollEvent::SetX(f) =&gt; <span class="self">self</span>.scroll_x = <span class="kw-2">*</span>f,
+                ScrollEvent::SetY(f) =&gt; <span class="self">self</span>.scroll_y = <span class="kw-2">*</span>f,
+                ScrollEvent::ChildGeo(x, y) =&gt; {
+                    <span class="self">self</span>.child_x = <span class="kw-2">*</span>x;
+                    <span class="self">self</span>.child_y = <span class="kw-2">*</span>y;
+                    <span class="self">self</span>.reset();
                 }
-                <span class="ident">ScrollEvent::ParentGeo</span>(<span class="ident">x</span>, <span class="ident">y</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">parent_x</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">x</span>;
-                    <span class="self">self</span>.<span class="ident">parent_y</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">y</span>;
-                    <span class="self">self</span>.<span class="ident">reset</span>();
+                ScrollEvent::ParentGeo(x, y) =&gt; {
+                    <span class="self">self</span>.parent_x = <span class="kw-2">*</span>x;
+                    <span class="self">self</span>.parent_y = <span class="kw-2">*</span>y;
+                    <span class="self">self</span>.reset();
                 }
             }
 
-            <span class="ident">meta</span>.<span class="ident">consume</span>();
+            meta.consume();
         });
     }
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ScrollView</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="ident">data</span>: <span class="ident">L</span>,
+<span class="kw">pub struct </span>ScrollView&lt;L&gt; {
+    data: L,
 }
 
-<span class="kw">impl</span> <span class="ident">ScrollView</span><span class="op">&lt;</span><span class="ident">scroll_data_derived_lenses::root</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
-        <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>,
-        <span class="ident">initial_x</span>: <span class="ident">f32</span>,
-        <span class="ident">initial_y</span>: <span class="ident">f32</span>,
-        <span class="ident">scroll_x</span>: <span class="ident">bool</span>,
-        <span class="ident">scroll_y</span>: <span class="ident">bool</span>,
-        <span class="ident">content</span>: <span class="ident">F</span>,
-    ) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
+<span class="kw">impl </span>ScrollView&lt;scroll_data_derived_lenses::root&gt; {
+    <span class="kw">pub fn </span>new&lt;F&gt;(
+        cx: <span class="kw-2">&amp;mut </span>Context,
+        initial_x: f32,
+        initial_y: f32,
+        scroll_x: bool,
+        scroll_y: bool,
+        content: F,
+    ) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ FnOnce(<span class="kw-2">&amp;mut </span>Context),
     {
-        <span class="self">Self</span> { <span class="ident">data</span>: <span class="ident">ScrollData::root</span> }.<span class="ident">build</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-            <span class="ident">ScrollData</span> {
-                <span class="ident">scroll_x</span>: <span class="ident">initial_x</span>,
-                <span class="ident">scroll_y</span>: <span class="ident">initial_y</span>,
-                <span class="ident">child_x</span>: <span class="number">0.0</span>,
-                <span class="ident">child_y</span>: <span class="number">0.0</span>,
-                <span class="ident">parent_x</span>: <span class="number">0.0</span>,
-                <span class="ident">parent_y</span>: <span class="number">0.0</span>,
+        <span class="self">Self </span>{ data: ScrollData::root }.build(cx, <span class="kw">move </span>|cx| {
+            ScrollData {
+                scroll_x: initial_x,
+                scroll_y: initial_y,
+                child_x: <span class="number">0.0</span>,
+                child_y: <span class="number">0.0</span>,
+                parent_x: <span class="number">0.0</span>,
+                parent_y: <span class="number">0.0</span>,
             }
-            .<span class="ident">build</span>(<span class="ident">cx</span>);
+            .build(cx);
 
-            <span class="ident"><span class="self">Self</span>::common_builder</span>(<span class="ident">cx</span>, <span class="ident">ScrollData::root</span>, <span class="ident">content</span>, <span class="ident">scroll_x</span>, <span class="ident">scroll_y</span>);
+            <span class="self">Self</span>::common_builder(cx, ScrollData::root, content, scroll_x, scroll_y);
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">ScrollData</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">ScrollView</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">custom</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
-        <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>,
-        <span class="ident">scroll_x</span>: <span class="ident">bool</span>,
-        <span class="ident">scroll_y</span>: <span class="ident">bool</span>,
-        <span class="ident">data</span>: <span class="ident">L</span>,
-        <span class="ident">content</span>: <span class="ident">F</span>,
-    ) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
+<span class="kw">impl</span>&lt;L: Lens&lt;Target = ScrollData&gt;&gt; ScrollView&lt;L&gt; {
+    <span class="kw">pub fn </span>custom&lt;F&gt;(
+        cx: <span class="kw-2">&amp;mut </span>Context,
+        scroll_x: bool,
+        scroll_y: bool,
+        data: L,
+        content: F,
+    ) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ FnOnce(<span class="kw-2">&amp;mut </span>Context),
     {
-        <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">data</span>::<span class="op">&lt;</span><span class="ident">ScrollData</span><span class="op">&gt;</span>().<span class="ident">is_none</span>() {
+        <span class="kw">if </span>cx.data::&lt;ScrollData&gt;().is_none() {
             <span class="macro">panic!</span>(<span class="string">&quot;ScrollView::custom requires a ScrollData to be built into a parent&quot;</span>);
         }
 
-        <span class="self">Self</span> { <span class="ident">data</span>: <span class="ident">data</span>.<span class="ident">clone</span>() }.<span class="ident">build</span>(<span class="ident">cx</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-            <span class="ident"><span class="self">Self</span>::common_builder</span>(<span class="ident">cx</span>, <span class="ident">data</span>, <span class="ident">content</span>, <span class="ident">scroll_x</span>, <span class="ident">scroll_y</span>);
+        <span class="self">Self </span>{ data: data.clone() }.build(cx, |cx| {
+            <span class="self">Self</span>::common_builder(cx, data, content, scroll_x, scroll_y);
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">common_builder</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">data</span>: <span class="ident">L</span>, <span class="ident">content</span>: <span class="ident">F</span>, <span class="ident">scroll_x</span>: <span class="ident">bool</span>, <span class="ident">scroll_y</span>: <span class="ident">bool</span>)
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
+    <span class="kw">fn </span>common_builder&lt;F&gt;(cx: <span class="kw-2">&amp;mut </span>Context, data: L, content: F, scroll_x: bool, scroll_y: bool)
+    <span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ FnOnce(<span class="kw-2">&amp;mut </span>Context),
     {
-        <span class="ident">VStack::new</span>(<span class="ident">cx</span>, <span class="ident">content</span>)
-            .<span class="ident">class</span>(<span class="string">&quot;scroll_content&quot;</span>)
-            .<span class="ident">bind</span>(<span class="ident">data</span>.<span class="ident">clone</span>(), <span class="op">|</span><span class="ident">handle</span>, <span class="ident">data</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">dpi_factor</span> <span class="op">=</span> <span class="ident">handle</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span>;
-                <span class="kw">if</span> <span class="ident">dpi_factor</span> <span class="op">&gt;</span> <span class="number">0.0</span> {
-                    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>);
-                    <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> ((<span class="ident">data</span>.<span class="ident">child_x</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_x</span>) <span class="op">*</span> <span class="ident">data</span>.<span class="ident">scroll_x</span>).<span class="ident">round</span>()
-                        <span class="op">/</span> <span class="ident">handle</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
-                    <span class="kw">let</span> <span class="ident">top</span> <span class="op">=</span> ((<span class="ident">data</span>.<span class="ident">child_y</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_y</span>) <span class="op">*</span> <span class="ident">data</span>.<span class="ident">scroll_y</span>).<span class="ident">round</span>()
-                        <span class="op">/</span> <span class="ident">handle</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
-                    <span class="ident">handle</span>.<span class="ident">left</span>(<span class="ident">Units::Pixels</span>(<span class="op">-</span><span class="ident">left</span>.<span class="ident">abs</span>())).<span class="ident">top</span>(<span class="ident">Units::Pixels</span>(<span class="op">-</span><span class="ident">top</span>.<span class="ident">abs</span>()));
+        VStack::new(cx, content)
+            .class(<span class="string">&quot;scroll_content&quot;</span>)
+            .bind(data.clone(), |handle, data| {
+                <span class="kw">let </span>dpi_factor = handle.cx.style.dpi_factor;
+                <span class="kw">if </span>dpi_factor &gt; <span class="number">0.0 </span>{
+                    <span class="kw">let </span>data = data.get(handle.cx);
+                    <span class="kw">let </span>left = ((data.child_x - data.parent_x) * data.scroll_x).round()
+                        / handle.cx.style.dpi_factor <span class="kw">as </span>f32;
+                    <span class="kw">let </span>top = ((data.child_y - data.parent_y) * data.scroll_y).round()
+                        / handle.cx.style.dpi_factor <span class="kw">as </span>f32;
+                    handle.left(Units::Pixels(-left.abs())).top(Units::Pixels(-top.abs()));
                 }
             })
-            .<span class="ident">on_geo_changed</span>(<span class="op">|</span><span class="ident">cx</span>, <span class="ident">geo</span><span class="op">|</span> {
-                <span class="kw">if</span> <span class="ident">geo</span>.<span class="ident">contains</span>(<span class="ident">GeometryChanged::HEIGHT_CHANGED</span>)
-                    <span class="op">|</span><span class="op">|</span> <span class="ident">geo</span>.<span class="ident">contains</span>(<span class="ident">GeometryChanged::WIDTH_CHANGED</span>)
+            .on_geo_changed(|cx, geo| {
+                <span class="kw">if </span>geo.contains(GeometryChanged::HEIGHT_CHANGED)
+                    || geo.contains(GeometryChanged::WIDTH_CHANGED)
                 {
-                    <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-                    <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">current</span>);
-                    <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">current</span>);
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">ScrollEvent::ChildGeo</span>(<span class="ident">width</span>, <span class="ident">height</span>));
+                    <span class="kw">let </span>current = cx.current();
+                    <span class="kw">let </span>width = cx.cache.get_width(current);
+                    <span class="kw">let </span>height = cx.cache.get_height(current);
+                    cx.emit(ScrollEvent::ChildGeo(width, height));
                 }
             });
-        <span class="kw">if</span> <span class="ident">scroll_y</span> {
-            <span class="ident">Scrollbar::new</span>(
-                <span class="ident">cx</span>,
-                <span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">then</span>(<span class="ident">ScrollData::scroll_y</span>),
-                <span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">then</span>(<span class="ident">RatioLens::new</span>(<span class="ident">ScrollData::parent_y</span>, <span class="ident">ScrollData::child_y</span>)),
-                <span class="ident">Orientation::Vertical</span>,
-                <span class="op">|</span><span class="ident">cx</span>, <span class="ident">value</span><span class="op">|</span> {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">ScrollEvent::SetY</span>(<span class="ident">value</span>));
+        <span class="kw">if </span>scroll_y {
+            Scrollbar::new(
+                cx,
+                data.clone().then(ScrollData::scroll_y),
+                data.clone().then(RatioLens::new(ScrollData::parent_y, ScrollData::child_y)),
+                Orientation::Vertical,
+                |cx, value| {
+                    cx.emit(ScrollEvent::SetY(value));
                 },
             )
-            .<span class="ident">position_type</span>(<span class="ident">PositionType::SelfDirected</span>);
+            .position_type(PositionType::SelfDirected);
         }
-        <span class="kw">if</span> <span class="ident">scroll_x</span> {
-            <span class="ident">Scrollbar::new</span>(
-                <span class="ident">cx</span>,
-                <span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">then</span>(<span class="ident">ScrollData::scroll_x</span>),
-                <span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">then</span>(<span class="ident">RatioLens::new</span>(<span class="ident">ScrollData::parent_x</span>, <span class="ident">ScrollData::child_x</span>)),
-                <span class="ident">Orientation::Horizontal</span>,
-                <span class="op">|</span><span class="ident">cx</span>, <span class="ident">value</span><span class="op">|</span> {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">ScrollEvent::SetX</span>(<span class="ident">value</span>));
+        <span class="kw">if </span>scroll_x {
+            Scrollbar::new(
+                cx,
+                data.clone().then(ScrollData::scroll_x),
+                data.clone().then(RatioLens::new(ScrollData::parent_x, ScrollData::child_x)),
+                Orientation::Horizontal,
+                |cx, value| {
+                    cx.emit(ScrollEvent::SetX(value));
                 },
             )
-            .<span class="ident">position_type</span>(<span class="ident">PositionType::SelfDirected</span>);
+            .position_type(PositionType::SelfDirected);
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">ScrollData</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">ScrollView</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;L: Lens&lt;Target = ScrollData&gt;&gt; View <span class="kw">for </span>ScrollView&lt;L&gt; {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">&quot;scrollview&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
-        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
-            <span class="ident">WindowEvent::GeometryChanged</span>(<span class="ident">geo</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">geo</span>.<span class="ident">contains</span>(<span class="ident">GeometryChanged::HEIGHT_CHANGED</span>)
-                    <span class="op">|</span><span class="op">|</span> <span class="ident">geo</span>.<span class="ident">contains</span>(<span class="ident">GeometryChanged::WIDTH_CHANGED</span>)
+    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
+        event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
+            WindowEvent::GeometryChanged(geo) =&gt; {
+                <span class="kw">if </span>geo.contains(GeometryChanged::HEIGHT_CHANGED)
+                    || geo.contains(GeometryChanged::WIDTH_CHANGED)
                 {
-                    <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-                    <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">current</span>);
-                    <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">current</span>);
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">ScrollEvent::ParentGeo</span>(<span class="ident">width</span>, <span class="ident">height</span>));
+                    <span class="kw">let </span>current = cx.current();
+                    <span class="kw">let </span>width = cx.cache.get_width(current);
+                    <span class="kw">let </span>height = cx.cache.get_height(current);
+                    cx.emit(ScrollEvent::ParentGeo(width, height));
                 }
             }
 
-            <span class="ident">WindowEvent::MouseScroll</span>(<span class="ident">x</span>, <span class="ident">y</span>) =&gt; {
-                <span class="kw">let</span> (<span class="ident">x</span>, <span class="ident">y</span>) <span class="op">=</span>
-                    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::SHIFT</span>) { (<span class="op">-</span><span class="kw-2">*</span><span class="ident">y</span>, <span class="op">-</span><span class="kw-2">*</span><span class="ident">x</span>) } <span class="kw">else</span> { (<span class="op">-</span><span class="kw-2">*</span><span class="ident">x</span>, <span class="op">-</span><span class="kw-2">*</span><span class="ident">y</span>) };
+            WindowEvent::MouseScroll(x, y) =&gt; {
+                <span class="kw">let </span>(x, y) =
+                    <span class="kw">if </span>cx.modifiers.contains(Modifiers::SHIFT) { (-<span class="kw-2">*</span>y, -<span class="kw-2">*</span>x) } <span class="kw">else </span>{ (-<span class="kw-2">*</span>x, -<span class="kw-2">*</span>y) };
 
-                <span class="comment">// what percentage of the negative space does this cross?</span>
-                <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">get</span>(<span class="ident">cx</span>);
-                <span class="kw">if</span> <span class="ident">x</span> <span class="op">!</span><span class="op">=</span> <span class="number">0.0</span> {
-                    <span class="kw">let</span> <span class="ident">negative_space</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">child_x</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_x</span>;
-                    <span class="kw">let</span> <span class="ident">logical_delta</span> <span class="op">=</span> <span class="ident">x</span> <span class="op">*</span> <span class="ident">SCROLL_SENSITIVITY</span> <span class="op">/</span> <span class="ident">negative_space</span>;
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">ScrollEvent::ScrollX</span>(<span class="ident">logical_delta</span>));
+                <span class="comment">// what percentage of the negative space does this cross?
+                </span><span class="kw">let </span>data = <span class="self">self</span>.data.get(cx);
+                <span class="kw">if </span>x != <span class="number">0.0 </span>{
+                    <span class="kw">let </span>negative_space = data.child_x - data.parent_x;
+                    <span class="kw">let </span>logical_delta = x * SCROLL_SENSITIVITY / negative_space;
+                    cx.emit(ScrollEvent::ScrollX(logical_delta));
                 }
-                <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">data</span>::<span class="op">&lt;</span><span class="ident">ScrollData</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
-                <span class="kw">if</span> <span class="ident">y</span> <span class="op">!</span><span class="op">=</span> <span class="number">0.0</span> {
-                    <span class="kw">let</span> <span class="ident">negative_space</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">child_y</span> <span class="op">-</span> <span class="ident">data</span>.<span class="ident">parent_y</span>;
-                    <span class="kw">let</span> <span class="ident">logical_delta</span> <span class="op">=</span> <span class="ident">y</span> <span class="op">*</span> <span class="ident">SCROLL_SENSITIVITY</span> <span class="op">/</span> <span class="ident">negative_space</span>;
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">ScrollEvent::ScrollY</span>(<span class="ident">logical_delta</span>));
+                <span class="kw">let </span>data = cx.data::&lt;ScrollData&gt;().unwrap();
+                <span class="kw">if </span>y != <span class="number">0.0 </span>{
+                    <span class="kw">let </span>negative_space = data.child_y - data.parent_y;
+                    <span class="kw">let </span>logical_delta = y * SCROLL_SENSITIVITY / negative_space;
+                    cx.emit(ScrollEvent::ScrollY(logical_delta));
                 }
             }
 
-            <span class="kw">_</span> =&gt; {}
+            <span class="kw">_ </span>=&gt; {}
         });
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

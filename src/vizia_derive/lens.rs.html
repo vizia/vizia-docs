@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_derive/src/lens.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lens.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../vizia_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../vizia_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../vizia_derive/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_derive/src/lens.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lens.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../vizia_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../vizia_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../vizia_derive/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -413,420 +413,420 @@
 <span id="413">413</span>
 <span id="414">414</span>
 <span id="415">415</span>
-</pre><pre class="rust"><code><span class="comment">// Adapted from Druid lens.rs</span>
+</pre><pre class="rust"><code><span class="comment">// Adapted from Druid lens.rs
 
-<span class="comment">// Copyright 2019 The Druid Authors.</span>
-<span class="comment">//</span>
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">//     http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Copyright 2019 The Druid Authors.
+//
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="comment">// use proc_macro2::{Ident, Span};</span>
-<span class="kw">use</span> <span class="ident">quote::quote</span>;
-<span class="comment">// use std::collections::HashSet;</span>
-<span class="kw">use</span> <span class="ident">syn::spanned::Spanned</span>;
-<span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">Data</span>, <span class="ident">GenericParam</span>, <span class="ident">Ident</span>, <span class="ident">Token</span>, <span class="ident">TypeParam</span>, <span class="ident">VisRestricted</span>, <span class="ident">Visibility</span>};
+// use proc_macro2::{Ident, Span};
+</span><span class="kw">use </span>quote::quote;
+<span class="comment">// use std::collections::HashSet;
+</span><span class="kw">use </span>syn::spanned::Spanned;
+<span class="kw">use </span>syn::{Data, GenericParam, Ident, Token, TypeParam, VisRestricted, Visibility};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::attr</span>::{<span class="ident">FieldKind</span>, <span class="ident">Fields</span>, <span class="ident">LensAttrs</span>};
+<span class="kw">use </span><span class="kw">super</span>::attr::{FieldKind, Fields, LensAttrs};
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">derive_lens_impl</span>(
-    <span class="ident">input</span>: <span class="ident">syn::DeriveInput</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">proc_macro2::TokenStream</span>, <span class="ident">syn::Error</span><span class="op">&gt;</span> {
-    <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">input</span>.<span class="ident">data</span> {
-        <span class="ident">Data::Struct</span>(<span class="kw">_</span>) =&gt; <span class="ident">derive_struct</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>),
-        <span class="ident">Data::Enum</span>(<span class="kw">_</span>) =&gt; <span class="ident">derive_enum</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>),
-        <span class="ident">Data::Union</span>(<span class="ident">u</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">syn::Error::new</span>(
-            <span class="ident">u</span>.<span class="ident">union_token</span>.<span class="ident">span</span>(),
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>derive_lens_impl(
+    input: syn::DeriveInput,
+) -&gt; <span class="prelude-ty">Result</span>&lt;proc_macro2::TokenStream, syn::Error&gt; {
+    <span class="kw">match </span><span class="kw-2">&amp;</span>input.data {
+        Data::Struct(<span class="kw">_</span>) =&gt; derive_struct(<span class="kw-2">&amp;</span>input),
+        Data::Enum(<span class="kw">_</span>) =&gt; derive_enum(<span class="kw-2">&amp;</span>input),
+        Data::Union(u) =&gt; <span class="prelude-val">Err</span>(syn::Error::new(
+            u.union_token.span(),
             <span class="string">&quot;Lens implementations cannot be derived from unions&quot;</span>,
         )),
     }
 }
 
-<span class="kw">fn</span> <span class="ident">derive_struct</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">syn::DeriveInput</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">proc_macro2::TokenStream</span>, <span class="ident">syn::Error</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">struct_type</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">input</span>.<span class="ident">ident</span>;
+<span class="kw">fn </span>derive_struct(input: <span class="kw-2">&amp;</span>syn::DeriveInput) -&gt; <span class="prelude-ty">Result</span>&lt;proc_macro2::TokenStream, syn::Error&gt; {
+    <span class="kw">let </span>struct_type = <span class="kw-2">&amp;</span>input.ident;
 
-    <span class="comment">// The generated module should have the same visibilty as the struct. If the struct is private</span>
-    <span class="comment">// then the generated structs within the new module should be visible only to the module the</span>
-    <span class="comment">// original struct was in.</span>
-    <span class="kw">let</span> <span class="ident">module_vis</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">input</span>.<span class="ident">vis</span>;
-    <span class="kw">let</span> <span class="ident">struct_vis</span> <span class="op">=</span> <span class="ident">increase_visibility</span>(<span class="ident">module_vis</span>);
+    <span class="comment">// The generated module should have the same visibilty as the struct. If the struct is private
+    // then the generated structs within the new module should be visible only to the module the
+    // original struct was in.
+    </span><span class="kw">let </span>module_vis = <span class="kw-2">&amp;</span>input.vis;
+    <span class="kw">let </span>struct_vis = increase_visibility(module_vis);
 
-    <span class="kw">let</span> <span class="ident">fields</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="ident">syn::Data::Struct</span>(<span class="ident">syn::DataStruct</span> { <span class="ident">fields</span>, .. }) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">input</span>.<span class="ident">data</span> {
-        <span class="ident">Fields</span>::<span class="op">&lt;</span><span class="ident">LensAttrs</span><span class="op">&gt;</span><span class="ident">::parse_ast</span>(<span class="ident">fields</span>)<span class="question-mark">?</span>
-    } <span class="kw">else</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">syn::Error::new</span>(
-            <span class="ident">input</span>.<span class="ident">span</span>(),
+    <span class="kw">let </span>fields = <span class="kw">if let </span>syn::Data::Struct(syn::DataStruct { fields, .. }) = <span class="kw-2">&amp;</span>input.data {
+        Fields::&lt;LensAttrs&gt;::parse_ast(fields)<span class="question-mark">?
+    </span>} <span class="kw">else </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(syn::Error::new(
+            input.span(),
             <span class="string">&quot;Lens implementations can only be derived from structs with named fields&quot;</span>,
         ));
     };
 
-    <span class="kw">if</span> <span class="ident">fields</span>.<span class="ident">kind</span> <span class="op">!</span><span class="op">=</span> <span class="ident">FieldKind::Named</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">syn::Error::new</span>(
-            <span class="ident">input</span>.<span class="ident">span</span>(),
+    <span class="kw">if </span>fields.kind != FieldKind::Named {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(syn::Error::new(
+            input.span(),
             <span class="string">&quot;Lens implementations can only be derived from structs with named fields&quot;</span>,
         ));
     }
 
-    <span class="kw">let</span> <span class="ident">twizzled_name</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">is_camel_case</span>(<span class="kw-2">&amp;</span><span class="ident">struct_type</span>.<span class="ident">to_string</span>()) {
-        <span class="kw">let</span> <span class="ident">temp_name</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{}_derived_lenses&quot;</span>, <span class="ident">to_snake_case</span>(<span class="kw-2">&amp;</span><span class="ident">struct_type</span>.<span class="ident">to_string</span>()));
-        <span class="ident">proc_macro2::Ident::new</span>(<span class="kw-2">&amp;</span><span class="ident">temp_name</span>, <span class="ident">proc_macro2::Span::call_site</span>())
-    } <span class="kw">else</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">syn::Error::new</span>(
-            <span class="ident">struct_type</span>.<span class="ident">span</span>(),
+    <span class="kw">let </span>twizzled_name = <span class="kw">if </span>is_camel_case(<span class="kw-2">&amp;</span>struct_type.to_string()) {
+        <span class="kw">let </span>temp_name = <span class="macro">format!</span>(<span class="string">&quot;{}_derived_lenses&quot;</span>, to_snake_case(<span class="kw-2">&amp;</span>struct_type.to_string()));
+        proc_macro2::Ident::new(<span class="kw-2">&amp;</span>temp_name, proc_macro2::Span::call_site())
+    } <span class="kw">else </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(syn::Error::new(
+            struct_type.span(),
             <span class="string">&quot;Lens implementations can only be derived from CamelCase types&quot;</span>,
         ));
     };
-    <span class="kw">let</span> (<span class="ident">impl_generics</span>, <span class="ident">ty_generics</span>, <span class="ident">where_clause</span>) <span class="op">=</span> <span class="ident">input</span>.<span class="ident">generics</span>.<span class="ident">split_for_impl</span>();
+    <span class="kw">let </span>(impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lens_ty_idents</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">phantom_decls</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">phantom_inits</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+    <span class="kw">let </span><span class="kw-2">mut </span>lens_ty_idents = Vec::new();
+    <span class="kw">let </span><span class="kw-2">mut </span>phantom_decls = Vec::new();
+    <span class="kw">let </span><span class="kw-2">mut </span>phantom_inits = Vec::new();
 
-    <span class="kw">for</span> <span class="ident">gp</span> <span class="kw">in</span> <span class="ident">input</span>.<span class="ident">generics</span>.<span class="ident">params</span>.<span class="ident">iter</span>() {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">GenericParam::Type</span>(<span class="ident">TypeParam</span> { <span class="ident">ident</span>, .. }) <span class="op">=</span> <span class="ident">gp</span> {
-            <span class="ident">lens_ty_idents</span>.<span class="ident">push</span>(<span class="macro">quote!</span> {#<span class="ident">ident</span>});
-            <span class="ident">phantom_decls</span>.<span class="ident">push</span>(<span class="macro">quote!</span> {<span class="ident">std::marker::PhantomData</span><span class="op">&lt;</span><span class="kw-2">*const</span> #<span class="ident">ident</span><span class="op">&gt;</span>});
-            <span class="ident">phantom_inits</span>.<span class="ident">push</span>(<span class="macro">quote!</span> {<span class="ident">std::marker::PhantomData</span>});
+    <span class="kw">for </span>gp <span class="kw">in </span>input.generics.params.iter() {
+        <span class="kw">if let </span>GenericParam::Type(TypeParam { ident, .. }) = gp {
+            lens_ty_idents.push(<span class="macro">quote! </span>{#ident});
+            phantom_decls.push(<span class="macro">quote! </span>{std::marker::PhantomData&lt;<span class="kw-2">*const </span>#ident&gt;});
+            phantom_inits.push(<span class="macro">quote! </span>{std::marker::PhantomData});
         }
     }
 
-    <span class="kw">let</span> <span class="ident">lens_ty_generics</span> <span class="op">=</span> <span class="macro">quote!</span> {
-        <span class="op">&lt;</span>#(#<span class="ident">lens_ty_idents</span>),<span class="kw-2">*</span><span class="op">&gt;</span>
+    <span class="kw">let </span>lens_ty_generics = <span class="macro">quote! </span>{
+        &lt;#(#lens_ty_idents),<span class="kw-2">*</span>&gt;
     };
 
-    <span class="comment">// Define lens types for each field</span>
-    <span class="kw">let</span> <span class="ident">defs</span> <span class="op">=</span> <span class="ident">fields</span>.<span class="ident">iter</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="op">!</span><span class="ident">f</span>.<span class="ident">attrs</span>.<span class="ident">ignore</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> {
-        <span class="kw">let</span> <span class="ident">field_name</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">f</span>.<span class="ident">ident</span>.<span class="ident">unwrap_named</span>();
-        <span class="kw">let</span> <span class="ident">struct_docs</span> <span class="op">=</span> <span class="macro">format!</span>(
+    <span class="comment">// Define lens types for each field
+    </span><span class="kw">let </span>defs = fields.iter().filter(|f| !f.attrs.ignore).map(|f| {
+        <span class="kw">let </span>field_name = <span class="kw-2">&amp;</span>f.ident.unwrap_named();
+        <span class="kw">let </span>struct_docs = <span class="macro">format!</span>(
             <span class="string">&quot;Lens for the field `{field}` on [`{ty}`](super::{ty}).&quot;</span>,
-            <span class="ident">field</span> <span class="op">=</span> <span class="ident">field_name</span>,
-            <span class="ident">ty</span> <span class="op">=</span> <span class="ident">struct_type</span>,
+            field = field_name,
+            ty = struct_type,
         );
 
-        <span class="kw">let</span> <span class="ident">fn_docs</span> <span class="op">=</span> <span class="macro">format!</span>(
+        <span class="kw">let </span>fn_docs = <span class="macro">format!</span>(
             <span class="string">&quot;Creates a new lens for the field `{field}` on [`{ty}`](super::{ty}). \
             Use [`{ty}::{field}`](super::{ty}::{field}) instead.&quot;</span>,
-            <span class="ident">field</span> <span class="op">=</span> <span class="ident">field_name</span>,
-            <span class="ident">ty</span> <span class="op">=</span> <span class="ident">struct_type</span>,
+            field = field_name,
+            ty = struct_type,
         );
 
-        <span class="macro">quote!</span> {
-            <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> #<span class="ident">struct_docs</span>]</span>
-            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
-            <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-            #<span class="ident">struct_vis</span> <span class="kw">struct</span> #<span class="ident">field_name</span>#<span class="ident">lens_ty_generics</span>(#(#<span class="ident">phantom_decls</span>),<span class="kw-2">*</span>);
+        <span class="macro">quote! </span>{
+            <span class="attribute">#[doc = #struct_docs]
+            #[allow(non_camel_case_types)]
+            #[derive(Copy, Clone, Hash, PartialEq, Eq)]
+            </span>#struct_vis <span class="kw">struct </span>#field_name#lens_ty_generics(#(#phantom_decls),<span class="kw-2">*</span>);
 
-            <span class="kw">impl</span> #<span class="ident">lens_ty_generics</span> #<span class="ident">field_name</span>#<span class="ident">lens_ty_generics</span>{
-                <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> #<span class="ident">fn_docs</span>]</span>
-                <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>()-&gt;<span class="self">Self</span>{
-                    <span class="self">Self</span>(#(#<span class="ident">phantom_inits</span>),<span class="kw-2">*</span>)
+            <span class="kw">impl </span>#lens_ty_generics #field_name#lens_ty_generics{
+                <span class="attribute">#[doc = #fn_docs]
+                </span><span class="kw">pub const fn </span>new()-&gt;<span class="self">Self</span>{
+                    <span class="self">Self</span>(#(#phantom_inits),<span class="kw-2">*</span>)
                 }
             }
 
-            <span class="kw">impl</span> #<span class="ident">lens_ty_generics</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> #<span class="ident">field_name</span>#<span class="ident">lens_ty_generics</span> {
-                <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-                    <span class="macro">write!</span>(<span class="ident">f</span>,<span class="string">&quot;{}:{}&quot;</span>,<span class="macro">stringify!</span>(#<span class="ident">struct_type</span>), <span class="macro">stringify!</span>(#<span class="ident">field_name</span>))
-                }
-            }
-        }
-    });
-
-    <span class="comment">// let used_params: HashSet&lt;String&gt; = input</span>
-    <span class="comment">//     .generics</span>
-    <span class="comment">//     .params</span>
-    <span class="comment">//     .iter()</span>
-    <span class="comment">//     .flat_map(|gp: &amp;GenericParam| match gp {</span>
-    <span class="comment">//         GenericParam::Type(TypeParam { ident, .. }) =&gt; Some(ident.to_string()),</span>
-    <span class="comment">//         _ =&gt; None,</span>
-    <span class="comment">//     })</span>
-    <span class="comment">//     .collect();</span>
-
-    <span class="comment">// let gen_new_param = |name: &amp;str| {</span>
-    <span class="comment">//     let mut candidate: String = name.into();</span>
-    <span class="comment">//     let mut count = 1usize;</span>
-    <span class="comment">//     while used_params.contains(&amp;candidate) {</span>
-    <span class="comment">//         candidate = format!(&quot;{}_{}&quot;, name, count);</span>
-    <span class="comment">//         count += 1;</span>
-    <span class="comment">//     }</span>
-    <span class="comment">//     Ident::new(&amp;candidate, Span::call_site())</span>
-    <span class="comment">// };</span>
-
-    <span class="comment">//let func_ty_par = gen_new_param(&quot;F&quot;);</span>
-    <span class="comment">//let val_ty_par = gen_new_param(&quot;V&quot;);</span>
-
-    <span class="kw">let</span> <span class="ident">impls</span> <span class="op">=</span> <span class="ident">fields</span>.<span class="ident">iter</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="op">!</span><span class="ident">f</span>.<span class="ident">attrs</span>.<span class="ident">ignore</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> {
-        <span class="kw">let</span> <span class="ident">field_name</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">f</span>.<span class="ident">ident</span>.<span class="ident">unwrap_named</span>();
-        <span class="kw">let</span> <span class="ident">field_ty</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">f</span>.<span class="ident">ty</span>;
-        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{}:{}&quot;</span>, <span class="ident">struct_type</span>.<span class="ident">to_string</span>(), <span class="ident">field_name</span>.<span class="ident">to_string</span>());
-
-        <span class="macro">quote!</span> {
-
-            <span class="kw">impl</span> #<span class="ident">impl_generics</span> <span class="ident">Lens</span> <span class="kw">for</span> #<span class="ident">twizzled_name</span>::#<span class="ident">field_name</span>#<span class="ident">lens_ty_generics</span> #<span class="ident">where_clause</span> {
-
-                <span class="kw">type</span> <span class="ident">Source</span> <span class="op">=</span> #<span class="ident">struct_type</span>#<span class="ident">ty_generics</span>;
-                <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> #<span class="ident">field_ty</span>;
-
-                <span class="kw">fn</span> <span class="ident">view</span><span class="op">&lt;</span><span class="ident">O</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span><span class="op">&gt;</span>) -&gt; <span class="ident">O</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">source</span>: <span class="kw-2">&amp;</span>#<span class="ident">struct_type</span>#<span class="ident">ty_generics</span>, <span class="ident">map</span>: <span class="ident">F</span>) -&gt; <span class="ident">O</span> {
-                    <span class="ident">map</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">source</span>.#<span class="ident">field_name</span>))
-                }
-
-                <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span>{
-                    <span class="prelude-val">Some</span>(#<span class="ident">name</span>)
+            <span class="kw">impl </span>#lens_ty_generics std::fmt::Debug <span class="kw">for </span>#field_name#lens_ty_generics {
+                <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+                    <span class="macro">write!</span>(f,<span class="string">&quot;{}:{}&quot;</span>,<span class="macro">stringify!</span>(#struct_type), <span class="macro">stringify!</span>(#field_name))
                 }
             }
         }
     });
 
-    <span class="kw">let</span> <span class="ident">associated_items</span> <span class="op">=</span> <span class="ident">fields</span>.<span class="ident">iter</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="op">!</span><span class="ident">f</span>.<span class="ident">attrs</span>.<span class="ident">ignore</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> {
-        <span class="kw">let</span> <span class="ident">field_name</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">f</span>.<span class="ident">ident</span>.<span class="ident">unwrap_named</span>();
-        <span class="kw">let</span> <span class="ident">lens_field_name</span> <span class="op">=</span> <span class="ident">f</span>.<span class="ident">attrs</span>.<span class="ident">lens_name_override</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap_or</span>(<span class="ident">field_name</span>);
-        <span class="kw">let</span> <span class="ident">field_vis</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">f</span>.<span class="ident">vis</span>;
+    <span class="comment">// let used_params: HashSet&lt;String&gt; = input
+    //     .generics
+    //     .params
+    //     .iter()
+    //     .flat_map(|gp: &amp;GenericParam| match gp {
+    //         GenericParam::Type(TypeParam { ident, .. }) =&gt; Some(ident.to_string()),
+    //         _ =&gt; None,
+    //     })
+    //     .collect();
 
-        <span class="macro">quote!</span> {
-            <span class="doccomment">/// Lens for the corresponding field.</span>
-            #<span class="ident">field_vis</span> <span class="kw">const</span> #<span class="ident">lens_field_name</span>: #<span class="ident">twizzled_name</span>::#<span class="ident">field_name</span>#<span class="ident">lens_ty_generics</span> <span class="op">=</span> #<span class="ident">twizzled_name</span>::#<span class="ident">field_name::new</span>();
+    // let gen_new_param = |name: &amp;str| {
+    //     let mut candidate: String = name.into();
+    //     let mut count = 1usize;
+    //     while used_params.contains(&amp;candidate) {
+    //         candidate = format!(&quot;{}_{}&quot;, name, count);
+    //         count += 1;
+    //     }
+    //     Ident::new(&amp;candidate, Span::call_site())
+    // };
+
+    //let func_ty_par = gen_new_param(&quot;F&quot;);
+    //let val_ty_par = gen_new_param(&quot;V&quot;);
+
+    </span><span class="kw">let </span>impls = fields.iter().filter(|f| !f.attrs.ignore).map(|f| {
+        <span class="kw">let </span>field_name = <span class="kw-2">&amp;</span>f.ident.unwrap_named();
+        <span class="kw">let </span>field_ty = <span class="kw-2">&amp;</span>f.ty;
+        <span class="kw">let </span>name = <span class="macro">format!</span>(<span class="string">&quot;{}:{}&quot;</span>, struct_type.to_string(), field_name.to_string());
+
+        <span class="macro">quote! </span>{
+
+            <span class="kw">impl </span>#impl_generics Lens <span class="kw">for </span>#twizzled_name::#field_name#lens_ty_generics #where_clause {
+
+                <span class="kw">type </span>Source = #struct_type#ty_generics;
+                <span class="kw">type </span>Target = #field_ty;
+
+                <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span>#struct_type#ty_generics, map: F) -&gt; O {
+                    map(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>source.#field_name))
+                }
+
+                <span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt;{
+                    <span class="prelude-val">Some</span>(#name)
+                }
+            }
         }
     });
 
-    <span class="kw">let</span> <span class="ident">mod_docs</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;Derived lenses for [`{}`].&quot;</span>, <span class="ident">struct_type</span>);
+    <span class="kw">let </span>associated_items = fields.iter().filter(|f| !f.attrs.ignore).map(|f| {
+        <span class="kw">let </span>field_name = <span class="kw-2">&amp;</span>f.ident.unwrap_named();
+        <span class="kw">let </span>lens_field_name = f.attrs.lens_name_override.as_ref().unwrap_or(field_name);
+        <span class="kw">let </span>field_vis = <span class="kw-2">&amp;</span>f.vis;
 
-    <span class="kw">let</span> <span class="ident">expanded</span> <span class="op">=</span> <span class="macro">quote!</span> {
-        <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> #<span class="ident">mod_docs</span>]</span>
-        #<span class="ident">module_vis</span> <span class="kw">mod</span> #<span class="ident">twizzled_name</span> {
-            #(#<span class="ident">defs</span>)<span class="op">*</span>
-            <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-            #<span class="ident">struct_vis</span> <span class="kw">struct</span> <span class="ident">root</span>#<span class="ident">lens_ty_generics</span>(#(#<span class="ident">phantom_decls</span>),<span class="kw-2">*</span>);
+        <span class="macro">quote! </span>{
+            <span class="doccomment">/// Lens for the corresponding field.
+            </span>#field_vis <span class="kw">const </span>#lens_field_name: #twizzled_name::#field_name#lens_ty_generics = #twizzled_name::#field_name::new();
+        }
+    });
 
-            <span class="kw">impl</span> #<span class="ident">lens_ty_generics</span> <span class="ident">root</span>#<span class="ident">lens_ty_generics</span>{
-                <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>()-&gt;<span class="self">Self</span>{
-                    <span class="self">Self</span>(#(#<span class="ident">phantom_inits</span>),<span class="kw-2">*</span>)
+    <span class="kw">let </span>mod_docs = <span class="macro">format!</span>(<span class="string">&quot;Derived lenses for [`{}`].&quot;</span>, struct_type);
+
+    <span class="kw">let </span>expanded = <span class="macro">quote! </span>{
+        <span class="attribute">#[doc = #mod_docs]
+        </span>#module_vis <span class="kw">mod </span>#twizzled_name {
+            #(#defs)*
+            <span class="attribute">#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+            </span>#struct_vis <span class="kw">struct </span>root#lens_ty_generics(#(#phantom_decls),<span class="kw-2">*</span>);
+
+            <span class="kw">impl </span>#lens_ty_generics root#lens_ty_generics{
+                <span class="kw">pub const fn </span>new()-&gt;<span class="self">Self</span>{
+                    <span class="self">Self</span>(#(#phantom_inits),<span class="kw-2">*</span>)
                 }
             }
         }
 
-        #(#<span class="ident">impls</span>)<span class="op">*</span>
+        #(#impls)*
 
-        <span class="kw">impl</span> #<span class="ident">impl_generics</span> <span class="ident">Lens</span> <span class="kw">for</span> #<span class="ident">twizzled_name</span>::<span class="ident">root</span>#<span class="ident">lens_ty_generics</span> {
-            <span class="kw">type</span> <span class="ident">Source</span> <span class="op">=</span> #<span class="ident">struct_type</span>#<span class="ident">ty_generics</span>;
-            <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> #<span class="ident">struct_type</span>#<span class="ident">ty_generics</span>;
+        <span class="kw">impl </span>#impl_generics Lens <span class="kw">for </span>#twizzled_name::root#lens_ty_generics {
+            <span class="kw">type </span>Source = #struct_type#ty_generics;
+            <span class="kw">type </span>Target = #struct_type#ty_generics;
 
-            <span class="kw">fn</span> <span class="ident">view</span><span class="op">&lt;</span><span class="ident">O</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span><span class="op">&gt;</span>) -&gt; <span class="ident">O</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Source</span>, <span class="ident">map</span>: <span class="ident">F</span>) -&gt; <span class="ident">O</span> {
-                <span class="ident">map</span>(<span class="prelude-val">Some</span>(<span class="ident">source</span>))
+            <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="self">Self</span>::Source, map: F) -&gt; O {
+                map(<span class="prelude-val">Some</span>(source))
             }
         }
 
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_upper_case_globals</span>)]</span>
-        <span class="kw">impl</span> #<span class="ident">impl_generics</span> #<span class="ident">struct_type</span> #<span class="ident">ty_generics</span> #<span class="ident">where_clause</span> {
-            #(#<span class="ident">associated_items</span>)<span class="op">*</span>
+        <span class="attribute">#[allow(non_upper_case_globals)]
+        </span><span class="kw">impl </span>#impl_generics #struct_type #ty_generics #where_clause {
+            #(#associated_items)*
 
-            <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">root</span>: #<span class="ident">twizzled_name</span>::<span class="ident">root</span>#<span class="ident">lens_ty_generics</span> <span class="op">=</span> #<span class="ident">twizzled_name::root::new</span>();
+            <span class="kw">pub const </span>root: #twizzled_name::root#lens_ty_generics = #twizzled_name::root::new();
         }
     };
 
-    <span class="prelude-val">Ok</span>(<span class="ident">expanded</span>)
+    <span class="prelude-val">Ok</span>(expanded)
 }
 
-<span class="comment">//I stole these from rustc!</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">char_has_case</span>(<span class="ident">c</span>: <span class="ident">char</span>) -&gt; <span class="ident">bool</span> {
-    <span class="ident">c</span>.<span class="ident">is_lowercase</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">is_uppercase</span>()
+<span class="comment">//I stole these from rustc!
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>char_has_case(c: char) -&gt; bool {
+    c.is_lowercase() || c.is_uppercase()
 }
 
-<span class="kw">fn</span> <span class="ident">is_camel_case</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">bool</span> {
-    <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">trim_matches</span>(<span class="string">&#39;_&#39;</span>);
-    <span class="kw">if</span> <span class="ident">name</span>.<span class="ident">is_empty</span>() {
-        <span class="kw">return</span> <span class="bool-val">true</span>;
+<span class="kw">fn </span>is_camel_case(name: <span class="kw-2">&amp;</span>str) -&gt; bool {
+    <span class="kw">let </span>name = name.trim_matches(<span class="string">&#39;_&#39;</span>);
+    <span class="kw">if </span>name.is_empty() {
+        <span class="kw">return </span><span class="bool-val">true</span>;
     }
 
-    <span class="comment">// start with a non-lowercase letter rather than non-uppercase</span>
-    <span class="comment">// ones (some scripts don&#39;t have a concept of upper/lowercase)</span>
-    <span class="op">!</span><span class="ident">name</span>.<span class="ident">chars</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">is_lowercase</span>()
-        <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">name</span>.<span class="ident">contains</span>(<span class="string">&quot;__&quot;</span>)
-        <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">name</span>.<span class="ident">chars</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>().<span class="ident">windows</span>(<span class="number">2</span>).<span class="ident">any</span>(<span class="op">|</span><span class="ident">pair</span><span class="op">|</span> {
-            <span class="comment">// contains a capitalisable character followed by, or preceded by, an underscore</span>
-            <span class="ident">char_has_case</span>(<span class="ident">pair</span>[<span class="number">0</span>]) <span class="op">&amp;&amp;</span> <span class="ident">pair</span>[<span class="number">1</span>] <span class="op">==</span> <span class="string">&#39;_&#39;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">char_has_case</span>(<span class="ident">pair</span>[<span class="number">1</span>]) <span class="op">&amp;&amp;</span> <span class="ident">pair</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39;_&#39;</span>
-        })
+    <span class="comment">// start with a non-lowercase letter rather than non-uppercase
+    // ones (some scripts don&#39;t have a concept of upper/lowercase)
+    </span>!name.chars().next().unwrap().is_lowercase()
+        &amp;&amp; !name.contains(<span class="string">&quot;__&quot;</span>)
+        &amp;&amp; !name.chars().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;().windows(<span class="number">2</span>).any(|pair| {
+            <span class="comment">// contains a capitalisable character followed by, or preceded by, an underscore
+            </span>char_has_case(pair[<span class="number">0</span>]) &amp;&amp; pair[<span class="number">1</span>] == <span class="string">&#39;_&#39; </span>|| char_has_case(pair[<span class="number">1</span>]) &amp;&amp; pair[<span class="number">0</span>] == <span class="string">&#39;_&#39;
+        </span>})
 }
 
-<span class="kw">fn</span> <span class="ident">to_snake_case</span>(<span class="kw-2">mut</span> <span class="ident">str</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">String</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">words</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-    <span class="comment">// Preserve leading underscores</span>
-    <span class="ident">str</span> <span class="op">=</span> <span class="ident">str</span>.<span class="ident">trim_start_matches</span>(<span class="op">|</span><span class="ident">c</span>: <span class="ident">char</span><span class="op">|</span> {
-        <span class="kw">if</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">&#39;_&#39;</span> {
-            <span class="ident">words</span>.<span class="ident">push</span>(<span class="ident">String::new</span>());
-            <span class="bool-val">true</span>
-        } <span class="kw">else</span> {
-            <span class="bool-val">false</span>
-        }
+<span class="kw">fn </span>to_snake_case(<span class="kw-2">mut </span>str: <span class="kw-2">&amp;</span>str) -&gt; String {
+    <span class="kw">let </span><span class="kw-2">mut </span>words = <span class="macro">vec!</span>[];
+    <span class="comment">// Preserve leading underscores
+    </span>str = str.trim_start_matches(|c: char| {
+        <span class="kw">if </span>c == <span class="string">&#39;_&#39; </span>{
+            words.push(String::new());
+            <span class="bool-val">true
+        </span>} <span class="kw">else </span>{
+            <span class="bool-val">false
+        </span>}
     });
-    <span class="kw">for</span> <span class="ident">s</span> <span class="kw">in</span> <span class="ident">str</span>.<span class="ident">split</span>(<span class="string">&#39;_&#39;</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last_upper</span> <span class="op">=</span> <span class="bool-val">false</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">String::new</span>();
-        <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">is_empty</span>() {
+    <span class="kw">for </span>s <span class="kw">in </span>str.split(<span class="string">&#39;_&#39;</span>) {
+        <span class="kw">let </span><span class="kw-2">mut </span>last_upper = <span class="bool-val">false</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>buf = String::new();
+        <span class="kw">if </span>s.is_empty() {
             <span class="kw">continue</span>;
         }
-        <span class="kw">for</span> <span class="ident">ch</span> <span class="kw">in</span> <span class="ident">s</span>.<span class="ident">chars</span>() {
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">buf</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="ident">buf</span> <span class="op">!</span><span class="op">=</span> <span class="string">&quot;&#39;&quot;</span> <span class="op">&amp;&amp;</span> <span class="ident">ch</span>.<span class="ident">is_uppercase</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">last_upper</span> {
-                <span class="ident">words</span>.<span class="ident">push</span>(<span class="ident">buf</span>);
-                <span class="ident">buf</span> <span class="op">=</span> <span class="ident">String::new</span>();
+        <span class="kw">for </span>ch <span class="kw">in </span>s.chars() {
+            <span class="kw">if </span>!buf.is_empty() &amp;&amp; buf != <span class="string">&quot;&#39;&quot; </span>&amp;&amp; ch.is_uppercase() &amp;&amp; !last_upper {
+                words.push(buf);
+                buf = String::new();
             }
-            <span class="ident">last_upper</span> <span class="op">=</span> <span class="ident">ch</span>.<span class="ident">is_uppercase</span>();
-            <span class="ident">buf</span>.<span class="ident">extend</span>(<span class="ident">ch</span>.<span class="ident">to_lowercase</span>());
+            last_upper = ch.is_uppercase();
+            buf.extend(ch.to_lowercase());
         }
-        <span class="ident">words</span>.<span class="ident">push</span>(<span class="ident">buf</span>);
+        words.push(buf);
     }
-    <span class="ident">words</span>.<span class="ident">join</span>(<span class="string">&quot;_&quot;</span>)
+    words.join(<span class="string">&quot;_&quot;</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">derive_enum</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">syn::DeriveInput</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">proc_macro2::TokenStream</span>, <span class="ident">syn::Error</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">enum_type</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">input</span>.<span class="ident">ident</span>;
+<span class="kw">fn </span>derive_enum(input: <span class="kw-2">&amp;</span>syn::DeriveInput) -&gt; <span class="prelude-ty">Result</span>&lt;proc_macro2::TokenStream, syn::Error&gt; {
+    <span class="kw">let </span>enum_type = <span class="kw-2">&amp;</span>input.ident;
 
-    <span class="comment">// See `derive_struct`</span>
-    <span class="kw">let</span> <span class="ident">module_vis</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">input</span>.<span class="ident">vis</span>;
-    <span class="kw">let</span> <span class="ident">struct_vis</span> <span class="op">=</span> <span class="ident">increase_visibility</span>(<span class="ident">module_vis</span>);
+    <span class="comment">// See `derive_struct`
+    </span><span class="kw">let </span>module_vis = <span class="kw-2">&amp;</span>input.vis;
+    <span class="kw">let </span>struct_vis = increase_visibility(module_vis);
 
-    <span class="kw">let</span> <span class="ident">variants</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="ident">syn::Data::Enum</span>(<span class="ident">syn::DataEnum</span> { <span class="ident">variants</span>, .. }) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">input</span>.<span class="ident">data</span> {
-        <span class="ident">variants</span>
-    } <span class="kw">else</span> {
+    <span class="kw">let </span>variants = <span class="kw">if let </span>syn::Data::Enum(syn::DataEnum { variants, .. }) = <span class="kw-2">&amp;</span>input.data {
+        variants
+    } <span class="kw">else </span>{
         <span class="macro">panic!</span>(<span class="string">&quot;I don&#39;t know what this case being triggered means. Please open an issue!&quot;</span>)
     };
 
-    <span class="kw">let</span> <span class="ident">usable_variants</span> <span class="op">=</span> <span class="ident">variants</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">v</span>.<span class="ident">fields</span> {
-            <span class="ident">syn::Fields::Unnamed</span>(<span class="ident">f</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">f</span>.<span class="ident">unnamed</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> {
-                    <span class="prelude-val">Some</span>((<span class="kw-2">&amp;</span><span class="ident">v</span>.<span class="ident">ident</span>, <span class="kw-2">&amp;</span><span class="ident">f</span>.<span class="ident">unnamed</span>.<span class="ident">first</span>().<span class="ident">unwrap</span>().<span class="ident">ty</span>))
-                } <span class="kw">else</span> {
-                    <span class="prelude-val">None</span>
-                }
+    <span class="kw">let </span>usable_variants = variants
+        .iter()
+        .filter_map(|v| <span class="kw">match </span><span class="kw-2">&amp;</span>v.fields {
+            syn::Fields::Unnamed(f) =&gt; {
+                <span class="kw">if </span>f.unnamed.len() == <span class="number">1 </span>{
+                    <span class="prelude-val">Some</span>((<span class="kw-2">&amp;</span>v.ident, <span class="kw-2">&amp;</span>f.unnamed.first().unwrap().ty))
+                } <span class="kw">else </span>{
+                    <span class="prelude-val">None
+                </span>}
             }
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         })
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">if</span> <span class="ident">usable_variants</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> {
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="kw">if </span>usable_variants.len() == <span class="number">0 </span>{
         <span class="macro">panic!</span>(<span class="string">&quot;This enum has no variants which can have Lenses built. A valid variant has exactly one unnamed field. If you think this is unreasonable, please work on https://github.com/rust-lang/rfcs/pull/2593&quot;</span>)
     }
 
-    <span class="kw">let</span> <span class="ident">twizzled_name</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">is_camel_case</span>(<span class="kw-2">&amp;</span><span class="ident">enum_type</span>.<span class="ident">to_string</span>()) {
-        <span class="kw">let</span> <span class="ident">temp_name</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{}_derived_lenses&quot;</span>, <span class="ident">to_snake_case</span>(<span class="kw-2">&amp;</span><span class="ident">enum_type</span>.<span class="ident">to_string</span>()));
-        <span class="ident">proc_macro2::Ident::new</span>(<span class="kw-2">&amp;</span><span class="ident">temp_name</span>, <span class="ident">proc_macro2::Span::call_site</span>())
-    } <span class="kw">else</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">syn::Error::new</span>(
-            <span class="ident">enum_type</span>.<span class="ident">span</span>(),
+    <span class="kw">let </span>twizzled_name = <span class="kw">if </span>is_camel_case(<span class="kw-2">&amp;</span>enum_type.to_string()) {
+        <span class="kw">let </span>temp_name = <span class="macro">format!</span>(<span class="string">&quot;{}_derived_lenses&quot;</span>, to_snake_case(<span class="kw-2">&amp;</span>enum_type.to_string()));
+        proc_macro2::Ident::new(<span class="kw-2">&amp;</span>temp_name, proc_macro2::Span::call_site())
+    } <span class="kw">else </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(syn::Error::new(
+            enum_type.span(),
             <span class="string">&quot;Lens implementations can only be derived from CamelCase types&quot;</span>,
         ));
     };
 
-    <span class="kw">if</span> <span class="ident">input</span>.<span class="ident">generics</span>.<span class="ident">params</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+    <span class="kw">if </span>input.generics.params.len() != <span class="number">0 </span>{
         <span class="macro">panic!</span>(<span class="string">&quot;Lens implementations can only be derived from non-generic enums (for now)&quot;</span>);
     }
 
-    <span class="kw">let</span> <span class="ident">defs</span> <span class="op">=</span> <span class="ident">usable_variants</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">variant_name</span>, <span class="kw">_</span>)<span class="op">|</span> {
-        <span class="macro">quote!</span> {
-            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
-            <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-            #<span class="ident">struct_vis</span> <span class="kw">struct</span> #<span class="ident">variant_name</span>();
+    <span class="kw">let </span>defs = usable_variants.iter().map(|(variant_name, <span class="kw">_</span>)| {
+        <span class="macro">quote! </span>{
+            <span class="attribute">#[allow(non_camel_case_types)]
+            #[derive(Copy, Clone, Hash, PartialEq, Eq)]
+            </span>#struct_vis <span class="kw">struct </span>#variant_name();
 
-            <span class="kw">impl</span> #<span class="ident">variant_name</span> {
-                <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
+            <span class="kw">impl </span>#variant_name {
+                <span class="kw">pub const fn </span>new() -&gt; <span class="self">Self </span>{
                     <span class="self">Self</span>()
                 }
             }
 
-            <span class="kw">impl</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> #<span class="ident">variant_name</span> {
-                <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-                    <span class="macro">write!</span>(<span class="ident">f</span>,<span class="string">&quot;{}:{}&quot;</span>,<span class="macro">stringify!</span>(#<span class="ident">enum_type</span>), <span class="macro">stringify!</span>(#<span class="ident">variant_name</span>))
+            <span class="kw">impl </span>std::fmt::Debug <span class="kw">for </span>#variant_name {
+                <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+                    <span class="macro">write!</span>(f,<span class="string">&quot;{}:{}&quot;</span>,<span class="macro">stringify!</span>(#enum_type), <span class="macro">stringify!</span>(#variant_name))
                 }
             }
         }
     });
 
-    <span class="kw">let</span> <span class="ident">impls</span> <span class="op">=</span> <span class="ident">usable_variants</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">variant_name</span>, <span class="ident">variant_type</span>)<span class="op">|</span> {
-        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{}:{}&quot;</span>, <span class="ident">enum_type</span>.<span class="ident">to_string</span>(), <span class="ident">variant_name</span>.<span class="ident">to_string</span>());
-        <span class="macro">quote!</span> {
-            <span class="kw">impl</span> <span class="ident">Lens</span> <span class="kw">for</span> #<span class="ident">twizzled_name</span>::#<span class="ident">variant_name</span> {
-                <span class="kw">type</span> <span class="ident">Source</span> <span class="op">=</span> #<span class="ident">enum_type</span>;
-                <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> #<span class="ident">variant_type</span>;
+    <span class="kw">let </span>impls = usable_variants.iter().map(|(variant_name, variant_type)| {
+        <span class="kw">let </span>name = <span class="macro">format!</span>(<span class="string">&quot;{}:{}&quot;</span>, enum_type.to_string(), variant_name.to_string());
+        <span class="macro">quote! </span>{
+            <span class="kw">impl </span>Lens <span class="kw">for </span>#twizzled_name::#variant_name {
+                <span class="kw">type </span>Source = #enum_type;
+                <span class="kw">type </span>Target = #variant_type;
 
-                <span class="kw">fn</span> <span class="ident">view</span><span class="op">&lt;</span><span class="ident">O</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span><span class="op">&gt;</span>) -&gt; <span class="ident">O</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">source</span>: <span class="kw-2">&amp;</span>#<span class="ident">enum_type</span>, <span class="ident">map</span>: <span class="ident">F</span>) -&gt; <span class="ident">O</span> {
-                    <span class="ident">map</span>(<span class="kw">if</span> <span class="kw">let</span> #<span class="ident">enum_type</span>::#<span class="ident">variant_name</span>(<span class="ident">inner_value</span>) <span class="op">=</span> <span class="ident">source</span> {
-                        <span class="prelude-val">Some</span>(<span class="ident">inner_value</span>)
-                    } <span class="kw">else</span> {
-                        <span class="prelude-val">None</span>
-                    })
+                <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span>#enum_type, map: F) -&gt; O {
+                    map(<span class="kw">if let </span>#enum_type::#variant_name(inner_value) = source {
+                        <span class="prelude-val">Some</span>(inner_value)
+                    } <span class="kw">else </span>{
+                        <span class="prelude-val">None
+                    </span>})
                 }
 
-                <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span>{
-                    <span class="prelude-val">Some</span>(#<span class="ident">name</span>)
+                <span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt;{
+                    <span class="prelude-val">Some</span>(#name)
                 }
             }
         }
     });
 
-    <span class="kw">let</span> <span class="ident">associated_items</span> <span class="op">=</span> <span class="ident">usable_variants</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">variant_name</span>, <span class="kw">_</span>)<span class="op">|</span> {
-        <span class="kw">let</span> <span class="ident">variant_const_name</span> <span class="op">=</span> <span class="ident">to_snake_case</span>(<span class="kw-2">&amp;</span><span class="ident">variant_name</span>.<span class="ident">to_string</span>());
-        <span class="kw">let</span> <span class="ident">variant_const_name</span> <span class="op">=</span> <span class="ident">proc_macro2::Ident::new</span>(<span class="kw-2">&amp;</span><span class="ident">variant_const_name</span>, <span class="ident">proc_macro2::Span::call_site</span>());
-        <span class="macro">quote!</span> {
-            <span class="kw">pub</span> <span class="kw">const</span> #<span class="ident">variant_const_name</span>: #<span class="ident">twizzled_name</span>::#<span class="ident">variant_name</span> <span class="op">=</span> #<span class="ident">twizzled_name</span>::#<span class="ident">variant_name::new</span>();
+    <span class="kw">let </span>associated_items = usable_variants.iter().map(|(variant_name, <span class="kw">_</span>)| {
+        <span class="kw">let </span>variant_const_name = to_snake_case(<span class="kw-2">&amp;</span>variant_name.to_string());
+        <span class="kw">let </span>variant_const_name = proc_macro2::Ident::new(<span class="kw-2">&amp;</span>variant_const_name, proc_macro2::Span::call_site());
+        <span class="macro">quote! </span>{
+            <span class="kw">pub const </span>#variant_const_name: #twizzled_name::#variant_name = #twizzled_name::#variant_name::new();
         }
     });
 
-    <span class="kw">let</span> <span class="ident">expanded</span> <span class="op">=</span> <span class="macro">quote!</span> {
-        #<span class="ident">module_vis</span> <span class="kw">mod</span> #<span class="ident">twizzled_name</span> {
-            #(#<span class="ident">defs</span>)<span class="op">*</span>
+    <span class="kw">let </span>expanded = <span class="macro">quote! </span>{
+        #module_vis <span class="kw">mod </span>#twizzled_name {
+            #(#defs)*
         }
 
-        #(#<span class="ident">impls</span>)<span class="op">*</span>
+        #(#impls)*
 
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_upper_case_globals</span>)]</span>
-        <span class="kw">impl</span> #<span class="ident">enum_type</span> {
-            #(#<span class="ident">associated_items</span>)<span class="op">*</span>
+        <span class="attribute">#[allow(non_upper_case_globals)]
+        </span><span class="kw">impl </span>#enum_type {
+            #(#associated_items)*
         }
     };
 
-    <span class="prelude-val">Ok</span>(<span class="ident">expanded</span>)
+    <span class="prelude-val">Ok</span>(expanded)
 }
 
-<span class="doccomment">/// Increase privite/inherited visiblity to `pub(super)`, `pub(super)` or anything else relative to</span>
-<span class="doccomment">/// `super` to one module higher than that, and leave everything else as is.</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">increase_visibility</span>(<span class="ident">vis</span>: <span class="kw-2">&amp;</span><span class="ident">Visibility</span>) -&gt; <span class="ident">Visibility</span> {
-    <span class="kw">match</span> <span class="ident">vis</span> {
-        <span class="comment">// Private structs are promoted to `pub(super)`</span>
-        <span class="ident">Visibility::Inherited</span> =&gt; <span class="ident">Visibility::Restricted</span>(<span class="ident">VisRestricted</span> {
-            <span class="ident">pub_token</span>: <span class="macro">Token!</span>[<span class="kw">pub</span>](<span class="ident">vis</span>.<span class="ident">span</span>()),
-            <span class="ident">paren_token</span>: <span class="ident">syn::token::Paren</span>(<span class="ident">vis</span>.<span class="ident">span</span>()),
-            <span class="ident">in_token</span>: <span class="prelude-val">None</span>,
-            <span class="ident">path</span>: <span class="ident">Box::new</span>(<span class="ident">syn::Path::from</span>(<span class="macro">Token!</span>[<span class="kw">super</span>](<span class="ident">vis</span>.<span class="ident">span</span>()))),
+<span class="doccomment">/// Increase privite/inherited visiblity to `pub(super)`, `pub(super)` or anything else relative to
+/// `super` to one module higher than that, and leave everything else as is.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>increase_visibility(vis: <span class="kw-2">&amp;</span>Visibility) -&gt; Visibility {
+    <span class="kw">match </span>vis {
+        <span class="comment">// Private structs are promoted to `pub(super)`
+        </span>Visibility::Inherited =&gt; Visibility::Restricted(VisRestricted {
+            pub_token: <span class="macro">Token!</span>[<span class="kw">pub</span>](vis.span()),
+            paren_token: syn::token::Paren(vis.span()),
+            in_token: <span class="prelude-val">None</span>,
+            path: Box::new(syn::Path::from(<span class="macro">Token!</span>[<span class="kw">super</span>](vis.span()))),
         }),
-        <span class="comment">// `pub(super(::...))` should be promoted to `pub(super::super(:...))`. Checking for this</span>
-        <span class="comment">// looks a bit funky.</span>
-        <span class="ident">Visibility::Restricted</span>(<span class="ident">vis</span> @ <span class="ident">VisRestricted</span> { <span class="ident">path</span>, .. })
-            <span class="kw">if</span> <span class="ident">path</span>.<span class="ident">segments</span>.<span class="ident">first</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">segment</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">segment</span>.<span class="ident">ident</span>)
-                <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">Ident::from</span>(<span class="macro">Token!</span>[<span class="kw">super</span>](<span class="ident">vis</span>.<span class="ident">span</span>()))) =&gt;
+        <span class="comment">// `pub(super(::...))` should be promoted to `pub(super::super(:...))`. Checking for this
+        // looks a bit funky.
+        </span>Visibility::Restricted(vis @ VisRestricted { path, .. })
+            <span class="kw">if </span>path.segments.first().map(|segment| <span class="kw-2">&amp;</span>segment.ident)
+                == <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>Ident::from(<span class="macro">Token!</span>[<span class="kw">super</span>](vis.span()))) =&gt;
         {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_path</span> <span class="op">=</span> <span class="ident">syn::Path::from</span>(<span class="macro">Token!</span>[<span class="kw">super</span>](<span class="ident">vis</span>.<span class="ident">span</span>()));
-            <span class="kw">for</span> <span class="ident">segment</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">path</span>.<span class="ident">segments</span> {
-                <span class="ident">new_path</span>.<span class="ident">segments</span>.<span class="ident">push</span>(<span class="ident">segment</span>.<span class="ident">clone</span>());
+            <span class="kw">let </span><span class="kw-2">mut </span>new_path = syn::Path::from(<span class="macro">Token!</span>[<span class="kw">super</span>](vis.span()));
+            <span class="kw">for </span>segment <span class="kw">in </span><span class="kw-2">&amp;</span>path.segments {
+                new_path.segments.push(segment.clone());
             }
 
-            <span class="ident">Visibility::Restricted</span>(<span class="ident">VisRestricted</span> {
-                <span class="ident">path</span>: <span class="ident">Box::new</span>(<span class="ident">new_path</span>),
-                <span class="comment">// Anything other than `crate` or `super` always needs to be prefixed with `in`</span>
-                <span class="ident">in_token</span>: <span class="prelude-val">Some</span>(<span class="macro">Token!</span>[<span class="kw">in</span>](<span class="ident">vis</span>.<span class="ident">span</span>())),
-                ..<span class="kw-2">*</span><span class="ident">vis</span>
+            Visibility::Restricted(VisRestricted {
+                path: Box::new(new_path),
+                <span class="comment">// Anything other than `crate` or `super` always needs to be prefixed with `in`
+                </span>in_token: <span class="prelude-val">Some</span>(<span class="macro">Token!</span>[<span class="kw">in</span>](vis.span())),
+                ..<span class="kw-2">*</span>vis
             })
         }
-        <span class="comment">// Everything else stays the same</span>
-        <span class="ident">vis</span> =&gt; <span class="ident">vis</span>.<span class="ident">clone</span>(),
+        <span class="comment">// Everything else stays the same
+        </span>vis =&gt; vis.clone(),
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

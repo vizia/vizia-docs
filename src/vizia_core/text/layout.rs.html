@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/text/layout.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>layout.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/text/layout.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>layout.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -211,218 +211,218 @@
 <span id="211">211</span>
 <span id="212">212</span>
 <span id="213">213</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">unicode_bidi</span>::{<span class="ident">bidi_class</span>, <span class="ident">BidiClass</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>unicode_bidi::{bidi_class, BidiClass};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::resource</span>::{<span class="ident">FontOrId</span>, <span class="ident">ResourceManager</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::style::Style</span>;
-<span class="kw">use</span> <span class="ident">femtovg</span>::{<span class="ident">ErrorKind</span>, <span class="ident">Paint</span>, <span class="ident">TextContext</span>, <span class="ident">TextMetrics</span>};
-<span class="kw">use</span> <span class="ident">std::ops::Range</span>;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::resource::{FontOrId, ResourceManager};
+<span class="kw">use </span><span class="kw">crate</span>::style::Style;
+<span class="kw">use </span>femtovg::{ErrorKind, Paint, TextContext, TextMetrics};
+<span class="kw">use </span>std::ops::Range;
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">text_paint_layout</span>(
-    <span class="ident">style</span>: <span class="kw-2">&amp;</span><span class="ident">Style</span>,
-    <span class="ident">resource_manager</span>: <span class="kw-2">&amp;</span><span class="ident">ResourceManager</span>,
-    <span class="ident">entity</span>: <span class="ident">Entity</span>,
-) -&gt; <span class="ident">Paint</span> {
-    <span class="kw">let</span> <span class="ident">font</span> <span class="op">=</span> <span class="ident">style</span>.<span class="ident">font</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">as_str</span>()).<span class="ident">unwrap_or</span>(<span class="string">&quot;&quot;</span>);
-    <span class="kw">let</span> <span class="ident">font_size</span> <span class="op">=</span> <span class="ident">style</span>.<span class="ident">font_size</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or</span>(<span class="number">16.0</span>);
-    <span class="comment">// drawing and layout are always in physical space</span>
-    <span class="kw">let</span> <span class="ident">font_size</span> <span class="op">=</span> <span class="ident">font_size</span> <span class="op">*</span> <span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>text_paint_layout(
+    style: <span class="kw-2">&amp;</span>Style,
+    resource_manager: <span class="kw-2">&amp;</span>ResourceManager,
+    entity: Entity,
+) -&gt; Paint {
+    <span class="kw">let </span>font = style.font.get(entity).map(|s| s.as_str()).unwrap_or(<span class="string">&quot;&quot;</span>);
+    <span class="kw">let </span>font_size = style.font_size.get(entity).cloned().unwrap_or(<span class="number">16.0</span>);
+    <span class="comment">// drawing and layout are always in physical space
+    </span><span class="kw">let </span>font_size = font_size * style.dpi_factor <span class="kw">as </span>f32;
 
-    <span class="ident">text_paint</span>(<span class="ident">font</span>, <span class="kw-2">&amp;</span><span class="ident">style</span>.<span class="ident">default_font</span>, <span class="ident">resource_manager</span>, <span class="ident">font_size</span>)
+    text_paint(font, <span class="kw-2">&amp;</span>style.default_font, resource_manager, font_size)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_paint_draw</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">DrawContext</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">Paint</span> {
-    <span class="kw">let</span> <span class="ident">font</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">font</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">as_str</span>()).<span class="ident">unwrap_or</span>(<span class="string">&quot;&quot;</span>);
-    <span class="kw">let</span> <span class="ident">font_size</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">font_size</span>(<span class="ident">entity</span>);
+<span class="kw">pub fn </span>text_paint_draw(cx: <span class="kw-2">&amp;</span>DrawContext, entity: Entity) -&gt; Paint {
+    <span class="kw">let </span>font = cx.font().map(|s| s.as_str()).unwrap_or(<span class="string">&quot;&quot;</span>);
+    <span class="kw">let </span>font_size = cx.font_size(entity);
 
-    <span class="ident">text_paint</span>(<span class="ident">font</span>, <span class="ident">cx</span>.<span class="ident">default_font</span>(), <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">resource_manager</span>, <span class="ident">font_size</span>)
+    text_paint(font, cx.default_font(), <span class="kw-2">&amp;</span>cx.resource_manager, font_size)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_paint_general</span>(
-    <span class="ident">style</span>: <span class="kw-2">&amp;</span><span class="ident">Style</span>,
-    <span class="ident">resource_manager</span>: <span class="kw-2">&amp;</span><span class="ident">ResourceManager</span>,
-    <span class="ident">entity</span>: <span class="ident">Entity</span>,
-) -&gt; <span class="ident">Paint</span> {
-    <span class="kw">let</span> <span class="ident">font</span> <span class="op">=</span> <span class="ident">style</span>.<span class="ident">font</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">as_str</span>()).<span class="ident">unwrap_or</span>(<span class="string">&quot;&quot;</span>);
-    <span class="kw">let</span> <span class="ident">font_size</span> <span class="op">=</span> <span class="ident">style</span>.<span class="ident">font_size</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">copied</span>().<span class="ident">unwrap_or</span>(<span class="number">16.0</span>) <span class="op">*</span> <span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
+<span class="kw">pub fn </span>text_paint_general(
+    style: <span class="kw-2">&amp;</span>Style,
+    resource_manager: <span class="kw-2">&amp;</span>ResourceManager,
+    entity: Entity,
+) -&gt; Paint {
+    <span class="kw">let </span>font = style.font.get(entity).map(|s| s.as_str()).unwrap_or(<span class="string">&quot;&quot;</span>);
+    <span class="kw">let </span>font_size = style.font_size.get(entity).copied().unwrap_or(<span class="number">16.0</span>) * style.dpi_factor <span class="kw">as </span>f32;
 
-    <span class="ident">text_paint</span>(<span class="ident">font</span>, <span class="kw-2">&amp;</span><span class="ident">style</span>.<span class="ident">default_font</span>, <span class="kw-2">&amp;</span><span class="ident">resource_manager</span>, <span class="ident">font_size</span>)
+    text_paint(font, <span class="kw-2">&amp;</span>style.default_font, <span class="kw-2">&amp;</span>resource_manager, font_size)
 }
 
-<span class="kw">fn</span> <span class="ident">text_paint</span>(
-    <span class="ident">font</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">default_font</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">resource_manager</span>: <span class="kw-2">&amp;</span><span class="ident">ResourceManager</span>,
-    <span class="ident">font_size</span>: <span class="ident">f32</span>,
-) -&gt; <span class="ident">Paint</span> {
-    <span class="comment">// TODO - This should probably be cached in cx to save look-up time</span>
-    <span class="kw">let</span> <span class="ident">default_font</span> <span class="op">=</span> <span class="ident">resource_manager</span>
-        .<span class="ident">fonts</span>
-        .<span class="ident">get</span>(<span class="ident">default_font</span>)
-        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">font</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">font</span> {
-            <span class="ident">FontOrId::Id</span>(<span class="ident">id</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">id</span>),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+<span class="kw">fn </span>text_paint(
+    font: <span class="kw-2">&amp;</span>str,
+    default_font: <span class="kw-2">&amp;</span>str,
+    resource_manager: <span class="kw-2">&amp;</span>ResourceManager,
+    font_size: f32,
+) -&gt; Paint {
+    <span class="comment">// TODO - This should probably be cached in cx to save look-up time
+    </span><span class="kw">let </span>default_font = resource_manager
+        .fonts
+        .get(default_font)
+        .and_then(|font| <span class="kw">match </span>font {
+            FontOrId::Id(id) =&gt; <span class="prelude-val">Some</span>(id),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         })
-        .<span class="ident">expect</span>(<span class="string">&quot;Failed to find default font&quot;</span>);
+        .expect(<span class="string">&quot;Failed to find default font&quot;</span>);
 
-    <span class="kw">let</span> <span class="ident">font_id</span> <span class="op">=</span> <span class="ident">resource_manager</span>
-        .<span class="ident">fonts</span>
-        .<span class="ident">get</span>(<span class="ident">font</span>)
-        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">font</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">font</span> {
-            <span class="ident">FontOrId::Id</span>(<span class="ident">id</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">id</span>),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+    <span class="kw">let </span>font_id = resource_manager
+        .fonts
+        .get(font)
+        .and_then(|font| <span class="kw">match </span>font {
+            FontOrId::Id(id) =&gt; <span class="prelude-val">Some</span>(id),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         })
-        .<span class="ident">unwrap_or</span>(<span class="ident">default_font</span>);
+        .unwrap_or(default_font);
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">paint</span> <span class="op">=</span> <span class="ident">Paint::default</span>();
-    <span class="ident">paint</span>.<span class="ident">set_font_size</span>(<span class="ident">font_size</span>);
-    <span class="ident">paint</span>.<span class="ident">set_font</span>(<span class="kw-2">&amp;</span>[<span class="ident">font_id</span>.<span class="ident">clone</span>()]);
+    <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
+    paint.set_font_size(font_size);
+    paint.set_font(<span class="kw-2">&amp;</span>[font_id.clone()]);
 
-    <span class="ident">paint</span>
+    paint
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_layout</span>(
-    <span class="ident">width</span>: <span class="ident">f32</span>,
-    <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">paint</span>: <span class="kw-2">&amp;</span><span class="ident">Paint</span>,
-    <span class="ident">text_context</span>: <span class="kw-2">&amp;</span><span class="ident">TextContext</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">ErrorKind</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lines</span> <span class="op">=</span> <span class="ident">text_context</span>.<span class="ident">break_text_vec</span>(<span class="ident">width</span>, <span class="ident">text</span>, <span class="ident">paint</span>)<span class="question-mark">?</span>;
-    <span class="kw">if</span> <span class="ident">lines</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> {
-        <span class="ident">lines</span>.<span class="ident">push</span>(<span class="number">0</span>..<span class="number">0</span>)
+<span class="kw">pub fn </span>text_layout(
+    width: f32,
+    text: <span class="kw-2">&amp;</span>str,
+    paint: <span class="kw-2">&amp;</span>Paint,
+    text_context: <span class="kw-2">&amp;</span>TextContext,
+) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Range&lt;usize&gt;&gt;, ErrorKind&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>lines = text_context.break_text_vec(width, text, paint)<span class="question-mark">?</span>;
+    <span class="kw">if </span>lines.len() == <span class="number">0 </span>{
+        lines.push(<span class="number">0</span>..<span class="number">0</span>)
     }
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">soft_break</span> <span class="op">=</span> <span class="bool-val">false</span>;
-    <span class="kw">for</span> <span class="ident">line_range</span> <span class="kw">in</span> <span class="ident">lines</span>.<span class="ident">iter_mut</span>() {
-        <span class="kw">if</span> <span class="ident">soft_break</span> {
-            <span class="comment">// trim start spaces</span>
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">broken</span> <span class="op">=</span> <span class="bool-val">false</span>;
-            <span class="kw">for</span> (<span class="ident">idx</span>, <span class="ident">ch</span>) <span class="kw">in</span> <span class="ident">text</span>[<span class="ident">line_range</span>.<span class="ident">clone</span>()].<span class="ident">char_indices</span>() {
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">ch</span>.<span class="ident">is_whitespace</span>() {
-                    <span class="ident">line_range</span>.<span class="ident">start</span> <span class="op">=</span> <span class="ident">idx</span> <span class="op">+</span> <span class="ident">line_range</span>.<span class="ident">start</span>;
-                    <span class="ident">broken</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>soft_break = <span class="bool-val">false</span>;
+    <span class="kw">for </span>line_range <span class="kw">in </span>lines.iter_mut() {
+        <span class="kw">if </span>soft_break {
+            <span class="comment">// trim start spaces
+            </span><span class="kw">let </span><span class="kw-2">mut </span>broken = <span class="bool-val">false</span>;
+            <span class="kw">for </span>(idx, ch) <span class="kw">in </span>text[line_range.clone()].char_indices() {
+                <span class="kw">if </span>!ch.is_whitespace() {
+                    line_range.start = idx + line_range.start;
+                    broken = <span class="bool-val">true</span>;
                     <span class="kw">break</span>;
                 }
             }
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">broken</span> {
-                <span class="ident">line_range</span>.<span class="ident">start</span> <span class="op">=</span> <span class="ident">line_range</span>.<span class="ident">end</span>;
+            <span class="kw">if </span>!broken {
+                line_range.start = line_range.end;
             }
         }
 
-        <span class="comment">// trim end newlines</span>
-        <span class="comment">// also: if there&#39;s any newlines, don&#39;t trim starting space on next line</span>
-        <span class="ident">soft_break</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="kw">for</span> (<span class="ident">idx</span>, <span class="ident">ch</span>) <span class="kw">in</span> <span class="ident">text</span>[<span class="ident">line_range</span>.<span class="ident">clone</span>()].<span class="ident">char_indices</span>().<span class="ident">rev</span>() {
-            <span class="kw">if</span> <span class="ident">bidi_class</span>(<span class="ident">ch</span>) <span class="op">==</span> <span class="ident">BidiClass::B</span> {
-                <span class="ident">soft_break</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                <span class="ident">line_range</span>.<span class="ident">end</span> <span class="op">=</span> <span class="ident">idx</span> <span class="op">+</span> <span class="ident">line_range</span>.<span class="ident">start</span>;
-            } <span class="kw">else</span> {
+        <span class="comment">// trim end newlines
+        // also: if there&#39;s any newlines, don&#39;t trim starting space on next line
+        </span>soft_break = <span class="bool-val">true</span>;
+        <span class="kw">for </span>(idx, ch) <span class="kw">in </span>text[line_range.clone()].char_indices().rev() {
+            <span class="kw">if </span>bidi_class(ch) == BidiClass::B {
+                soft_break = <span class="bool-val">false</span>;
+                line_range.end = idx + line_range.start;
+            } <span class="kw">else </span>{
                 <span class="kw">break</span>;
             }
         }
     }
 
-    <span class="comment">// if the text ends with a newline, add a blank line</span>
-    <span class="kw">if</span> <span class="ident">text</span>.<span class="ident">chars</span>().<span class="ident">last</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="string">&#39;\n&#39;</span>) {
-        <span class="ident">lines</span>.<span class="ident">push</span>(<span class="ident">text</span>.<span class="ident">len</span>()..<span class="ident">text</span>.<span class="ident">len</span>());
+    <span class="comment">// if the text ends with a newline, add a blank line
+    </span><span class="kw">if </span>text.chars().last() == <span class="prelude-val">Some</span>(<span class="string">&#39;\n&#39;</span>) {
+        lines.push(text.len()..text.len());
     }
 
-    <span class="prelude-val">Ok</span>(<span class="ident">lines</span>)
+    <span class="prelude-val">Ok</span>(lines)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">measure_text_lines</span>(
-    <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    <span class="ident">paint</span>: <span class="kw-2">&amp;</span><span class="ident">Paint</span>,
-    <span class="ident">lines</span>: <span class="kw-2">&amp;</span>[<span class="ident">Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>],
-    <span class="ident">x</span>: <span class="ident">f32</span>,
-    <span class="ident">y</span>: <span class="ident">f32</span>,
-    <span class="ident">text_context</span>: <span class="kw-2">&amp;</span><span class="ident">TextContext</span>,
-) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TextMetrics</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">metrics</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-    <span class="kw">let</span> <span class="ident">line_height</span> <span class="op">=</span> <span class="ident">text_context</span>.<span class="ident">measure_font</span>(<span class="kw-2">&amp;</span><span class="ident">paint</span>).<span class="ident">unwrap</span>().<span class="ident">height</span>();
+<span class="kw">pub fn </span>measure_text_lines(
+    text: <span class="kw-2">&amp;</span>str,
+    paint: <span class="kw-2">&amp;</span>Paint,
+    lines: <span class="kw-2">&amp;</span>[Range&lt;usize&gt;],
+    x: f32,
+    y: f32,
+    text_context: <span class="kw-2">&amp;</span>TextContext,
+) -&gt; Vec&lt;TextMetrics&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>metrics = <span class="macro">vec!</span>[];
+    <span class="kw">let </span>line_height = text_context.measure_font(<span class="kw-2">&amp;</span>paint).unwrap().height();
 
-    <span class="kw">for</span> (<span class="ident">idx</span>, <span class="ident">line</span>) <span class="kw">in</span> <span class="ident">lines</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-        <span class="kw">let</span> <span class="ident">y</span> <span class="op">=</span> <span class="ident">y</span> <span class="op">+</span> <span class="ident">idx</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">*</span> <span class="ident">line_height</span>;
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">res</span>) <span class="op">=</span> <span class="ident">text_context</span>.<span class="ident">measure_text</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="kw-2">&amp;</span><span class="ident">text</span>[<span class="ident">line</span>.<span class="ident">clone</span>()], <span class="kw-2">&amp;</span><span class="ident">paint</span>) {
-            <span class="kw">for</span> <span class="ident">glyph</span> <span class="kw">in</span> <span class="ident">res</span>.<span class="ident">glyphs</span>.<span class="ident">iter_mut</span>() {
-                <span class="ident">glyph</span>.<span class="ident">byte_index</span> <span class="op">+</span><span class="op">=</span> <span class="ident">line</span>.<span class="ident">start</span>;
+    <span class="kw">for </span>(idx, line) <span class="kw">in </span>lines.iter().enumerate() {
+        <span class="kw">let </span>y = y + idx <span class="kw">as </span>f32 * line_height;
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>res) = text_context.measure_text(x, y, <span class="kw-2">&amp;</span>text[line.clone()], <span class="kw-2">&amp;</span>paint) {
+            <span class="kw">for </span>glyph <span class="kw">in </span>res.glyphs.iter_mut() {
+                glyph.byte_index += line.start;
             }
-            <span class="ident">metrics</span>.<span class="ident">push</span>(<span class="ident">res</span>);
-        } <span class="kw">else</span> {
-            <span class="ident">metrics</span>.<span class="ident">push</span>(<span class="ident">TextMetrics::default</span>());
+            metrics.push(res);
+        } <span class="kw">else </span>{
+            metrics.push(TextMetrics::default());
         }
     }
 
-    <span class="ident">metrics</span>
+    metrics
 }
 
-<span class="comment">// returns (line_no, (x_pos, y_pos))</span>
-<span class="comment">// TODO affinity</span>
-<span class="comment">// TODO neither this nor the next function are correct for rtl. we probably need to explicitly do</span>
-<span class="comment">// bidi analysis the same way femtovg does</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">idx_to_pos</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-    <span class="ident">byte_idx</span>: <span class="ident">usize</span>,
-    <span class="ident">metrics</span>: <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> (<span class="ident">Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">TextMetrics</span>)<span class="op">&gt;</span>,
-) -&gt; (<span class="ident">usize</span>, (<span class="ident">f32</span>, <span class="ident">f32</span>)) {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">uninit</span> <span class="op">=</span> <span class="bool-val">true</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result_line</span> <span class="op">=</span> <span class="number">0</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result_xpos</span> <span class="op">=</span> <span class="number">0.0</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result_ypos</span> <span class="op">=</span> <span class="number">0.0</span>;
-    <span class="kw">for</span> (<span class="ident">line</span>, (<span class="ident">range</span>, <span class="ident">line_metrics</span>)) <span class="kw">in</span> <span class="ident">metrics</span>.<span class="ident">enumerate</span>() {
-        <span class="kw">if</span> <span class="ident">range</span>.<span class="ident">start</span> <span class="op">==</span> <span class="ident">byte_idx</span> {
-            <span class="ident">result_line</span> <span class="op">=</span> <span class="ident">line</span>;
-            <span class="ident">result_xpos</span> <span class="op">=</span> <span class="ident">line_metrics</span>.<span class="ident">x</span>;
-            <span class="ident">result_ypos</span> <span class="op">=</span> <span class="ident">line_metrics</span>.<span class="ident">y</span>;
+<span class="comment">// returns (line_no, (x_pos, y_pos))
+// TODO affinity
+// TODO neither this nor the next function are correct for rtl. we probably need to explicitly do
+// bidi analysis the same way femtovg does
+</span><span class="kw">pub fn </span>idx_to_pos&lt;<span class="lifetime">&#39;a</span>&gt;(
+    byte_idx: usize,
+    metrics: <span class="kw">impl </span>Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>(Range&lt;usize&gt;, TextMetrics)&gt;,
+) -&gt; (usize, (f32, f32)) {
+    <span class="kw">let </span><span class="kw-2">mut </span>uninit = <span class="bool-val">true</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>result_line = <span class="number">0</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>result_xpos = <span class="number">0.0</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>result_ypos = <span class="number">0.0</span>;
+    <span class="kw">for </span>(line, (range, line_metrics)) <span class="kw">in </span>metrics.enumerate() {
+        <span class="kw">if </span>range.start == byte_idx {
+            result_line = line;
+            result_xpos = line_metrics.x;
+            result_ypos = line_metrics.y;
             <span class="kw">break</span>;
         }
-        <span class="kw">for</span> <span class="ident">glyph</span> <span class="kw">in</span> <span class="ident">line_metrics</span>.<span class="ident">glyphs</span>.<span class="ident">iter</span>() {
-            <span class="kw">if</span> <span class="ident">uninit</span> {
-                <span class="ident">uninit</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                <span class="ident">result_line</span> <span class="op">=</span> <span class="ident">line</span>;
-                <span class="ident">result_xpos</span> <span class="op">=</span> <span class="ident">glyph</span>.<span class="ident">x</span>;
-                <span class="ident">result_ypos</span> <span class="op">=</span> <span class="ident">glyph</span>.<span class="ident">y</span>;
+        <span class="kw">for </span>glyph <span class="kw">in </span>line_metrics.glyphs.iter() {
+            <span class="kw">if </span>uninit {
+                uninit = <span class="bool-val">false</span>;
+                result_line = line;
+                result_xpos = glyph.x;
+                result_ypos = glyph.y;
             }
-            <span class="kw">if</span> <span class="ident">glyph</span>.<span class="ident">byte_index</span> <span class="op">==</span> <span class="ident">byte_idx</span> {
-                <span class="ident">result_line</span> <span class="op">=</span> <span class="ident">line</span>;
-                <span class="ident">result_xpos</span> <span class="op">=</span> <span class="ident">glyph</span>.<span class="ident">x</span>;
-                <span class="ident">result_ypos</span> <span class="op">=</span> <span class="ident">glyph</span>.<span class="ident">y</span>;
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">glyph</span>.<span class="ident">byte_index</span> <span class="op">&lt;</span> <span class="ident">byte_idx</span> {
-                <span class="comment">// if the target is after me, place the cursor after me</span>
-                <span class="ident">result_line</span> <span class="op">=</span> <span class="ident">line</span>;
-                <span class="ident">result_xpos</span> <span class="op">=</span> <span class="ident">glyph</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">glyph</span>.<span class="ident">advance_x</span>;
-                <span class="ident">result_ypos</span> <span class="op">=</span> <span class="ident">glyph</span>.<span class="ident">y</span>;
-            } <span class="kw">else</span> {
+            <span class="kw">if </span>glyph.byte_index == byte_idx {
+                result_line = line;
+                result_xpos = glyph.x;
+                result_ypos = glyph.y;
+            } <span class="kw">else if </span>glyph.byte_index &lt; byte_idx {
+                <span class="comment">// if the target is after me, place the cursor after me
+                </span>result_line = line;
+                result_xpos = glyph.x + glyph.advance_x;
+                result_ypos = glyph.y;
+            } <span class="kw">else </span>{
                 <span class="kw">break</span>;
             }
         }
     }
 
-    (<span class="ident">result_line</span>, (<span class="ident">result_xpos</span> <span class="op">-</span> <span class="number">1.0</span>, <span class="ident">result_ypos</span>))
+    (result_line, (result_xpos - <span class="number">1.0</span>, result_ypos))
 }
 
-<span class="comment">// TODO see above</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pos_to_idx</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-    <span class="ident">x</span>: <span class="ident">f32</span>,
-    <span class="ident">y</span>: <span class="ident">f32</span>,
-    <span class="ident">cache</span>: <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> (<span class="ident">Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">TextMetrics</span>)<span class="op">&gt;</span>,
-    <span class="ident">single_line</span>: <span class="ident">bool</span>,
-) -&gt; <span class="ident">usize</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last</span> <span class="op">=</span> <span class="number">0</span>;
-    <span class="comment">// first: what line is it?</span>
-    <span class="kw">for</span> (<span class="ident">line_range</span>, <span class="ident">line_metrics</span>) <span class="kw">in</span> <span class="ident">cache</span> {
-        <span class="kw">if</span> <span class="ident">y</span> <span class="op">&lt;</span> <span class="ident">line_metrics</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">line_metrics</span>.<span class="ident">height</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">single_line</span> {
-            <span class="comment">// it&#39;s me!</span>
-            <span class="kw">for</span> <span class="ident">glyph</span> <span class="kw">in</span> <span class="ident">line_metrics</span>.<span class="ident">glyphs</span>.<span class="ident">iter</span>() {
-                <span class="kw">if</span> <span class="ident">x</span> <span class="op">&lt;</span> <span class="ident">glyph</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">glyph</span>.<span class="ident">advance_x</span> <span class="op">/</span> <span class="number">2.0</span> {
-                    <span class="kw">return</span> <span class="ident">glyph</span>.<span class="ident">byte_index</span>;
+<span class="comment">// TODO see above
+</span><span class="kw">pub fn </span>pos_to_idx&lt;<span class="lifetime">&#39;a</span>&gt;(
+    x: f32,
+    y: f32,
+    cache: <span class="kw">impl </span>Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>(Range&lt;usize&gt;, TextMetrics)&gt;,
+    single_line: bool,
+) -&gt; usize {
+    <span class="kw">let </span><span class="kw-2">mut </span>last = <span class="number">0</span>;
+    <span class="comment">// first: what line is it?
+    </span><span class="kw">for </span>(line_range, line_metrics) <span class="kw">in </span>cache {
+        <span class="kw">if </span>y &lt; line_metrics.y + line_metrics.height() || single_line {
+            <span class="comment">// it&#39;s me!
+            </span><span class="kw">for </span>glyph <span class="kw">in </span>line_metrics.glyphs.iter() {
+                <span class="kw">if </span>x &lt; glyph.x + glyph.advance_x / <span class="number">2.0 </span>{
+                    <span class="kw">return </span>glyph.byte_index;
                 }
             }
-            <span class="kw">return</span> <span class="ident">line_range</span>.<span class="ident">end</span>;
+            <span class="kw">return </span>line_range.end;
         }
-        <span class="ident">last</span> <span class="op">=</span> <span class="ident">line_range</span>.<span class="ident">end</span>;
+        last = line_range.end;
     }
 
-    <span class="ident">last</span>
+    last
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

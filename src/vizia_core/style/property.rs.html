@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/style/property.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>property.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/style/property.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>property.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -275,282 +275,282 @@
 <span id="275">275</span>
 <span id="276">276</span>
 <span id="277">277</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::animation::Transition</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::style::shadow::BoxShadow</span>;
-<span class="kw">use</span> <span class="ident">morphorm</span>::{<span class="ident">LayoutType</span>, <span class="ident">PositionType</span>, <span class="ident">Units</span>};
+<span class="kw">use </span><span class="kw">crate</span>::animation::Transition;
+<span class="kw">use </span><span class="kw">crate</span>::style::shadow::BoxShadow;
+<span class="kw">use </span>morphorm::{LayoutType, PositionType, Units};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PropType</span> {
-    <span class="ident">Units</span>(<span class="ident">Units</span>),
-    <span class="ident">String</span>(<span class="ident">String</span>),
+<span class="attribute">#[derive(Debug, Clone, PartialEq)]
+</span><span class="kw">pub enum </span>PropType {
+    Units(Units),
+    String(String),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">Property</span> {
-    <span class="ident">Unknown</span>(<span class="ident">String</span>, <span class="ident">PropType</span>),
+<span class="attribute">#[derive(Clone, Debug, PartialEq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>Property {
+    Unknown(String, PropType),
 
-    <span class="comment">// General</span>
-    <span class="ident">Display</span>(<span class="ident">Display</span>),
-    <span class="ident">Visibility</span>(<span class="ident">Visibility</span>),
-    <span class="ident">Overflow</span>(<span class="ident">Overflow</span>),
-    <span class="ident">Opacity</span>(<span class="ident">f32</span>),
+    <span class="comment">// General
+    </span>Display(Display),
+    Visibility(Visibility),
+    Overflow(Overflow),
+    Opacity(f32),
 
-    <span class="comment">// Positioning</span>
-    <span class="ident">LayoutType</span>(<span class="ident">LayoutType</span>),
-    <span class="ident">PositionType</span>(<span class="ident">PositionType</span>),
+    <span class="comment">// Positioning
+    </span>LayoutType(LayoutType),
+    PositionType(PositionType),
 
-    <span class="comment">// Position and Size</span>
-    <span class="ident">Space</span>(<span class="ident">Units</span>),
-    <span class="ident">Left</span>(<span class="ident">Units</span>),
-    <span class="ident">Width</span>(<span class="ident">Units</span>),
-    <span class="ident">Right</span>(<span class="ident">Units</span>),
-    <span class="ident">Top</span>(<span class="ident">Units</span>),
-    <span class="ident">Height</span>(<span class="ident">Units</span>),
-    <span class="ident">Bottom</span>(<span class="ident">Units</span>),
+    <span class="comment">// Position and Size
+    </span>Space(Units),
+    Left(Units),
+    Width(Units),
+    Right(Units),
+    Top(Units),
+    Height(Units),
+    Bottom(Units),
 
-    <span class="comment">// Constraints</span>
-    <span class="ident">MinLeft</span>(<span class="ident">Units</span>),
-    <span class="ident">MaxLeft</span>(<span class="ident">Units</span>),
-    <span class="ident">MinWidth</span>(<span class="ident">Units</span>),
-    <span class="ident">MaxWidth</span>(<span class="ident">Units</span>),
-    <span class="ident">MinRight</span>(<span class="ident">Units</span>),
-    <span class="ident">MaxRight</span>(<span class="ident">Units</span>),
+    <span class="comment">// Constraints
+    </span>MinLeft(Units),
+    MaxLeft(Units),
+    MinWidth(Units),
+    MaxWidth(Units),
+    MinRight(Units),
+    MaxRight(Units),
 
-    <span class="ident">MinTop</span>(<span class="ident">Units</span>),
-    <span class="ident">MaxTop</span>(<span class="ident">Units</span>),
-    <span class="ident">MinHeight</span>(<span class="ident">Units</span>),
-    <span class="ident">MaxHeight</span>(<span class="ident">Units</span>),
-    <span class="ident">MinBottom</span>(<span class="ident">Units</span>),
-    <span class="ident">MaxBottom</span>(<span class="ident">Units</span>),
+    MinTop(Units),
+    MaxTop(Units),
+    MinHeight(Units),
+    MaxHeight(Units),
+    MinBottom(Units),
+    MaxBottom(Units),
 
-    <span class="comment">// Child Spacing</span>
-    <span class="ident">ChildSpace</span>(<span class="ident">Units</span>),
-    <span class="ident">ChildLeft</span>(<span class="ident">Units</span>),
-    <span class="ident">ChildRight</span>(<span class="ident">Units</span>),
-    <span class="ident">ChildTop</span>(<span class="ident">Units</span>),
-    <span class="ident">ChildBottom</span>(<span class="ident">Units</span>),
-    <span class="ident">RowBetween</span>(<span class="ident">Units</span>),
-    <span class="ident">ColBetween</span>(<span class="ident">Units</span>),
+    <span class="comment">// Child Spacing
+    </span>ChildSpace(Units),
+    ChildLeft(Units),
+    ChildRight(Units),
+    ChildTop(Units),
+    ChildBottom(Units),
+    RowBetween(Units),
+    ColBetween(Units),
 
-    <span class="comment">// Border Radius</span>
-    <span class="ident">BorderRadius</span>(<span class="ident">Units</span>),
-    <span class="ident">BorderTopLeftRadius</span>(<span class="ident">Units</span>),
-    <span class="ident">BorderTopRightRadius</span>(<span class="ident">Units</span>),
-    <span class="ident">BorderBottomLeftRadius</span>(<span class="ident">Units</span>),
-    <span class="ident">BorderBottomRightRadius</span>(<span class="ident">Units</span>),
+    <span class="comment">// Border Radius
+    </span>BorderRadius(Units),
+    BorderTopLeftRadius(Units),
+    BorderTopRightRadius(Units),
+    BorderBottomLeftRadius(Units),
+    BorderBottomRightRadius(Units),
 
-    <span class="comment">// Border Width</span>
-    <span class="ident">BorderWidth</span>(<span class="ident">Units</span>),
+    <span class="comment">// Border Width
+    </span>BorderWidth(Units),
 
-    <span class="comment">// Border Color</span>
-    <span class="ident">BorderColor</span>(<span class="ident">Color</span>),
+    <span class="comment">// Border Color
+    </span>BorderColor(Color),
 
-    <span class="comment">// Border Shape</span>
-    <span class="ident">BorderCornerShape</span>(<span class="ident">BorderCornerShape</span>),
-    <span class="ident">BorderTopLeftShape</span>(<span class="ident">BorderCornerShape</span>),
-    <span class="ident">BorderTopRightShape</span>(<span class="ident">BorderCornerShape</span>),
-    <span class="ident">BorderBottomLeftShape</span>(<span class="ident">BorderCornerShape</span>),
-    <span class="ident">BorderBottomRightShape</span>(<span class="ident">BorderCornerShape</span>),
+    <span class="comment">// Border Shape
+    </span>BorderCornerShape(BorderCornerShape),
+    BorderTopLeftShape(BorderCornerShape),
+    BorderTopRightShape(BorderCornerShape),
+    BorderBottomLeftShape(BorderCornerShape),
+    BorderBottomRightShape(BorderCornerShape),
 
-    <span class="comment">// Outline</span>
-    <span class="ident">OutlineWidth</span>(<span class="ident">Units</span>),
-    <span class="ident">OutlineColor</span>(<span class="ident">Color</span>),
-    <span class="ident">OutlineOffset</span>(<span class="ident">Units</span>),
+    <span class="comment">// Outline
+    </span>OutlineWidth(Units),
+    OutlineColor(Color),
+    OutlineOffset(Units),
 
-    <span class="comment">// Background</span>
-    <span class="ident">BackgroundColor</span>(<span class="ident">Color</span>),
-    <span class="ident">BackgroundImage</span>(<span class="ident">String</span>),
-    <span class="comment">// TODO</span>
-    <span class="comment">//BackgroundGradient(LinearGradient),</span>
+    <span class="comment">// Background
+    </span>BackgroundColor(Color),
+    BackgroundImage(String),
+    <span class="comment">// TODO
+    //BackgroundGradient(LinearGradient),
 
-    <span class="comment">// Font</span>
-    <span class="ident">FontSize</span>(<span class="ident">f32</span>),
-    <span class="ident">FontColor</span>(<span class="ident">Color</span>),
-    <span class="ident">Font</span>(<span class="ident">String</span>),
-    <span class="ident">SelectionColor</span>(<span class="ident">Color</span>),
-    <span class="ident">CaretColor</span>(<span class="ident">Color</span>),
-    <span class="ident">TextWrap</span>(<span class="ident">bool</span>),
+    // Font
+    </span>FontSize(f32),
+    FontColor(Color),
+    Font(String),
+    SelectionColor(Color),
+    CaretColor(Color),
+    TextWrap(bool),
 
-    <span class="comment">// Shadow</span>
-    <span class="ident">OuterShadow</span>(<span class="ident">BoxShadow</span>),
-    <span class="ident">OuterShadowHOffset</span>(<span class="ident">Units</span>),
-    <span class="ident">OuterShadowVOffset</span>(<span class="ident">Units</span>),
-    <span class="ident">OuterShadowBlur</span>(<span class="ident">Units</span>),
-    <span class="ident">OuterShadowColor</span>(<span class="ident">Color</span>),
+    <span class="comment">// Shadow
+    </span>OuterShadow(BoxShadow),
+    OuterShadowHOffset(Units),
+    OuterShadowVOffset(Units),
+    OuterShadowBlur(Units),
+    OuterShadowColor(Color),
 
-    <span class="ident">InnerShadow</span>(<span class="ident">BoxShadow</span>),
-    <span class="ident">InnerShadowHOffset</span>(<span class="ident">Units</span>),
-    <span class="ident">InnerShadowVOffset</span>(<span class="ident">Units</span>),
-    <span class="ident">InnerShadowBlur</span>(<span class="ident">Units</span>),
-    <span class="ident">InnerShadowColor</span>(<span class="ident">Color</span>),
+    InnerShadow(BoxShadow),
+    InnerShadowHOffset(Units),
+    InnerShadowVOffset(Units),
+    InnerShadowBlur(Units),
+    InnerShadowColor(Color),
 
-    <span class="ident">Transition</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Transition</span><span class="op">&gt;</span>),
+    Transition(Vec&lt;Transition&gt;),
 
-    <span class="ident">ZIndex</span>(<span class="ident">i32</span>),
+    ZIndex(i32),
 
-    <span class="comment">// TODO</span>
-    <span class="comment">// Translate((f32, f32)),</span>
-    <span class="comment">// Rotate(f32),</span>
-    <span class="comment">// Scale((f32, f32)),</span>
-    <span class="ident">Cursor</span>(<span class="ident">CursorIcon</span>),
+    <span class="comment">// TODO
+    // Translate((f32, f32)),
+    // Rotate(f32),
+    // Scale((f32, f32)),
+    </span>Cursor(CursorIcon),
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">fmt_units</span>(<span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">Units</span>) -&gt; <span class="ident">String</span> {
-    <span class="kw">match</span> <span class="ident">val</span> {
-        <span class="ident">Units::Pixels</span>(<span class="ident">px</span>) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}px&quot;</span>, <span class="ident">px</span>),
-        <span class="ident">Units::Percentage</span>(<span class="ident">p</span>) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}%&quot;</span>, <span class="ident">p</span>),
-        <span class="ident">Units::Stretch</span>(<span class="ident">s</span>) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}s&quot;</span>, <span class="ident">s</span>),
-        <span class="ident">Units::Auto</span> =&gt; <span class="macro">format!</span>(<span class="string">&quot;auto&quot;</span>),
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>fmt_units(val: <span class="kw-2">&amp;</span>Units) -&gt; String {
+    <span class="kw">match </span>val {
+        Units::Pixels(px) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}px&quot;</span>, px),
+        Units::Percentage(p) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}%&quot;</span>, p),
+        Units::Stretch(s) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}s&quot;</span>, s),
+        Units::Auto =&gt; <span class="macro">format!</span>(<span class="string">&quot;auto&quot;</span>),
     }
 }
 
-<span class="kw">fn</span> <span class="ident">fmt_layout_type</span>(<span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">LayoutType</span>) -&gt; <span class="ident">String</span> {
-    <span class="kw">match</span> <span class="ident">val</span> {
-        <span class="ident">LayoutType::Row</span> =&gt; <span class="string">&quot;row&quot;</span>,
-        <span class="ident">LayoutType::Column</span> =&gt; <span class="string">&quot;column&quot;</span>,
-        <span class="ident">LayoutType::Grid</span> =&gt; <span class="string">&quot;grid&quot;</span>,
+<span class="kw">fn </span>fmt_layout_type(val: <span class="kw-2">&amp;</span>LayoutType) -&gt; String {
+    <span class="kw">match </span>val {
+        LayoutType::Row =&gt; <span class="string">&quot;row&quot;</span>,
+        LayoutType::Column =&gt; <span class="string">&quot;column&quot;</span>,
+        LayoutType::Grid =&gt; <span class="string">&quot;grid&quot;</span>,
     }
-    .<span class="ident">to_owned</span>()
+    .to_owned()
 }
 
-<span class="kw">fn</span> <span class="ident">fmt_position_type</span>(<span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">PositionType</span>) -&gt; <span class="ident">String</span> {
-    <span class="kw">match</span> <span class="ident">val</span> {
-        <span class="ident">PositionType::SelfDirected</span> =&gt; <span class="string">&quot;self-directed&quot;</span>,
-        <span class="ident">PositionType::ParentDirected</span> =&gt; <span class="string">&quot;parent-directed&quot;</span>,
+<span class="kw">fn </span>fmt_position_type(val: <span class="kw-2">&amp;</span>PositionType) -&gt; String {
+    <span class="kw">match </span>val {
+        PositionType::SelfDirected =&gt; <span class="string">&quot;self-directed&quot;</span>,
+        PositionType::ParentDirected =&gt; <span class="string">&quot;parent-directed&quot;</span>,
     }
-    .<span class="ident">to_owned</span>()
+    .to_owned()
 }
 
-<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">Property</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Property::Unknown</span>(<span class="ident">ident</span>, <span class="ident">prop</span>) =&gt; {
+<span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>Property {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="kw">match </span><span class="self">self </span>{
+            Property::Unknown(ident, prop) =&gt; {
                 <span class="macro">write!</span>(
-                    <span class="ident">f</span>,
+                    f,
                     <span class="string">&quot;/* unknown: {}: {}; /*&quot;</span>,
-                    <span class="ident">ident</span>,
-                    <span class="kw">match</span> <span class="ident">prop</span> {
-                        <span class="ident">PropType::Units</span>(<span class="ident">val</span>) =&gt; <span class="ident">fmt_units</span>(<span class="ident">val</span>),
+                    ident,
+                    <span class="kw">match </span>prop {
+                        PropType::Units(val) =&gt; fmt_units(val),
 
-                        <span class="ident">PropType::String</span>(<span class="ident">string</span>) =&gt; {
-                            <span class="ident">string</span>.<span class="ident">clone</span>()
+                        PropType::String(string) =&gt; {
+                            string.clone()
                         }
                     }
                 )
             }
-            <span class="comment">// General</span>
-            <span class="ident">Property::Display</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;display: {};&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::Visibility</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;visibility: {};&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::Overflow</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;overflow: {};&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::Opacity</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;opacity: {};&quot;</span>, <span class="ident">val</span>),
+            <span class="comment">// General
+            </span>Property::Display(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;display: {};&quot;</span>, val),
+            Property::Visibility(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;visibility: {};&quot;</span>, val),
+            Property::Overflow(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;overflow: {};&quot;</span>, val),
+            Property::Opacity(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;opacity: {};&quot;</span>, val),
 
-            <span class="comment">// Positioning</span>
-            <span class="ident">Property::LayoutType</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;layout-type: {};&quot;</span>, <span class="ident">fmt_layout_type</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::PositionType</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;position-type: {};&quot;</span>, <span class="ident">fmt_position_type</span>(<span class="ident">val</span>)),
+            <span class="comment">// Positioning
+            </span>Property::LayoutType(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;layout-type: {};&quot;</span>, fmt_layout_type(val)),
+            Property::PositionType(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;position-type: {};&quot;</span>, fmt_position_type(val)),
 
-            <span class="comment">// Position and Size</span>
-            <span class="ident">Property::Space</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;space: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::Left</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;left: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::Width</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;width: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::Right</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;right: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::Top</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;top: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::Height</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;height: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::Bottom</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;bottom: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
+            <span class="comment">// Position and Size
+            </span>Property::Space(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;space: {};&quot;</span>, fmt_units(val)),
+            Property::Left(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;left: {};&quot;</span>, fmt_units(val)),
+            Property::Width(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;width: {};&quot;</span>, fmt_units(val)),
+            Property::Right(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;right: {};&quot;</span>, fmt_units(val)),
+            Property::Top(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;top: {};&quot;</span>, fmt_units(val)),
+            Property::Height(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;height: {};&quot;</span>, fmt_units(val)),
+            Property::Bottom(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;bottom: {};&quot;</span>, fmt_units(val)),
 
-            <span class="comment">// Constraints</span>
-            <span class="ident">Property::MinLeft</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;min-left: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::MaxLeft</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;max-left: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::MinWidth</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;min-width: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::MaxWidth</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;max-width: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::MinRight</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;min-right: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::MaxRight</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;max-right: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
+            <span class="comment">// Constraints
+            </span>Property::MinLeft(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;min-left: {};&quot;</span>, fmt_units(val)),
+            Property::MaxLeft(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;max-left: {};&quot;</span>, fmt_units(val)),
+            Property::MinWidth(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;min-width: {};&quot;</span>, fmt_units(val)),
+            Property::MaxWidth(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;max-width: {};&quot;</span>, fmt_units(val)),
+            Property::MinRight(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;min-right: {};&quot;</span>, fmt_units(val)),
+            Property::MaxRight(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;max-right: {};&quot;</span>, fmt_units(val)),
 
-            <span class="ident">Property::MinTop</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;min-top: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::MaxTop</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;max-top: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::MinHeight</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;min-height: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::MaxHeight</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;max-height: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::MinBottom</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;min-bottom: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::MaxBottom</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;max-bottom: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
+            Property::MinTop(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;min-top: {};&quot;</span>, fmt_units(val)),
+            Property::MaxTop(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;max-top: {};&quot;</span>, fmt_units(val)),
+            Property::MinHeight(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;min-height: {};&quot;</span>, fmt_units(val)),
+            Property::MaxHeight(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;max-height: {};&quot;</span>, fmt_units(val)),
+            Property::MinBottom(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;min-bottom: {};&quot;</span>, fmt_units(val)),
+            Property::MaxBottom(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;max-bottom: {};&quot;</span>, fmt_units(val)),
 
-            <span class="comment">// Child Spacing</span>
-            <span class="ident">Property::ChildSpace</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;child-space: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::ChildLeft</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;child-left: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::ChildRight</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;child-right: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::ChildTop</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;child-top: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::ChildBottom</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;child-bottom: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::RowBetween</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;row-between: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::ColBetween</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;col-between: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
+            <span class="comment">// Child Spacing
+            </span>Property::ChildSpace(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;child-space: {};&quot;</span>, fmt_units(val)),
+            Property::ChildLeft(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;child-left: {};&quot;</span>, fmt_units(val)),
+            Property::ChildRight(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;child-right: {};&quot;</span>, fmt_units(val)),
+            Property::ChildTop(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;child-top: {};&quot;</span>, fmt_units(val)),
+            Property::ChildBottom(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;child-bottom: {};&quot;</span>, fmt_units(val)),
+            Property::RowBetween(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;row-between: {};&quot;</span>, fmt_units(val)),
+            Property::ColBetween(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;col-between: {};&quot;</span>, fmt_units(val)),
 
-            <span class="comment">// Border</span>
-            <span class="ident">Property::BorderRadius</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;border-radius: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::BorderTopLeftRadius</span>(<span class="ident">val</span>) =&gt; {
-                <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;border-top-left-radius: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>))
+            <span class="comment">// Border
+            </span>Property::BorderRadius(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;border-radius: {};&quot;</span>, fmt_units(val)),
+            Property::BorderTopLeftRadius(val) =&gt; {
+                <span class="macro">write!</span>(f, <span class="string">&quot;border-top-left-radius: {};&quot;</span>, fmt_units(val))
             }
-            <span class="ident">Property::BorderTopRightRadius</span>(<span class="ident">val</span>) =&gt; {
-                <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;border-top-right-radius: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>))
+            Property::BorderTopRightRadius(val) =&gt; {
+                <span class="macro">write!</span>(f, <span class="string">&quot;border-top-right-radius: {};&quot;</span>, fmt_units(val))
             }
-            <span class="ident">Property::BorderBottomLeftRadius</span>(<span class="ident">val</span>) =&gt; {
-                <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;border-bottom-left-radius: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>))
+            Property::BorderBottomLeftRadius(val) =&gt; {
+                <span class="macro">write!</span>(f, <span class="string">&quot;border-bottom-left-radius: {};&quot;</span>, fmt_units(val))
             }
-            <span class="ident">Property::BorderBottomRightRadius</span>(<span class="ident">val</span>) =&gt; {
-                <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;border-bottom-right-radius: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>))
+            Property::BorderBottomRightRadius(val) =&gt; {
+                <span class="macro">write!</span>(f, <span class="string">&quot;border-bottom-right-radius: {};&quot;</span>, fmt_units(val))
             }
-            <span class="ident">Property::BorderWidth</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;border-width: {};&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::BorderColor</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;border-color: {};&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::BorderCornerShape</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;border-corner-shape: {};&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::BorderTopLeftShape</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;border-top-left-shape: {};&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::BorderTopRightShape</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;border-top-right-shape: {};&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::BorderBottomLeftShape</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;border-bottom-left-shape: {};&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::BorderBottomRightShape</span>(<span class="ident">val</span>) =&gt; {
-                <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;border-bottom-right-shape: {};&quot;</span>, <span class="ident">val</span>)
+            Property::BorderWidth(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;border-width: {};&quot;</span>, fmt_units(val)),
+            Property::BorderColor(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;border-color: {};&quot;</span>, val),
+            Property::BorderCornerShape(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;border-corner-shape: {};&quot;</span>, val),
+            Property::BorderTopLeftShape(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;border-top-left-shape: {};&quot;</span>, val),
+            Property::BorderTopRightShape(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;border-top-right-shape: {};&quot;</span>, val),
+            Property::BorderBottomLeftShape(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;border-bottom-left-shape: {};&quot;</span>, val),
+            Property::BorderBottomRightShape(val) =&gt; {
+                <span class="macro">write!</span>(f, <span class="string">&quot;border-bottom-right-shape: {};&quot;</span>, val)
             }
 
-            <span class="comment">// Background</span>
-            <span class="ident">Property::BackgroundColor</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;background-color: {};&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::BackgroundImage</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;background-image: {};&quot;</span>, <span class="ident">val</span>),
+            <span class="comment">// Background
+            </span>Property::BackgroundColor(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;background-color: {};&quot;</span>, val),
+            Property::BackgroundImage(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;background-image: {};&quot;</span>, val),
 
-            <span class="comment">// Outline</span>
-            <span class="ident">Property::OutlineWidth</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;outline-width: {}&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::OutlineColor</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;outline-color: {}&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::OutlineOffset</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;outline-offset: {}&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
+            <span class="comment">// Outline
+            </span>Property::OutlineWidth(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;outline-width: {}&quot;</span>, fmt_units(val)),
+            Property::OutlineColor(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;outline-color: {}&quot;</span>, val),
+            Property::OutlineOffset(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;outline-offset: {}&quot;</span>, fmt_units(val)),
 
-            <span class="comment">// Text</span>
-            <span class="ident">Property::FontSize</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;font-size: {};&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::FontColor</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;color: {};&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::Font</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;font: {}&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::SelectionColor</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;selection-color: {}&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::CaretColor</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;caret-color: {}&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::TextWrap</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;text-wrap: {}&quot;</span>, <span class="ident">val</span>),
+            <span class="comment">// Text
+            </span>Property::FontSize(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;font-size: {};&quot;</span>, val),
+            Property::FontColor(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;color: {};&quot;</span>, val),
+            Property::Font(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;font: {}&quot;</span>, val),
+            Property::SelectionColor(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;selection-color: {}&quot;</span>, val),
+            Property::CaretColor(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;caret-color: {}&quot;</span>, val),
+            Property::TextWrap(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;text-wrap: {}&quot;</span>, val),
 
-            <span class="comment">// Shadow</span>
-            <span class="ident">Property::OuterShadow</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;outer-shadow: {};&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::InnerShadow</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;inner-shadow: {};&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::OuterShadowHOffset</span>(<span class="ident">val</span>) =&gt; {
-                <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;outer-shadow-h-offset: {}&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>))
+            <span class="comment">// Shadow
+            </span>Property::OuterShadow(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;outer-shadow: {};&quot;</span>, val),
+            Property::InnerShadow(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;inner-shadow: {};&quot;</span>, val),
+            Property::OuterShadowHOffset(val) =&gt; {
+                <span class="macro">write!</span>(f, <span class="string">&quot;outer-shadow-h-offset: {}&quot;</span>, fmt_units(val))
             }
-            <span class="ident">Property::OuterShadowVOffset</span>(<span class="ident">val</span>) =&gt; {
-                <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;outer-shadow-v-offset: {}&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>))
+            Property::OuterShadowVOffset(val) =&gt; {
+                <span class="macro">write!</span>(f, <span class="string">&quot;outer-shadow-v-offset: {}&quot;</span>, fmt_units(val))
             }
-            <span class="ident">Property::OuterShadowBlur</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;inner-shadow-blur: {}&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::OuterShadowColor</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;inner-shadow-color: {}&quot;</span>, <span class="ident">val</span>),
-            <span class="ident">Property::InnerShadowHOffset</span>(<span class="ident">val</span>) =&gt; {
-                <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;inner-shadow-h-offset: {}&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>))
+            Property::OuterShadowBlur(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;inner-shadow-blur: {}&quot;</span>, fmt_units(val)),
+            Property::OuterShadowColor(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;inner-shadow-color: {}&quot;</span>, val),
+            Property::InnerShadowHOffset(val) =&gt; {
+                <span class="macro">write!</span>(f, <span class="string">&quot;inner-shadow-h-offset: {}&quot;</span>, fmt_units(val))
             }
-            <span class="ident">Property::InnerShadowVOffset</span>(<span class="ident">val</span>) =&gt; {
-                <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;inner-shadow-v-offset: {}&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>))
+            Property::InnerShadowVOffset(val) =&gt; {
+                <span class="macro">write!</span>(f, <span class="string">&quot;inner-shadow-v-offset: {}&quot;</span>, fmt_units(val))
             }
-            <span class="ident">Property::InnerShadowBlur</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;inner-shadow-blur: {}&quot;</span>, <span class="ident">fmt_units</span>(<span class="ident">val</span>)),
-            <span class="ident">Property::InnerShadowColor</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;inner-shadow-color: {}&quot;</span>, <span class="ident">val</span>),
+            Property::InnerShadowBlur(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;inner-shadow-blur: {}&quot;</span>, fmt_units(val)),
+            Property::InnerShadowColor(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;inner-shadow-color: {}&quot;</span>, val),
 
-            <span class="ident">Property::Transition</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;transition: {:?};&quot;</span>, <span class="ident">val</span>),
+            Property::Transition(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;transition: {:?};&quot;</span>, val),
 
-            <span class="ident">Property::ZIndex</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;z-index: {};&quot;</span>, <span class="ident">val</span>),
+            Property::ZIndex(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;z-index: {};&quot;</span>, val),
 
-            <span class="ident">Property::Cursor</span>(<span class="ident">val</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;cursor: {};&quot;</span>, <span class="ident">val</span>),
+            Property::Cursor(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;cursor: {};&quot;</span>, val),
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

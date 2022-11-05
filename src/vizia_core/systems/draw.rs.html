@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/draw.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>draw.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/draw.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>draw.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -100,107 +100,107 @@
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::context::Context</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">vizia_id::GenerationalId</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::Context;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>vizia_id::GenerationalId;
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">draw_system</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) {
-    <span class="kw">let</span> <span class="ident">canvas</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">canvases</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">Entity::root</span>()).<span class="ident">unwrap</span>();
-    <span class="ident">cx</span>.<span class="ident">resource_manager</span>.<span class="ident">mark_images_unused</span>();
+<span class="kw">pub fn </span>draw_system(cx: <span class="kw-2">&amp;mut </span>Context) {
+    <span class="kw">let </span>canvas = cx.canvases.get_mut(<span class="kw-2">&amp;</span>Entity::root()).unwrap();
+    cx.resource_manager.mark_images_unused();
 
-    <span class="kw">let</span> <span class="ident">window_width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">Entity::root</span>());
-    <span class="kw">let</span> <span class="ident">window_height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">Entity::root</span>());
+    <span class="kw">let </span>window_width = cx.cache.get_width(Entity::root());
+    <span class="kw">let </span>window_height = cx.cache.get_height(Entity::root());
 
-    <span class="ident">canvas</span>.<span class="ident">set_size</span>(<span class="ident">window_width</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">window_height</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="number">1.0</span>);
-    <span class="kw">let</span> <span class="ident">clear_color</span> <span class="op">=</span>
-        <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">background_color</span>.<span class="ident">get</span>(<span class="ident">Entity::root</span>()).<span class="ident">cloned</span>().<span class="ident">unwrap_or</span>(<span class="ident">Color::white</span>());
-    <span class="ident">canvas</span>.<span class="ident">clear_rect</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="ident">window_width</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">window_height</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">clear_color</span>.<span class="ident">into</span>());
+    canvas.set_size(window_width <span class="kw">as </span>u32, window_height <span class="kw">as </span>u32, <span class="number">1.0</span>);
+    <span class="kw">let </span>clear_color =
+        cx.style.background_color.get(Entity::root()).cloned().unwrap_or(Color::white());
+    canvas.clear_rect(<span class="number">0</span>, <span class="number">0</span>, window_width <span class="kw">as </span>u32, window_height <span class="kw">as </span>u32, clear_color.into());
 
-    <span class="comment">// filter for widgets that should be drawn</span>
-    <span class="kw">let</span> <span class="ident">tree_iter</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">into_iter</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">draw_tree</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">tree_iter</span>
-        .<span class="ident">filter</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">entity</span><span class="op">|</span> {
-            <span class="ident">entity</span> <span class="op">!</span><span class="op">=</span> <span class="ident">Entity::root</span>()
-                <span class="op">&amp;&amp;</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_visibility</span>(<span class="ident">entity</span>) <span class="op">!</span><span class="op">=</span> <span class="ident">Visibility::Invisible</span>
-                <span class="op">&amp;&amp;</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_display</span>(<span class="ident">entity</span>) <span class="op">!</span><span class="op">=</span> <span class="ident">Display::None</span>
-                <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">is_ignored</span>(<span class="ident">entity</span>)
-                <span class="op">&amp;&amp;</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_opacity</span>(<span class="ident">entity</span>) <span class="op">&gt;</span> <span class="number">0.0</span>
-                <span class="op">&amp;&amp;</span> {
-                    <span class="kw">let</span> <span class="ident">bounds</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_bounds</span>(<span class="ident">entity</span>);
-                    <span class="op">!</span>(<span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">&gt;</span> <span class="ident">window_width</span>
-                        <span class="op">|</span><span class="op">|</span> <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">&gt;</span> <span class="ident">window_height</span>
-                        <span class="op">|</span><span class="op">|</span> <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">0.0</span>
-                        <span class="op">|</span><span class="op">|</span> <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">bounds</span>.<span class="ident">h</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">0.0</span>)
+    <span class="comment">// filter for widgets that should be drawn
+    </span><span class="kw">let </span>tree_iter = cx.tree.into_iter();
+    <span class="kw">let </span><span class="kw-2">mut </span>draw_tree: Vec&lt;Entity&gt; = tree_iter
+        .filter(|<span class="kw-2">&amp;</span>entity| {
+            entity != Entity::root()
+                &amp;&amp; cx.cache.get_visibility(entity) != Visibility::Invisible
+                &amp;&amp; cx.cache.get_display(entity) != Display::None
+                &amp;&amp; !cx.tree.is_ignored(entity)
+                &amp;&amp; cx.cache.get_opacity(entity) &gt; <span class="number">0.0
+                </span>&amp;&amp; {
+                    <span class="kw">let </span>bounds = cx.cache.get_bounds(entity);
+                    !(bounds.x &gt; window_width
+                        || bounds.y &gt; window_height
+                        || bounds.x + bounds.w &lt;= <span class="number">0.0
+                        </span>|| bounds.y + bounds.h &lt;= <span class="number">0.0</span>)
                 }
         })
-        .<span class="ident">collect</span>();
+        .collect();
 
-    <span class="comment">// Sort the tree by z order</span>
-    <span class="ident">draw_tree</span>.<span class="ident">sort_by_cached_key</span>(<span class="op">|</span><span class="ident">entity</span><span class="op">|</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_z_index</span>(<span class="kw-2">*</span><span class="ident">entity</span>));
+    <span class="comment">// Sort the tree by z order
+    </span>draw_tree.sort_by_cached_key(|entity| cx.cache.get_z_index(<span class="kw-2">*</span>entity));
 
-    <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">draw_tree</span>.<span class="ident">into_iter</span>() {
-        <span class="comment">// Apply clipping</span>
-        <span class="kw">let</span> <span class="ident">clip_region</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_clip_region</span>(<span class="ident">entity</span>);
+    <span class="kw">for </span>entity <span class="kw">in </span>draw_tree.into_iter() {
+        <span class="comment">// Apply clipping
+        </span><span class="kw">let </span>clip_region = cx.cache.get_clip_region(entity);
 
-        <span class="comment">// Skips drawing views with zero-sized clip regions</span>
-        <span class="comment">// This skips calling the `draw` method of the view</span>
-        <span class="kw">if</span> <span class="ident">clip_region</span>.<span class="ident">height</span>() <span class="op">==</span> <span class="number">0.0</span> <span class="op">|</span><span class="op">|</span> <span class="ident">clip_region</span>.<span class="ident">width</span>() <span class="op">==</span> <span class="number">0.0</span> {
+        <span class="comment">// Skips drawing views with zero-sized clip regions
+        // This skips calling the `draw` method of the view
+        </span><span class="kw">if </span>clip_region.height() == <span class="number">0.0 </span>|| clip_region.width() == <span class="number">0.0 </span>{
             <span class="kw">continue</span>;
         }
 
-        <span class="ident">canvas</span>.<span class="ident">scissor</span>(<span class="ident">clip_region</span>.<span class="ident">x</span>, <span class="ident">clip_region</span>.<span class="ident">y</span>, <span class="ident">clip_region</span>.<span class="ident">w</span>, <span class="ident">clip_region</span>.<span class="ident">h</span>);
+        canvas.scissor(clip_region.x, clip_region.y, clip_region.w, clip_region.h);
 
-        <span class="comment">// Apply transform</span>
-        <span class="kw">let</span> <span class="ident">transform</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_transform</span>(<span class="ident">entity</span>);
-        <span class="ident">canvas</span>.<span class="ident">save</span>();
-        <span class="ident">canvas</span>.<span class="ident">set_transform</span>(
-            <span class="ident">transform</span>[<span class="number">0</span>],
-            <span class="ident">transform</span>[<span class="number">1</span>],
-            <span class="ident">transform</span>[<span class="number">2</span>],
-            <span class="ident">transform</span>[<span class="number">3</span>],
-            <span class="ident">transform</span>[<span class="number">4</span>],
-            <span class="ident">transform</span>[<span class="number">5</span>],
+        <span class="comment">// Apply transform
+        </span><span class="kw">let </span>transform = cx.cache.get_transform(entity);
+        canvas.save();
+        canvas.set_transform(
+            transform[<span class="number">0</span>],
+            transform[<span class="number">1</span>],
+            transform[<span class="number">2</span>],
+            transform[<span class="number">3</span>],
+            transform[<span class="number">4</span>],
+            transform[<span class="number">5</span>],
         );
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">view</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">views</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>) {
-            <span class="ident">cx</span>.<span class="ident">current</span> <span class="op">=</span> <span class="ident">entity</span>;
-            <span class="ident">view</span>.<span class="ident">draw</span>(
-                <span class="kw-2">&amp;mut</span> <span class="ident">DrawContext</span> {
-                    <span class="ident">current</span>: <span class="ident">cx</span>.<span class="ident">current</span>,
-                    <span class="ident">captured</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">captured</span>,
-                    <span class="ident">focused</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">focused</span>,
-                    <span class="ident">hovered</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">hovered</span>,
-                    <span class="ident">style</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">style</span>,
-                    <span class="ident">cache</span>: <span class="kw-2">&amp;mut</span> <span class="ident">cx</span>.<span class="ident">cache</span>,
-                    <span class="ident">draw_cache</span>: <span class="kw-2">&amp;mut</span> <span class="ident">cx</span>.<span class="ident">draw_cache</span>,
-                    <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">tree</span>,
-                    <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">data</span>,
-                    <span class="ident">views</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">views</span>,
-                    <span class="ident">resource_manager</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">resource_manager</span>,
-                    <span class="ident">text_context</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">text_context</span>,
-                    <span class="ident">modifiers</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">modifiers</span>,
-                    <span class="ident">mouse</span>: <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">mouse</span>,
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(view) = cx.views.remove(<span class="kw-2">&amp;</span>entity) {
+            cx.current = entity;
+            view.draw(
+                <span class="kw-2">&amp;mut </span>DrawContext {
+                    current: cx.current,
+                    captured: <span class="kw-2">&amp;</span>cx.captured,
+                    focused: <span class="kw-2">&amp;</span>cx.focused,
+                    hovered: <span class="kw-2">&amp;</span>cx.hovered,
+                    style: <span class="kw-2">&amp;</span>cx.style,
+                    cache: <span class="kw-2">&amp;mut </span>cx.cache,
+                    draw_cache: <span class="kw-2">&amp;mut </span>cx.draw_cache,
+                    tree: <span class="kw-2">&amp;</span>cx.tree,
+                    data: <span class="kw-2">&amp;</span>cx.data,
+                    views: <span class="kw-2">&amp;</span>cx.views,
+                    resource_manager: <span class="kw-2">&amp;</span>cx.resource_manager,
+                    text_context: <span class="kw-2">&amp;</span>cx.text_context,
+                    modifiers: <span class="kw-2">&amp;</span>cx.modifiers,
+                    mouse: <span class="kw-2">&amp;</span>cx.mouse,
                 },
-                <span class="ident">canvas</span>,
+                canvas,
             );
 
-            <span class="ident">cx</span>.<span class="ident">views</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">view</span>);
+            cx.views.insert(entity, view);
         }
 
-        <span class="ident">canvas</span>.<span class="ident">restore</span>();
+        canvas.restore();
 
-        <span class="comment">// Uncomment this for debug outlines</span>
-        <span class="comment">// TODO - Hook this up to a key in debug mode</span>
-        <span class="comment">// let mut path = Path::new();</span>
-        <span class="comment">// path.rect(bounds.x, bounds.y, bounds.w, bounds.h);</span>
-        <span class="comment">// let mut paint = Paint::color(femtovg::Color::rgb(255, 0, 0));</span>
-        <span class="comment">// paint.set_line_width(1.0);</span>
-        <span class="comment">// canvas.stroke_path(&amp;mut path, paint);</span>
-    }
+        <span class="comment">// Uncomment this for debug outlines
+        // TODO - Hook this up to a key in debug mode
+        // let mut path = Path::new();
+        // path.rect(bounds.x, bounds.y, bounds.w, bounds.h);
+        // let mut paint = Paint::color(femtovg::Color::rgb(255, 0, 0));
+        // paint.set_line_width(1.0);
+        // canvas.stroke_path(&amp;mut path, paint);
+    </span>}
 
-    <span class="ident">canvas</span>.<span class="ident">flush</span>();
+    canvas.flush();
 
-    <span class="comment">//cx.resource_manager.evict_unused_images();</span>
-}
+    <span class="comment">//cx.resource_manager.evict_unused_images();
+</span>}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

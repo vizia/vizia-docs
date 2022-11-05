@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/cache.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>cache.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../vizia_core/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/cache.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>cache.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../vizia_core/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -952,959 +952,959 @@
 <span id="952">952</span>
 <span id="953">953</span>
 <span id="954">954</span>
-</pre><pre class="rust"><code><span class="doccomment">//! The cache is a store for intermediate data produced while computing state, notably layout</span>
-<span class="doccomment">//! results. The main type here is CachedData, usually accessed via `cx.cache`.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! The cache is a store for intermediate data produced while computing state, notably layout
+//! results. The main type here is CachedData, usually accessed via `cx.cache`.
 
-<span class="kw">use</span> <span class="ident">morphorm::GeometryChanged</span>;
-<span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
+</span><span class="kw">use </span>morphorm::GeometryChanged;
+<span class="kw">use </span>std::fmt::Debug;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::style::Transform2D</span>;
-<span class="kw">use</span> <span class="ident">vizia_storage::SparseSet</span>;
-<span class="kw">use</span> <span class="ident">vizia_storage::SparseSetError</span>;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::style::Transform2D;
+<span class="kw">use </span>vizia_storage::SparseSet;
+<span class="kw">use </span>vizia_storage::SparseSetError;
 
-<span class="doccomment">/// Computed properties used for layout and drawing.</span>
+<span class="doccomment">/// Computed properties used for layout and drawing.
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">Pos</span> {
-    <span class="kw">pub</span> <span class="ident">x</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">y</span>: <span class="ident">f32</span>,
+</span><span class="attribute">#[derive(Clone, Copy, Debug)]
+</span><span class="kw">struct </span>Pos {
+    <span class="kw">pub </span>x: f32,
+    <span class="kw">pub </span>y: f32,
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Pos</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">Pos</span> { <span class="ident">x</span>: <span class="number">0.0</span>, <span class="ident">y</span>: <span class="number">0.0</span> }
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">std::ops::Add</span> <span class="kw">for</span> <span class="ident">Pos</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Pos</span>;
-
-    <span class="kw">fn</span> <span class="ident">add</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">Pos</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">Pos</span> { <span class="ident">x</span>: <span class="self">self</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">other</span>.<span class="ident">x</span>, <span class="ident">y</span>: <span class="self">self</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">other</span>.<span class="ident">y</span> }
+<span class="kw">impl </span>Default <span class="kw">for </span>Pos {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        Pos { x: <span class="number">0.0</span>, y: <span class="number">0.0 </span>}
     }
 }
 
-<span class="doccomment">/// Respresents an axis-aligned bounding box of an entity.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BoundingBox</span> {
-    <span class="kw">pub</span> <span class="ident">x</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">y</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">w</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">h</span>: <span class="ident">f32</span>,
-}
+<span class="kw">impl </span>std::ops::Add <span class="kw">for </span>Pos {
+    <span class="kw">type </span>Output = Pos;
 
-<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">BoundingBox</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{{ x: {:?}, y: {:?}, w: {:?}, h:{:?} }}&quot;</span>, <span class="self">self</span>.<span class="ident">x</span>, <span class="self">self</span>.<span class="ident">y</span>, <span class="self">self</span>.<span class="ident">w</span>, <span class="self">self</span>.<span class="ident">h</span>)
+    <span class="kw">fn </span>add(<span class="self">self</span>, other: Pos) -&gt; <span class="self">Self </span>{
+        Pos { x: <span class="self">self</span>.x + other.x, y: <span class="self">self</span>.y + other.y }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Space</span> {
-    <span class="kw">pub</span> <span class="ident">left</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">right</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">top</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">bottom</span>: <span class="ident">f32</span>,
+<span class="doccomment">/// Respresents an axis-aligned bounding box of an entity.
+</span><span class="attribute">#[derive(Clone, Copy, Debug, PartialEq)]
+</span><span class="kw">pub struct </span>BoundingBox {
+    <span class="kw">pub </span>x: f32,
+    <span class="kw">pub </span>y: f32,
+    <span class="kw">pub </span>w: f32,
+    <span class="kw">pub </span>h: f32,
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">BoundingBox</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">x</span>: <span class="number">0.0</span>, <span class="ident">y</span>: <span class="number">0.0</span>, <span class="ident">w</span>: <span class="ident">std::f32::MAX</span>, <span class="ident">h</span>: <span class="ident">std::f32::MAX</span> }
+<span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>BoundingBox {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="macro">write!</span>(f, <span class="string">&quot;{{ x: {:?}, y: {:?}, w: {:?}, h:{:?} }}&quot;</span>, <span class="self">self</span>.x, <span class="self">self</span>.y, <span class="self">self</span>.w, <span class="self">self</span>.h)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">BoundingBox</span> {
-    <span class="doccomment">/// Construct a [`BoundingBox`] from checked minimum and maximum values.</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_min_max</span>(<span class="ident">min_x</span>: <span class="ident">f32</span>, <span class="ident">min_y</span>: <span class="ident">f32</span>, <span class="ident">max_x</span>: <span class="ident">f32</span>, <span class="ident">max_y</span>: <span class="ident">f32</span>) -&gt; <span class="ident">BoundingBox</span> {
-        <span class="ident">BoundingBox</span> { <span class="ident">x</span>: <span class="ident">min_x</span>, <span class="ident">y</span>: <span class="ident">min_y</span>, <span class="ident">w</span>: <span class="ident">max_x</span> <span class="op">-</span> <span class="ident">min_x</span>, <span class="ident">h</span>: <span class="ident">max_y</span> <span class="op">-</span> <span class="ident">min_y</span> }
+<span class="attribute">#[derive(Debug, Default, Clone, PartialEq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Space {
+    <span class="kw">pub </span>left: f32,
+    <span class="kw">pub </span>right: f32,
+    <span class="kw">pub </span>top: f32,
+    <span class="kw">pub </span>bottom: f32,
+}
+
+<span class="kw">impl </span>Default <span class="kw">for </span>BoundingBox {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ x: <span class="number">0.0</span>, y: <span class="number">0.0</span>, w: std::f32::MAX, h: std::f32::MAX }
+    }
+}
+
+<span class="kw">impl </span>BoundingBox {
+    <span class="doccomment">/// Construct a [`BoundingBox`] from checked minimum and maximum values.
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>from_min_max(min_x: f32, min_y: f32, max_x: f32, max_y: f32) -&gt; BoundingBox {
+        BoundingBox { x: min_x, y: min_y, w: max_x - min_x, h: max_y - min_y }
     }
 
-    <span class="doccomment">/// Left side of bounds equivalent to `x`</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">left</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">x</span>
+    <span class="doccomment">/// Left side of bounds equivalent to `x`
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>left(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.x
     }
 
-    <span class="doccomment">/// Top of bounds equivalent to `y`</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">top</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">y</span>
+    <span class="doccomment">/// Top of bounds equivalent to `y`
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>top(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.y
     }
 
-    <span class="doccomment">/// Bounds width equivalent to `w`</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">width</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">w</span>
+    <span class="doccomment">/// Bounds width equivalent to `w`
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>width(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.w
     }
 
-    <span class="doccomment">/// Bounds height equivalent to `h`</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">height</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">h</span>
+    <span class="doccomment">/// Bounds height equivalent to `h`
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>height(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.h
     }
 
-    <span class="doccomment">/// Right side of bounds</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">right</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">left</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">width</span>()
+    <span class="doccomment">/// Right side of bounds
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>right(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.left() + <span class="self">self</span>.width()
     }
 
-    <span class="doccomment">/// Bottom of bounds</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bottom</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">top</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">height</span>()
+    <span class="doccomment">/// Bottom of bounds
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>bottom(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.top() + <span class="self">self</span>.height()
     }
 
-    <span class="doccomment">/// Horizontal and vertical center of bounds</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">center</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
-        ((<span class="self">self</span>.<span class="ident">width</span>() <span class="op">/</span> <span class="number">2f32</span>) <span class="op">+</span> <span class="self">self</span>.<span class="ident">x</span>, (<span class="self">self</span>.<span class="ident">height</span>() <span class="op">/</span> <span class="number">2f32</span>) <span class="op">+</span> <span class="self">self</span>.<span class="ident">y</span>)
+    <span class="doccomment">/// Horizontal and vertical center of bounds
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>center(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (f32, f32) {
+        ((<span class="self">self</span>.width() / <span class="number">2f32</span>) + <span class="self">self</span>.x, (<span class="self">self</span>.height() / <span class="number">2f32</span>) + <span class="self">self</span>.y)
     }
 
-    <span class="doccomment">/// Left center of bounds</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">center_left</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
-        (<span class="self">self</span>.<span class="ident">left</span>(), (<span class="self">self</span>.<span class="ident">height</span>() <span class="op">/</span> <span class="number">2f32</span>) <span class="op">+</span> <span class="self">self</span>.<span class="ident">top</span>())
+    <span class="doccomment">/// Left center of bounds
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>center_left(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (f32, f32) {
+        (<span class="self">self</span>.left(), (<span class="self">self</span>.height() / <span class="number">2f32</span>) + <span class="self">self</span>.top())
     }
 
-    <span class="doccomment">/// Right center of bounds</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">center_right</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
-        (<span class="self">self</span>.<span class="ident">right</span>(), (<span class="self">self</span>.<span class="ident">height</span>() <span class="op">/</span> <span class="number">2f32</span>) <span class="op">+</span> <span class="self">self</span>.<span class="ident">top</span>())
+    <span class="doccomment">/// Right center of bounds
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>center_right(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (f32, f32) {
+        (<span class="self">self</span>.right(), (<span class="self">self</span>.height() / <span class="number">2f32</span>) + <span class="self">self</span>.top())
     }
 
-    <span class="doccomment">/// Top center of bounds</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">center_top</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
-        ((<span class="self">self</span>.<span class="ident">width</span>() <span class="op">/</span> <span class="number">2f32</span>) <span class="op">+</span> <span class="self">self</span>.<span class="ident">left</span>(), <span class="self">self</span>.<span class="ident">top</span>())
+    <span class="doccomment">/// Top center of bounds
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>center_top(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (f32, f32) {
+        ((<span class="self">self</span>.width() / <span class="number">2f32</span>) + <span class="self">self</span>.left(), <span class="self">self</span>.top())
     }
 
-    <span class="doccomment">/// Bottom center of bounds</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">center_bottom</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
-        ((<span class="self">self</span>.<span class="ident">width</span>() <span class="op">/</span> <span class="number">2f32</span>) <span class="op">+</span> <span class="self">self</span>.<span class="ident">left</span>(), <span class="self">self</span>.<span class="ident">bottom</span>())
+    <span class="doccomment">/// Bottom center of bounds
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>center_bottom(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (f32, f32) {
+        ((<span class="self">self</span>.width() / <span class="number">2f32</span>) + <span class="self">self</span>.left(), <span class="self">self</span>.bottom())
     }
 
-    <span class="doccomment">/// Bottom left point of bounds</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bottom_left</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
-        (<span class="self">self</span>.<span class="ident">left</span>(), <span class="self">self</span>.<span class="ident">bottom</span>())
+    <span class="doccomment">/// Bottom left point of bounds
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>bottom_left(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (f32, f32) {
+        (<span class="self">self</span>.left(), <span class="self">self</span>.bottom())
     }
 
-    <span class="doccomment">/// Bottom right point of bounds</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bottom_right</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
-        (<span class="self">self</span>.<span class="ident">right</span>(), <span class="self">self</span>.<span class="ident">bottom</span>())
+    <span class="doccomment">/// Bottom right point of bounds
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>bottom_right(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (f32, f32) {
+        (<span class="self">self</span>.right(), <span class="self">self</span>.bottom())
     }
 
-    <span class="doccomment">/// Top left point of bounds</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">top_left</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
-        (<span class="self">self</span>.<span class="ident">left</span>(), <span class="self">self</span>.<span class="ident">top</span>())
+    <span class="doccomment">/// Top left point of bounds
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>top_left(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (f32, f32) {
+        (<span class="self">self</span>.left(), <span class="self">self</span>.top())
     }
 
-    <span class="doccomment">/// Top right point of bounds</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">top_right</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
-        (<span class="self">self</span>.<span class="ident">right</span>(), <span class="self">self</span>.<span class="ident">top</span>())
+    <span class="doccomment">/// Top right point of bounds
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub fn </span>top_right(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (f32, f32) {
+        (<span class="self">self</span>.right(), <span class="self">self</span>.top())
     }
 
-    <span class="doccomment">/// Shrinks by some `amount` in both directions and returns a new</span>
-    <span class="doccomment">/// [`BoundingBox`].</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shrink</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">amount</span>: <span class="ident">f32</span>) -&gt; <span class="ident">BoundingBox</span> {
-        <span class="ident">BoundingBox::from_min_max</span>(
-            <span class="self">self</span>.<span class="ident">left</span>() <span class="op">+</span> <span class="ident">amount</span>,
-            <span class="self">self</span>.<span class="ident">top</span>() <span class="op">+</span> <span class="ident">amount</span>,
-            <span class="self">self</span>.<span class="ident">right</span>() <span class="op">-</span> <span class="ident">amount</span>,
-            <span class="self">self</span>.<span class="ident">bottom</span>() <span class="op">-</span> <span class="ident">amount</span>,
+    <span class="doccomment">/// Shrinks by some `amount` in both directions and returns a new
+    /// [`BoundingBox`].
+    </span><span class="attribute">#[inline(always)]
+    #[must_use]
+    </span><span class="kw">pub fn </span>shrink(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; BoundingBox {
+        BoundingBox::from_min_max(
+            <span class="self">self</span>.left() + amount,
+            <span class="self">self</span>.top() + amount,
+            <span class="self">self</span>.right() - amount,
+            <span class="self">self</span>.bottom() - amount,
         )
     }
 
-    <span class="doccomment">/// Shrinks by some `amount` horizontally and returns a new [`BoundingBox`].</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shrink_horizontal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">amount</span>: <span class="ident">f32</span>) -&gt; <span class="ident">BoundingBox</span> {
-        <span class="ident">BoundingBox::from_min_max</span>(
-            <span class="self">self</span>.<span class="ident">left</span>() <span class="op">+</span> <span class="ident">amount</span>,
-            <span class="self">self</span>.<span class="ident">top</span>(),
-            <span class="self">self</span>.<span class="ident">right</span>() <span class="op">-</span> <span class="ident">amount</span>,
-            <span class="self">self</span>.<span class="ident">bottom</span>(),
+    <span class="doccomment">/// Shrinks by some `amount` horizontally and returns a new [`BoundingBox`].
+    </span><span class="attribute">#[inline(always)]
+    #[must_use]
+    </span><span class="kw">pub fn </span>shrink_horizontal(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; BoundingBox {
+        BoundingBox::from_min_max(
+            <span class="self">self</span>.left() + amount,
+            <span class="self">self</span>.top(),
+            <span class="self">self</span>.right() - amount,
+            <span class="self">self</span>.bottom(),
         )
     }
 
-    <span class="doccomment">/// Shrinks by some `amount` vertically and returns a new [`BoundingBox`].</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shrink_vertical</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">amount</span>: <span class="ident">f32</span>) -&gt; <span class="ident">BoundingBox</span> {
-        <span class="ident">BoundingBox::from_min_max</span>(
-            <span class="self">self</span>.<span class="ident">left</span>(),
-            <span class="self">self</span>.<span class="ident">top</span>() <span class="op">+</span> <span class="ident">amount</span>,
-            <span class="self">self</span>.<span class="ident">right</span>(),
-            <span class="self">self</span>.<span class="ident">bottom</span>() <span class="op">-</span> <span class="ident">amount</span>,
+    <span class="doccomment">/// Shrinks by some `amount` vertically and returns a new [`BoundingBox`].
+    </span><span class="attribute">#[inline(always)]
+    #[must_use]
+    </span><span class="kw">pub fn </span>shrink_vertical(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; BoundingBox {
+        BoundingBox::from_min_max(
+            <span class="self">self</span>.left(),
+            <span class="self">self</span>.top() + amount,
+            <span class="self">self</span>.right(),
+            <span class="self">self</span>.bottom() - amount,
         )
     }
 
-    <span class="doccomment">/// Expands by some `amount` in both directions and returns a new</span>
-    <span class="doccomment">/// [`BoundingBox`].</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expand</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">amount</span>: <span class="ident">f32</span>) -&gt; <span class="ident">BoundingBox</span> {
-        <span class="ident">BoundingBox::from_min_max</span>(
-            <span class="self">self</span>.<span class="ident">left</span>() <span class="op">-</span> <span class="ident">amount</span>,
-            <span class="self">self</span>.<span class="ident">top</span>() <span class="op">-</span> <span class="ident">amount</span>,
-            <span class="self">self</span>.<span class="ident">right</span>() <span class="op">+</span> <span class="ident">amount</span>,
-            <span class="self">self</span>.<span class="ident">bottom</span>() <span class="op">+</span> <span class="ident">amount</span>,
+    <span class="doccomment">/// Expands by some `amount` in both directions and returns a new
+    /// [`BoundingBox`].
+    </span><span class="attribute">#[inline(always)]
+    #[must_use]
+    </span><span class="kw">pub fn </span>expand(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; BoundingBox {
+        BoundingBox::from_min_max(
+            <span class="self">self</span>.left() - amount,
+            <span class="self">self</span>.top() - amount,
+            <span class="self">self</span>.right() + amount,
+            <span class="self">self</span>.bottom() + amount,
         )
     }
 
-    <span class="doccomment">/// Expands by some `amount` horizontally and returns a new [`BoundingBox`].</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expand_horizontal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">amount</span>: <span class="ident">f32</span>) -&gt; <span class="ident">BoundingBox</span> {
-        <span class="ident">BoundingBox::from_min_max</span>(
-            <span class="self">self</span>.<span class="ident">left</span>() <span class="op">-</span> <span class="ident">amount</span>,
-            <span class="self">self</span>.<span class="ident">top</span>(),
-            <span class="self">self</span>.<span class="ident">right</span>() <span class="op">+</span> <span class="ident">amount</span>,
-            <span class="self">self</span>.<span class="ident">bottom</span>(),
+    <span class="doccomment">/// Expands by some `amount` horizontally and returns a new [`BoundingBox`].
+    </span><span class="attribute">#[inline(always)]
+    #[must_use]
+    </span><span class="kw">pub fn </span>expand_horizontal(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; BoundingBox {
+        BoundingBox::from_min_max(
+            <span class="self">self</span>.left() - amount,
+            <span class="self">self</span>.top(),
+            <span class="self">self</span>.right() + amount,
+            <span class="self">self</span>.bottom(),
         )
     }
 
-    <span class="doccomment">/// Expands by some `amount` vertically and returns a new [`BoundingBox`].</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expand_vertical</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">amount</span>: <span class="ident">f32</span>) -&gt; <span class="ident">BoundingBox</span> {
-        <span class="ident">BoundingBox::from_min_max</span>(
-            <span class="self">self</span>.<span class="ident">left</span>(),
-            <span class="self">self</span>.<span class="ident">top</span>() <span class="op">-</span> <span class="ident">amount</span>,
-            <span class="self">self</span>.<span class="ident">right</span>(),
-            <span class="self">self</span>.<span class="ident">bottom</span>() <span class="op">+</span> <span class="ident">amount</span>,
+    <span class="doccomment">/// Expands by some `amount` vertically and returns a new [`BoundingBox`].
+    </span><span class="attribute">#[inline(always)]
+    #[must_use]
+    </span><span class="kw">pub fn </span>expand_vertical(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; BoundingBox {
+        BoundingBox::from_min_max(
+            <span class="self">self</span>.left(),
+            <span class="self">self</span>.top() - amount,
+            <span class="self">self</span>.right(),
+            <span class="self">self</span>.bottom() + amount,
         )
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">intersects</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">x_hit</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">x</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">other</span>.<span class="ident">x</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">x</span> <span class="op">&lt;</span> <span class="ident">other</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">other</span>.<span class="ident">w</span>)
-            <span class="op">|</span><span class="op">|</span> (<span class="ident">other</span>.<span class="ident">x</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">x</span> <span class="op">&amp;&amp;</span> <span class="ident">other</span>.<span class="ident">x</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">x</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">w</span>);
-        <span class="kw">let</span> <span class="ident">y_hit</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">y</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">other</span>.<span class="ident">y</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">y</span> <span class="op">&lt;</span> <span class="ident">other</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">other</span>.<span class="ident">h</span>)
-            <span class="op">|</span><span class="op">|</span> (<span class="ident">other</span>.<span class="ident">y</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">y</span> <span class="op">&amp;&amp;</span> <span class="ident">other</span>.<span class="ident">y</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">y</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">h</span>);
-        <span class="ident">x_hit</span> <span class="op">&amp;&amp;</span> <span class="ident">y_hit</span>
+    <span class="kw">pub fn </span>intersects(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+        <span class="kw">let </span>x_hit = (<span class="self">self</span>.x &gt;= other.x &amp;&amp; <span class="self">self</span>.x &lt; other.x + other.w)
+            || (other.x &gt;= <span class="self">self</span>.x &amp;&amp; other.x &lt; <span class="self">self</span>.x + <span class="self">self</span>.w);
+        <span class="kw">let </span>y_hit = (<span class="self">self</span>.y &gt;= other.y &amp;&amp; <span class="self">self</span>.y &lt; other.y + other.h)
+            || (other.y &gt;= <span class="self">self</span>.y &amp;&amp; other.y &lt; <span class="self">self</span>.y + <span class="self">self</span>.h);
+        x_hit &amp;&amp; y_hit
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">x_hit</span> <span class="op">=</span> <span class="ident">other</span>.<span class="ident">x</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">x</span> <span class="op">&amp;&amp;</span> <span class="ident">other</span>.<span class="ident">x</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">x</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">w</span>;
-        <span class="kw">let</span> <span class="ident">y_hit</span> <span class="op">=</span> <span class="ident">other</span>.<span class="ident">y</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">y</span> <span class="op">&amp;&amp;</span> <span class="ident">other</span>.<span class="ident">y</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">y</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">h</span>;
-        <span class="ident">x_hit</span> <span class="op">&amp;&amp;</span> <span class="ident">y_hit</span>
+    <span class="kw">pub fn </span>contains(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+        <span class="kw">let </span>x_hit = other.x &gt;= <span class="self">self</span>.x &amp;&amp; other.x &lt; <span class="self">self</span>.x + <span class="self">self</span>.w;
+        <span class="kw">let </span>y_hit = other.y &gt;= <span class="self">self</span>.y &amp;&amp; other.y &lt; <span class="self">self</span>.y + <span class="self">self</span>.h;
+        x_hit &amp;&amp; y_hit
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Size</span> {
-    <span class="kw">pub</span> <span class="ident">width</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">height</span>: <span class="ident">f32</span>,
+<span class="attribute">#[derive(Debug, Default, Clone, PartialEq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Size {
+    <span class="kw">pub </span>width: f32,
+    <span class="kw">pub </span>height: f32,
 }
 
-<span class="doccomment">/// Stores data which can be cached between system runs.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// When an event occurs or style data is changed systems run to determine the new state of the UI.</span>
-<span class="doccomment">/// The output of these systems can be cached so that not all of the systems need to run again.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CachedData</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">bounds</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">BoundingBox</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">visibility</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">Visibility</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">display</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">Display</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">opacity</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Stores data which can be cached between system runs.
+///
+/// When an event occurs or style data is changed systems run to determine the new state of the UI.
+/// The output of these systems can be cached so that not all of the systems need to run again.
+</span><span class="attribute">#[derive(Default)]
+</span><span class="kw">pub struct </span>CachedData {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) bounds: SparseSet&lt;BoundingBox&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) visibility: SparseSet&lt;Visibility&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) display: SparseSet&lt;Display&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) opacity: SparseSet&lt;f32&gt;,
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">abilities</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">Abilities</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) abilities: SparseSet&lt;Abilities&gt;,
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">z_index</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) z_index: SparseSet&lt;i32&gt;,
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">child_sum</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span>(<span class="ident">f32</span>, <span class="ident">f32</span>)<span class="op">&gt;</span>, <span class="comment">// Sum of child (widths, heights)</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">child_max</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span>(<span class="ident">f32</span>, <span class="ident">f32</span>)<span class="op">&gt;</span>, <span class="comment">// Max child (widths, heights)</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) child_sum: SparseSet&lt;(f32, f32)&gt;, <span class="comment">// Sum of child (widths, heights)
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) child_max: SparseSet&lt;(f32, f32)&gt;, <span class="comment">// Max child (widths, heights)
 
-    <span class="comment">//pub(crate) prev_size: SparseSet&lt;Pos&gt;,</span>
-    <span class="ident">clip_region</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">BoundingBox</span><span class="op">&gt;</span>,
+    //pub(crate) prev_size: SparseSet&lt;Pos&gt;,
+    </span>clip_region: SparseSet&lt;BoundingBox&gt;,
 
-    <span class="comment">// Transform</span>
-    <span class="ident">rotate</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
-    <span class="ident">scale</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span>(<span class="ident">f32</span>, <span class="ident">f32</span>)<span class="op">&gt;</span>,
-    <span class="ident">transform</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">Transform2D</span><span class="op">&gt;</span>,
+    <span class="comment">// Transform
+    </span>rotate: SparseSet&lt;f32&gt;,
+    scale: SparseSet&lt;(f32, f32)&gt;,
+    transform: SparseSet&lt;Transform2D&gt;,
 
-    <span class="ident">origin</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span>(<span class="ident">f32</span>, <span class="ident">f32</span>)<span class="op">&gt;</span>,
+    origin: SparseSet&lt;(f32, f32)&gt;,
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">space</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">Space</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">size</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&gt;</span>,
-    <span class="ident">cross_stretch_sum</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
-    <span class="ident">cross_free_space</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) space: SparseSet&lt;Space&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) size: SparseSet&lt;Size&gt;,
+    cross_stretch_sum: SparseSet&lt;f32&gt;,
+    cross_free_space: SparseSet&lt;f32&gt;,
 
-    <span class="ident">horizontal_free_space</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
-    <span class="ident">horizontal_stretch_sum</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
-    <span class="ident">vertical_free_space</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
-    <span class="ident">vertical_stretch_sum</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
+    horizontal_free_space: SparseSet&lt;f32&gt;,
+    horizontal_stretch_sum: SparseSet&lt;f32&gt;,
+    vertical_free_space: SparseSet&lt;f32&gt;,
+    vertical_stretch_sum: SparseSet&lt;f32&gt;,
 
-    <span class="ident">grid_row_max</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
-    <span class="ident">grid_col_max</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
+    grid_row_max: SparseSet&lt;f32&gt;,
+    grid_col_max: SparseSet&lt;f32&gt;,
 
-    <span class="comment">// is_first_child, is_last_child</span>
-    <span class="ident">stack_child</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span>(<span class="ident">bool</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>,
+    <span class="comment">// is_first_child, is_last_child
+    </span>stack_child: SparseSet&lt;(bool, bool)&gt;,
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">geometry_changed</span>: <span class="ident">SparseSet</span><span class="op">&lt;</span><span class="ident">GeometryChanged</span><span class="op">&gt;</span>,
-    <span class="comment">//pub(crate) text_lines: SparseSet&lt;Vec&lt;(Range&lt;usize&gt;, femtovg::TextMetrics)&gt;&gt;,</span>
-}
+    <span class="kw">pub</span>(<span class="kw">crate</span>) geometry_changed: SparseSet&lt;GeometryChanged&gt;,
+    <span class="comment">//pub(crate) text_lines: SparseSet&lt;Vec&lt;(Range&lt;usize&gt;, femtovg::TextMetrics)&gt;&gt;,
+</span>}
 
-<span class="kw">impl</span> <span class="ident">CachedData</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SparseSetError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">bounds</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Default::default</span>())<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">visibility</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Default::default</span>())<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Default::default</span>())<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">child_sum</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, (<span class="number">0.0</span>, <span class="number">0.0</span>))<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">child_max</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, (<span class="number">0.0</span>, <span class="number">0.0</span>))<span class="question-mark">?</span>;
+<span class="kw">impl </span>CachedData {
+    <span class="kw">pub fn </span>add(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) -&gt; <span class="prelude-ty">Result</span>&lt;(), SparseSetError&gt; {
+        <span class="self">self</span>.bounds.insert(entity, Default::default())<span class="question-mark">?</span>;
+        <span class="self">self</span>.visibility.insert(entity, Default::default())<span class="question-mark">?</span>;
+        <span class="self">self</span>.display.insert(entity, Default::default())<span class="question-mark">?</span>;
+        <span class="self">self</span>.child_sum.insert(entity, (<span class="number">0.0</span>, <span class="number">0.0</span>))<span class="question-mark">?</span>;
+        <span class="self">self</span>.child_max.insert(entity, (<span class="number">0.0</span>, <span class="number">0.0</span>))<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">opacity</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="number">1.0</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.opacity.insert(entity, <span class="number">1.0</span>)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">rotate</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="number">0.0</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">scale</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, (<span class="number">1.0</span>, <span class="number">1.0</span>))<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">transform</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Transform2D::identity</span>())<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">origin</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, (<span class="number">0.0</span>, <span class="number">0.0</span>))<span class="question-mark">?</span>;
+        <span class="self">self</span>.rotate.insert(entity, <span class="number">0.0</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.scale.insert(entity, (<span class="number">1.0</span>, <span class="number">1.0</span>))<span class="question-mark">?</span>;
+        <span class="self">self</span>.transform.insert(entity, Transform2D::identity())<span class="question-mark">?</span>;
+        <span class="self">self</span>.origin.insert(entity, (<span class="number">0.0</span>, <span class="number">0.0</span>))<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">z_index</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="number">0</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.z_index.insert(entity, <span class="number">0</span>)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">clip_region</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Default::default</span>())<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">space</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Default::default</span>())<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Default::default</span>())<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">cross_stretch_sum</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Default::default</span>())<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">cross_free_space</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Default::default</span>())<span class="question-mark">?</span>;
+        <span class="self">self</span>.clip_region.insert(entity, Default::default())<span class="question-mark">?</span>;
+        <span class="self">self</span>.space.insert(entity, Default::default())<span class="question-mark">?</span>;
+        <span class="self">self</span>.size.insert(entity, Default::default())<span class="question-mark">?</span>;
+        <span class="self">self</span>.cross_stretch_sum.insert(entity, Default::default())<span class="question-mark">?</span>;
+        <span class="self">self</span>.cross_free_space.insert(entity, Default::default())<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">horizontal_free_space</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Default::default</span>())<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">horizontal_stretch_sum</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Default::default</span>())<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">vertical_free_space</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Default::default</span>())<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">vertical_stretch_sum</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Default::default</span>())<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">stack_child</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, (<span class="bool-val">false</span>, <span class="bool-val">false</span>))<span class="question-mark">?</span>;
+        <span class="self">self</span>.horizontal_free_space.insert(entity, Default::default())<span class="question-mark">?</span>;
+        <span class="self">self</span>.horizontal_stretch_sum.insert(entity, Default::default())<span class="question-mark">?</span>;
+        <span class="self">self</span>.vertical_free_space.insert(entity, Default::default())<span class="question-mark">?</span>;
+        <span class="self">self</span>.vertical_stretch_sum.insert(entity, Default::default())<span class="question-mark">?</span>;
+        <span class="self">self</span>.stack_child.insert(entity, (<span class="bool-val">false</span>, <span class="bool-val">false</span>))<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">grid_row_max</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="number">0.0</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">grid_col_max</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="number">0.0</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.grid_row_max.insert(entity, <span class="number">0.0</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.grid_col_max.insert(entity, <span class="number">0.0</span>)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">geometry_changed</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Default::default</span>())<span class="question-mark">?</span>;
+        <span class="self">self</span>.geometry_changed.insert(entity, Default::default())<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">abilities</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">Default::default</span>())<span class="question-mark">?</span>;
+        <span class="self">self</span>.abilities.insert(entity, Default::default())<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) {
-        <span class="self">self</span>.<span class="ident">bounds</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">visibility</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">child_sum</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">child_max</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
+    <span class="kw">pub fn </span>remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
+        <span class="self">self</span>.bounds.remove(entity);
+        <span class="self">self</span>.visibility.remove(entity);
+        <span class="self">self</span>.child_sum.remove(entity);
+        <span class="self">self</span>.child_max.remove(entity);
 
-        <span class="self">self</span>.<span class="ident">opacity</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
+        <span class="self">self</span>.opacity.remove(entity);
 
-        <span class="self">self</span>.<span class="ident">rotate</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">scale</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">transform</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">origin</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
+        <span class="self">self</span>.rotate.remove(entity);
+        <span class="self">self</span>.scale.remove(entity);
+        <span class="self">self</span>.transform.remove(entity);
+        <span class="self">self</span>.origin.remove(entity);
 
-        <span class="self">self</span>.<span class="ident">z_index</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
+        <span class="self">self</span>.z_index.remove(entity);
 
-        <span class="self">self</span>.<span class="ident">clip_region</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">space</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">cross_stretch_sum</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">cross_free_space</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
+        <span class="self">self</span>.clip_region.remove(entity);
+        <span class="self">self</span>.space.remove(entity);
+        <span class="self">self</span>.size.remove(entity);
+        <span class="self">self</span>.cross_stretch_sum.remove(entity);
+        <span class="self">self</span>.cross_free_space.remove(entity);
 
-        <span class="self">self</span>.<span class="ident">horizontal_free_space</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">horizontal_stretch_sum</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">vertical_free_space</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">vertical_stretch_sum</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">stack_child</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
+        <span class="self">self</span>.horizontal_free_space.remove(entity);
+        <span class="self">self</span>.horizontal_stretch_sum.remove(entity);
+        <span class="self">self</span>.vertical_free_space.remove(entity);
+        <span class="self">self</span>.vertical_stretch_sum.remove(entity);
+        <span class="self">self</span>.stack_child.remove(entity);
 
-        <span class="self">self</span>.<span class="ident">grid_row_max</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
-        <span class="self">self</span>.<span class="ident">grid_col_max</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
+        <span class="self">self</span>.grid_row_max.remove(entity);
+        <span class="self">self</span>.grid_col_max.remove(entity);
 
-        <span class="self">self</span>.<span class="ident">geometry_changed</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
+        <span class="self">self</span>.geometry_changed.remove(entity);
 
-        <span class="self">self</span>.<span class="ident">abilities</span>.<span class="ident">remove</span>(<span class="ident">entity</span>);
+        <span class="self">self</span>.abilities.remove(entity);
     }
 
-    <span class="comment">// For getters and setters it&#39;s safe to use unwrap because every entity must have a position and size.</span>
-    <span class="comment">// Event if the position and size are 0.0, or the entity is invisible.</span>
+    <span class="comment">// For getters and setters it&#39;s safe to use unwrap because every entity must have a position and size.
+    // Event if the position and size are 0.0, or the entity is invisible.
 
-    <span class="comment">// pub fn get_clip_widget(&amp;self, entity: Entity) -&gt; Entity {</span>
-    <span class="comment">//     self.clip_widget</span>
-    <span class="comment">//         .get(entity.index_unchecked())</span>
-    <span class="comment">//         .cloned()</span>
-    <span class="comment">//         .unwrap()</span>
-    <span class="comment">// }</span>
+    // pub fn get_clip_widget(&amp;self, entity: Entity) -&gt; Entity {
+    //     self.clip_widget
+    //         .get(entity.index_unchecked())
+    //         .cloned()
+    //         .unwrap()
+    // }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_grid_row_max</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">grid_row_max</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>()
+    </span><span class="kw">pub fn </span>get_grid_row_max(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.grid_row_max.get(entity).cloned().unwrap_or_default()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_grid_row_max</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">grid_row_max</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">grid_row_max</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw-2">*</span><span class="ident">grid_row_max</span> <span class="op">=</span> <span class="ident">value</span>;
+    <span class="kw">pub fn </span>set_grid_row_max(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, value: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(grid_row_max) = <span class="self">self</span>.grid_row_max.get_mut(entity) {
+            <span class="kw-2">*</span>grid_row_max = value;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_grid_col_max</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">grid_col_max</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>()
+    <span class="kw">pub fn </span>get_grid_col_max(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.grid_col_max.get(entity).cloned().unwrap_or_default()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_grid_col_max</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">grid_col_max</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">grid_col_max</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw-2">*</span><span class="ident">grid_col_max</span> <span class="op">=</span> <span class="ident">value</span>;
+    <span class="kw">pub fn </span>set_grid_col_max(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, value: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(grid_col_max) = <span class="self">self</span>.grid_col_max.get_mut(entity) {
+            <span class="kw-2">*</span>grid_col_max = value;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_stack_child</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; (<span class="ident">bool</span>, <span class="ident">bool</span>) {
-        <span class="self">self</span>.<span class="ident">stack_child</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or</span>((<span class="bool-val">false</span>, <span class="bool-val">false</span>))
+    <span class="kw">pub fn </span>get_stack_child(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; (bool, bool) {
+        <span class="self">self</span>.stack_child.get(entity).cloned().unwrap_or((<span class="bool-val">false</span>, <span class="bool-val">false</span>))
     }
 
-    <span class="doccomment">/// Returns the bounding box of the entity, determined by the layout system.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_bounds</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">BoundingBox</span> {
-        <span class="ident">BoundingBox</span> {
-            <span class="ident">x</span>: <span class="self">self</span>.<span class="ident">get_posx</span>(<span class="ident">entity</span>),
-            <span class="ident">y</span>: <span class="self">self</span>.<span class="ident">get_posy</span>(<span class="ident">entity</span>),
-            <span class="ident">w</span>: <span class="self">self</span>.<span class="ident">get_width</span>(<span class="ident">entity</span>),
-            <span class="ident">h</span>: <span class="self">self</span>.<span class="ident">get_height</span>(<span class="ident">entity</span>),
+    <span class="doccomment">/// Returns the bounding box of the entity, determined by the layout system.
+    </span><span class="kw">pub fn </span>get_bounds(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; BoundingBox {
+        BoundingBox {
+            x: <span class="self">self</span>.get_posx(entity),
+            y: <span class="self">self</span>.get_posy(entity),
+            w: <span class="self">self</span>.get_width(entity),
+            h: <span class="self">self</span>.get_height(entity),
         }
     }
-    <span class="comment">// pub(crate) fn get_cross_stretch_sum(&amp;self, entity: Entity) -&gt; f32 {</span>
-    <span class="comment">//     self.cross_stretch_sum</span>
-    <span class="comment">//         .get(entity)</span>
-    <span class="comment">//         .cloned()</span>
-    <span class="comment">//         .unwrap()</span>
-    <span class="comment">// }</span>
+    <span class="comment">// pub(crate) fn get_cross_stretch_sum(&amp;self, entity: Entity) -&gt; f32 {
+    //     self.cross_stretch_sum
+    //         .get(entity)
+    //         .cloned()
+    //         .unwrap()
+    // }
 
-    <span class="comment">// pub(crate) fn set_cross_stretch_sum(&amp;mut self, entity: Entity, val: f32) {</span>
-    <span class="comment">//     if let Some(cross_stretch_sum) = self.cross_stretch_sum.get_mut(entity) {</span>
-    <span class="comment">//         *cross_stretch_sum = val;</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
+    // pub(crate) fn set_cross_stretch_sum(&amp;mut self, entity: Entity, val: f32) {
+    //     if let Some(cross_stretch_sum) = self.cross_stretch_sum.get_mut(entity) {
+    //         *cross_stretch_sum = val;
+    //     }
+    // }
 
-    <span class="comment">// pub(crate) fn get_cross_free_space(&amp;self, entity: Entity) -&gt; f32 {</span>
-    <span class="comment">//     self.cross_free_space</span>
-    <span class="comment">//         .get(entity)</span>
-    <span class="comment">//         .cloned()</span>
-    <span class="comment">//         .unwrap()</span>
-    <span class="comment">// }</span>
+    // pub(crate) fn get_cross_free_space(&amp;self, entity: Entity) -&gt; f32 {
+    //     self.cross_free_space
+    //         .get(entity)
+    //         .cloned()
+    //         .unwrap()
+    // }
 
-    <span class="comment">// pub(crate) fn set_cross_free_space(&amp;mut self, entity: Entity, val: f32) {</span>
-    <span class="comment">//     if let Some(cross_free_space) = self.cross_free_space.get_mut(entity) {</span>
-    <span class="comment">//         *cross_free_space = val;</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
+    // pub(crate) fn set_cross_free_space(&amp;mut self, entity: Entity, val: f32) {
+    //     if let Some(cross_free_space) = self.cross_free_space.get_mut(entity) {
+    //         *cross_free_space = val;
+    //     }
+    // }
 
-    <span class="comment">// pub(crate) fn get_space_left(&amp;self, entity: Entity) -&gt; f32 {</span>
-    <span class="comment">//     self.space</span>
-    <span class="comment">//         .get(entity)</span>
-    <span class="comment">//         .cloned()</span>
-    <span class="comment">//         .unwrap()</span>
-    <span class="comment">//         .left</span>
-    <span class="comment">// }</span>
+    // pub(crate) fn get_space_left(&amp;self, entity: Entity) -&gt; f32 {
+    //     self.space
+    //         .get(entity)
+    //         .cloned()
+    //         .unwrap()
+    //         .left
+    // }
 
-    <span class="comment">// pub(crate) fn get_space_right(&amp;self, entity: Entity) -&gt; f32 {</span>
-    <span class="comment">//     self.space</span>
-    <span class="comment">//         .get(entity)</span>
-    <span class="comment">//         .cloned()</span>
-    <span class="comment">//         .unwrap()</span>
-    <span class="comment">//         .right</span>
-    <span class="comment">// }</span>
+    // pub(crate) fn get_space_right(&amp;self, entity: Entity) -&gt; f32 {
+    //     self.space
+    //         .get(entity)
+    //         .cloned()
+    //         .unwrap()
+    //         .right
+    // }
 
-    <span class="comment">// pub(crate) fn get_space_top(&amp;self, entity: Entity) -&gt; f32 {</span>
-    <span class="comment">//     self.space</span>
-    <span class="comment">//         .get(entity)</span>
-    <span class="comment">//         .cloned()</span>
-    <span class="comment">//         .unwrap()</span>
-    <span class="comment">//         .top</span>
-    <span class="comment">// }</span>
+    // pub(crate) fn get_space_top(&amp;self, entity: Entity) -&gt; f32 {
+    //     self.space
+    //         .get(entity)
+    //         .cloned()
+    //         .unwrap()
+    //         .top
+    // }
 
-    <span class="comment">// pub(crate) fn get_space_bottom(&amp;self, entity: Entity) -&gt; f32 {</span>
-    <span class="comment">//     self.space</span>
-    <span class="comment">//         .get(entity)</span>
-    <span class="comment">//         .cloned()</span>
-    <span class="comment">//         .unwrap()</span>
-    <span class="comment">//         .bottom</span>
-    <span class="comment">// }</span>
+    // pub(crate) fn get_space_bottom(&amp;self, entity: Entity) -&gt; f32 {
+    //     self.space
+    //         .get(entity)
+    //         .cloned()
+    //         .unwrap()
+    //         .bottom
+    // }
 
-    <span class="comment">// pub fn get_space(&amp;self, entity: Entity) -&gt; Space {</span>
-    <span class="comment">//     self.space.get(entity).cloned().unwrap()</span>
-    <span class="comment">// }</span>
+    // pub fn get_space(&amp;self, entity: Entity) -&gt; Space {
+    //     self.space.get(entity).cloned().unwrap()
+    // }
 
-    <span class="doccomment">/// Returns the clip region of the entity.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is the bounding box for which rendering of the widget will be clipped/cropped when outside of the bounds.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_clip_region</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">BoundingBox</span> {
-        <span class="self">self</span>.<span class="ident">clip_region</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>()
+    </span><span class="doccomment">/// Returns the clip region of the entity.
+    ///
+    /// This is the bounding box for which rendering of the widget will be clipped/cropped when outside of the bounds.
+    </span><span class="kw">pub fn </span>get_clip_region(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; BoundingBox {
+        <span class="self">self</span>.clip_region.get(entity).cloned().unwrap()
     }
 
-    <span class="doccomment">/// Returns the Z index of the entity.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Entities can specify a z-index with `entity.set_z_index(cx, value)`.</span>
-    <span class="doccomment">/// The z_order_system then determines the z-index of child entities based on their parent and any specified z-index.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_z_index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">i32</span> {
-        <span class="self">self</span>.<span class="ident">z_index</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>()
+    <span class="doccomment">/// Returns the Z index of the entity.
+    ///
+    /// Entities can specify a z-index with `entity.set_z_index(cx, value)`.
+    /// The z_order_system then determines the z-index of child entities based on their parent and any specified z-index.
+    </span><span class="kw">pub fn </span>get_z_index(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; i32 {
+        <span class="self">self</span>.z_index.get(entity).cloned().unwrap()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_child_width_sum</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">child_sum</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>().<span class="number">0</span>
+    <span class="kw">pub fn </span>get_child_width_sum(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.child_sum.get(entity).cloned().unwrap().<span class="number">0
+    </span>}
+
+    <span class="kw">pub fn </span>get_child_height_sum(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.child_sum.get(entity).cloned().unwrap().<span class="number">1
+    </span>}
+
+    <span class="kw">pub fn </span>get_child_width_max(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.child_max.get(entity).cloned().unwrap().<span class="number">0
+    </span>}
+
+    <span class="kw">pub fn </span>get_child_height_max(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.child_max.get(entity).cloned().unwrap().<span class="number">1
+    </span>}
+
+    <span class="doccomment">/// Returns the x position of the entity.
+    </span><span class="kw">pub fn </span>get_posx(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.bounds.get(entity).cloned().unwrap_or_default().x
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_child_height_sum</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">child_sum</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>().<span class="number">1</span>
+    <span class="doccomment">/// Returns the y position of the entity.
+    </span><span class="kw">pub fn </span>get_posy(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.bounds.get(entity).cloned().unwrap_or_default().y
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_child_width_max</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">child_max</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>().<span class="number">0</span>
+    <span class="doccomment">/// Returns the width of the entity.
+    </span><span class="kw">pub fn </span>get_width(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.bounds.get(entity).cloned().unwrap_or_default().w
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_child_height_max</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">child_max</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>().<span class="number">1</span>
+    <span class="doccomment">/// Returns the height of the entity.
+    </span><span class="kw">pub fn </span>get_height(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.bounds.get(entity).cloned().unwrap_or_default().h
     }
 
-    <span class="doccomment">/// Returns the x position of the entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_posx</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">bounds</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">x</span>
+    <span class="comment">// pub(crate) fn get_prev_width(&amp;self, entity: Entity) -&gt; f32 {
+    //     self.prev_size
+    //         .get(entity.index_unchecked())
+    //         .cloned()
+    //         .unwrap_or_default()
+    //         .x
+    // }
+
+    // pub(crate) fn get_prev_height(&amp;self, entity: Entity) -&gt; f32 {
+    //     self.prev_size
+    //         .get(entity.index_unchecked())
+    //         .cloned()
+    //         .unwrap_or_default()
+    //         .y
+    // }
+
+    </span><span class="doccomment">/// Returns the opacity of the entity.
+    </span><span class="kw">pub fn </span>get_opacity(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.opacity.get(entity).cloned().unwrap()
     }
 
-    <span class="doccomment">/// Returns the y position of the entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_posy</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">bounds</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">y</span>
+    <span class="kw">pub fn </span>get_horizontal_free_space(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.horizontal_free_space.get(entity).cloned().unwrap()
     }
 
-    <span class="doccomment">/// Returns the width of the entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_width</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">bounds</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">w</span>
+    <span class="kw">pub fn </span>get_horizontal_stretch_sum(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.horizontal_stretch_sum.get(entity).cloned().unwrap()
     }
 
-    <span class="doccomment">/// Returns the height of the entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_height</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">bounds</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">h</span>
+    <span class="kw">pub fn </span>get_vertical_free_space(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.vertical_free_space.get(entity).cloned().unwrap()
     }
 
-    <span class="comment">// pub(crate) fn get_prev_width(&amp;self, entity: Entity) -&gt; f32 {</span>
-    <span class="comment">//     self.prev_size</span>
-    <span class="comment">//         .get(entity.index_unchecked())</span>
-    <span class="comment">//         .cloned()</span>
-    <span class="comment">//         .unwrap_or_default()</span>
-    <span class="comment">//         .x</span>
-    <span class="comment">// }</span>
-
-    <span class="comment">// pub(crate) fn get_prev_height(&amp;self, entity: Entity) -&gt; f32 {</span>
-    <span class="comment">//     self.prev_size</span>
-    <span class="comment">//         .get(entity.index_unchecked())</span>
-    <span class="comment">//         .cloned()</span>
-    <span class="comment">//         .unwrap_or_default()</span>
-    <span class="comment">//         .y</span>
-    <span class="comment">// }</span>
-
-    <span class="doccomment">/// Returns the opacity of the entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_opacity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">opacity</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>()
+    <span class="kw">pub fn </span>get_vertical_stretch_sum(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.vertical_stretch_sum.get(entity).cloned().unwrap()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_horizontal_free_space</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">horizontal_free_space</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>()
+    <span class="kw">pub fn </span>get_rotate(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="self">self</span>.transform.get(entity).cloned().unwrap()[<span class="number">0</span>].acos()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_horizontal_stretch_sum</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">horizontal_stretch_sum</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>()
+    <span class="kw">pub fn </span>get_translate(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; (f32, f32) {
+        <span class="kw">let </span>transform = <span class="self">self</span>.transform.get(entity).cloned().unwrap();
+
+        (transform[<span class="number">4</span>], transform[<span class="number">5</span>])
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_vertical_free_space</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">vertical_free_space</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>()
+    <span class="kw">pub fn </span>get_scale(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+        <span class="kw">let </span>scale = <span class="self">self</span>.scale.get(entity).cloned().unwrap();
+
+        scale.<span class="number">0
+    </span>}
+
+    <span class="kw">pub fn </span>get_origin(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; (f32, f32) {
+        <span class="self">self</span>.origin.get(entity).cloned().unwrap()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_vertical_stretch_sum</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">vertical_stretch_sum</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>()
+    <span class="doccomment">/// Returns the transform on the entity.
+    </span><span class="kw">pub fn </span>get_transform(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; Transform2D {
+        <span class="self">self</span>.transform.get(entity).cloned().unwrap()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_rotate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">transform</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>()[<span class="number">0</span>].<span class="ident">acos</span>()
+    <span class="kw">pub fn </span>get_transform_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) -&gt; <span class="kw-2">&amp;mut </span>Transform2D {
+        <span class="self">self</span>.transform.get_mut(entity).unwrap()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_translate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
-        <span class="kw">let</span> <span class="ident">transform</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">transform</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>();
+    <span class="comment">// SETTERS
 
-        (<span class="ident">transform</span>[<span class="number">4</span>], <span class="ident">transform</span>[<span class="number">5</span>])
-    }
+    // pub fn set_clip_widget(&amp;mut self, entity: Entity, val: Entity) {
+    //     if let Some(clip_widget) = self.clip_widget.get_mut(entity.index_unchecked()) {
+    //         *clip_widget = val;
+    //     }
+    // }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_scale</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">f32</span> {
-        <span class="kw">let</span> <span class="ident">scale</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">scale</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>();
-
-        <span class="ident">scale</span>.<span class="number">0</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_origin</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; (<span class="ident">f32</span>, <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">origin</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>()
-    }
-
-    <span class="doccomment">/// Returns the transform on the entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_transform</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">Transform2D</span> {
-        <span class="self">self</span>.<span class="ident">transform</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>()
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_transform_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Transform2D</span> {
-        <span class="self">self</span>.<span class="ident">transform</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>).<span class="ident">unwrap</span>()
-    }
-
-    <span class="comment">// SETTERS</span>
-
-    <span class="comment">// pub fn set_clip_widget(&amp;mut self, entity: Entity, val: Entity) {</span>
-    <span class="comment">//     if let Some(clip_widget) = self.clip_widget.get_mut(entity.index_unchecked()) {</span>
-    <span class="comment">//         *clip_widget = val;</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_stack_first_child</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">value</span>: <span class="ident">bool</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">stack_child</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">stack_child</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="ident">stack_child</span>.<span class="number">0</span> <span class="op">=</span> <span class="ident">value</span>;
-        }
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_stack_last_child</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">value</span>: <span class="ident">bool</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">stack_child</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">stack_child</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="ident">stack_child</span>.<span class="number">1</span> <span class="op">=</span> <span class="ident">value</span>;
+    </span><span class="kw">pub fn </span>set_stack_first_child(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, value: bool) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(stack_child) = <span class="self">self</span>.stack_child.get_mut(entity) {
+            stack_child.<span class="number">0 </span>= value;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_horizontal_free_space</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">horizontal_free_space</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">horizontal_free_space</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw-2">*</span><span class="ident">horizontal_free_space</span> <span class="op">=</span> <span class="ident">value</span>;
+    <span class="kw">pub fn </span>set_stack_last_child(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, value: bool) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(stack_child) = <span class="self">self</span>.stack_child.get_mut(entity) {
+            stack_child.<span class="number">1 </span>= value;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_horizontal_stretch_sum</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">horizontal_stretch_sum</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">horizontal_stretch_sum</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw-2">*</span><span class="ident">horizontal_stretch_sum</span> <span class="op">=</span> <span class="ident">value</span>;
+    <span class="kw">pub fn </span>set_horizontal_free_space(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, value: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(horizontal_free_space) = <span class="self">self</span>.horizontal_free_space.get_mut(entity) {
+            <span class="kw-2">*</span>horizontal_free_space = value;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_vertical_free_space</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">vertical_free_space</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">vertical_free_space</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw-2">*</span><span class="ident">vertical_free_space</span> <span class="op">=</span> <span class="ident">value</span>;
+    <span class="kw">pub fn </span>set_horizontal_stretch_sum(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, value: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(horizontal_stretch_sum) = <span class="self">self</span>.horizontal_stretch_sum.get_mut(entity) {
+            <span class="kw-2">*</span>horizontal_stretch_sum = value;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_vertical_stretch_sum</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">vertical_stretch_sum</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">vertical_stretch_sum</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw-2">*</span><span class="ident">vertical_stretch_sum</span> <span class="op">=</span> <span class="ident">value</span>;
+    <span class="kw">pub fn </span>set_vertical_free_space(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, value: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(vertical_free_space) = <span class="self">self</span>.vertical_free_space.get_mut(entity) {
+            <span class="kw-2">*</span>vertical_free_space = value;
         }
     }
 
-    <span class="comment">// pub fn set_space(&amp;mut self, entity: Entity, val: Space) {</span>
-    <span class="comment">//     if let Some(space) = self.space.get_mut(entity.index_unchecked()) {</span>
-    <span class="comment">//         *space = val;</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
-
-    <span class="comment">// pub(crate) fn set_space_left(&amp;mut self, entity: Entity, val: f32) {</span>
-    <span class="comment">//     if let Some(space) = self.space.get_mut(entity) {</span>
-    <span class="comment">//         space.left = val;</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_space_right</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">space</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">space</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="ident">space</span>.<span class="ident">right</span> <span class="op">=</span> <span class="ident">val</span>;
+    <span class="kw">pub fn </span>set_vertical_stretch_sum(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, value: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(vertical_stretch_sum) = <span class="self">self</span>.vertical_stretch_sum.get_mut(entity) {
+            <span class="kw-2">*</span>vertical_stretch_sum = value;
         }
     }
 
-    <span class="comment">// pub(crate) fn set_space_top(&amp;mut self, entity: Entity, val: f32) {</span>
-    <span class="comment">//     if let Some(space) = self.space.get_mut(entity) {</span>
-    <span class="comment">//         space.top = val;</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
+    <span class="comment">// pub fn set_space(&amp;mut self, entity: Entity, val: Space) {
+    //     if let Some(space) = self.space.get_mut(entity.index_unchecked()) {
+    //         *space = val;
+    //     }
+    // }
 
-    <span class="comment">// pub(crate) fn set_space_bottom(&amp;mut self, entity: Entity, val: f32) {</span>
-    <span class="comment">//     if let Some(space) = self.space.get_mut(entity) {</span>
-    <span class="comment">//         space.bottom = val;</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
+    // pub(crate) fn set_space_left(&amp;mut self, entity: Entity, val: f32) {
+    //     if let Some(space) = self.space.get_mut(entity) {
+    //         space.left = val;
+    //     }
+    // }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_clip_region</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">BoundingBox</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">clip_region</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">clip_region</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw-2">*</span><span class="ident">clip_region</span> <span class="op">=</span> <span class="ident">val</span>;
+    </span><span class="kw">pub fn </span>set_space_right(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(space) = <span class="self">self</span>.space.get_mut(entity) {
+            space.right = val;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_z_index</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">i32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">z_index</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">z_index</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw-2">*</span><span class="ident">z_index</span> <span class="op">=</span> <span class="ident">val</span>;
+    <span class="comment">// pub(crate) fn set_space_top(&amp;mut self, entity: Entity, val: f32) {
+    //     if let Some(space) = self.space.get_mut(entity) {
+    //         space.top = val;
+    //     }
+    // }
+
+    // pub(crate) fn set_space_bottom(&amp;mut self, entity: Entity, val: f32) {
+    //     if let Some(space) = self.space.get_mut(entity) {
+    //         space.bottom = val;
+    //     }
+    // }
+
+    </span><span class="kw">pub fn </span>set_clip_region(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: BoundingBox) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(clip_region) = <span class="self">self</span>.clip_region.get_mut(entity) {
+            <span class="kw-2">*</span>clip_region = val;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_child_width_sum</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">child_sum</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">child_sum</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="ident">child_sum</span>.<span class="number">0</span> <span class="op">=</span> <span class="ident">val</span>;
+    <span class="kw">pub fn </span>set_z_index(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: i32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(z_index) = <span class="self">self</span>.z_index.get_mut(entity) {
+            <span class="kw-2">*</span>z_index = val;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_child_height_sum</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">child_sum</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">child_sum</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="ident">child_sum</span>.<span class="number">1</span> <span class="op">=</span> <span class="ident">val</span>;
+    <span class="kw">pub fn </span>set_child_width_sum(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(child_sum) = <span class="self">self</span>.child_sum.get_mut(entity) {
+            child_sum.<span class="number">0 </span>= val;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_child_width_max</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">child_max</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">child_max</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="ident">child_max</span>.<span class="number">0</span> <span class="op">=</span> <span class="ident">val</span>;
+    <span class="kw">pub fn </span>set_child_height_sum(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(child_sum) = <span class="self">self</span>.child_sum.get_mut(entity) {
+            child_sum.<span class="number">1 </span>= val;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_child_height_max</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">child_max</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">child_max</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="ident">child_max</span>.<span class="number">1</span> <span class="op">=</span> <span class="ident">val</span>;
+    <span class="kw">pub fn </span>set_child_width_max(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(child_max) = <span class="self">self</span>.child_max.get_mut(entity) {
+            child_max.<span class="number">0 </span>= val;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_posx</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">bounds</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">bounds</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">=</span> <span class="ident">val</span>;
+    <span class="kw">pub fn </span>set_child_height_max(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(child_max) = <span class="self">self</span>.child_max.get_mut(entity) {
+            child_max.<span class="number">1 </span>= val;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_posy</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">bounds</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">bounds</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">=</span> <span class="ident">val</span>;
+    <span class="kw">pub fn </span>set_posx(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(bounds) = <span class="self">self</span>.bounds.get_mut(entity) {
+            bounds.x = val;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_width</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">bounds</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">bounds</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">=</span> <span class="ident">val</span>;
+    <span class="kw">pub fn </span>set_posy(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(bounds) = <span class="self">self</span>.bounds.get_mut(entity) {
+            bounds.y = val;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_height</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">bounds</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">bounds</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="ident">bounds</span>.<span class="ident">h</span> <span class="op">=</span> <span class="ident">val</span>;
+    <span class="kw">pub fn </span>set_width(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(bounds) = <span class="self">self</span>.bounds.get_mut(entity) {
+            bounds.w = val;
         }
     }
 
-    <span class="comment">// pub(crate) fn set_prev_width(&amp;mut self, entity: Entity, val: f32) {</span>
-    <span class="comment">//     if let Some(size) = self.prev_size.get_mut(entity.index_unchecked()) {</span>
-    <span class="comment">//         size.x = val;</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
-
-    <span class="comment">// pub(crate) fn set_prev_height(&amp;mut self, entity: Entity, val: f32) {</span>
-    <span class="comment">//     if let Some(size) = self.prev_size.get_mut(entity.index_unchecked()) {</span>
-    <span class="comment">//         size.y = val;</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_hoverability</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">abilities</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">abilities</span>.<span class="ident">get</span>(<span class="ident">entity</span>) {
-            <span class="ident">abilities</span>.<span class="ident">contains</span>(<span class="ident">Abilities::HOVERABLE</span>)
-        } <span class="kw">else</span> {
-            <span class="bool-val">false</span>
+    <span class="kw">pub fn </span>set_height(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(bounds) = <span class="self">self</span>.bounds.get_mut(entity) {
+            bounds.h = val;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_visibility</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">Visibility</span> {
-        <span class="self">self</span>.<span class="ident">visibility</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>()
+    <span class="comment">// pub(crate) fn set_prev_width(&amp;mut self, entity: Entity, val: f32) {
+    //     if let Some(size) = self.prev_size.get_mut(entity.index_unchecked()) {
+    //         size.x = val;
+    //     }
+    // }
+
+    // pub(crate) fn set_prev_height(&amp;mut self, entity: Entity, val: f32) {
+    //     if let Some(size) = self.prev_size.get_mut(entity.index_unchecked()) {
+    //         size.y = val;
+    //     }
+    // }
+
+    </span><span class="kw">pub fn </span>get_hoverability(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; bool {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(abilities) = <span class="self">self</span>.abilities.get(entity) {
+            abilities.contains(Abilities::HOVERABLE)
+        } <span class="kw">else </span>{
+            <span class="bool-val">false
+        </span>}
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">Display</span> {
-        <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap</span>()
+    <span class="kw">pub fn </span>get_visibility(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; Visibility {
+        <span class="self">self</span>.visibility.get(entity).cloned().unwrap()
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_hoverability</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">bool</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">abilities</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">abilities</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="ident">abilities</span>.<span class="ident">set</span>(<span class="ident">Abilities::HOVERABLE</span>, <span class="ident">val</span>);
+    <span class="kw">pub fn </span>get_display(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; Display {
+        <span class="self">self</span>.display.get(entity).cloned().unwrap()
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_hoverability(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: bool) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(abilities) = <span class="self">self</span>.abilities.get_mut(entity) {
+            abilities.set(Abilities::HOVERABLE, val);
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_visibility</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">Visibility</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">visibility</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">visibility</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw-2">*</span><span class="ident">visibility</span> <span class="op">=</span> <span class="ident">val</span>;
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_visibility(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: Visibility) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(visibility) = <span class="self">self</span>.visibility.get_mut(entity) {
+            <span class="kw-2">*</span>visibility = val;
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_display</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">Display</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">display</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw-2">*</span><span class="ident">display</span> <span class="op">=</span> <span class="ident">val</span>;
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_display(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: Display) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(display) = <span class="self">self</span>.display.get_mut(entity) {
+            <span class="kw-2">*</span>display = val;
         }
     }
 
-    <span class="comment">// pub(crate) fn set_hoverable(&amp;mut self, entity: Entity, val: bool) {</span>
-    <span class="comment">//     if let Some(abilities) = self.abilities.get_mut(entity) {</span>
-    <span class="comment">//         abilities.set(Abilities::HOVERABLE, val);</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
+    <span class="comment">// pub(crate) fn set_hoverable(&amp;mut self, entity: Entity, val: bool) {
+    //     if let Some(abilities) = self.abilities.get_mut(entity) {
+    //         abilities.set(Abilities::HOVERABLE, val);
+    //     }
+    // }
 
-    <span class="comment">// pub(crate) fn set_focusable(&amp;mut self, entity: Entity, val: bool) {</span>
-    <span class="comment">//     if let Some(abilities) = self.abilities.get_mut(entity) {</span>
-    <span class="comment">//         abilities.set(Abilities::FOCUSABLE, val);</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
+    // pub(crate) fn set_focusable(&amp;mut self, entity: Entity, val: bool) {
+    //     if let Some(abilities) = self.abilities.get_mut(entity) {
+    //         abilities.set(Abilities::FOCUSABLE, val);
+    //     }
+    // }
 
-    <span class="comment">// pub(crate) fn set_checkable(&amp;mut self, entity: Entity, val: bool) {</span>
-    <span class="comment">//     if let Some(abilities) = self.abilities.get_mut(entity) {</span>
-    <span class="comment">//         abilities.set(Abilities::CHECKABLE, val);</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
+    // pub(crate) fn set_checkable(&amp;mut self, entity: Entity, val: bool) {
+    //     if let Some(abilities) = self.abilities.get_mut(entity) {
+    //         abilities.set(Abilities::CHECKABLE, val);
+    //     }
+    // }
 
-    <span class="comment">// pub(crate) fn set_selectable(&amp;mut self, entity: Entity, val: bool) {</span>
-    <span class="comment">//     if let Some(abilities) = self.abilities.get_mut(entity) {</span>
-    <span class="comment">//         abilities.set(Abilities::SELECTABLE, val);</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
+    // pub(crate) fn set_selectable(&amp;mut self, entity: Entity, val: bool) {
+    //     if let Some(abilities) = self.abilities.get_mut(entity) {
+    //         abilities.set(Abilities::SELECTABLE, val);
+    //     }
+    // }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_opacity</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">opacity</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">opacity</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw-2">*</span><span class="ident">opacity</span> <span class="op">=</span> <span class="ident">val</span>;
+    </span><span class="kw">pub fn </span>set_opacity(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(opacity) = <span class="self">self</span>.opacity.get_mut(entity) {
+            <span class="kw-2">*</span>opacity = val;
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_rotate</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">transform</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">transform</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Transform2D::identity</span>();
-            <span class="ident">t</span>.<span class="ident">rotate</span>(<span class="ident">val</span>);
-            <span class="ident">transform</span>.<span class="ident">premultiply</span>(<span class="kw-2">&amp;</span><span class="ident">t</span>);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_rotate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(transform) = <span class="self">self</span>.transform.get_mut(entity) {
+            <span class="kw">let </span><span class="kw-2">mut </span>t = Transform2D::identity();
+            t.rotate(val);
+            transform.premultiply(<span class="kw-2">&amp;</span>t);
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_translate</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: (<span class="ident">f32</span>, <span class="ident">f32</span>)) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">transform</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">transform</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Transform2D::identity</span>();
-            <span class="ident">t</span>.<span class="ident">translate</span>(<span class="ident">val</span>.<span class="number">0</span>, <span class="ident">val</span>.<span class="number">1</span>);
-            <span class="ident">transform</span>.<span class="ident">premultiply</span>(<span class="kw-2">&amp;</span><span class="ident">t</span>);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_translate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: (f32, f32)) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(transform) = <span class="self">self</span>.transform.get_mut(entity) {
+            <span class="kw">let </span><span class="kw-2">mut </span>t = Transform2D::identity();
+            t.translate(val.<span class="number">0</span>, val.<span class="number">1</span>);
+            transform.premultiply(<span class="kw-2">&amp;</span>t);
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_scale</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: (<span class="ident">f32</span>, <span class="ident">f32</span>)) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">transform</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">transform</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Transform2D::identity</span>();
-            <span class="ident">t</span>.<span class="ident">scale</span>(<span class="ident">val</span>.<span class="number">0</span>, <span class="ident">val</span>.<span class="number">1</span>);
-            <span class="ident">transform</span>.<span class="ident">premultiply</span>(<span class="kw-2">&amp;</span><span class="ident">t</span>);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_scale(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: (f32, f32)) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(transform) = <span class="self">self</span>.transform.get_mut(entity) {
+            <span class="kw">let </span><span class="kw-2">mut </span>t = Transform2D::identity();
+            t.scale(val.<span class="number">0</span>, val.<span class="number">1</span>);
+            transform.premultiply(<span class="kw-2">&amp;</span>t);
         }
     }
 
-    <span class="comment">// pub(crate) fn set_origin(&amp;mut self, entity: Entity, val: (f32, f32)) {</span>
-    <span class="comment">//     if let Some(origin) = self.origin.get_mut(entity) {</span>
-    <span class="comment">//         *origin = val;</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
+    <span class="comment">// pub(crate) fn set_origin(&amp;mut self, entity: Entity, val: (f32, f32)) {
+    //     if let Some(origin) = self.origin.get_mut(entity) {
+    //         *origin = val;
+    //     }
+    // }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_transform</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">val</span>: <span class="ident">Transform2D</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">transform</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">transform</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-            <span class="kw-2">*</span><span class="ident">transform</span> <span class="op">=</span> <span class="ident">val</span>;
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_transform(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, val: Transform2D) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(transform) = <span class="self">self</span>.transform.get_mut(entity) {
+            <span class="kw-2">*</span>transform = val;
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="kw">fn</span> <span class="ident">rect</span>() -&gt; <span class="ident">BoundingBox</span> {
-        <span class="ident">BoundingBox</span> { <span class="ident">x</span>: <span class="number">100f32</span>, <span class="ident">y</span>: <span class="number">100f32</span>, <span class="ident">w</span>: <span class="number">100f32</span>, <span class="ident">h</span>: <span class="number">100f32</span> }
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="kw">fn </span>rect() -&gt; BoundingBox {
+        BoundingBox { x: <span class="number">100f32</span>, y: <span class="number">100f32</span>, w: <span class="number">100f32</span>, h: <span class="number">100f32 </span>}
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_center</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">rect</span>.<span class="ident">center</span>(), (<span class="number">150f32</span>, <span class="number">150f32</span>));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_center() {
+        <span class="kw">let </span>rect = rect();
+        <span class="macro">assert_eq!</span>(rect.center(), (<span class="number">150f32</span>, <span class="number">150f32</span>));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_center_top</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">rect</span>.<span class="ident">center_top</span>(), (<span class="number">150f32</span>, <span class="number">100f32</span>));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_center_top() {
+        <span class="kw">let </span>rect = rect();
+        <span class="macro">assert_eq!</span>(rect.center_top(), (<span class="number">150f32</span>, <span class="number">100f32</span>));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_center_bottom</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">rect</span>.<span class="ident">center_bottom</span>(), (<span class="number">150f32</span>, <span class="number">200f32</span>));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_center_bottom() {
+        <span class="kw">let </span>rect = rect();
+        <span class="macro">assert_eq!</span>(rect.center_bottom(), (<span class="number">150f32</span>, <span class="number">200f32</span>));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_center_left</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">rect</span>.<span class="ident">center_left</span>(), (<span class="number">100f32</span>, <span class="number">150f32</span>));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_center_left() {
+        <span class="kw">let </span>rect = rect();
+        <span class="macro">assert_eq!</span>(rect.center_left(), (<span class="number">100f32</span>, <span class="number">150f32</span>));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_center_right</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">rect</span>.<span class="ident">center_right</span>(), (<span class="number">200f32</span>, <span class="number">150f32</span>));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_center_right() {
+        <span class="kw">let </span>rect = rect();
+        <span class="macro">assert_eq!</span>(rect.center_right(), (<span class="number">200f32</span>, <span class="number">150f32</span>));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_left</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">rect</span>.<span class="ident">left</span>(), <span class="number">100f32</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_left() {
+        <span class="kw">let </span>rect = rect();
+        <span class="macro">assert_eq!</span>(rect.left(), <span class="number">100f32</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_right</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">rect</span>.<span class="ident">right</span>(), <span class="number">200f32</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_right() {
+        <span class="kw">let </span>rect = rect();
+        <span class="macro">assert_eq!</span>(rect.right(), <span class="number">200f32</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_top</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">rect</span>.<span class="ident">top</span>(), <span class="number">100f32</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_top() {
+        <span class="kw">let </span>rect = rect();
+        <span class="macro">assert_eq!</span>(rect.top(), <span class="number">100f32</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_bottom</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">rect</span>.<span class="ident">bottom</span>(), <span class="number">200f32</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_bottom() {
+        <span class="kw">let </span>rect = rect();
+        <span class="macro">assert_eq!</span>(rect.bottom(), <span class="number">200f32</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_shrunken</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">rect</span>.<span class="ident">shrink</span>(<span class="number">25f32</span>);
-        <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">BoundingBox</span> { <span class="ident">x</span>: <span class="number">125f32</span>, <span class="ident">y</span>: <span class="number">125f32</span>, <span class="ident">w</span>: <span class="number">50f32</span>, <span class="ident">h</span>: <span class="number">50f32</span> };
-        <span class="macro">assert_eq!</span>(<span class="ident">a</span>, <span class="ident">b</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_shrunken() {
+        <span class="kw">let </span>rect = rect();
+        <span class="kw">let </span>a = rect.shrink(<span class="number">25f32</span>);
+        <span class="kw">let </span>b = BoundingBox { x: <span class="number">125f32</span>, y: <span class="number">125f32</span>, w: <span class="number">50f32</span>, h: <span class="number">50f32 </span>};
+        <span class="macro">assert_eq!</span>(a, b);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_shrunken_horizontal</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">rect</span>.<span class="ident">shrink_horizontal</span>(<span class="number">25f32</span>);
-        <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">BoundingBox</span> { <span class="ident">x</span>: <span class="number">125f32</span>, <span class="ident">y</span>: <span class="number">100f32</span>, <span class="ident">w</span>: <span class="number">50f32</span>, <span class="ident">h</span>: <span class="number">100f32</span> };
-        <span class="macro">assert_eq!</span>(<span class="ident">a</span>, <span class="ident">b</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_shrunken_horizontal() {
+        <span class="kw">let </span>rect = rect();
+        <span class="kw">let </span>a = rect.shrink_horizontal(<span class="number">25f32</span>);
+        <span class="kw">let </span>b = BoundingBox { x: <span class="number">125f32</span>, y: <span class="number">100f32</span>, w: <span class="number">50f32</span>, h: <span class="number">100f32 </span>};
+        <span class="macro">assert_eq!</span>(a, b);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_shrunken_vertical</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">rect</span>.<span class="ident">shrink_vertical</span>(<span class="number">25f32</span>);
-        <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">BoundingBox</span> { <span class="ident">x</span>: <span class="number">100f32</span>, <span class="ident">y</span>: <span class="number">125f32</span>, <span class="ident">w</span>: <span class="number">100f32</span>, <span class="ident">h</span>: <span class="number">50f32</span> };
-        <span class="macro">assert_eq!</span>(<span class="ident">a</span>, <span class="ident">b</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_shrunken_vertical() {
+        <span class="kw">let </span>rect = rect();
+        <span class="kw">let </span>a = rect.shrink_vertical(<span class="number">25f32</span>);
+        <span class="kw">let </span>b = BoundingBox { x: <span class="number">100f32</span>, y: <span class="number">125f32</span>, w: <span class="number">100f32</span>, h: <span class="number">50f32 </span>};
+        <span class="macro">assert_eq!</span>(a, b);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_expanded</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">rect</span>.<span class="ident">expand</span>(<span class="number">25f32</span>);
-        <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">BoundingBox</span> { <span class="ident">x</span>: <span class="number">75f32</span>, <span class="ident">y</span>: <span class="number">75f32</span>, <span class="ident">w</span>: <span class="number">150f32</span>, <span class="ident">h</span>: <span class="number">150f32</span> };
-        <span class="macro">assert_eq!</span>(<span class="ident">a</span>, <span class="ident">b</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_expanded() {
+        <span class="kw">let </span>rect = rect();
+        <span class="kw">let </span>a = rect.expand(<span class="number">25f32</span>);
+        <span class="kw">let </span>b = BoundingBox { x: <span class="number">75f32</span>, y: <span class="number">75f32</span>, w: <span class="number">150f32</span>, h: <span class="number">150f32 </span>};
+        <span class="macro">assert_eq!</span>(a, b);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_expanded_horizontal</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">rect</span>.<span class="ident">expand_horizontal</span>(<span class="number">25f32</span>);
-        <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">BoundingBox</span> { <span class="ident">x</span>: <span class="number">75f32</span>, <span class="ident">y</span>: <span class="number">100f32</span>, <span class="ident">w</span>: <span class="number">150f32</span>, <span class="ident">h</span>: <span class="number">100f32</span> };
-        <span class="macro">assert_eq!</span>(<span class="ident">a</span>, <span class="ident">b</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_expanded_horizontal() {
+        <span class="kw">let </span>rect = rect();
+        <span class="kw">let </span>a = rect.expand_horizontal(<span class="number">25f32</span>);
+        <span class="kw">let </span>b = BoundingBox { x: <span class="number">75f32</span>, y: <span class="number">100f32</span>, w: <span class="number">150f32</span>, h: <span class="number">100f32 </span>};
+        <span class="macro">assert_eq!</span>(a, b);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_expanded_vertical</span>() {
-        <span class="kw">let</span> <span class="ident">rect</span> <span class="op">=</span> <span class="ident">rect</span>();
-        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">rect</span>.<span class="ident">expand_vertical</span>(<span class="number">25f32</span>);
-        <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">BoundingBox</span> { <span class="ident">x</span>: <span class="number">100f32</span>, <span class="ident">y</span>: <span class="number">75f32</span>, <span class="ident">w</span>: <span class="number">100f32</span>, <span class="ident">h</span>: <span class="number">150f32</span> };
-        <span class="macro">assert_eq!</span>(<span class="ident">a</span>, <span class="ident">b</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>get_expanded_vertical() {
+        <span class="kw">let </span>rect = rect();
+        <span class="kw">let </span>a = rect.expand_vertical(<span class="number">25f32</span>);
+        <span class="kw">let </span>b = BoundingBox { x: <span class="number">100f32</span>, y: <span class="number">75f32</span>, w: <span class="number">100f32</span>, h: <span class="number">150f32 </span>};
+        <span class="macro">assert_eq!</span>(a, b);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

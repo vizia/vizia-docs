@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/normalized_map.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>normalized_map.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/normalized_map.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>normalized_map.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -403,410 +403,410 @@
 <span id="403">403</span>
 <span id="404">404</span>
 <span id="405">405</span>
-</pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NormalizedMap</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Clone</span> {
-    <span class="kw">fn</span> <span class="ident">normalized_to_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">normalized</span>: <span class="ident">f32</span>) -&gt; <span class="ident">String</span>;
+</pre><pre class="rust"><code><span class="kw">pub trait </span>NormalizedMap: <span class="lifetime">&#39;static </span>+ Clone {
+    <span class="kw">fn </span>normalized_to_display(<span class="kw-2">&amp;</span><span class="self">self</span>, normalized: f32) -&gt; String;
 
-    <span class="kw">fn</span> <span class="ident">snap</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">normalized</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="ident">normalized</span>
+    <span class="kw">fn </span>snap(<span class="kw-2">&amp;</span><span class="self">self</span>, normalized: f32) -&gt; f32 {
+        normalized
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DisplayDecimals</span> {
-    <span class="ident">Zero</span>,
-    <span class="ident">One</span>,
-    <span class="ident">Two</span>,
-    <span class="ident">Three</span>,
-    <span class="ident">Four</span>,
-    <span class="ident">Five</span>,
+<span class="attribute">#[derive(Debug, Clone, Copy, PartialEq)]
+</span><span class="kw">pub enum </span>DisplayDecimals {
+    Zero,
+    One,
+    Two,
+    Three,
+    Four,
+    Five,
 }
 
-<span class="kw">impl</span> <span class="ident">DisplayDecimals</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">display_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">value</span>: <span class="ident">f32</span>) -&gt; <span class="ident">String</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">DisplayDecimals::Zero</span> =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:.0}&quot;</span>, <span class="ident">value</span>),
-            <span class="ident">DisplayDecimals::One</span> =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:.1}&quot;</span>, <span class="ident">value</span>),
-            <span class="ident">DisplayDecimals::Two</span> =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:.2}&quot;</span>, <span class="ident">value</span>),
-            <span class="ident">DisplayDecimals::Three</span> =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:.3}&quot;</span>, <span class="ident">value</span>),
-            <span class="ident">DisplayDecimals::Four</span> =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:.4}&quot;</span>, <span class="ident">value</span>),
-            <span class="ident">DisplayDecimals::Five</span> =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:.5}&quot;</span>, <span class="ident">value</span>),
+<span class="kw">impl </span>DisplayDecimals {
+    <span class="kw">pub fn </span>display_value(<span class="kw-2">&amp;</span><span class="self">self</span>, value: f32) -&gt; String {
+        <span class="kw">match </span><span class="self">self </span>{
+            DisplayDecimals::Zero =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:.0}&quot;</span>, value),
+            DisplayDecimals::One =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:.1}&quot;</span>, value),
+            DisplayDecimals::Two =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:.2}&quot;</span>, value),
+            DisplayDecimals::Three =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:.3}&quot;</span>, value),
+            DisplayDecimals::Four =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:.4}&quot;</span>, value),
+            DisplayDecimals::Five =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:.5}&quot;</span>, value),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">DisplayDecimals</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">DisplayDecimals::One</span>
+<span class="kw">impl </span>Default <span class="kw">for </span>DisplayDecimals {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        DisplayDecimals::One
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ValueScaling</span> {
-    <span class="ident">Linear</span>,
-    <span class="ident">Power</span>(<span class="ident">f32</span>),
-    <span class="ident">Frequency</span>,
+<span class="attribute">#[derive(Debug, Clone, Copy, PartialEq)]
+</span><span class="kw">pub enum </span>ValueScaling {
+    Linear,
+    Power(f32),
+    Frequency,
 }
 
-<span class="kw">impl</span> <span class="ident">ValueScaling</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalized_to_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">normalized</span>: <span class="ident">f32</span>, <span class="ident">min</span>: <span class="ident">f32</span>, <span class="ident">max</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="kw">if</span> <span class="ident">normalized</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">0.0</span> {
-            <span class="kw">return</span> <span class="ident">min</span>;
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">normalized</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">1.0</span> {
-            <span class="kw">return</span> <span class="ident">max</span>;
+<span class="kw">impl </span>ValueScaling {
+    <span class="kw">pub fn </span>normalized_to_value(<span class="kw-2">&amp;</span><span class="self">self</span>, normalized: f32, min: f32, max: f32) -&gt; f32 {
+        <span class="kw">if </span>normalized &lt;= <span class="number">0.0 </span>{
+            <span class="kw">return </span>min;
+        } <span class="kw">else if </span>normalized &gt;= <span class="number">1.0 </span>{
+            <span class="kw">return </span>max;
         }
 
-        <span class="kw">let</span> <span class="ident">map</span> <span class="op">=</span> <span class="op">|</span><span class="ident">x</span>: <span class="ident">f32</span><span class="op">|</span> -&gt; <span class="ident">f32</span> { (<span class="ident">x</span> <span class="op">*</span> (<span class="ident">max</span> <span class="op">-</span> <span class="ident">min</span>)) <span class="op">+</span> <span class="ident">min</span> };
+        <span class="kw">let </span>map = |x: f32| -&gt; f32 { (x * (max - min)) + min };
 
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">ValueScaling::Linear</span> =&gt; <span class="ident">map</span>(<span class="ident">normalized</span>),
+        <span class="kw">match </span><span class="self">self </span>{
+            ValueScaling::Linear =&gt; map(normalized),
 
-            <span class="ident">ValueScaling::Power</span>(<span class="ident">exponent</span>) =&gt; <span class="ident">map</span>(<span class="ident">normalized</span>.<span class="ident">powf</span>(<span class="kw-2">*</span><span class="ident">exponent</span>)),
+            ValueScaling::Power(exponent) =&gt; map(normalized.powf(<span class="kw-2">*</span>exponent)),
 
-            <span class="ident">ValueScaling::Frequency</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">minl</span> <span class="op">=</span> <span class="ident">min</span>.<span class="ident">log2</span>();
-                <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">max</span>.<span class="ident">log2</span>() <span class="op">-</span> <span class="ident">minl</span>;
-                <span class="number">2.0f32</span>.<span class="ident">powf</span>((<span class="ident">normalized</span> <span class="op">*</span> <span class="ident">range</span>) <span class="op">+</span> <span class="ident">minl</span>)
+            ValueScaling::Frequency =&gt; {
+                <span class="kw">let </span>minl = min.log2();
+                <span class="kw">let </span>range = max.log2() - minl;
+                <span class="number">2.0f32</span>.powf((normalized * range) + minl)
             }
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_to_normalized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">value</span>: <span class="ident">f32</span>, <span class="ident">min</span>: <span class="ident">f32</span>, <span class="ident">max</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="kw">if</span> <span class="ident">value</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">min</span> {
-            <span class="kw">return</span> <span class="number">0.0</span>;
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">value</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">max</span> {
-            <span class="kw">return</span> <span class="number">1.0</span>;
+    <span class="kw">pub fn </span>value_to_normalized(<span class="kw-2">&amp;</span><span class="self">self</span>, value: f32, min: f32, max: f32) -&gt; f32 {
+        <span class="kw">if </span>value &lt;= min {
+            <span class="kw">return </span><span class="number">0.0</span>;
+        } <span class="kw">else if </span>value &gt;= max {
+            <span class="kw">return </span><span class="number">1.0</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">unmap</span> <span class="op">=</span> <span class="op">|</span><span class="ident">x</span>: <span class="ident">f32</span><span class="op">|</span> -&gt; <span class="ident">f32</span> { (<span class="ident">x</span> <span class="op">-</span> <span class="ident">min</span>) <span class="op">/</span> (<span class="ident">max</span> <span class="op">-</span> <span class="ident">min</span>) };
+        <span class="kw">let </span>unmap = |x: f32| -&gt; f32 { (x - min) / (max - min) };
 
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">ValueScaling::Linear</span> =&gt; <span class="ident">unmap</span>(<span class="ident">value</span>),
+        <span class="kw">match </span><span class="self">self </span>{
+            ValueScaling::Linear =&gt; unmap(value),
 
-            <span class="ident">ValueScaling::Power</span>(<span class="ident">exponent</span>) =&gt; <span class="ident">unmap</span>(<span class="ident">value</span>).<span class="ident">powf</span>(<span class="number">1.0</span> <span class="op">/</span> <span class="kw-2">*</span><span class="ident">exponent</span>),
+            ValueScaling::Power(exponent) =&gt; unmap(value).powf(<span class="number">1.0 </span>/ <span class="kw-2">*</span>exponent),
 
-            <span class="ident">ValueScaling::Frequency</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">minl</span> <span class="op">=</span> <span class="ident">min</span>.<span class="ident">log2</span>();
-                <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">max</span>.<span class="ident">log2</span>() <span class="op">-</span> <span class="ident">minl</span>;
-                (<span class="ident">value</span>.<span class="ident">log2</span>() <span class="op">-</span> <span class="ident">minl</span>) <span class="op">/</span> <span class="ident">range</span>
+            ValueScaling::Frequency =&gt; {
+                <span class="kw">let </span>minl = min.log2();
+                <span class="kw">let </span>range = max.log2() - minl;
+                (value.log2() - minl) / range
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GenericMap</span> {
-    <span class="ident">min</span>: <span class="ident">f32</span>,
-    <span class="ident">max</span>: <span class="ident">f32</span>,
-    <span class="ident">_span_recip</span>: <span class="ident">f32</span>, <span class="comment">// Small optimization to avoid division operations.</span>
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>GenericMap {
+    min: f32,
+    max: f32,
+    _span_recip: f32, <span class="comment">// Small optimization to avoid division operations.
 
-    <span class="ident">value_scaling</span>: <span class="ident">ValueScaling</span>,
+    </span>value_scaling: ValueScaling,
 
-    <span class="ident">display_decimals</span>: <span class="ident">DisplayDecimals</span>,
-    <span class="ident">units</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    display_decimals: DisplayDecimals,
+    units: <span class="prelude-ty">Option</span>&lt;String&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">GenericMap</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">min</span>: <span class="ident">f32</span>,
-        <span class="ident">max</span>: <span class="ident">f32</span>,
-        <span class="ident">value_scaling</span>: <span class="ident">ValueScaling</span>,
-        <span class="ident">display_decimals</span>: <span class="ident">DisplayDecimals</span>,
-        <span class="ident">units</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="macro">assert!</span>(<span class="ident">min</span> <span class="op">&lt;</span> <span class="ident">max</span>);
+<span class="kw">impl </span>GenericMap {
+    <span class="kw">pub fn </span>new(
+        min: f32,
+        max: f32,
+        value_scaling: ValueScaling,
+        display_decimals: DisplayDecimals,
+        units: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="macro">assert!</span>(min &lt; max);
 
-        <span class="self">Self</span> { <span class="ident">min</span>, <span class="ident">max</span>, <span class="ident">_span_recip</span>: <span class="number">1.0</span> <span class="op">/</span> (<span class="ident">max</span> <span class="op">-</span> <span class="ident">min</span>), <span class="ident">value_scaling</span>, <span class="ident">display_decimals</span>, <span class="ident">units</span> }
+        <span class="self">Self </span>{ min, max, _span_recip: <span class="number">1.0 </span>/ (max - min), value_scaling, display_decimals, units }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">min</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">min</span>
+    <span class="kw">pub fn </span>min(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.min
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">max</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_scaling</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">ValueScaling</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value_scaling</span>
+    <span class="kw">pub fn </span>max(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.max
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalized_to_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">normalized</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">value_scaling</span>.<span class="ident">normalized_to_value</span>(<span class="ident">normalized</span>, <span class="self">self</span>.<span class="ident">min</span>, <span class="self">self</span>.<span class="ident">max</span>)
+    <span class="kw">pub fn </span>value_scaling(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>ValueScaling {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.value_scaling
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_to_normalized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">value</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">value_scaling</span>.<span class="ident">value_to_normalized</span>(<span class="ident">value</span>, <span class="self">self</span>.<span class="ident">min</span>, <span class="self">self</span>.<span class="ident">max</span>)
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>normalized_to_value(<span class="kw-2">&amp;</span><span class="self">self</span>, normalized: f32) -&gt; f32 {
+        <span class="self">self</span>.value_scaling.normalized_to_value(normalized, <span class="self">self</span>.min, <span class="self">self</span>.max)
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clamp_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">value</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="ident">value</span>.<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">max</span>).<span class="ident">max</span>(<span class="self">self</span>.<span class="ident">min</span>)
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>value_to_normalized(<span class="kw-2">&amp;</span><span class="self">self</span>, value: f32) -&gt; f32 {
+        <span class="self">self</span>.value_scaling.value_to_normalized(value, <span class="self">self</span>.min, <span class="self">self</span>.max)
+    }
+
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>clamp_value(<span class="kw-2">&amp;</span><span class="self">self</span>, value: f32) -&gt; f32 {
+        value.min(<span class="self">self</span>.max).max(<span class="self">self</span>.min)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">NormalizedMap</span> <span class="kw">for</span> <span class="ident">GenericMap</span> {
-    <span class="kw">fn</span> <span class="ident">normalized_to_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">normalized</span>: <span class="ident">f32</span>) -&gt; <span class="ident">String</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">display_decimals</span>.<span class="ident">display_value</span>(<span class="self">self</span>.<span class="ident">normalized_to_value</span>(<span class="ident">normalized</span>));
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">units</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">units</span> {
-            <span class="ident">s</span> <span class="op">+</span><span class="op">=</span> <span class="ident">units</span>;
+<span class="kw">impl </span>NormalizedMap <span class="kw">for </span>GenericMap {
+    <span class="kw">fn </span>normalized_to_display(<span class="kw-2">&amp;</span><span class="self">self</span>, normalized: f32) -&gt; String {
+        <span class="kw">let </span><span class="kw-2">mut </span>s = <span class="self">self</span>.display_decimals.display_value(<span class="self">self</span>.normalized_to_value(normalized));
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(units) = <span class="kw-2">&amp;</span><span class="self">self</span>.units {
+            s += units;
         }
-        <span class="ident">s</span>
+        s
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DecibelMap</span> {
-    <span class="ident">min</span>: <span class="ident">f32</span>,
-    <span class="ident">max</span>: <span class="ident">f32</span>,
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>DecibelMap {
+    min: f32,
+    max: f32,
 
-    <span class="ident">value_scaling</span>: <span class="ident">ValueScaling</span>,
+    value_scaling: ValueScaling,
 
-    <span class="ident">display_decimals</span>: <span class="ident">DisplayDecimals</span>,
-    <span class="ident">display_units</span>: <span class="ident">bool</span>,
+    display_decimals: DisplayDecimals,
+    display_units: bool,
 }
 
-<span class="kw">impl</span> <span class="ident">DecibelMap</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">min_db</span>: <span class="ident">f32</span>,
-        <span class="ident">max_db</span>: <span class="ident">f32</span>,
-        <span class="ident">value_scaling</span>: <span class="ident">ValueScaling</span>,
-        <span class="ident">display_decimals</span>: <span class="ident">DisplayDecimals</span>,
-        <span class="ident">display_units</span>: <span class="ident">bool</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="macro">assert!</span>(<span class="ident">min_db</span> <span class="op">&lt;</span> <span class="ident">max_db</span>);
+<span class="kw">impl </span>DecibelMap {
+    <span class="kw">pub fn </span>new(
+        min_db: f32,
+        max_db: f32,
+        value_scaling: ValueScaling,
+        display_decimals: DisplayDecimals,
+        display_units: bool,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="macro">assert!</span>(min_db &lt; max_db);
 
-        <span class="self">Self</span> { <span class="ident">min</span>: <span class="ident">min_db</span>, <span class="ident">max</span>: <span class="ident">max_db</span>, <span class="ident">value_scaling</span>, <span class="ident">display_decimals</span>, <span class="ident">display_units</span> }
+        <span class="self">Self </span>{ min: min_db, max: max_db, value_scaling, display_decimals, display_units }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">min_db</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">min</span>
+    <span class="kw">pub fn </span>min_db(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.min
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_db</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">max</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_scaling</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">ValueScaling</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value_scaling</span>
+    <span class="kw">pub fn </span>max_db(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.max
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalized_to_db</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">normalized</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">value_scaling</span>.<span class="ident">normalized_to_value</span>(<span class="ident">normalized</span>, <span class="self">self</span>.<span class="ident">min</span>, <span class="self">self</span>.<span class="ident">max</span>)
+    <span class="kw">pub fn </span>value_scaling(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>ValueScaling {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.value_scaling
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalized_to_amplitude</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">normalized</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="ident">db_to_amplitude</span>(<span class="self">self</span>.<span class="ident">value_scaling</span>.<span class="ident">normalized_to_value</span>(<span class="ident">normalized</span>, <span class="self">self</span>.<span class="ident">min</span>, <span class="self">self</span>.<span class="ident">max</span>))
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>normalized_to_db(<span class="kw-2">&amp;</span><span class="self">self</span>, normalized: f32) -&gt; f32 {
+        <span class="self">self</span>.value_scaling.normalized_to_value(normalized, <span class="self">self</span>.min, <span class="self">self</span>.max)
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">db_to_normalized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">value_scaling</span>.<span class="ident">value_to_normalized</span>(<span class="ident">db</span>, <span class="self">self</span>.<span class="ident">min</span>, <span class="self">self</span>.<span class="ident">max</span>)
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>normalized_to_amplitude(<span class="kw-2">&amp;</span><span class="self">self</span>, normalized: f32) -&gt; f32 {
+        db_to_amplitude(<span class="self">self</span>.value_scaling.normalized_to_value(normalized, <span class="self">self</span>.min, <span class="self">self</span>.max))
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">amplitude_to_normalized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">amplitude</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">amplitude_to_db</span>(<span class="ident">amplitude</span>);
-        <span class="self">self</span>.<span class="ident">db_to_normalized</span>(<span class="ident">db</span>)
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>db_to_normalized(<span class="kw-2">&amp;</span><span class="self">self</span>, db: f32) -&gt; f32 {
+        <span class="self">self</span>.value_scaling.value_to_normalized(db, <span class="self">self</span>.min, <span class="self">self</span>.max)
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clamp_db</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">db</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="ident">db</span>.<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">max</span>).<span class="ident">max</span>(<span class="self">self</span>.<span class="ident">min</span>)
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>amplitude_to_normalized(<span class="kw-2">&amp;</span><span class="self">self</span>, amplitude: f32) -&gt; f32 {
+        <span class="kw">let </span>db = amplitude_to_db(amplitude);
+        <span class="self">self</span>.db_to_normalized(db)
+    }
+
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>clamp_db(<span class="kw-2">&amp;</span><span class="self">self</span>, db: f32) -&gt; f32 {
+        db.min(<span class="self">self</span>.max).max(<span class="self">self</span>.min)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">NormalizedMap</span> <span class="kw">for</span> <span class="ident">DecibelMap</span> {
-    <span class="kw">fn</span> <span class="ident">normalized_to_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">normalized</span>: <span class="ident">f32</span>) -&gt; <span class="ident">String</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">display_decimals</span>.<span class="ident">display_value</span>(<span class="self">self</span>.<span class="ident">normalized_to_db</span>(<span class="ident">normalized</span>));
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">display_units</span> {
-            <span class="ident">s</span> <span class="op">+</span><span class="op">=</span> <span class="string">&quot; dB&quot;</span>
+<span class="kw">impl </span>NormalizedMap <span class="kw">for </span>DecibelMap {
+    <span class="kw">fn </span>normalized_to_display(<span class="kw-2">&amp;</span><span class="self">self</span>, normalized: f32) -&gt; String {
+        <span class="kw">let </span><span class="kw-2">mut </span>s = <span class="self">self</span>.display_decimals.display_value(<span class="self">self</span>.normalized_to_db(normalized));
+        <span class="kw">if </span><span class="self">self</span>.display_units {
+            s += <span class="string">&quot; dB&quot;
+        </span>}
+        s
+    }
+}
+
+<span class="attribute">#[derive(Debug, Clone, Copy, PartialEq)]
+</span><span class="kw">pub enum </span>FrequencyDisplayMode {
+    OnlyHz(DisplayDecimals),
+    HzThenKHz { under_1k: DisplayDecimals, over_1k: DisplayDecimals },
+}
+
+<span class="kw">impl </span>Default <span class="kw">for </span>FrequencyDisplayMode {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        FrequencyDisplayMode::HzThenKHz {
+            under_1k: DisplayDecimals::One,
+            over_1k: DisplayDecimals::Two,
         }
-        <span class="ident">s</span>
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FrequencyDisplayMode</span> {
-    <span class="ident">OnlyHz</span>(<span class="ident">DisplayDecimals</span>),
-    <span class="ident">HzThenKHz</span> { <span class="ident">under_1k</span>: <span class="ident">DisplayDecimals</span>, <span class="ident">over_1k</span>: <span class="ident">DisplayDecimals</span> },
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>FrequencyMap {
+    min: f32,
+    max: f32,
+
+    value_scaling: ValueScaling,
+
+    display_mode: FrequencyDisplayMode,
+    display_units: bool,
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">FrequencyDisplayMode</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">FrequencyDisplayMode::HzThenKHz</span> {
-            <span class="ident">under_1k</span>: <span class="ident">DisplayDecimals::One</span>,
-            <span class="ident">over_1k</span>: <span class="ident">DisplayDecimals::Two</span>,
-        }
-    }
-}
+<span class="kw">impl </span>FrequencyMap {
+    <span class="kw">pub fn </span>new(
+        min_hz: f32,
+        max_hz: f32,
+        value_scaling: ValueScaling,
+        display_mode: FrequencyDisplayMode,
+        display_units: bool,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="macro">assert!</span>(min_hz &lt; max_hz);
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FrequencyMap</span> {
-    <span class="ident">min</span>: <span class="ident">f32</span>,
-    <span class="ident">max</span>: <span class="ident">f32</span>,
-
-    <span class="ident">value_scaling</span>: <span class="ident">ValueScaling</span>,
-
-    <span class="ident">display_mode</span>: <span class="ident">FrequencyDisplayMode</span>,
-    <span class="ident">display_units</span>: <span class="ident">bool</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">FrequencyMap</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">min_hz</span>: <span class="ident">f32</span>,
-        <span class="ident">max_hz</span>: <span class="ident">f32</span>,
-        <span class="ident">value_scaling</span>: <span class="ident">ValueScaling</span>,
-        <span class="ident">display_mode</span>: <span class="ident">FrequencyDisplayMode</span>,
-        <span class="ident">display_units</span>: <span class="ident">bool</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="macro">assert!</span>(<span class="ident">min_hz</span> <span class="op">&lt;</span> <span class="ident">max_hz</span>);
-
-        <span class="self">Self</span> { <span class="ident">min</span>: <span class="ident">min_hz</span>, <span class="ident">max</span>: <span class="ident">max_hz</span>, <span class="ident">value_scaling</span>, <span class="ident">display_mode</span>, <span class="ident">display_units</span> }
+        <span class="self">Self </span>{ min: min_hz, max: max_hz, value_scaling, display_mode, display_units }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">min_hz</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">min</span>
+    <span class="kw">pub fn </span>min_hz(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.min
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_hz</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">max</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_scaling</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">ValueScaling</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value_scaling</span>
+    <span class="kw">pub fn </span>max_hz(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.max
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalized_to_hz</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">normalized</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">value_scaling</span>.<span class="ident">normalized_to_value</span>(<span class="ident">normalized</span>, <span class="self">self</span>.<span class="ident">min</span>, <span class="self">self</span>.<span class="ident">max</span>)
+    <span class="kw">pub fn </span>value_scaling(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>ValueScaling {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.value_scaling
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hz_to_normalized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hz</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">value_scaling</span>.<span class="ident">value_to_normalized</span>(<span class="ident">hz</span>, <span class="self">self</span>.<span class="ident">min</span>, <span class="self">self</span>.<span class="ident">max</span>)
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>normalized_to_hz(<span class="kw-2">&amp;</span><span class="self">self</span>, normalized: f32) -&gt; f32 {
+        <span class="self">self</span>.value_scaling.normalized_to_value(normalized, <span class="self">self</span>.min, <span class="self">self</span>.max)
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clamp_hz</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hz</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="ident">hz</span>.<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">max</span>).<span class="ident">max</span>(<span class="self">self</span>.<span class="ident">min</span>)
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>hz_to_normalized(<span class="kw-2">&amp;</span><span class="self">self</span>, hz: f32) -&gt; f32 {
+        <span class="self">self</span>.value_scaling.value_to_normalized(hz, <span class="self">self</span>.min, <span class="self">self</span>.max)
+    }
+
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>clamp_hz(<span class="kw-2">&amp;</span><span class="self">self</span>, hz: f32) -&gt; f32 {
+        hz.min(<span class="self">self</span>.max).max(<span class="self">self</span>.min)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">NormalizedMap</span> <span class="kw">for</span> <span class="ident">FrequencyMap</span> {
-    <span class="kw">fn</span> <span class="ident">normalized_to_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">normalized</span>: <span class="ident">f32</span>) -&gt; <span class="ident">String</span> {
-        <span class="kw">let</span> <span class="ident">hz</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">normalized_to_hz</span>(<span class="ident">normalized</span>);
+<span class="kw">impl </span>NormalizedMap <span class="kw">for </span>FrequencyMap {
+    <span class="kw">fn </span>normalized_to_display(<span class="kw-2">&amp;</span><span class="self">self</span>, normalized: f32) -&gt; String {
+        <span class="kw">let </span>hz = <span class="self">self</span>.normalized_to_hz(normalized);
 
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">display_mode</span> {
-            <span class="ident">FrequencyDisplayMode::OnlyHz</span>(<span class="ident">display_decimals</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">display_decimals</span>.<span class="ident">display_value</span>(<span class="ident">hz</span>);
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">display_units</span> {
-                    <span class="ident">s</span> <span class="op">+</span><span class="op">=</span> <span class="string">&quot; Hz&quot;</span>
+        <span class="kw">match </span><span class="self">self</span>.display_mode {
+            FrequencyDisplayMode::OnlyHz(display_decimals) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>s = display_decimals.display_value(hz);
+                <span class="kw">if </span><span class="self">self</span>.display_units {
+                    s += <span class="string">&quot; Hz&quot;
+                </span>}
+                s
+            }
+            FrequencyDisplayMode::HzThenKHz { under_1k, over_1k } =&gt; {
+                <span class="kw">if </span>hz &lt; <span class="number">1_000.0 </span>{
+                    <span class="kw">let </span><span class="kw-2">mut </span>s = under_1k.display_value(hz);
+                    <span class="kw">if </span><span class="self">self</span>.display_units {
+                        s += <span class="string">&quot; Hz&quot;
+                    </span>}
+                    s
+                } <span class="kw">else </span>{
+                    <span class="kw">let </span><span class="kw-2">mut </span>s = over_1k.display_value(hz / <span class="number">1_000.0</span>);
+                    <span class="kw">if </span><span class="self">self</span>.display_units {
+                        s += <span class="string">&quot; kHz&quot;
+                    </span>}
+                    s
                 }
-                <span class="ident">s</span>
-            }
-            <span class="ident">FrequencyDisplayMode::HzThenKHz</span> { <span class="ident">under_1k</span>, <span class="ident">over_1k</span> } =&gt; {
-                <span class="kw">if</span> <span class="ident">hz</span> <span class="op">&lt;</span> <span class="number">1_000.0</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">under_1k</span>.<span class="ident">display_value</span>(<span class="ident">hz</span>);
-                    <span class="kw">if</span> <span class="self">self</span>.<span class="ident">display_units</span> {
-                        <span class="ident">s</span> <span class="op">+</span><span class="op">=</span> <span class="string">&quot; Hz&quot;</span>
-                    }
-                    <span class="ident">s</span>
-                } <span class="kw">else</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">over_1k</span>.<span class="ident">display_value</span>(<span class="ident">hz</span> <span class="op">/</span> <span class="number">1_000.0</span>);
-                    <span class="kw">if</span> <span class="self">self</span>.<span class="ident">display_units</span> {
-                        <span class="ident">s</span> <span class="op">+</span><span class="op">=</span> <span class="string">&quot; kHz&quot;</span>
-                    }
-                    <span class="ident">s</span>
-                }
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IntMap</span> {
-    <span class="ident">min</span>: <span class="ident">i32</span>,
-    <span class="ident">max</span>: <span class="ident">i32</span>,
-    <span class="ident">span</span>: <span class="ident">f32</span>, <span class="comment">// Small optimization.</span>
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>IntMap {
+    min: i32,
+    max: i32,
+    span: f32, <span class="comment">// Small optimization.
 
-    <span class="ident">display_map</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="ident">i32</span>) -&gt; <span class="ident">String</span><span class="op">&gt;</span>,
+    </span>display_map: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw">dyn </span>Fn(i32) -&gt; String&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">IntMap</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">min</span>: <span class="ident">i32</span>, <span class="ident">max</span>: <span class="ident">i32</span>, <span class="ident">display_map</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="ident">i32</span>) -&gt; <span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="macro">assert!</span>(<span class="ident">min</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">max</span>);
+<span class="kw">impl </span>IntMap {
+    <span class="kw">pub fn </span>new(min: i32, max: i32, display_map: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw">dyn </span>Fn(i32) -&gt; String&gt;) -&gt; <span class="self">Self </span>{
+        <span class="macro">assert!</span>(min &lt;= max);
 
-        <span class="self">Self</span> { <span class="ident">min</span>, <span class="ident">max</span>, <span class="ident">span</span>: (<span class="ident">max</span> <span class="op">-</span> <span class="ident">min</span>) <span class="kw">as</span> <span class="ident">f32</span>, <span class="ident">display_map</span> }
+        <span class="self">Self </span>{ min, max, span: (max - min) <span class="kw">as </span>f32, display_map }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">min</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">i32</span> {
-        <span class="self">self</span>.<span class="ident">min</span>
+    <span class="kw">pub fn </span>min(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i32 {
+        <span class="self">self</span>.min
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">i32</span> {
-        <span class="self">self</span>.<span class="ident">max</span>
+    <span class="kw">pub fn </span>max(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i32 {
+        <span class="self">self</span>.max
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalized_to_int</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">normalized</span>: <span class="ident">f32</span>) -&gt; <span class="ident">i32</span> {
-        <span class="kw">if</span> <span class="ident">normalized</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">0.0</span> {
-            <span class="kw">return</span> <span class="self">self</span>.<span class="ident">min</span>;
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">normalized</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">1.0</span> {
-            <span class="kw">return</span> <span class="self">self</span>.<span class="ident">max</span>;
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>normalized_to_int(<span class="kw-2">&amp;</span><span class="self">self</span>, normalized: f32) -&gt; i32 {
+        <span class="kw">if </span>normalized &lt;= <span class="number">0.0 </span>{
+            <span class="kw">return </span><span class="self">self</span>.min;
+        } <span class="kw">else if </span>normalized &gt;= <span class="number">1.0 </span>{
+            <span class="kw">return </span><span class="self">self</span>.max;
         }
 
-        (<span class="ident">normalized</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">span</span>).<span class="ident">round</span>() <span class="kw">as</span> <span class="ident">i32</span>
+        (normalized * <span class="self">self</span>.span).round() <span class="kw">as </span>i32
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">int_to_normalized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">int</span>: <span class="ident">i32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">min</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">max</span> {
-            <span class="comment">// Value will always be the same, so avoid a divide</span>
-            <span class="comment">// by zero.</span>
-            <span class="number">0.0</span>
-        } <span class="kw">else</span> {
-            <span class="kw">if</span> <span class="ident">int</span> <span class="op">&lt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">min</span> {
-                <span class="kw">return</span> <span class="number">0.0</span>;
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">int</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">max</span> {
-                <span class="kw">return</span> <span class="number">1.0</span>;
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>int_to_normalized(<span class="kw-2">&amp;</span><span class="self">self</span>, int: i32) -&gt; f32 {
+        <span class="kw">if </span><span class="self">self</span>.min == <span class="self">self</span>.max {
+            <span class="comment">// Value will always be the same, so avoid a divide
+            // by zero.
+            </span><span class="number">0.0
+        </span>} <span class="kw">else </span>{
+            <span class="kw">if </span>int &lt;= <span class="self">self</span>.min {
+                <span class="kw">return </span><span class="number">0.0</span>;
+            } <span class="kw">else if </span>int &gt;= <span class="self">self</span>.max {
+                <span class="kw">return </span><span class="number">1.0</span>;
             }
 
-            (<span class="ident">int</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">min</span> <span class="kw">as</span> <span class="ident">f32</span>) <span class="op">/</span> <span class="self">self</span>.<span class="ident">span</span>
+            (int <span class="kw">as </span>f32 - <span class="self">self</span>.min <span class="kw">as </span>f32) / <span class="self">self</span>.span
         }
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clamp_int</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">int</span>: <span class="ident">i32</span>) -&gt; <span class="ident">i32</span> {
-        <span class="ident">int</span>.<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">max</span>).<span class="ident">max</span>(<span class="self">self</span>.<span class="ident">min</span>)
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>clamp_int(<span class="kw-2">&amp;</span><span class="self">self</span>, int: i32) -&gt; i32 {
+        int.min(<span class="self">self</span>.max).max(<span class="self">self</span>.min)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">NormalizedMap</span> <span class="kw">for</span> <span class="ident">IntMap</span> {
-    <span class="kw">fn</span> <span class="ident">normalized_to_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">normalized</span>: <span class="ident">f32</span>) -&gt; <span class="ident">String</span> {
-        <span class="kw">let</span> <span class="ident">int</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">normalized_to_int</span>(<span class="ident">normalized</span>);
+<span class="kw">impl </span>NormalizedMap <span class="kw">for </span>IntMap {
+    <span class="kw">fn </span>normalized_to_display(<span class="kw-2">&amp;</span><span class="self">self</span>, normalized: f32) -&gt; String {
+        <span class="kw">let </span>int = <span class="self">self</span>.normalized_to_int(normalized);
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">display_map</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">display_map</span> {
-            (<span class="ident">display_map</span>)(<span class="ident">int</span>)
-        } <span class="kw">else</span> {
-            <span class="comment">// Display the plain integer instead.</span>
-            <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">int</span>)
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(display_map) = <span class="self">self</span>.display_map {
+            (display_map)(int)
+        } <span class="kw">else </span>{
+            <span class="comment">// Display the plain integer instead.
+            </span><span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, int)
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">snap</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">normalized</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-        <span class="kw">let</span> <span class="ident">int</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">normalized_to_int</span>(<span class="ident">normalized</span>);
-        <span class="self">self</span>.<span class="ident">int_to_normalized</span>(<span class="ident">int</span>)
+    <span class="kw">fn </span>snap(<span class="kw-2">&amp;</span><span class="self">self</span>, normalized: f32) -&gt; f32 {
+        <span class="kw">let </span>int = <span class="self">self</span>.normalized_to_int(normalized);
+        <span class="self">self</span>.int_to_normalized(int)
     }
 }
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">db_to_amplitude</span>(<span class="ident">db</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-    <span class="number">10.0f32</span>.<span class="ident">powf</span>(<span class="ident">db</span> <span class="op">*</span> <span class="number">1.0</span> <span class="op">/</span> <span class="number">20.0</span>)
+<span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>db_to_amplitude(db: f32) -&gt; f32 {
+    <span class="number">10.0f32</span>.powf(db * <span class="number">1.0 </span>/ <span class="number">20.0</span>)
 }
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">amplitude_to_db</span>(<span class="ident">amp</span>: <span class="ident">f32</span>) -&gt; <span class="ident">f32</span> {
-    <span class="number">20.0f32</span> <span class="op">*</span> <span class="ident">amp</span>.<span class="ident">log10</span>()
+<span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>amplitude_to_db(amp: f32) -&gt; f32 {
+    <span class="number">20.0f32 </span>* amp.log10()
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

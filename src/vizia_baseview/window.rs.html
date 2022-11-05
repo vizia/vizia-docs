@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_baseview/src/window.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>window.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../vizia_baseview/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../vizia_baseview/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../vizia_baseview/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_baseview/src/window.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>window.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../vizia_baseview/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../vizia_baseview/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../vizia_baseview/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -252,259 +252,259 @@
 <span id="252">252</span>
 <span id="253">253</span>
 <span id="254">254</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">application::ApplicationRunner</span>, <span class="ident">Renderer</span>};
-<span class="kw">use</span> <span class="ident">baseview::gl::GlConfig</span>;
-<span class="kw">use</span> <span class="ident">baseview</span>::{
-    <span class="ident">Event</span>, <span class="ident">EventStatus</span>, <span class="ident">Window</span>, <span class="ident">WindowHandle</span>, <span class="ident">WindowHandler</span>, <span class="ident">WindowOpenOptions</span>, <span class="ident">WindowScalePolicy</span>,
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{application::ApplicationRunner, Renderer};
+<span class="kw">use </span>baseview::gl::GlConfig;
+<span class="kw">use </span>baseview::{
+    Event, EventStatus, Window, WindowHandle, WindowHandler, WindowOpenOptions, WindowScalePolicy,
 };
-<span class="kw">use</span> <span class="ident">raw_window_handle::HasRawWindowHandle</span>;
+<span class="kw">use </span>raw_window_handle::HasRawWindowHandle;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::proxy::BaseviewProxy</span>;
-<span class="kw">use</span> <span class="ident">vizia_core::context::backend</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">vizia_core::prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::proxy::BaseviewProxy;
+<span class="kw">use </span>vizia_core::context::backend::<span class="kw-2">*</span>;
+<span class="kw">use </span>vizia_core::prelude::<span class="kw-2">*</span>;
 
-<span class="doccomment">/// Handles a vizia_baseview application</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ViziaWindow</span> {
-    <span class="ident">application</span>: <span class="ident">ApplicationRunner</span>,
-    <span class="ident">on_idle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Handles a vizia_baseview application
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ViziaWindow {
+    application: ApplicationRunner,
+    on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">ViziaWindow</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="kw-2">mut</span> <span class="ident">cx</span>: <span class="ident">Context</span>,
-        <span class="ident">win_desc</span>: <span class="ident">WindowDescription</span>,
-        <span class="ident">scale_policy</span>: <span class="ident">WindowScalePolicy</span>,
-        <span class="ident">window</span>: <span class="kw-2">&amp;mut</span> <span class="ident">baseview::Window</span>,
-        <span class="ident">builder</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">on_idle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">ViziaWindow</span> {
-        <span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">window</span>.<span class="ident">gl_context</span>().<span class="ident">expect</span>(<span class="string">&quot;Window was created without OpenGL support&quot;</span>);
-        <span class="kw">let</span> <span class="ident">renderer</span> <span class="op">=</span> <span class="ident">load_renderer</span>(<span class="ident">window</span>);
+<span class="kw">impl </span>ViziaWindow {
+    <span class="kw">fn </span>new(
+        <span class="kw-2">mut </span>cx: Context,
+        win_desc: WindowDescription,
+        scale_policy: WindowScalePolicy,
+        window: <span class="kw-2">&amp;mut </span>baseview::Window,
+        builder: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnOnce(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
+        on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
+    ) -&gt; ViziaWindow {
+        <span class="kw">let </span>context = window.gl_context().expect(<span class="string">&quot;Window was created without OpenGL support&quot;</span>);
+        <span class="kw">let </span>renderer = load_renderer(window);
 
-        <span class="kw">unsafe</span> { <span class="ident">context</span>.<span class="ident">make_current</span>() };
+        <span class="kw">unsafe </span>{ context.make_current() };
 
-        <span class="kw">let</span> <span class="ident">canvas</span> <span class="op">=</span> <span class="ident">Canvas::new</span>(<span class="ident">renderer</span>).<span class="ident">expect</span>(<span class="string">&quot;Cannot create canvas&quot;</span>);
+        <span class="kw">let </span>canvas = Canvas::new(renderer).expect(<span class="string">&quot;Cannot create canvas&quot;</span>);
 
-        <span class="comment">// Assume scale for now until there is an event with a new one.</span>
-        <span class="kw">let</span> <span class="ident">scale_factor</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">scale_policy</span> {
-            <span class="ident">WindowScalePolicy::ScaleFactor</span>(<span class="ident">scale</span>) =&gt; <span class="ident">scale</span>,
-            <span class="ident">WindowScalePolicy::SystemScaleFactor</span> =&gt; <span class="number">1.0</span>,
+        <span class="comment">// Assume scale for now until there is an event with a new one.
+        </span><span class="kw">let </span>scale_factor = <span class="kw">match </span>scale_policy {
+            WindowScalePolicy::ScaleFactor(scale) =&gt; scale,
+            WindowScalePolicy::SystemScaleFactor =&gt; <span class="number">1.0</span>,
         };
 
-        <span class="ident">BackendContext::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">cx</span>).<span class="ident">add_main_window</span>(<span class="kw-2">&amp;</span><span class="ident">win_desc</span>, <span class="ident">canvas</span>, <span class="ident">scale_factor</span> <span class="kw">as</span> <span class="ident">f32</span>);
+        BackendContext::new(<span class="kw-2">&amp;mut </span>cx).add_main_window(<span class="kw-2">&amp;</span>win_desc, canvas, scale_factor <span class="kw">as </span>f32);
 
-        <span class="ident">cx</span>.<span class="ident">remove_user_themes</span>();
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">builder</span>) <span class="op">=</span> <span class="ident">builder</span> {
-            (<span class="ident">builder</span>)(<span class="kw-2">&amp;mut</span> <span class="ident">cx</span>);
+        cx.remove_user_themes();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(builder) = builder {
+            (builder)(<span class="kw-2">&amp;mut </span>cx);
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">backend_cx</span> <span class="op">=</span> <span class="ident">BackendContext::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">cx</span>);
-        <span class="ident">backend_cx</span>.<span class="ident">synchronize_fonts</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>backend_cx = BackendContext::new(<span class="kw-2">&amp;mut </span>cx);
+        backend_cx.synchronize_fonts();
 
-        <span class="kw">let</span> <span class="ident">application</span> <span class="op">=</span> <span class="ident">ApplicationRunner::new</span>(<span class="ident">cx</span>, <span class="ident">scale_policy</span>);
-        <span class="kw">unsafe</span> { <span class="ident">context</span>.<span class="ident">make_not_current</span>() };
+        <span class="kw">let </span>application = ApplicationRunner::new(cx, scale_policy);
+        <span class="kw">unsafe </span>{ context.make_not_current() };
 
-        <span class="ident">ViziaWindow</span> { <span class="ident">application</span>, <span class="ident">on_idle</span> }
+        ViziaWindow { application, on_idle }
     }
 
-    <span class="doccomment">/// Open a new child window.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// * `parent` - The parent window.</span>
-    <span class="doccomment">/// * `app` - The Vizia application builder.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_parented</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span><span class="op">&gt;</span>(
-        <span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>,
-        <span class="ident">win_desc</span>: <span class="ident">WindowDescription</span>,
-        <span class="ident">scale_policy</span>: <span class="ident">WindowScalePolicy</span>,
-        <span class="ident">app</span>: <span class="ident">F</span>,
-        <span class="ident">on_idle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">ignore_default_theme</span>: <span class="ident">bool</span>,
-    ) -&gt; <span class="ident">WindowHandle</span>
-    <span class="kw">where</span>
-        <span class="ident">P</span>: <span class="ident">HasRawWindowHandle</span>,
-        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span>,
+    <span class="doccomment">/// Open a new child window.
+    ///
+    /// * `parent` - The parent window.
+    /// * `app` - The Vizia application builder.
+    </span><span class="kw">pub fn </span>open_parented&lt;P, F&gt;(
+        parent: <span class="kw-2">&amp;</span>P,
+        win_desc: WindowDescription,
+        scale_policy: WindowScalePolicy,
+        app: F,
+        on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
+        ignore_default_theme: bool,
+    ) -&gt; WindowHandle
+    <span class="kw">where
+        </span>P: HasRawWindowHandle,
+        F: Fn(<span class="kw-2">&amp;mut </span>Context),
+        F: <span class="lifetime">&#39;static </span>+ Send,
     {
-        <span class="kw">let</span> <span class="ident">window_settings</span> <span class="op">=</span> <span class="ident">WindowOpenOptions</span> {
-            <span class="ident">title</span>: <span class="ident">win_desc</span>.<span class="ident">title</span>.<span class="ident">clone</span>(),
-            <span class="ident">size</span>: <span class="ident">baseview::Size::new</span>(
-                <span class="ident">win_desc</span>.<span class="ident">inner_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span>,
-                <span class="ident">win_desc</span>.<span class="ident">inner_size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">f64</span>,
+        <span class="kw">let </span>window_settings = WindowOpenOptions {
+            title: win_desc.title.clone(),
+            size: baseview::Size::new(
+                win_desc.inner_size.width <span class="kw">as </span>f64,
+                win_desc.inner_size.height <span class="kw">as </span>f64,
             ),
-            <span class="ident">scale</span>: <span class="ident">scale_policy</span>,
-            <span class="ident">gl_config</span>: <span class="prelude-val">Some</span>(<span class="ident">GlConfig</span> { <span class="ident">vsync</span>: <span class="bool-val">false</span>, ..<span class="ident">GlConfig::default</span>() }),
+            scale: scale_policy,
+            gl_config: <span class="prelude-val">Some</span>(GlConfig { vsync: <span class="bool-val">false</span>, ..GlConfig::default() }),
         };
 
-        <span class="ident">Window::open_parented</span>(
-            <span class="ident">parent</span>,
-            <span class="ident">window_settings</span>,
-            <span class="kw">move</span> <span class="op">|</span><span class="ident">window</span>: <span class="kw-2">&amp;mut</span> <span class="ident">baseview::Window</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">|</span> -&gt; <span class="ident">ViziaWindow</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">Context::new</span>();
+        Window::open_parented(
+            parent,
+            window_settings,
+            <span class="kw">move </span>|window: <span class="kw-2">&amp;mut </span>baseview::Window&lt;<span class="lifetime">&#39;_</span>&gt;| -&gt; ViziaWindow {
+                <span class="kw">let </span><span class="kw-2">mut </span>context = Context::new();
 
-                <span class="ident">context</span>.<span class="ident">ignore_default_theme</span> <span class="op">=</span> <span class="ident">ignore_default_theme</span>;
-                <span class="ident">context</span>.<span class="ident">remove_user_themes</span>();
+                context.ignore_default_theme = ignore_default_theme;
+                context.remove_user_themes();
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cx</span> <span class="op">=</span> <span class="ident">BackendContext::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">context</span>);
+                <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(<span class="kw-2">&amp;mut </span>context);
 
-                <span class="ident">cx</span>.<span class="ident">set_event_proxy</span>(<span class="ident">Box::new</span>(<span class="ident">BaseviewProxy</span>()));
-                <span class="ident">ViziaWindow::new</span>(
-                    <span class="ident">context</span>,
-                    <span class="ident">win_desc</span>,
-                    <span class="ident">scale_policy</span>,
-                    <span class="ident">window</span>,
-                    <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">app</span>)),
-                    <span class="ident">on_idle</span>,
+                cx.set_event_proxy(Box::new(BaseviewProxy()));
+                ViziaWindow::new(
+                    context,
+                    win_desc,
+                    scale_policy,
+                    window,
+                    <span class="prelude-val">Some</span>(Box::new(app)),
+                    on_idle,
                 )
             },
         )
     }
 
-    <span class="doccomment">/// Open a new window as if it had a parent window.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// * `app` - The Vizia application builder.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_as_if_parented</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
-        <span class="ident">win_desc</span>: <span class="ident">WindowDescription</span>,
-        <span class="ident">scale_policy</span>: <span class="ident">WindowScalePolicy</span>,
-        <span class="ident">app</span>: <span class="ident">F</span>,
-        <span class="ident">on_idle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">ignore_default_theme</span>: <span class="ident">bool</span>,
-    ) -&gt; <span class="ident">WindowHandle</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span>,
+    <span class="doccomment">/// Open a new window as if it had a parent window.
+    ///
+    /// * `app` - The Vizia application builder.
+    </span><span class="kw">pub fn </span>open_as_if_parented&lt;F&gt;(
+        win_desc: WindowDescription,
+        scale_policy: WindowScalePolicy,
+        app: F,
+        on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
+        ignore_default_theme: bool,
+    ) -&gt; WindowHandle
+    <span class="kw">where
+        </span>F: Fn(<span class="kw-2">&amp;mut </span>Context),
+        F: <span class="lifetime">&#39;static </span>+ Send,
     {
-        <span class="kw">let</span> <span class="ident">window_settings</span> <span class="op">=</span> <span class="ident">WindowOpenOptions</span> {
-            <span class="ident">title</span>: <span class="ident">win_desc</span>.<span class="ident">title</span>.<span class="ident">clone</span>(),
-            <span class="ident">size</span>: <span class="ident">baseview::Size::new</span>(
-                <span class="ident">win_desc</span>.<span class="ident">inner_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span>,
-                <span class="ident">win_desc</span>.<span class="ident">inner_size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">f64</span>,
+        <span class="kw">let </span>window_settings = WindowOpenOptions {
+            title: win_desc.title.clone(),
+            size: baseview::Size::new(
+                win_desc.inner_size.width <span class="kw">as </span>f64,
+                win_desc.inner_size.height <span class="kw">as </span>f64,
             ),
-            <span class="ident">scale</span>: <span class="ident">scale_policy</span>,
-            <span class="ident">gl_config</span>: <span class="prelude-val">Some</span>(<span class="ident">GlConfig</span> { <span class="ident">vsync</span>: <span class="bool-val">false</span>, ..<span class="ident">GlConfig::default</span>() }),
+            scale: scale_policy,
+            gl_config: <span class="prelude-val">Some</span>(GlConfig { vsync: <span class="bool-val">false</span>, ..GlConfig::default() }),
         };
 
-        <span class="ident">Window::open_as_if_parented</span>(
-            <span class="ident">window_settings</span>,
-            <span class="kw">move</span> <span class="op">|</span><span class="ident">window</span>: <span class="kw-2">&amp;mut</span> <span class="ident">baseview::Window</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">|</span> -&gt; <span class="ident">ViziaWindow</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">Context::new</span>();
+        Window::open_as_if_parented(
+            window_settings,
+            <span class="kw">move </span>|window: <span class="kw-2">&amp;mut </span>baseview::Window&lt;<span class="lifetime">&#39;_</span>&gt;| -&gt; ViziaWindow {
+                <span class="kw">let </span><span class="kw-2">mut </span>context = Context::new();
 
-                <span class="ident">context</span>.<span class="ident">ignore_default_theme</span> <span class="op">=</span> <span class="ident">ignore_default_theme</span>;
-                <span class="ident">context</span>.<span class="ident">remove_user_themes</span>();
+                context.ignore_default_theme = ignore_default_theme;
+                context.remove_user_themes();
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cx</span> <span class="op">=</span> <span class="ident">BackendContext::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">context</span>);
+                <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(<span class="kw-2">&amp;mut </span>context);
 
-                <span class="ident">cx</span>.<span class="ident">set_event_proxy</span>(<span class="ident">Box::new</span>(<span class="ident">BaseviewProxy</span>()));
-                <span class="ident">ViziaWindow::new</span>(
-                    <span class="ident">context</span>,
-                    <span class="ident">win_desc</span>,
-                    <span class="ident">scale_policy</span>,
-                    <span class="ident">window</span>,
-                    <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">app</span>)),
-                    <span class="ident">on_idle</span>,
+                cx.set_event_proxy(Box::new(BaseviewProxy()));
+                ViziaWindow::new(
+                    context,
+                    win_desc,
+                    scale_policy,
+                    window,
+                    <span class="prelude-val">Some</span>(Box::new(app)),
+                    on_idle,
                 )
             },
         )
     }
 
-    <span class="doccomment">/// Open a new window that blocks the current thread until the window is destroyed.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// * `app` - The Vizia application builder.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_blocking</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
-        <span class="ident">win_desc</span>: <span class="ident">WindowDescription</span>,
-        <span class="ident">scale_policy</span>: <span class="ident">WindowScalePolicy</span>,
-        <span class="ident">app</span>: <span class="ident">F</span>,
-        <span class="ident">on_idle</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">ignore_default_theme</span>: <span class="ident">bool</span>,
-        <span class="ident">text_shaping_run_cache_size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-        <span class="ident">text_shaped_words_cache_size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    ) <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span>,
+    <span class="doccomment">/// Open a new window that blocks the current thread until the window is destroyed.
+    ///
+    /// * `app` - The Vizia application builder.
+    </span><span class="kw">pub fn </span>open_blocking&lt;F&gt;(
+        win_desc: WindowDescription,
+        scale_policy: WindowScalePolicy,
+        app: F,
+        on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
+        ignore_default_theme: bool,
+        text_shaping_run_cache_size: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+        text_shaped_words_cache_size: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+    ) <span class="kw">where
+        </span>F: Fn(<span class="kw-2">&amp;mut </span>Context),
+        F: <span class="lifetime">&#39;static </span>+ Send,
     {
-        <span class="kw">let</span> <span class="ident">window_settings</span> <span class="op">=</span> <span class="ident">WindowOpenOptions</span> {
-            <span class="ident">title</span>: <span class="ident">win_desc</span>.<span class="ident">title</span>.<span class="ident">clone</span>(),
-            <span class="ident">size</span>: <span class="ident">baseview::Size::new</span>(
-                <span class="ident">win_desc</span>.<span class="ident">inner_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">f64</span>,
-                <span class="ident">win_desc</span>.<span class="ident">inner_size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">f64</span>,
+        <span class="kw">let </span>window_settings = WindowOpenOptions {
+            title: win_desc.title.clone(),
+            size: baseview::Size::new(
+                win_desc.inner_size.width <span class="kw">as </span>f64,
+                win_desc.inner_size.height <span class="kw">as </span>f64,
             ),
-            <span class="ident">scale</span>: <span class="ident">scale_policy</span>,
-            <span class="ident">gl_config</span>: <span class="prelude-val">Some</span>(<span class="ident">GlConfig</span> { <span class="ident">vsync</span>: <span class="bool-val">false</span>, ..<span class="ident">GlConfig::default</span>() }),
+            scale: scale_policy,
+            gl_config: <span class="prelude-val">Some</span>(GlConfig { vsync: <span class="bool-val">false</span>, ..GlConfig::default() }),
         };
 
-        <span class="ident">Window::open_blocking</span>(
-            <span class="ident">window_settings</span>,
-            <span class="kw">move</span> <span class="op">|</span><span class="ident">window</span>: <span class="kw-2">&amp;mut</span> <span class="ident">baseview::Window</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">|</span> -&gt; <span class="ident">ViziaWindow</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">Context::new</span>();
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">size</span>) <span class="op">=</span> <span class="ident">text_shaped_words_cache_size</span> {
-                    <span class="ident">BackendContext::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">context</span>)
-                        .<span class="ident">text_context</span>()
-                        .<span class="ident">resize_shaped_words_cache</span>(<span class="ident">size</span>);
+        Window::open_blocking(
+            window_settings,
+            <span class="kw">move </span>|window: <span class="kw-2">&amp;mut </span>baseview::Window&lt;<span class="lifetime">&#39;_</span>&gt;| -&gt; ViziaWindow {
+                <span class="kw">let </span><span class="kw-2">mut </span>context = Context::new();
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(size) = text_shaped_words_cache_size {
+                    BackendContext::new(<span class="kw-2">&amp;mut </span>context)
+                        .text_context()
+                        .resize_shaped_words_cache(size);
                 }
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">size</span>) <span class="op">=</span> <span class="ident">text_shaping_run_cache_size</span> {
-                    <span class="ident">BackendContext::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">context</span>).<span class="ident">text_context</span>().<span class="ident">resize_shaping_run_cache</span>(<span class="ident">size</span>);
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(size) = text_shaping_run_cache_size {
+                    BackendContext::new(<span class="kw-2">&amp;mut </span>context).text_context().resize_shaping_run_cache(size);
                 }
 
-                <span class="ident">context</span>.<span class="ident">ignore_default_theme</span> <span class="op">=</span> <span class="ident">ignore_default_theme</span>;
-                <span class="ident">context</span>.<span class="ident">remove_user_themes</span>();
+                context.ignore_default_theme = ignore_default_theme;
+                context.remove_user_themes();
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cx</span> <span class="op">=</span> <span class="ident">BackendContext::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">context</span>);
+                <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(<span class="kw-2">&amp;mut </span>context);
 
-                <span class="ident">cx</span>.<span class="ident">set_event_proxy</span>(<span class="ident">Box::new</span>(<span class="ident">BaseviewProxy</span>()));
-                <span class="ident">ViziaWindow::new</span>(
-                    <span class="ident">context</span>,
-                    <span class="ident">win_desc</span>,
-                    <span class="ident">scale_policy</span>,
-                    <span class="ident">window</span>,
-                    <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">app</span>)),
-                    <span class="ident">on_idle</span>,
+                cx.set_event_proxy(Box::new(BaseviewProxy()));
+                ViziaWindow::new(
+                    context,
+                    win_desc,
+                    scale_policy,
+                    window,
+                    <span class="prelude-val">Some</span>(Box::new(app)),
+                    on_idle,
                 )
             },
         )
     }
 }
 
-<span class="kw">impl</span> <span class="ident">WindowHandler</span> <span class="kw">for</span> <span class="ident">ViziaWindow</span> {
-    <span class="kw">fn</span> <span class="ident">on_frame</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">window</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Window</span>) {
-        <span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">window</span>.<span class="ident">gl_context</span>().<span class="ident">expect</span>(<span class="string">&quot;Window was created without OpenGL support&quot;</span>);
+<span class="kw">impl </span>WindowHandler <span class="kw">for </span>ViziaWindow {
+    <span class="kw">fn </span>on_frame(<span class="kw-2">&amp;mut </span><span class="self">self</span>, window: <span class="kw-2">&amp;mut </span>Window) {
+        <span class="kw">let </span>context = window.gl_context().expect(<span class="string">&quot;Window was created without OpenGL support&quot;</span>);
 
-        <span class="self">self</span>.<span class="ident">application</span>.<span class="ident">on_frame_update</span>();
+        <span class="self">self</span>.application.on_frame_update();
 
-        <span class="kw">unsafe</span> { <span class="ident">context</span>.<span class="ident">make_current</span>() };
+        <span class="kw">unsafe </span>{ context.make_current() };
 
-        <span class="self">self</span>.<span class="ident">application</span>.<span class="ident">render</span>();
-        <span class="ident">context</span>.<span class="ident">swap_buffers</span>();
+        <span class="self">self</span>.application.render();
+        context.swap_buffers();
 
-        <span class="kw">unsafe</span> { <span class="ident">context</span>.<span class="ident">make_not_current</span>() };
+        <span class="kw">unsafe </span>{ context.make_not_current() };
     }
 
-    <span class="kw">fn</span> <span class="ident">on_event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_window</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Window</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">event</span>: <span class="ident">Event</span>) -&gt; <span class="ident">EventStatus</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">should_quit</span> <span class="op">=</span> <span class="bool-val">false</span>;
-        <span class="self">self</span>.<span class="ident">application</span>.<span class="ident">handle_event</span>(<span class="ident">event</span>, <span class="kw-2">&amp;mut</span> <span class="ident">should_quit</span>);
+    <span class="kw">fn </span>on_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _window: <span class="kw-2">&amp;mut </span>Window&lt;<span class="lifetime">&#39;_</span>&gt;, event: Event) -&gt; EventStatus {
+        <span class="kw">let </span><span class="kw-2">mut </span>should_quit = <span class="bool-val">false</span>;
+        <span class="self">self</span>.application.handle_event(event, <span class="kw-2">&amp;mut </span>should_quit);
 
-        <span class="comment">//self.application.update_data();</span>
+        <span class="comment">//self.application.update_data();
 
-        <span class="self">self</span>.<span class="ident">application</span>.<span class="ident">handle_idle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">on_idle</span>);
+        </span><span class="self">self</span>.application.handle_idle(<span class="kw-2">&amp;</span><span class="self">self</span>.on_idle);
 
-        <span class="kw">if</span> <span class="ident">should_quit</span> {
-            <span class="comment">// TODO: Request close.</span>
-        }
+        <span class="kw">if </span>should_quit {
+            <span class="comment">// TODO: Request close.
+        </span>}
 
-        <span class="ident">EventStatus::Ignored</span>
+        EventStatus::Ignored
     }
 }
 
-<span class="kw">fn</span> <span class="ident">load_renderer</span>(<span class="ident">window</span>: <span class="kw-2">&amp;</span><span class="ident">Window</span>) -&gt; <span class="ident">Renderer</span> {
-    <span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">window</span>.<span class="ident">gl_context</span>().<span class="ident">expect</span>(<span class="string">&quot;Window was created without OpenGL support&quot;</span>);
+<span class="kw">fn </span>load_renderer(window: <span class="kw-2">&amp;</span>Window) -&gt; Renderer {
+    <span class="kw">let </span>context = window.gl_context().expect(<span class="string">&quot;Window was created without OpenGL support&quot;</span>);
 
-    <span class="kw">unsafe</span> { <span class="ident">context</span>.<span class="ident">make_current</span>() };
+    <span class="kw">unsafe </span>{ context.make_current() };
 
-    <span class="kw">let</span> <span class="ident">renderer</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-        <span class="ident">femtovg::renderer::OpenGl::new_from_function</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">context</span>.<span class="ident">get_proc_address</span>(<span class="ident">s</span>) <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>)
-            .<span class="ident">expect</span>(<span class="string">&quot;Cannot create renderer&quot;</span>)
+    <span class="kw">let </span>renderer = <span class="kw">unsafe </span>{
+        femtovg::renderer::OpenGl::new_from_function(|s| context.get_proc_address(s) <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>)
+            .expect(<span class="string">&quot;Cannot create renderer&quot;</span>)
     };
 
-    <span class="kw">unsafe</span> { <span class="ident">context</span>.<span class="ident">make_not_current</span>() };
+    <span class="kw">unsafe </span>{ context.make_not_current() };
 
-    <span class="ident">renderer</span>
+    renderer
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_baseview" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_baseview" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

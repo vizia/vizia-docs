@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/storage/style_set.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>style_set.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/storage/style_set.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>style_set.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -435,442 +435,442 @@
 <span id="435">435</span>
 <span id="436">436</span>
 <span id="437">437</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::style::Rule</span>;
-<span class="kw">use</span> <span class="ident">vizia_id::GenerationalId</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::style::Rule;
+<span class="kw">use </span>vizia_id::GenerationalId;
 
-<span class="kw">use</span> <span class="ident">vizia_storage</span>::{<span class="ident">SparseSetGeneric</span>, <span class="ident">SparseSetIndex</span>};
+<span class="kw">use </span>vizia_storage::{SparseSetGeneric, SparseSetIndex};
 
-<span class="kw">const</span> <span class="ident">INDEX_MASK</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="ident">u32::MAX</span> <span class="op">/</span> <span class="number">4</span>;
-<span class="kw">const</span> <span class="ident">INLINE_MASK</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">31</span>;
-<span class="kw">const</span> <span class="ident">INHERITED_MASK</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">30</span>;
+<span class="kw">const </span>INDEX_MASK: u32 = u32::MAX / <span class="number">4</span>;
+<span class="kw">const </span>INLINE_MASK: u32 = <span class="number">1 </span>&lt;&lt; <span class="number">31</span>;
+<span class="kw">const </span>INHERITED_MASK: u32 = <span class="number">1 </span>&lt;&lt; <span class="number">30</span>;
 
-<span class="doccomment">/// Represents an index that can either be used to retrieve inline or shared data</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Since inline data will override shared data, this allows the same index to be used</span>
-<span class="doccomment">/// with a flag to indicate which data the index refers to.</span>
-<span class="doccomment">/// The first bit of the u32 internal value is used to signify if the data index</span>
-<span class="doccomment">/// refers to shared (default) or inline data:</span>
-<span class="doccomment">/// - 0 - shared</span>
-<span class="doccomment">/// - 1 - inline</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">struct</span> <span class="ident">DataIndex</span>(<span class="ident">u32</span>);
+<span class="doccomment">/// Represents an index that can either be used to retrieve inline or shared data
+///
+/// Since inline data will override shared data, this allows the same index to be used
+/// with a flag to indicate which data the index refers to.
+/// The first bit of the u32 internal value is used to signify if the data index
+/// refers to shared (default) or inline data:
+/// - 0 - shared
+/// - 1 - inline
+</span><span class="attribute">#[derive(Debug, Clone, Copy, PartialEq)]
+</span><span class="kw">struct </span>DataIndex(u32);
 
-<span class="kw">impl</span> <span class="ident">DataIndex</span> {
-    <span class="doccomment">/// Create a new data index with the first bit set to 1, indicating that</span>
-    <span class="doccomment">/// the index refers to inline data.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inline</span>(<span class="ident">index</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
-        <span class="macro">assert!</span>((<span class="ident">index</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;</span> <span class="ident">INDEX_MASK</span>);
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> (<span class="ident">index</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">|</span> <span class="ident">INLINE_MASK</span>;
-        <span class="self">Self</span>(<span class="ident">value</span>)
+<span class="kw">impl </span>DataIndex {
+    <span class="doccomment">/// Create a new data index with the first bit set to 1, indicating that
+    /// the index refers to inline data.
+    </span><span class="kw">pub fn </span>inline(index: usize) -&gt; <span class="self">Self </span>{
+        <span class="macro">assert!</span>((index <span class="kw">as </span>u32) &lt; INDEX_MASK);
+        <span class="kw">let </span>value = (index <span class="kw">as </span>u32) | INLINE_MASK;
+        <span class="self">Self</span>(value)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inherited</span>(<span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>;
-        <span class="self">Self</span>(<span class="ident">value</span> <span class="op">|</span> <span class="ident">INHERITED_MASK</span>)
+    <span class="kw">pub fn </span>inherited(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>value = <span class="self">self</span>.<span class="number">0</span>;
+        <span class="self">Self</span>(value | INHERITED_MASK)
     }
 
-    <span class="doccomment">/// Create a new data index with the first bit set to 0, indicating that</span>
-    <span class="doccomment">/// the index refers to shared data.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shared</span>(<span class="ident">index</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
-        <span class="macro">assert!</span>((<span class="ident">index</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;</span> <span class="ident">INDEX_MASK</span>);
-        <span class="self">Self</span>(<span class="ident">index</span> <span class="kw">as</span> <span class="ident">u32</span>)
+    <span class="doccomment">/// Create a new data index with the first bit set to 0, indicating that
+    /// the index refers to shared data.
+    </span><span class="kw">pub fn </span>shared(index: usize) -&gt; <span class="self">Self </span>{
+        <span class="macro">assert!</span>((index <span class="kw">as </span>u32) &lt; INDEX_MASK);
+        <span class="self">Self</span>(index <span class="kw">as </span>u32)
     }
 
-    <span class="doccomment">/// Retrieve the inline or shared data index.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        (<span class="self">self</span>.<span class="number">0</span> <span class="op">&amp;</span> <span class="ident">INDEX_MASK</span>) <span class="kw">as</span> <span class="ident">usize</span>
+    <span class="doccomment">/// Retrieve the inline or shared data index.
+    </span><span class="kw">pub fn </span>index(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        (<span class="self">self</span>.<span class="number">0 </span>&amp; INDEX_MASK) <span class="kw">as </span>usize
     }
 
-    <span class="doccomment">/// Returns true if the data index refers to inline data.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_inline</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        (<span class="self">self</span>.<span class="number">0</span> <span class="op">&amp;</span> <span class="ident">INLINE_MASK</span>).<span class="ident">rotate_left</span>(<span class="number">1</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
-    }
+    <span class="doccomment">/// Returns true if the data index refers to inline data.
+    </span><span class="kw">pub fn </span>is_inline(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        (<span class="self">self</span>.<span class="number">0 </span>&amp; INLINE_MASK).rotate_left(<span class="number">1</span>) != <span class="number">0
+    </span>}
 
-    <span class="doccomment">/// Returns true if the data index refers to an inherited value</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_inherited</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        (<span class="self">self</span>.<span class="number">0</span> <span class="op">&amp;</span> <span class="ident">INHERITED_MASK</span>).<span class="ident">rotate_left</span>(<span class="number">2</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span>
-    }
+    <span class="doccomment">/// Returns true if the data index refers to an inherited value
+    </span><span class="kw">pub fn </span>is_inherited(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        (<span class="self">self</span>.<span class="number">0 </span>&amp; INHERITED_MASK).rotate_left(<span class="number">2</span>) != <span class="number">0
+    </span>}
 
-    <span class="doccomment">/// Create a null data index.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// A null data index is used to signify that the index refers to no data.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">null</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">u32::MAX</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">1</span>)
-    }
-}
-
-<span class="doccomment">/// An Index is used by the AnimatableStorage and contains a data index and an animation index.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">struct</span> <span class="ident">Index</span> {
-    <span class="ident">data_index</span>: <span class="ident">DataIndex</span>,
-    <span class="ident">anim_index</span>: <span class="ident">u32</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Index</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">Index</span> { <span class="ident">data_index</span>: <span class="ident">DataIndex::null</span>(), <span class="ident">anim_index</span>: <span class="ident">u32::MAX</span> }
+    <span class="doccomment">/// Create a null data index.
+    ///
+    /// A null data index is used to signify that the index refers to no data.
+    </span><span class="kw">pub fn </span>null() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(u32::MAX &gt;&gt; <span class="number">1</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">SparseSetIndex</span> <span class="kw">for</span> <span class="ident">Index</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">index</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">Index</span> { <span class="ident">data_index</span>: <span class="ident">DataIndex::inline</span>(<span class="ident">index</span>), <span class="ident">anim_index</span>: <span class="ident">u32::MAX</span> }
-    }
+<span class="doccomment">/// An Index is used by the AnimatableStorage and contains a data index and an animation index.
+</span><span class="attribute">#[derive(Debug, Clone, Copy, PartialEq)]
+</span><span class="kw">struct </span>Index {
+    data_index: DataIndex,
+    anim_index: u32,
+}
 
-    <span class="kw">fn</span> <span class="ident">null</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::default</span>()
-    }
-
-    <span class="kw">fn</span> <span class="ident">index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">data_index</span>.<span class="ident">index</span>()
+<span class="kw">impl </span>Default <span class="kw">for </span>Index {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        Index { data_index: DataIndex::null(), anim_index: u32::MAX }
     }
 }
 
-<span class="doccomment">/// Animatable storage is used for storing inline and shared data for entities as well as definitions for</span>
-<span class="doccomment">/// animations, which can be played for entities, and transitions, which play when an entity matches a new shared style</span>
-<span class="doccomment">/// rule which defines a trnasition.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Animations are moved from animations to active_animations when played. This allows the active</span>
-<span class="doccomment">/// animations to be quickly iterated to update the value.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">StyleSet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Shared data determined by style rules</span>
-    <span class="ident">shared_data</span>: <span class="ident">SparseSetGeneric</span><span class="op">&lt;</span><span class="ident">Index</span>, <span class="ident">T</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Inline data defined on specific entities</span>
-    <span class="ident">inline_data</span>: <span class="ident">SparseSetGeneric</span><span class="op">&lt;</span><span class="ident">Index</span>, <span class="ident">T</span><span class="op">&gt;</span>,
-}
+<span class="kw">impl </span>SparseSetIndex <span class="kw">for </span>Index {
+    <span class="kw">fn </span>new(index: usize) -&gt; <span class="self">Self </span>{
+        Index { data_index: DataIndex::inline(index), anim_index: u32::MAX }
+    }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">StyleSet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">shared_data</span>: <span class="ident">Default::default</span>(), <span class="ident">inline_data</span>: <span class="ident">Default::default</span>() }
+    <span class="kw">fn </span>null() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::default()
+    }
+
+    <span class="kw">fn </span>index(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.data_index.index()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">StyleSet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">std::fmt::Debug</span>,
+<span class="doccomment">/// Animatable storage is used for storing inline and shared data for entities as well as definitions for
+/// animations, which can be played for entities, and transitions, which play when an entity matches a new shared style
+/// rule which defines a trnasition.
+///
+/// Animations are moved from animations to active_animations when played. This allows the active
+/// animations to be quickly iterated to update the value.
+</span><span class="kw">pub struct </span>StyleSet&lt;T&gt; {
+    <span class="doccomment">/// Shared data determined by style rules
+    </span>shared_data: SparseSetGeneric&lt;Index, T&gt;,
+    <span class="doccomment">/// Inline data defined on specific entities
+    </span>inline_data: SparseSetGeneric&lt;Index, T&gt;,
+}
+
+<span class="kw">impl</span>&lt;T&gt; Default <span class="kw">for </span>StyleSet&lt;T&gt; {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ shared_data: Default::default(), inline_data: Default::default() }
+    }
+}
+
+<span class="kw">impl</span>&lt;T&gt; StyleSet&lt;T&gt;
+<span class="kw">where
+    </span>T: <span class="lifetime">&#39;static </span>+ std::fmt::Debug,
 {
-    <span class="doccomment">/// Create a new empty styleset.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::default</span>()
+    <span class="doccomment">/// Create a new empty styleset.
+    </span><span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::default()
     }
 
-    <span class="doccomment">/// Insert an inline value for an entity.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">value</span>: <span class="ident">T</span>) {
-        <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>).<span class="ident">unwrap</span>();
+    <span class="doccomment">/// Insert an inline value for an entity.
+    </span><span class="kw">pub fn </span>insert(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, value: T) {
+        <span class="self">self</span>.inline_data.insert(entity, value).unwrap();
     }
 
-    <span class="doccomment">/// Remove an entity and any inline data.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">entity_index</span> <span class="op">=</span> <span class="ident">entity</span>.<span class="ident">index</span>();
+    <span class="doccomment">/// Remove an entity and any inline data.
+    </span><span class="kw">pub fn </span>remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+        <span class="kw">let </span>entity_index = entity.index();
 
-        <span class="kw">if</span> <span class="ident">entity_index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="ident">data_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>].<span class="ident">data_index</span>;
-            <span class="kw">if</span> <span class="ident">data_index</span>.<span class="ident">is_inline</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">data_index</span>.<span class="ident">is_inherited</span>() {
-                <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">remove</span>(<span class="ident">entity</span>)
-            } <span class="kw">else</span> {
-                <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>] <span class="op">=</span> <span class="ident">Index::null</span>();
-                <span class="prelude-val">None</span>
-            }
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
-        }
+        <span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
+            <span class="kw">let </span>data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
+            <span class="kw">if </span>data_index.is_inline() &amp;&amp; !data_index.is_inherited() {
+                <span class="self">self</span>.inline_data.remove(entity)
+            } <span class="kw">else </span>{
+                <span class="self">self</span>.inline_data.sparse[entity_index] = Index::null();
+                <span class="prelude-val">None
+            </span>}
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>}
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inherit_inline</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">parent</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">entity_index</span> <span class="op">=</span> <span class="ident">entity</span>.<span class="ident">index</span>();
-        <span class="kw">let</span> <span class="ident">parent_index</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">index</span>();
+    <span class="kw">pub fn </span>inherit_inline(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, parent: Entity) -&gt; bool {
+        <span class="kw">let </span>entity_index = entity.index();
+        <span class="kw">let </span>parent_index = parent.index();
 
-        <span class="kw">if</span> <span class="ident">parent_index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="ident">parent_sparse_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">parent_index</span>];
+        <span class="kw">if </span>parent_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
+            <span class="kw">let </span>parent_sparse_index = <span class="self">self</span>.inline_data.sparse[parent_index];
 
-            <span class="kw">if</span> <span class="ident">parent_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">is_inline</span>()
-                <span class="op">&amp;&amp;</span> <span class="ident">parent_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">index</span>() <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">dense</span>.<span class="ident">len</span>()
+            <span class="kw">if </span>parent_sparse_index.data_index.is_inline()
+                &amp;&amp; parent_sparse_index.data_index.index() &lt; <span class="self">self</span>.inline_data.dense.len()
             {
-                <span class="kw">if</span> <span class="ident">entity_index</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">len</span>() {
-                    <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">resize</span>(<span class="ident">entity_index</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">Index::null</span>());
+                <span class="kw">if </span>entity_index &gt;= <span class="self">self</span>.inline_data.sparse.len() {
+                    <span class="self">self</span>.inline_data.sparse.resize(entity_index + <span class="number">1</span>, Index::null());
                 }
 
-                <span class="kw">let</span> <span class="ident">entity_sparse_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>];
+                <span class="kw">let </span>entity_sparse_index = <span class="self">self</span>.inline_data.sparse[entity_index];
 
-                <span class="kw">if</span> <span class="ident">entity_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">is_inline</span>()
-                    <span class="op">&amp;&amp;</span> <span class="ident">entity_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">index</span>() <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">dense</span>.<span class="ident">len</span>()
+                <span class="kw">if </span>entity_sparse_index.data_index.is_inline()
+                    &amp;&amp; entity_sparse_index.data_index.index() &lt; <span class="self">self</span>.inline_data.dense.len()
                 {
-                    <span class="kw">if</span> <span class="ident">entity_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">is_inherited</span>() {
-                        <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>] <span class="op">=</span> <span class="ident">Index</span> {
-                            <span class="ident">data_index</span>: <span class="ident">DataIndex::inline</span>(<span class="ident">parent_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">index</span>())
-                                .<span class="ident">inherited</span>(),
-                            <span class="ident">anim_index</span>: <span class="ident">u32::MAX</span>,
+                    <span class="kw">if </span>entity_sparse_index.data_index.is_inherited() {
+                        <span class="self">self</span>.inline_data.sparse[entity_index] = Index {
+                            data_index: DataIndex::inline(parent_sparse_index.data_index.index())
+                                .inherited(),
+                            anim_index: u32::MAX,
                         };
-                        <span class="kw">return</span> <span class="bool-val">true</span>;
+                        <span class="kw">return </span><span class="bool-val">true</span>;
                     }
-                } <span class="kw">else</span> {
-                    <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>] <span class="op">=</span> <span class="ident">Index</span> {
-                        <span class="ident">data_index</span>: <span class="ident">DataIndex::inline</span>(<span class="ident">parent_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">index</span>())
-                            .<span class="ident">inherited</span>(),
-                        <span class="ident">anim_index</span>: <span class="ident">u32::MAX</span>,
+                } <span class="kw">else </span>{
+                    <span class="self">self</span>.inline_data.sparse[entity_index] = Index {
+                        data_index: DataIndex::inline(parent_sparse_index.data_index.index())
+                            .inherited(),
+                        anim_index: u32::MAX,
                     };
-                    <span class="kw">return</span> <span class="bool-val">true</span>;
+                    <span class="kw">return </span><span class="bool-val">true</span>;
                 }
             }
         }
 
-        <span class="kw">return</span> <span class="bool-val">false</span>;
+        <span class="kw">return </span><span class="bool-val">false</span>;
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inherit_shared</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">parent</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">entity_index</span> <span class="op">=</span> <span class="ident">entity</span>.<span class="ident">index</span>();
-        <span class="kw">let</span> <span class="ident">parent_index</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">index</span>();
+    <span class="kw">pub fn </span>inherit_shared(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, parent: Entity) -&gt; bool {
+        <span class="kw">let </span>entity_index = entity.index();
+        <span class="kw">let </span>parent_index = parent.index();
 
-        <span class="kw">if</span> <span class="ident">parent_index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="ident">parent_sparse_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">parent_index</span>];
+        <span class="kw">if </span>parent_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
+            <span class="kw">let </span>parent_sparse_index = <span class="self">self</span>.inline_data.sparse[parent_index];
 
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">parent_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">is_inline</span>()
-                <span class="op">&amp;&amp;</span> <span class="ident">parent_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">index</span>() <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">dense</span>.<span class="ident">len</span>()
+            <span class="kw">if </span>!parent_sparse_index.data_index.is_inline()
+                &amp;&amp; parent_sparse_index.data_index.index() &lt; <span class="self">self</span>.shared_data.dense.len()
             {
-                <span class="kw">if</span> <span class="ident">entity_index</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">len</span>() {
-                    <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">resize</span>(<span class="ident">entity_index</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">Index::null</span>());
+                <span class="kw">if </span>entity_index &gt;= <span class="self">self</span>.inline_data.sparse.len() {
+                    <span class="self">self</span>.inline_data.sparse.resize(entity_index + <span class="number">1</span>, Index::null());
                 }
 
-                <span class="kw">let</span> <span class="ident">entity_sparse_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>];
+                <span class="kw">let </span>entity_sparse_index = <span class="self">self</span>.inline_data.sparse[entity_index];
 
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">entity_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">is_inline</span>()
-                    <span class="op">&amp;&amp;</span> <span class="ident">entity_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">index</span>() <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">dense</span>.<span class="ident">len</span>()
+                <span class="kw">if </span>!entity_sparse_index.data_index.is_inline()
+                    &amp;&amp; entity_sparse_index.data_index.index() &lt; <span class="self">self</span>.shared_data.dense.len()
                 {
-                    <span class="kw">if</span> <span class="ident">entity_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">is_inherited</span>() {
-                        <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>] <span class="op">=</span> <span class="ident">Index</span> {
-                            <span class="ident">data_index</span>: <span class="ident">DataIndex::shared</span>(<span class="ident">parent_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">index</span>())
-                                .<span class="ident">inherited</span>(),
-                            <span class="ident">anim_index</span>: <span class="ident">u32::MAX</span>,
+                    <span class="kw">if </span>entity_sparse_index.data_index.is_inherited() {
+                        <span class="self">self</span>.inline_data.sparse[entity_index] = Index {
+                            data_index: DataIndex::shared(parent_sparse_index.data_index.index())
+                                .inherited(),
+                            anim_index: u32::MAX,
                         };
-                        <span class="kw">return</span> <span class="bool-val">true</span>;
+                        <span class="kw">return </span><span class="bool-val">true</span>;
                     }
-                } <span class="kw">else</span> {
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">entity_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">is_inline</span>() {
-                        <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>] <span class="op">=</span> <span class="ident">Index</span> {
-                            <span class="ident">data_index</span>: <span class="ident">DataIndex::shared</span>(<span class="ident">parent_sparse_index</span>.<span class="ident">data_index</span>.<span class="ident">index</span>())
-                                .<span class="ident">inherited</span>(),
-                            <span class="ident">anim_index</span>: <span class="ident">u32::MAX</span>,
+                } <span class="kw">else </span>{
+                    <span class="kw">if </span>!entity_sparse_index.data_index.is_inline() {
+                        <span class="self">self</span>.inline_data.sparse[entity_index] = Index {
+                            data_index: DataIndex::shared(parent_sparse_index.data_index.index())
+                                .inherited(),
+                            anim_index: u32::MAX,
                         };
                     }
-                    <span class="kw">return</span> <span class="bool-val">true</span>;
+                    <span class="kw">return </span><span class="bool-val">true</span>;
                 }
             }
         }
 
-        <span class="kw">return</span> <span class="bool-val">false</span>;
+        <span class="kw">return </span><span class="bool-val">false</span>;
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clear_rules</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="comment">// Remove transitions (TODO)</span>
-        <span class="kw">for</span> <span class="ident">_index</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">sparse</span>.<span class="ident">iter</span>() {
-            <span class="comment">//let anim_index = index.anim_index as usize;</span>
-        }
+    <span class="kw">pub fn </span>clear_rules(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="comment">// Remove transitions (TODO)
+        </span><span class="kw">for </span>_index <span class="kw">in </span><span class="self">self</span>.shared_data.sparse.iter() {
+            <span class="comment">//let anim_index = index.anim_index as usize;
+        </span>}
 
-        <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">clear</span>();
+        <span class="self">self</span>.shared_data.clear();
 
-        <span class="kw">for</span> <span class="ident">index</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">iter_mut</span>() {
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">index</span>.<span class="ident">data_index</span>.<span class="ident">is_inline</span>() {
-                <span class="ident">index</span>.<span class="ident">data_index</span> <span class="op">=</span> <span class="ident">DataIndex::null</span>();
+        <span class="kw">for </span>index <span class="kw">in </span><span class="self">self</span>.inline_data.sparse.iter_mut() {
+            <span class="kw">if </span>!index.data_index.is_inline() {
+                index.data_index = DataIndex::null();
             }
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert_rule</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">rule</span>: <span class="ident">Rule</span>, <span class="ident">value</span>: <span class="ident">T</span>) {
-        <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">insert</span>(<span class="ident">rule</span>, <span class="ident">value</span>).<span class="ident">unwrap</span>();
+    <span class="kw">pub fn </span>insert_rule(<span class="kw-2">&amp;mut </span><span class="self">self</span>, rule: Rule, value: T) {
+        <span class="self">self</span>.shared_data.insert(rule, value).unwrap();
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_rule</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">rule</span>: <span class="ident">Rule</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">remove</span>(<span class="ident">rule</span>)
+    <span class="kw">pub fn </span>remove_rule(<span class="kw-2">&amp;mut </span><span class="self">self</span>, rule: Rule) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+        <span class="self">self</span>.shared_data.remove(rule)
     }
 
-    <span class="doccomment">/// Returns a reference to any inline data on the entity if it exists.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_inline</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">entity_index</span> <span class="op">=</span> <span class="ident">entity</span>.<span class="ident">index</span>();
-        <span class="kw">if</span> <span class="ident">entity_index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="ident">data_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>].<span class="ident">data_index</span>;
-            <span class="kw">if</span> <span class="ident">data_index</span>.<span class="ident">is_inline</span>() {
-                <span class="kw">return</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">get</span>(<span class="ident">entity</span>);
+    <span class="doccomment">/// Returns a reference to any inline data on the entity if it exists.
+    </span><span class="kw">pub fn </span>get_inline(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
+        <span class="kw">let </span>entity_index = entity.index();
+        <span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
+            <span class="kw">let </span>data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
+            <span class="kw">if </span>data_index.is_inline() {
+                <span class="kw">return </span><span class="self">self</span>.inline_data.get(entity);
             }
         }
 
-        <span class="prelude-val">None</span>
-    }
+        <span class="prelude-val">None
+    </span>}
 
-    <span class="doccomment">/// Returns a mutable reference to any inline data on the entity if it exists.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_inline_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">entity_index</span> <span class="op">=</span> <span class="ident">entity</span>.<span class="ident">index</span>();
-        <span class="kw">if</span> <span class="ident">entity_index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="ident">data_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>].<span class="ident">data_index</span>;
-            <span class="kw">if</span> <span class="ident">data_index</span>.<span class="ident">is_inline</span>() {
-                <span class="kw">return</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>);
+    <span class="doccomment">/// Returns a mutable reference to any inline data on the entity if it exists.
+    </span><span class="kw">pub fn </span>get_inline_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>T&gt; {
+        <span class="kw">let </span>entity_index = entity.index();
+        <span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
+            <span class="kw">let </span>data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
+            <span class="kw">if </span>data_index.is_inline() {
+                <span class="kw">return </span><span class="self">self</span>.inline_data.get_mut(entity);
             }
         }
 
-        <span class="prelude-val">None</span>
+        <span class="prelude-val">None
+    </span>}
+
+    <span class="doccomment">/// Returns a reference to any shared data for a given rule if it exists.
+    </span><span class="kw">pub fn </span>get_shared(<span class="kw-2">&amp;</span><span class="self">self</span>, rule: Rule) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
+        <span class="self">self</span>.shared_data.get(rule)
     }
 
-    <span class="doccomment">/// Returns a reference to any shared data for a given rule if it exists.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_shared</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rule</span>: <span class="ident">Rule</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">get</span>(<span class="ident">rule</span>)
+    <span class="doccomment">/// Returns a mutable reference to any shared data for a given rule if it exists.
+    </span><span class="kw">pub fn </span>get_shared_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, rule: Rule) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>T&gt; {
+        <span class="self">self</span>.shared_data.get_mut(rule)
     }
 
-    <span class="doccomment">/// Returns a mutable reference to any shared data for a given rule if it exists.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_shared_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">rule</span>: <span class="ident">Rule</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">get_mut</span>(<span class="ident">rule</span>)
-    }
-
-    <span class="doccomment">/// Get the animated, inline, or shared data value from the storage.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">entity_index</span> <span class="op">=</span> <span class="ident">entity</span>.<span class="ident">index</span>();
-        <span class="kw">if</span> <span class="ident">entity_index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="ident">data_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>].<span class="ident">data_index</span>;
-            <span class="kw">if</span> <span class="ident">data_index</span>.<span class="ident">is_inline</span>() {
-                <span class="kw">if</span> <span class="ident">data_index</span>.<span class="ident">index</span>() <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">dense</span>.<span class="ident">len</span>() {
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">dense</span>[<span class="ident">data_index</span>.<span class="ident">index</span>()].<span class="ident">value</span>);
+    <span class="doccomment">/// Get the animated, inline, or shared data value from the storage.
+    </span><span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
+        <span class="kw">let </span>entity_index = entity.index();
+        <span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
+            <span class="kw">let </span>data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
+            <span class="kw">if </span>data_index.is_inline() {
+                <span class="kw">if </span>data_index.index() &lt; <span class="self">self</span>.inline_data.dense.len() {
+                    <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.inline_data.dense[data_index.index()].value);
                 }
-            } <span class="kw">else</span> {
-                <span class="kw">if</span> <span class="ident">data_index</span>.<span class="ident">index</span>() <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">dense</span>.<span class="ident">len</span>() {
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">dense</span>[<span class="ident">data_index</span>.<span class="ident">index</span>()].<span class="ident">value</span>);
-                }
-            }
-        }
-
-        <span class="prelude-val">None</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">entity_index</span> <span class="op">=</span> <span class="ident">entity</span>.<span class="ident">index</span>();
-        <span class="kw">if</span> <span class="ident">entity_index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="ident">data_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>].<span class="ident">data_index</span>;
-            <span class="kw">if</span> <span class="ident">data_index</span>.<span class="ident">is_inline</span>() {
-                <span class="kw">if</span> <span class="ident">data_index</span>.<span class="ident">index</span>() <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">dense</span>.<span class="ident">len</span>() {
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">dense</span>[<span class="ident">data_index</span>.<span class="ident">index</span>()].<span class="ident">value</span>);
+            } <span class="kw">else </span>{
+                <span class="kw">if </span>data_index.index() &lt; <span class="self">self</span>.shared_data.dense.len() {
+                    <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.shared_data.dense[data_index.index()].value);
                 }
             }
         }
 
-        <span class="prelude-val">None</span>
-    }
+        <span class="prelude-val">None
+    </span>}
 
-    <span class="doccomment">/// Link an entity to some shared data.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">link</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">rules</span>: <span class="kw-2">&amp;</span>[<span class="ident">Rule</span>]) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">entity_index</span> <span class="op">=</span> <span class="ident">entity</span>.<span class="ident">index</span>();
-
-        <span class="comment">// Check if the entity already has some data</span>
-        <span class="kw">if</span> <span class="ident">entity_index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="ident">data_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>].<span class="ident">data_index</span>;
-            <span class="comment">// If the data is inline then skip linking as inline data overrides shared data</span>
-            <span class="kw">if</span> <span class="ident">data_index</span>.<span class="ident">is_inline</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">data_index</span>.<span class="ident">is_inherited</span>() {
-                <span class="kw">return</span> <span class="bool-val">false</span>;
-            }
-        }
-
-        <span class="comment">// Loop through matched rules and link to the first valid rule</span>
-        <span class="kw">for</span> <span class="ident">rule</span> <span class="kw">in</span> <span class="ident">rules</span>.<span class="ident">iter</span>() {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">shared_data_index</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">dense_idx</span>(<span class="kw-2">*</span><span class="ident">rule</span>) {
-                <span class="comment">// If the entity doesn&#39;t have any previous shared data then create space for it</span>
-                <span class="kw">if</span> <span class="ident">entity_index</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">len</span>() {
-                    <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">resize</span>(<span class="ident">entity_index</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">Index::null</span>());
-                }
-
-                <span class="kw">let</span> <span class="ident">data_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>].<span class="ident">data_index</span>;
-                <span class="comment">// Already linked</span>
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">data_index</span>.<span class="ident">is_inline</span>() <span class="op">&amp;&amp;</span> <span class="ident">data_index</span>.<span class="ident">index</span>() <span class="op">==</span> <span class="ident">shared_data_index</span>.<span class="ident">index</span>() {
-                    <span class="kw">return</span> <span class="bool-val">false</span>;
-                }
-
-                <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>].<span class="ident">data_index</span> <span class="op">=</span>
-                    <span class="ident">DataIndex::shared</span>(<span class="ident">shared_data_index</span>.<span class="ident">index</span>());
-
-                <span class="kw">return</span> <span class="bool-val">true</span>;
-            }
-        }
-
-        <span class="comment">// No matching rules so set if the data is shared set the index to null if not already null</span>
-        <span class="kw">if</span> <span class="ident">entity_index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="ident">data_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>].<span class="ident">data_index</span>;
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">data_index</span>.<span class="ident">is_inline</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">data_index</span>.<span class="ident">is_inherited</span>() {
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>].<span class="ident">data_index</span> <span class="op">!</span><span class="op">=</span> <span class="ident">DataIndex::null</span>() {
-                    <span class="self">self</span>.<span class="ident">inline_data</span>.<span class="ident">sparse</span>[<span class="ident">entity_index</span>].<span class="ident">data_index</span> <span class="op">=</span> <span class="ident">DataIndex::null</span>();
-                    <span class="kw">return</span> <span class="bool-val">true</span>;
+    <span class="kw">pub fn </span>get_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>T&gt; {
+        <span class="kw">let </span>entity_index = entity.index();
+        <span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
+            <span class="kw">let </span>data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
+            <span class="kw">if </span>data_index.is_inline() {
+                <span class="kw">if </span>data_index.index() &lt; <span class="self">self</span>.inline_data.dense.len() {
+                    <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>.inline_data.dense[data_index.index()].value);
                 }
             }
         }
 
-        <span class="bool-val">false</span>
-    }
+        <span class="prelude-val">None
+    </span>}
+
+    <span class="doccomment">/// Link an entity to some shared data.
+    </span><span class="kw">pub fn </span>link(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, rules: <span class="kw-2">&amp;</span>[Rule]) -&gt; bool {
+        <span class="kw">let </span>entity_index = entity.index();
+
+        <span class="comment">// Check if the entity already has some data
+        </span><span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
+            <span class="kw">let </span>data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
+            <span class="comment">// If the data is inline then skip linking as inline data overrides shared data
+            </span><span class="kw">if </span>data_index.is_inline() &amp;&amp; !data_index.is_inherited() {
+                <span class="kw">return </span><span class="bool-val">false</span>;
+            }
+        }
+
+        <span class="comment">// Loop through matched rules and link to the first valid rule
+        </span><span class="kw">for </span>rule <span class="kw">in </span>rules.iter() {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(shared_data_index) = <span class="self">self</span>.shared_data.dense_idx(<span class="kw-2">*</span>rule) {
+                <span class="comment">// If the entity doesn&#39;t have any previous shared data then create space for it
+                </span><span class="kw">if </span>entity_index &gt;= <span class="self">self</span>.inline_data.sparse.len() {
+                    <span class="self">self</span>.inline_data.sparse.resize(entity_index + <span class="number">1</span>, Index::null());
+                }
+
+                <span class="kw">let </span>data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
+                <span class="comment">// Already linked
+                </span><span class="kw">if </span>!data_index.is_inline() &amp;&amp; data_index.index() == shared_data_index.index() {
+                    <span class="kw">return </span><span class="bool-val">false</span>;
+                }
+
+                <span class="self">self</span>.inline_data.sparse[entity_index].data_index =
+                    DataIndex::shared(shared_data_index.index());
+
+                <span class="kw">return </span><span class="bool-val">true</span>;
+            }
+        }
+
+        <span class="comment">// No matching rules so set if the data is shared set the index to null if not already null
+        </span><span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
+            <span class="kw">let </span>data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
+            <span class="kw">if </span>!data_index.is_inline() &amp;&amp; !data_index.is_inherited() {
+                <span class="kw">if </span><span class="self">self</span>.inline_data.sparse[entity_index].data_index != DataIndex::null() {
+                    <span class="self">self</span>.inline_data.sparse[entity_index].data_index = DataIndex::null();
+                    <span class="kw">return </span><span class="bool-val">true</span>;
+                }
+            }
+        }
+
+        <span class="bool-val">false
+    </span>}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-    <span class="comment">// DataIndex tests</span>
+    <span class="comment">// DataIndex tests
 
-    <span class="doccomment">/// Test for creating an inline data index and retrieving the index.</span>
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">inline</span>() {
-        <span class="kw">let</span> <span class="ident">data_index</span> <span class="op">=</span> <span class="ident">DataIndex::inline</span>(<span class="number">5</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">data_index</span>.<span class="number">0</span>, <span class="ident">INLINE_MASK</span> <span class="op">+</span> <span class="number">5</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">data_index</span>.<span class="ident">index</span>(), <span class="number">5</span>);
+    </span><span class="doccomment">/// Test for creating an inline data index and retrieving the index.
+    </span><span class="attribute">#[test]
+    </span><span class="kw">fn </span>inline() {
+        <span class="kw">let </span>data_index = DataIndex::inline(<span class="number">5</span>);
+        <span class="macro">assert_eq!</span>(data_index.<span class="number">0</span>, INLINE_MASK + <span class="number">5</span>);
+        <span class="macro">assert_eq!</span>(data_index.index(), <span class="number">5</span>);
     }
 
-    <span class="doccomment">/// Test that an invalid (too large) inline index causes a panic.</span>
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="attribute">#[<span class="ident">should_panic</span>]</span>
-    <span class="kw">fn</span> <span class="ident">invalid_inline</span>() {
-        <span class="ident">DataIndex::inline</span>(<span class="ident">std::usize::MAX</span>);
+    <span class="doccomment">/// Test that an invalid (too large) inline index causes a panic.
+    </span><span class="attribute">#[test]
+    #[should_panic]
+    </span><span class="kw">fn </span>invalid_inline() {
+        DataIndex::inline(std::usize::MAX);
     }
 
-    <span class="doccomment">/// Test for creating a shared data index and retrieving the index.</span>
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">shared</span>() {
-        <span class="kw">let</span> <span class="ident">data_index</span> <span class="op">=</span> <span class="ident">DataIndex::shared</span>(<span class="number">5</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">data_index</span>.<span class="number">0</span>, <span class="number">5</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">data_index</span>.<span class="ident">index</span>(), <span class="number">5</span>);
+    <span class="doccomment">/// Test for creating a shared data index and retrieving the index.
+    </span><span class="attribute">#[test]
+    </span><span class="kw">fn </span>shared() {
+        <span class="kw">let </span>data_index = DataIndex::shared(<span class="number">5</span>);
+        <span class="macro">assert_eq!</span>(data_index.<span class="number">0</span>, <span class="number">5</span>);
+        <span class="macro">assert_eq!</span>(data_index.index(), <span class="number">5</span>);
     }
 
-    <span class="doccomment">/// Test that an invalid (too large) shared index causes a panic.</span>
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="attribute">#[<span class="ident">should_panic</span>]</span>
-    <span class="kw">fn</span> <span class="ident">invalid_shared</span>() {
-        <span class="ident">DataIndex::shared</span>(<span class="ident">std::usize::MAX</span>);
+    <span class="doccomment">/// Test that an invalid (too large) shared index causes a panic.
+    </span><span class="attribute">#[test]
+    #[should_panic]
+    </span><span class="kw">fn </span>invalid_shared() {
+        DataIndex::shared(std::usize::MAX);
     }
 
-    <span class="doccomment">/// Test of the is_inline() method.</span>
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">is_inline</span>() {
-        <span class="kw">let</span> <span class="ident">data_index1</span> <span class="op">=</span> <span class="ident">DataIndex::inline</span>(<span class="number">5</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">data_index1</span>.<span class="ident">is_inline</span>(), <span class="bool-val">true</span>);
-        <span class="kw">let</span> <span class="ident">data_index2</span> <span class="op">=</span> <span class="ident">DataIndex::shared</span>(<span class="number">5</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">data_index2</span>.<span class="ident">is_inline</span>(), <span class="bool-val">false</span>);
+    <span class="doccomment">/// Test of the is_inline() method.
+    </span><span class="attribute">#[test]
+    </span><span class="kw">fn </span>is_inline() {
+        <span class="kw">let </span>data_index1 = DataIndex::inline(<span class="number">5</span>);
+        <span class="macro">assert_eq!</span>(data_index1.is_inline(), <span class="bool-val">true</span>);
+        <span class="kw">let </span>data_index2 = DataIndex::shared(<span class="number">5</span>);
+        <span class="macro">assert_eq!</span>(data_index2.is_inline(), <span class="bool-val">false</span>);
     }
 
-    <span class="doccomment">/// Test that a null data index is the correct value #7FFFFFFF (i.e. all bits = 1 except the first bit).</span>
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">null</span>() {
-        <span class="kw">let</span> <span class="ident">data_index</span> <span class="op">=</span> <span class="ident">DataIndex::null</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">data_index</span>.<span class="number">0</span>, <span class="number">2147483647</span>);
+    <span class="doccomment">/// Test that a null data index is the correct value #7FFFFFFF (i.e. all bits = 1 except the first bit).
+    </span><span class="attribute">#[test]
+    </span><span class="kw">fn </span>null() {
+        <span class="kw">let </span>data_index = DataIndex::null();
+        <span class="macro">assert_eq!</span>(data_index.<span class="number">0</span>, <span class="number">2147483647</span>);
     }
 
-    <span class="comment">// AnimatableStorage tests</span>
+    <span class="comment">// AnimatableStorage tests
 
-    <span class="doccomment">/// Test for constructing a new empty animatable storage.</span>
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">new</span>() {
-        <span class="kw">let</span> <span class="ident">animatable_storage</span> <span class="op">=</span> <span class="ident">StyleSet</span>::<span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span><span class="ident">::new</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">animatable_storage</span>.<span class="ident">inline_data</span>.<span class="ident">is_empty</span>(), <span class="bool-val">true</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">animatable_storage</span>.<span class="ident">shared_data</span>.<span class="ident">is_empty</span>(), <span class="bool-val">true</span>);
+    </span><span class="doccomment">/// Test for constructing a new empty animatable storage.
+    </span><span class="attribute">#[test]
+    </span><span class="kw">fn </span>new() {
+        <span class="kw">let </span>animatable_storage = StyleSet::&lt;f32&gt;::new();
+        <span class="macro">assert_eq!</span>(animatable_storage.inline_data.is_empty(), <span class="bool-val">true</span>);
+        <span class="macro">assert_eq!</span>(animatable_storage.shared_data.is_empty(), <span class="bool-val">true</span>);
     }
 
-    <span class="doccomment">/// Test inserting inline data into the storage.</span>
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">insert_inline</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">animatable_storage</span> <span class="op">=</span> <span class="ident">StyleSet::new</span>();
-        <span class="ident">animatable_storage</span>.<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="number">5.0</span>);
-        <span class="comment">//assert_eq!(animatable_storage.entity_indices.first().unwrap().data_index, DataIndex::inline(0));</span>
-    }
+    <span class="doccomment">/// Test inserting inline data into the storage.
+    </span><span class="attribute">#[test]
+    </span><span class="kw">fn </span>insert_inline() {
+        <span class="kw">let </span><span class="kw-2">mut </span>animatable_storage = StyleSet::new();
+        animatable_storage.insert(Entity::root(), <span class="number">5.0</span>);
+        <span class="comment">//assert_eq!(animatable_storage.entity_indices.first().unwrap().data_index, DataIndex::inline(0));
+    </span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

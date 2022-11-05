@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/events/event.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/events/event.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -156,163 +156,163 @@
 <span id="156">156</span>
 <span id="157">157</span>
 <span id="158">158</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::entity::Entity</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">any::Any</span>, <span class="ident">fmt::Debug</span>};
-<span class="kw">use</span> <span class="ident">vizia_id::GenerationalId</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::entity::Entity;
+<span class="kw">use </span>std::{any::Any, fmt::Debug};
+<span class="kw">use </span>vizia_id::GenerationalId;
 
-<span class="doccomment">/// Determines how an event propagates through the tree.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This type is part of the prelude.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Propagation</span> {
-    <span class="comment">// /// Events propagate down the tree to the target entity, e.g. from grand-parent to parent to child (target)</span>
-    <span class="comment">// Down,</span>
-    <span class="doccomment">/// Events propagate up the tree from the target entity from ancestor to ancestor, e.g. from child (target) to parent to grand-parent etc...</span>
-    <span class="ident">Up</span>,
-    <span class="comment">// /// Events propagate down the tree to the target entity and then back up to the root</span>
-    <span class="comment">// DownUp,</span>
-    <span class="doccomment">/// Events propagate starting at the target entity and visiting every entity that is a descendent of the target</span>
-    <span class="ident">Subtree</span>,
-    <span class="doccomment">/// Events propagate directly to the target entity and to no others</span>
-    <span class="ident">Direct</span>,
+<span class="doccomment">/// Determines how an event propagates through the tree.
+///
+/// This type is part of the prelude.
+</span><span class="attribute">#[derive(Debug, Clone, Copy, PartialEq)]
+</span><span class="kw">pub enum </span>Propagation {
+    <span class="comment">// /// Events propagate down the tree to the target entity, e.g. from grand-parent to parent to child (target)
+    // Down,
+    </span><span class="doccomment">/// Events propagate up the tree from the target entity from ancestor to ancestor, e.g. from child (target) to parent to grand-parent etc...
+    </span>Up,
+    <span class="comment">// /// Events propagate down the tree to the target entity and then back up to the root
+    // DownUp,
+    </span><span class="doccomment">/// Events propagate starting at the target entity and visiting every entity that is a descendent of the target
+    </span>Subtree,
+    <span class="doccomment">/// Events propagate directly to the target entity and to no others
+    </span>Direct,
 }
 
-<span class="doccomment">/// A wrapper around a message, providing metadata on how the event travels through the tree.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This type is part of the prelude.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Event</span> {
-    <span class="doccomment">/// The meta data of the event</span>
-    <span class="kw">pub</span> <span class="ident">meta</span>: <span class="ident">EventMeta</span>,
-    <span class="doccomment">/// The message of the event</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">message</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A wrapper around a message, providing metadata on how the event travels through the tree.
+///
+/// This type is part of the prelude.
+</span><span class="kw">pub struct </span>Event {
+    <span class="doccomment">/// The meta data of the event
+    </span><span class="kw">pub </span>meta: EventMeta,
+    <span class="doccomment">/// The message of the event
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) message: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Any + Send&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Event</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
+<span class="kw">impl </span>Debug <span class="kw">for </span>Event {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="comment">// // Allows events to be compared for equality</span>
-<span class="comment">// impl PartialEq for Event {</span>
-<span class="comment">//     fn eq(&amp;self, other: &amp;Event) -&gt; bool {</span>
-<span class="comment">//         self.message.equals_a(&amp;*other.message)</span>
-<span class="comment">//             //&amp;&amp; self.origin == other.origin</span>
-<span class="comment">//             &amp;&amp; self.target == other.target</span>
-<span class="comment">//     }</span>
-<span class="comment">// }</span>
+<span class="comment">// // Allows events to be compared for equality
+// impl PartialEq for Event {
+//     fn eq(&amp;self, other: &amp;Event) -&gt; bool {
+//         self.message.equals_a(&amp;*other.message)
+//             //&amp;&amp; self.origin == other.origin
+//             &amp;&amp; self.target == other.target
+//     }
+// }
 
-<span class="kw">impl</span> <span class="ident">Event</span> {
-    <span class="doccomment">/// Creates a new event with a specified message</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span>(<span class="ident">message</span>: <span class="ident">M</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">M</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span>,
+</span><span class="kw">impl </span>Event {
+    <span class="doccomment">/// Creates a new event with a specified message
+    </span><span class="kw">pub fn </span>new&lt;M&gt;(message: M) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>M: Any + Send,
     {
-        <span class="ident">Event</span> { <span class="ident">meta</span>: <span class="ident">Default::default</span>(), <span class="ident">message</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">message</span>)) }
+        Event { meta: Default::default(), message: <span class="prelude-val">Some</span>(Box::new(message)) }
     }
 
-    <span class="doccomment">/// Sets the target of the event.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">target</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">meta</span>.<span class="ident">target</span> <span class="op">=</span> <span class="ident">entity</span>;
-        <span class="self">self</span>
+    <span class="doccomment">/// Sets the target of the event.
+    </span><span class="kw">pub fn </span>target(<span class="kw-2">mut </span><span class="self">self</span>, entity: Entity) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.meta.target = entity;
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Sets the origin of the event.
+    </span><span class="kw">pub fn </span>origin(<span class="kw-2">mut </span><span class="self">self</span>, entity: Entity) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.meta.origin = entity;
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Sets the propagation of the event.
+    </span><span class="kw">pub fn </span>propagate(<span class="kw-2">mut </span><span class="self">self</span>, propagation: Propagation) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.meta.propagation = propagation;
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Sets the propagation to directly target the `entity`.
+    </span><span class="kw">pub fn </span>direct(<span class="kw-2">mut </span><span class="self">self</span>, entity: Entity) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.meta.propagation = Propagation::Direct;
+        <span class="self">self</span>.meta.target = entity;
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Consumes the event to prevent it from continuing on its propagation path.
+    </span><span class="kw">pub fn </span>consume(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.meta.consume();
     }
 
-    <span class="doccomment">/// Sets the origin of the event.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">origin</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">meta</span>.<span class="ident">origin</span> <span class="op">=</span> <span class="ident">entity</span>;
-        <span class="self">self</span>
-    }
-
-    <span class="doccomment">/// Sets the propagation of the event.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">propagate</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">propagation</span>: <span class="ident">Propagation</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">meta</span>.<span class="ident">propagation</span> <span class="op">=</span> <span class="ident">propagation</span>;
-        <span class="self">self</span>
-    }
-
-    <span class="doccomment">/// Sets the propagation to directly target the `entity`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">direct</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">meta</span>.<span class="ident">propagation</span> <span class="op">=</span> <span class="ident">Propagation::Direct</span>;
-        <span class="self">self</span>.<span class="ident">meta</span>.<span class="ident">target</span> <span class="op">=</span> <span class="ident">entity</span>;
-        <span class="self">self</span>
-    }
-
-    <span class="doccomment">/// Consumes the event to prevent it from continuing on its propagation path.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">meta</span>.<span class="ident">consume</span>();
-    }
-
-    <span class="doccomment">/// Tries to downcast the event message to the specified type. If the downcast was successful,</span>
-    <span class="doccomment">/// the downcasted message and the event meta data get passed into `f`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span><span class="op">&lt;</span><span class="ident">M</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>)
-    <span class="kw">where</span>
-        <span class="ident">M</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span>,
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">M</span>, <span class="kw-2">&amp;mut</span> <span class="ident">EventMeta</span>),
+    <span class="doccomment">/// Tries to downcast the event message to the specified type. If the downcast was successful,
+    /// the downcasted message and the event meta data get passed into `f`.
+    </span><span class="kw">pub fn </span>map&lt;M, F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, f: F)
+    <span class="kw">where
+        </span>M: Any + Send,
+        F: FnOnce(<span class="kw-2">&amp;</span>M, <span class="kw-2">&amp;mut </span>EventMeta),
     {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">message</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">message</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">message</span>) <span class="op">=</span> <span class="ident">message</span>.<span class="ident">as_ref</span>().<span class="ident">downcast_ref</span>() {
-                (<span class="ident">f</span>)(<span class="ident">message</span>, <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">meta</span>);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(message) = <span class="kw-2">&amp;</span><span class="self">self</span>.message {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(message) = message.as_ref().downcast_ref() {
+                (f)(message, <span class="kw-2">&amp;mut </span><span class="self">self</span>.meta);
             }
         }
     }
 
-    <span class="doccomment">/// Tries to downcast the event message to the specified type. If the downcast was successful,</span>
-    <span class="doccomment">/// return the message by value and consume the event. Otherwise, do nothing.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">take</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">message</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">message</span> {
-            <span class="kw">if</span> <span class="ident">message</span>.<span class="ident">as_ref</span>().<span class="ident">is</span>::<span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span>() {
-                <span class="comment">// Safe to unwrap because we already checked it exists</span>
-                <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
-                <span class="comment">// Safe to unwrap because we already checked it can be cast to M</span>
-                <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">downcast</span>().<span class="ident">unwrap</span>();
-                <span class="self">self</span>.<span class="ident">meta</span>.<span class="ident">consume</span>();
-                <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">v</span>);
+    <span class="doccomment">/// Tries to downcast the event message to the specified type. If the downcast was successful,
+    /// return the message by value and consume the event. Otherwise, do nothing.
+    </span><span class="kw">pub fn </span>take&lt;M: Any + Send&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;M&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(message) = <span class="kw-2">&amp;</span><span class="self">self</span>.message {
+            <span class="kw">if </span>message.as_ref().is::&lt;M&gt;() {
+                <span class="comment">// Safe to unwrap because we already checked it exists
+                </span><span class="kw">let </span>m = <span class="self">self</span>.message.take().unwrap();
+                <span class="comment">// Safe to unwrap because we already checked it can be cast to M
+                </span><span class="kw">let </span>v = m.downcast().unwrap();
+                <span class="self">self</span>.meta.consume();
+                <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">*</span>v);
             }
         }
-        <span class="prelude-val">None</span>
+        <span class="prelude-val">None
+    </span>}
+}
+
+<span class="doccomment">/// The meta data of an [`Event`].
+</span><span class="kw">pub struct </span>EventMeta {
+    <span class="doccomment">/// The entity that produced the event. Entity::null() for OS events or unspecified.
+    </span><span class="kw">pub </span>origin: Entity,
+    <span class="doccomment">/// The entity the event should be sent to. Entity::null() to send to all entities.
+    </span><span class="kw">pub </span>target: Entity,
+    <span class="doccomment">/// How the event propagates through the tree.
+    </span><span class="kw">pub </span>propagation: Propagation,
+    <span class="doccomment">/// Whether the event can be consumed
+    </span><span class="kw">pub </span>consumable: bool,
+    <span class="doccomment">/// Determines whether the event should continue to be propagated
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) consumed: bool,
+    <span class="doccomment">/// Specifies an order index which is used to sort the event queue
+    </span><span class="kw">pub </span>order: i32,
+}
+
+<span class="kw">impl </span>EventMeta {
+    <span class="doccomment">/// Creates a new event meta.
+    </span><span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::default()
     }
 }
 
-<span class="doccomment">/// The meta data of an [`Event`].</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EventMeta</span> {
-    <span class="doccomment">/// The entity that produced the event. Entity::null() for OS events or unspecified.</span>
-    <span class="kw">pub</span> <span class="ident">origin</span>: <span class="ident">Entity</span>,
-    <span class="doccomment">/// The entity the event should be sent to. Entity::null() to send to all entities.</span>
-    <span class="kw">pub</span> <span class="ident">target</span>: <span class="ident">Entity</span>,
-    <span class="doccomment">/// How the event propagates through the tree.</span>
-    <span class="kw">pub</span> <span class="ident">propagation</span>: <span class="ident">Propagation</span>,
-    <span class="doccomment">/// Whether the event can be consumed</span>
-    <span class="kw">pub</span> <span class="ident">consumable</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Determines whether the event should continue to be propagated</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">consumed</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Specifies an order index which is used to sort the event queue</span>
-    <span class="kw">pub</span> <span class="ident">order</span>: <span class="ident">i32</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">EventMeta</span> {
-    <span class="doccomment">/// Creates a new event meta.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::default</span>()
+<span class="kw">impl </span>EventMeta {
+    <span class="doccomment">/// Consumes the event to prevent it from continuing on its propagation path.
+    </span><span class="kw">pub fn </span>consume(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.consumed = <span class="bool-val">true</span>;
     }
 }
 
-<span class="kw">impl</span> <span class="ident">EventMeta</span> {
-    <span class="doccomment">/// Consumes the event to prevent it from continuing on its propagation path.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">consumed</span> <span class="op">=</span> <span class="bool-val">true</span>;
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">EventMeta</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">origin</span>: <span class="ident">Entity::null</span>(),
-            <span class="ident">target</span>: <span class="ident">Entity::root</span>(),
-            <span class="ident">propagation</span>: <span class="ident">Propagation::Up</span>,
-            <span class="ident">consumable</span>: <span class="bool-val">true</span>,
-            <span class="ident">consumed</span>: <span class="bool-val">false</span>,
-            <span class="ident">order</span>: <span class="number">0</span>,
+<span class="kw">impl </span>Default <span class="kw">for </span>EventMeta {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            origin: Entity::null(),
+            target: Entity::root(),
+            propagation: Propagation::Up,
+            consumable: <span class="bool-val">true</span>,
+            consumed: <span class="bool-val">false</span>,
+            order: <span class="number">0</span>,
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

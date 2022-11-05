@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_derive/src/ray.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>ray.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../vizia_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../vizia_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../vizia_derive/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_derive/src/ray.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>ray.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../vizia_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../vizia_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../vizia_derive/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -158,165 +158,165 @@
 <span id="158">158</span>
 <span id="159">159</span>
 <span id="160">160</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::attr</span>::{<span class="ident">FieldKind</span>, <span class="ident">Fields</span>, <span class="ident">RayAttrs</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::lens</span>::{<span class="ident">char_has_case</span>, <span class="ident">increase_visibility</span>};
-<span class="kw">use</span> <span class="ident">proc_macro2::Ident</span>;
-<span class="kw">use</span> <span class="ident">quote::quote</span>;
-<span class="kw">use</span> <span class="ident">syn::spanned::Spanned</span>;
-<span class="kw">use</span> <span class="ident">syn::Data</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::attr::{FieldKind, Fields, RayAttrs};
+<span class="kw">use </span><span class="kw">crate</span>::lens::{char_has_case, increase_visibility};
+<span class="kw">use </span>proc_macro2::Ident;
+<span class="kw">use </span>quote::quote;
+<span class="kw">use </span>syn::spanned::Spanned;
+<span class="kw">use </span>syn::Data;
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">derive_ray_impl</span>(
-    <span class="ident">input</span>: <span class="ident">syn::DeriveInput</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">proc_macro2::TokenStream</span>, <span class="ident">syn::Error</span><span class="op">&gt;</span> {
-    <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">input</span>.<span class="ident">data</span> {
-        <span class="ident">Data::Struct</span>(<span class="kw">_</span>) =&gt; <span class="ident">derive_struct</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>),
-        <span class="ident">Data::Enum</span>(<span class="ident">e</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">syn::Error::new</span>(
-            <span class="ident">e</span>.<span class="ident">enum_token</span>.<span class="ident">span</span>(),
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>derive_ray_impl(
+    input: syn::DeriveInput,
+) -&gt; <span class="prelude-ty">Result</span>&lt;proc_macro2::TokenStream, syn::Error&gt; {
+    <span class="kw">match </span><span class="kw-2">&amp;</span>input.data {
+        Data::Struct(<span class="kw">_</span>) =&gt; derive_struct(<span class="kw-2">&amp;</span>input),
+        Data::Enum(e) =&gt; <span class="prelude-val">Err</span>(syn::Error::new(
+            e.enum_token.span(),
             <span class="string">&quot;Setter implementations cannot be derived from enums&quot;</span>,
         )),
-        <span class="ident">Data::Union</span>(<span class="ident">u</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">syn::Error::new</span>(
-            <span class="ident">u</span>.<span class="ident">union_token</span>.<span class="ident">span</span>(),
+        Data::Union(u) =&gt; <span class="prelude-val">Err</span>(syn::Error::new(
+            u.union_token.span(),
             <span class="string">&quot;Setter implementations cannot be derived from unions&quot;</span>,
         )),
     }
 }
 
-<span class="kw">fn</span> <span class="ident">derive_struct</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">syn::DeriveInput</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">proc_macro2::TokenStream</span>, <span class="ident">syn::Error</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">enum_type</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">input</span>.<span class="ident">ident</span>;
-    <span class="kw">let</span> <span class="ident">ray_name</span> <span class="op">=</span> <span class="ident">Ident::new</span>(<span class="kw-2">&amp;</span>(<span class="ident">enum_type</span>.<span class="ident">to_string</span>() <span class="op">+</span> <span class="string">&quot;Setter&quot;</span>), <span class="ident">enum_type</span>.<span class="ident">span</span>());
+<span class="kw">fn </span>derive_struct(input: <span class="kw-2">&amp;</span>syn::DeriveInput) -&gt; <span class="prelude-ty">Result</span>&lt;proc_macro2::TokenStream, syn::Error&gt; {
+    <span class="kw">let </span>enum_type = <span class="kw-2">&amp;</span>input.ident;
+    <span class="kw">let </span>ray_name = Ident::new(<span class="kw-2">&amp;</span>(enum_type.to_string() + <span class="string">&quot;Setter&quot;</span>), enum_type.span());
 
-    <span class="kw">let</span> <span class="ident">module_vis</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">input</span>.<span class="ident">vis</span>;
-    <span class="kw">let</span> <span class="ident">enum_vis</span> <span class="op">=</span> <span class="ident">increase_visibility</span>(<span class="ident">module_vis</span>);
+    <span class="kw">let </span>module_vis = <span class="kw-2">&amp;</span>input.vis;
+    <span class="kw">let </span>enum_vis = increase_visibility(module_vis);
 
-    <span class="kw">let</span> <span class="ident">fields</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="ident">syn::Data::Struct</span>(<span class="ident">syn::DataStruct</span> { <span class="ident">fields</span>, .. }) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">input</span>.<span class="ident">data</span> {
-        <span class="ident">Fields</span>::<span class="op">&lt;</span><span class="ident">RayAttrs</span><span class="op">&gt;</span><span class="ident">::parse_ast</span>(<span class="ident">fields</span>)<span class="question-mark">?</span>
-    } <span class="kw">else</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">syn::Error::new</span>(
-            <span class="ident">input</span>.<span class="ident">span</span>(),
+    <span class="kw">let </span>fields = <span class="kw">if let </span>syn::Data::Struct(syn::DataStruct { fields, .. }) = <span class="kw-2">&amp;</span>input.data {
+        Fields::&lt;RayAttrs&gt;::parse_ast(fields)<span class="question-mark">?
+    </span>} <span class="kw">else </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(syn::Error::new(
+            input.span(),
             <span class="string">&quot;Setter implementations can only be derived from structs with named fields&quot;</span>,
         ));
     };
 
-    <span class="kw">if</span> <span class="ident">fields</span>.<span class="ident">kind</span> <span class="op">!</span><span class="op">=</span> <span class="ident">FieldKind::Named</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">syn::Error::new</span>(
-            <span class="ident">input</span>.<span class="ident">span</span>(),
+    <span class="kw">if </span>fields.kind != FieldKind::Named {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(syn::Error::new(
+            input.span(),
             <span class="string">&quot;Setter implementations can only be derived from structs with named fields&quot;</span>,
         ));
     }
 
-    <span class="kw">let</span> (<span class="ident">impl_generics</span>, <span class="ident">ty_generics</span>, <span class="ident">where_clause</span>) <span class="op">=</span> <span class="ident">input</span>.<span class="ident">generics</span>.<span class="ident">split_for_impl</span>();
+    <span class="kw">let </span>(impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">variants</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">swap_arms</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">apply_arms</span> <span class="op">=</span> <span class="macro">vec!</span>[];
+    <span class="kw">let </span><span class="kw-2">mut </span>variants = <span class="macro">vec!</span>[];
+    <span class="kw">let </span><span class="kw-2">mut </span>swap_arms = <span class="macro">vec!</span>[];
+    <span class="kw">let </span><span class="kw-2">mut </span>apply_arms = <span class="macro">vec!</span>[];
 
-    <span class="comment">// Define ray types for each field, define ray match arms for each field</span>
-    <span class="kw">for</span> <span class="ident">f</span> <span class="kw">in</span> <span class="ident">fields</span>.<span class="ident">iter</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="op">!</span><span class="ident">f</span>.<span class="ident">attrs</span>.<span class="ident">ignore</span>) {
-        <span class="kw">let</span> <span class="ident">field_name</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">f</span>.<span class="ident">ident</span>.<span class="ident">unwrap_named</span>();
-        <span class="kw">let</span> <span class="ident">field_ty</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">f</span>.<span class="ident">ty</span>;
-        <span class="kw">let</span> <span class="ident">variant_name</span> <span class="op">=</span> <span class="ident">Ident::new</span>(<span class="kw-2">&amp;</span><span class="ident">to_camel_case</span>(<span class="kw-2">&amp;</span><span class="ident">field_name</span>.<span class="ident">to_string</span>()), <span class="ident">field_name</span>.<span class="ident">span</span>());
+    <span class="comment">// Define ray types for each field, define ray match arms for each field
+    </span><span class="kw">for </span>f <span class="kw">in </span>fields.iter().filter(|f| !f.attrs.ignore) {
+        <span class="kw">let </span>field_name = <span class="kw-2">&amp;</span>f.ident.unwrap_named();
+        <span class="kw">let </span>field_ty = <span class="kw-2">&amp;</span>f.ty;
+        <span class="kw">let </span>variant_name = Ident::new(<span class="kw-2">&amp;</span>to_camel_case(<span class="kw-2">&amp;</span>field_name.to_string()), field_name.span());
 
-        <span class="ident">variants</span>.<span class="ident">push</span>(<span class="macro">quote!</span> { #<span class="ident">variant_name</span>(#<span class="ident">field_ty</span>) });
-        <span class="ident">swap_arms</span>.<span class="ident">push</span>(
-            <span class="macro">quote!</span> { #<span class="ident">ray_name</span>::#<span class="ident">variant_name</span>(<span class="ident">v</span>) =&gt; <span class="ident">std::mem::swap</span>(<span class="ident">v</span>, <span class="kw-2">&amp;mut</span> <span class="ident">source</span>.#<span class="ident">field_name</span>) },
+        variants.push(<span class="macro">quote! </span>{ #variant_name(#field_ty) });
+        swap_arms.push(
+            <span class="macro">quote! </span>{ #ray_name::#variant_name(v) =&gt; std::mem::swap(v, <span class="kw-2">&amp;mut </span>source.#field_name) },
         );
-        <span class="ident">apply_arms</span>.<span class="ident">push</span>(<span class="macro">quote!</span> { #<span class="ident">ray_name</span>::#<span class="ident">variant_name</span>(<span class="ident">v</span>) =&gt; <span class="ident">source</span>.#<span class="ident">field_name</span> <span class="op">=</span> <span class="ident">v</span> });
+        apply_arms.push(<span class="macro">quote! </span>{ #ray_name::#variant_name(v) =&gt; source.#field_name = v });
     }
 
-    <span class="kw">let</span> <span class="ident">enum_docs</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;Setter enum for [`{ty}`](super::{ty}).&quot;</span>, <span class="ident">ty</span> <span class="op">=</span> <span class="ident">enum_type</span>,);
+    <span class="kw">let </span>enum_docs = <span class="macro">format!</span>(<span class="string">&quot;Setter enum for [`{ty}`](super::{ty}).&quot;</span>, ty = enum_type,);
 
-    <span class="kw">let</span> <span class="ident">expanded</span> <span class="op">=</span> <span class="macro">quote!</span> {
-        <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> #<span class="ident">enum_docs</span>]</span>
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
-        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-        #<span class="ident">enum_vis</span> <span class="kw">enum</span> #<span class="ident">ray_name</span> #<span class="ident">ty_generics</span> #<span class="ident">where_clause</span> {
-            #(#<span class="ident">variants</span>),<span class="op">*</span>
+    <span class="kw">let </span>expanded = <span class="macro">quote! </span>{
+        <span class="attribute">#[doc = #enum_docs]
+        #[allow(non_camel_case_types)]
+        #[derive(Debug)]
+        </span>#enum_vis <span class="kw">enum </span>#ray_name #ty_generics #where_clause {
+            #(#variants),*
         }
 
-        <span class="kw">impl</span> #<span class="ident">impl_generics</span> <span class="ident">Setter</span> <span class="kw">for</span> #<span class="ident">ray_name</span> #<span class="ident">ty_generics</span> #<span class="ident">where_clause</span> {
-            <span class="kw">type</span> <span class="ident">Source</span> <span class="op">=</span> #<span class="ident">enum_type</span>;
+        <span class="kw">impl </span>#impl_generics Setter <span class="kw">for </span>#ray_name #ty_generics #where_clause {
+            <span class="kw">type </span>Source = #enum_type;
 
-            <span class="kw">fn</span> <span class="ident">swap</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">source</span>: <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::Source</span>) {
-                <span class="kw">match</span> <span class="self">self</span> {
-                    #(#<span class="ident">swap_arms</span>),<span class="op">*</span>
+            <span class="kw">fn </span>swap(<span class="kw-2">&amp;mut </span><span class="self">self</span>, source: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Source) {
+                <span class="kw">match </span><span class="self">self </span>{
+                    #(#swap_arms),*
                 }
             }
 
-            <span class="kw">fn</span> <span class="ident">apply</span>(<span class="self">self</span>, <span class="ident">source</span>: <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::Source</span>) {
-                <span class="kw">match</span> <span class="self">self</span> {
-                    #(#<span class="ident">apply_arms</span>),<span class="op">*</span>
+            <span class="kw">fn </span>apply(<span class="self">self</span>, source: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Source) {
+                <span class="kw">match </span><span class="self">self </span>{
+                    #(#apply_arms),*
                 }
             }
         }
     };
 
-    <span class="prelude-val">Ok</span>(<span class="ident">expanded</span>)
+    <span class="prelude-val">Ok</span>(expanded)
 }
 
-<span class="comment">// once again, stolen from rustc</span>
-<span class="kw">fn</span> <span class="ident">to_camel_case</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">String</span> {
-    <span class="ident">s</span>.<span class="ident">trim_matches</span>(<span class="string">&#39;_&#39;</span>)
-        .<span class="ident">split</span>(<span class="string">&#39;_&#39;</span>)
-        .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">component</span><span class="op">|</span> <span class="op">!</span><span class="ident">component</span>.<span class="ident">is_empty</span>())
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">component</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">camel_cased_component</span> <span class="op">=</span> <span class="ident">String::new</span>();
+<span class="comment">// once again, stolen from rustc
+</span><span class="kw">fn </span>to_camel_case(s: <span class="kw-2">&amp;</span>str) -&gt; String {
+    s.trim_matches(<span class="string">&#39;_&#39;</span>)
+        .split(<span class="string">&#39;_&#39;</span>)
+        .filter(|component| !component.is_empty())
+        .map(|component| {
+            <span class="kw">let </span><span class="kw-2">mut </span>camel_cased_component = String::new();
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_word</span> <span class="op">=</span> <span class="bool-val">true</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev_is_lower_case</span> <span class="op">=</span> <span class="bool-val">true</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>new_word = <span class="bool-val">true</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>prev_is_lower_case = <span class="bool-val">true</span>;
 
-            <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="ident">component</span>.<span class="ident">chars</span>() {
-                <span class="comment">// Preserve the case if an uppercase letter follows a lowercase letter, so that</span>
-                <span class="comment">// `camelCase` is converted to `CamelCase`.</span>
-                <span class="kw">if</span> <span class="ident">prev_is_lower_case</span> <span class="op">&amp;&amp;</span> <span class="ident">c</span>.<span class="ident">is_uppercase</span>() {
-                    <span class="ident">new_word</span> <span class="op">=</span> <span class="bool-val">true</span>;
+            <span class="kw">for </span>c <span class="kw">in </span>component.chars() {
+                <span class="comment">// Preserve the case if an uppercase letter follows a lowercase letter, so that
+                // `camelCase` is converted to `CamelCase`.
+                </span><span class="kw">if </span>prev_is_lower_case &amp;&amp; c.is_uppercase() {
+                    new_word = <span class="bool-val">true</span>;
                 }
 
-                <span class="kw">if</span> <span class="ident">new_word</span> {
-                    <span class="ident">camel_cased_component</span>.<span class="ident">extend</span>(<span class="ident">c</span>.<span class="ident">to_uppercase</span>());
-                } <span class="kw">else</span> {
-                    <span class="ident">camel_cased_component</span>.<span class="ident">extend</span>(<span class="ident">c</span>.<span class="ident">to_lowercase</span>());
+                <span class="kw">if </span>new_word {
+                    camel_cased_component.extend(c.to_uppercase());
+                } <span class="kw">else </span>{
+                    camel_cased_component.extend(c.to_lowercase());
                 }
 
-                <span class="ident">prev_is_lower_case</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">is_lowercase</span>();
-                <span class="ident">new_word</span> <span class="op">=</span> <span class="bool-val">false</span>;
+                prev_is_lower_case = c.is_lowercase();
+                new_word = <span class="bool-val">false</span>;
             }
 
-            <span class="ident">camel_cased_component</span>
+            camel_cased_component
         })
-        .<span class="ident">fold</span>((<span class="ident">String::new</span>(), <span class="prelude-val">None</span>), <span class="op">|</span>(<span class="ident">acc</span>, <span class="ident">prev</span>): (<span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>), <span class="ident">next</span><span class="op">|</span> {
-            <span class="comment">// separate two components with an underscore if their boundary cannot</span>
-            <span class="comment">// be distinguished using an uppercase/lowercase case distinction</span>
-            <span class="kw">let</span> <span class="ident">join</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">prev</span>) <span class="op">=</span> <span class="ident">prev</span> {
-                <span class="kw">let</span> <span class="ident">l</span> <span class="op">=</span> <span class="ident">prev</span>.<span class="ident">chars</span>().<span class="ident">last</span>().<span class="ident">unwrap</span>();
-                <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">next</span>.<span class="ident">chars</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>();
-                <span class="op">!</span><span class="ident">char_has_case</span>(<span class="ident">l</span>) <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">char_has_case</span>(<span class="ident">f</span>)
-            } <span class="kw">else</span> {
-                <span class="bool-val">false</span>
-            };
-            (<span class="ident">acc</span> <span class="op">+</span> <span class="kw">if</span> <span class="ident">join</span> { <span class="string">&quot;_&quot;</span> } <span class="kw">else</span> { <span class="string">&quot;&quot;</span> } <span class="op">+</span> <span class="kw-2">&amp;</span><span class="ident">next</span>, <span class="prelude-val">Some</span>(<span class="ident">next</span>))
+        .fold((String::new(), <span class="prelude-val">None</span>), |(acc, prev): (String, <span class="prelude-ty">Option</span>&lt;String&gt;), next| {
+            <span class="comment">// separate two components with an underscore if their boundary cannot
+            // be distinguished using an uppercase/lowercase case distinction
+            </span><span class="kw">let </span>join = <span class="kw">if let </span><span class="prelude-val">Some</span>(prev) = prev {
+                <span class="kw">let </span>l = prev.chars().last().unwrap();
+                <span class="kw">let </span>f = next.chars().next().unwrap();
+                !char_has_case(l) &amp;&amp; !char_has_case(f)
+            } <span class="kw">else </span>{
+                <span class="bool-val">false
+            </span>};
+            (acc + <span class="kw">if </span>join { <span class="string">&quot;_&quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;&quot; </span>} + <span class="kw-2">&amp;</span>next, <span class="prelude-val">Some</span>(next))
         })
-        .<span class="number">0</span>
-}
+        .<span class="number">0
+</span>}
 
-<span class="kw">fn</span> <span class="ident">is_snake_case</span>(<span class="ident">ident</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">bool</span> {
-    <span class="kw">if</span> <span class="ident">ident</span>.<span class="ident">is_empty</span>() {
-        <span class="kw">return</span> <span class="bool-val">true</span>;
+<span class="kw">fn </span>is_snake_case(ident: <span class="kw-2">&amp;</span>str) -&gt; bool {
+    <span class="kw">if </span>ident.is_empty() {
+        <span class="kw">return </span><span class="bool-val">true</span>;
     }
-    <span class="kw">let</span> <span class="ident">ident</span> <span class="op">=</span> <span class="ident">ident</span>.<span class="ident">trim_start_matches</span>(<span class="string">&#39;\&#39;&#39;</span>);
-    <span class="kw">let</span> <span class="ident">ident</span> <span class="op">=</span> <span class="ident">ident</span>.<span class="ident">trim_matches</span>(<span class="string">&#39;_&#39;</span>);
+    <span class="kw">let </span>ident = ident.trim_start_matches(<span class="string">&#39;\&#39;&#39;</span>);
+    <span class="kw">let </span>ident = ident.trim_matches(<span class="string">&#39;_&#39;</span>);
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">allow_underscore</span> <span class="op">=</span> <span class="bool-val">true</span>;
-    <span class="ident">ident</span>.<span class="ident">chars</span>().<span class="ident">all</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> {
-        <span class="ident">allow_underscore</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">c</span> {
-            <span class="string">&#39;_&#39;</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">allow_underscore</span> =&gt; <span class="kw">return</span> <span class="bool-val">false</span>,
-            <span class="string">&#39;_&#39;</span> =&gt; <span class="bool-val">false</span>,
-            <span class="comment">// It would be more obvious to use `c.is_lowercase()`,</span>
-            <span class="comment">// but some characters do not have a lowercase form</span>
-            <span class="ident">c</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">c</span>.<span class="ident">is_uppercase</span>() =&gt; <span class="bool-val">true</span>,
-            <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="bool-val">false</span>,
+    <span class="kw">let </span><span class="kw-2">mut </span>allow_underscore = <span class="bool-val">true</span>;
+    ident.chars().all(|c| {
+        allow_underscore = <span class="kw">match </span>c {
+            <span class="string">&#39;_&#39; </span><span class="kw">if </span>!allow_underscore =&gt; <span class="kw">return </span><span class="bool-val">false</span>,
+            <span class="string">&#39;_&#39; </span>=&gt; <span class="bool-val">false</span>,
+            <span class="comment">// It would be more obvious to use `c.is_lowercase()`,
+            // but some characters do not have a lowercase form
+            </span>c <span class="kw">if </span>!c.is_uppercase() =&gt; <span class="bool-val">true</span>,
+            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="bool-val">false</span>,
         };
-        <span class="bool-val">true</span>
-    })
+        <span class="bool-val">true
+    </span>})
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

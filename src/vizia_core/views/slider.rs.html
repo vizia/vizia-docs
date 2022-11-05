@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/slider.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>slider.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/slider.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>slider.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -402,409 +402,409 @@
 <span id="402">402</span>
 <span id="403">403</span>
 <span id="404">404</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::ops::Range</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::ops::Range;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::views::Orientation</span>;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::views::Orientation;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">enum</span> <span class="ident">SliderEventInternal</span> {
-    <span class="ident">SetThumbSize</span>(<span class="ident">f32</span>, <span class="ident">f32</span>),
-    <span class="ident">SetRange</span>(<span class="ident">Range</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>),
-    <span class="ident">SetKeyboardFraction</span>(<span class="ident">f32</span>),
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">enum </span>SliderEventInternal {
+    SetThumbSize(f32, f32),
+    SetRange(Range&lt;f32&gt;),
+    SetKeyboardFraction(f32),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Data</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SliderDataInternal</span> {
-    <span class="kw">pub</span> <span class="ident">orientation</span>: <span class="ident">Orientation</span>,
-    <span class="kw">pub</span> <span class="ident">size</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">thumb_size</span>: <span class="ident">f32</span>,
-    <span class="kw">pub</span> <span class="ident">range</span>: <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">keyboard_fraction</span>: <span class="ident">f32</span>,
+<span class="attribute">#[derive(Clone, Debug, Default, Data)]
+</span><span class="kw">pub struct </span>SliderDataInternal {
+    <span class="kw">pub </span>orientation: Orientation,
+    <span class="kw">pub </span>size: f32,
+    <span class="kw">pub </span>thumb_size: f32,
+    <span class="kw">pub </span>range: Range&lt;f32&gt;,
+    <span class="kw">pub </span>keyboard_fraction: f32,
 }
 
-<span class="doccomment">/// The slider control can be used to select from a continuous set of values.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The slider control consists of three main parts, a **thumb** element which can be moved between the extremes of a linear **track**,</span>
-<span class="doccomment">/// and an **active** element which fills the slider to indicate the current value.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The slider orientation is determined by its dimensions. If the slider width is greater than the height then the thumb</span>
-<span class="doccomment">/// moves horizontally, whereas if the slider height is greater than the width the thumb moves vertically.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Basic Slider</span>
-<span class="doccomment">/// In the following example, a slider is bound to a value. The `on_changing` callback is used to send an event to mutate the</span>
-<span class="doccomment">/// bound value when the slider thumb is moved, or if the track is clicked on.</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use vizia_core::prelude::*;</span>
-<span class="doccomment">/// # use vizia_derive::*;</span>
-<span class="doccomment">/// # let mut cx = &amp;mut Context::new();</span>
-<span class="doccomment">/// # #[derive(Lens, Default)]</span>
-<span class="doccomment">/// # pub struct AppData {</span>
-<span class="doccomment">/// #     value: f32,</span>
-<span class="doccomment">/// # }</span>
-<span class="doccomment">/// # impl Model for AppData {}</span>
-<span class="doccomment">/// # AppData::default().build(cx);</span>
-<span class="doccomment">/// Slider::new(cx, AppData::value)</span>
-<span class="doccomment">///     .on_changing(|cx, value| {</span>
-<span class="doccomment">///         println!(&quot;Slider on_changing: {}&quot;, value);</span>
-<span class="doccomment">///     });</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Slider with Label</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use vizia_core::prelude::*;</span>
-<span class="doccomment">/// # use vizia_derive::*;</span>
-<span class="doccomment">/// # let mut cx = &amp;mut Context::new();</span>
-<span class="doccomment">/// # #[derive(Lens, Default)]</span>
-<span class="doccomment">/// # pub struct AppData {</span>
-<span class="doccomment">/// #     value: f32,</span>
-<span class="doccomment">/// # }</span>
-<span class="doccomment">/// # impl Model for AppData {}</span>
-<span class="doccomment">/// # AppData::default().build(cx);</span>
-<span class="doccomment">/// HStack::new(cx, |cx|{</span>
-<span class="doccomment">///     Slider::new(cx, AppData::value)</span>
-<span class="doccomment">///         .on_changing(|cx, value| {</span>
-<span class="doccomment">///             println!(&quot;Slider on_changing: {}&quot;, value);</span>
-<span class="doccomment">///         });</span>
-<span class="doccomment">///     Label::new(cx, AppData::value.map(|val| format!(&quot;{:.2}&quot;, val)));</span>
-<span class="doccomment">/// });</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Lens</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Slider</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&gt;</span> {
-    <span class="ident">lens</span>: <span class="ident">L</span>,
-    <span class="ident">is_dragging</span>: <span class="ident">bool</span>,
-    <span class="ident">internal</span>: <span class="ident">SliderDataInternal</span>,
-    <span class="ident">on_changing</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">f32</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// The slider control can be used to select from a continuous set of values.
+///
+/// The slider control consists of three main parts, a **thumb** element which can be moved between the extremes of a linear **track**,
+/// and an **active** element which fills the slider to indicate the current value.
+///
+/// The slider orientation is determined by its dimensions. If the slider width is greater than the height then the thumb
+/// moves horizontally, whereas if the slider height is greater than the width the thumb moves vertically.
+///
+/// # Examples
+///
+/// ## Basic Slider
+/// In the following example, a slider is bound to a value. The `on_changing` callback is used to send an event to mutate the
+/// bound value when the slider thumb is moved, or if the track is clicked on.
+/// ```
+/// # use vizia_core::prelude::*;
+/// # use vizia_derive::*;
+/// # let mut cx = &amp;mut Context::new();
+/// # #[derive(Lens, Default)]
+/// # pub struct AppData {
+/// #     value: f32,
+/// # }
+/// # impl Model for AppData {}
+/// # AppData::default().build(cx);
+/// Slider::new(cx, AppData::value)
+///     .on_changing(|cx, value| {
+///         println!(&quot;Slider on_changing: {}&quot;, value);
+///     });
+/// ```
+///
+/// ## Slider with Label
+/// ```
+/// # use vizia_core::prelude::*;
+/// # use vizia_derive::*;
+/// # let mut cx = &amp;mut Context::new();
+/// # #[derive(Lens, Default)]
+/// # pub struct AppData {
+/// #     value: f32,
+/// # }
+/// # impl Model for AppData {}
+/// # AppData::default().build(cx);
+/// HStack::new(cx, |cx|{
+///     Slider::new(cx, AppData::value)
+///         .on_changing(|cx, value| {
+///             println!(&quot;Slider on_changing: {}&quot;, value);
+///         });
+///     Label::new(cx, AppData::value.map(|val| format!(&quot;{:.2}&quot;, val)));
+/// });
+/// ```
+</span><span class="attribute">#[derive(Lens)]
+</span><span class="kw">pub struct </span>Slider&lt;L: Lens&gt; {
+    lens: L,
+    is_dragging: bool,
+    internal: SliderDataInternal,
+    on_changing: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, f32)&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="ident">Slider</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;L&gt; Slider&lt;L&gt;
+<span class="kw">where
+    </span>L: Lens&lt;Target = f32&gt;,
 {
-    <span class="doccomment">/// Creates a new slider bound to the value targeted by the lens.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use vizia_core::prelude::*;</span>
-    <span class="doccomment">/// # use vizia_derive::*;</span>
-    <span class="doccomment">/// # let mut cx = &amp;mut Context::new();</span>
-    <span class="doccomment">/// # #[derive(Lens, Default)]</span>
-    <span class="doccomment">/// # pub struct AppData {</span>
-    <span class="doccomment">/// #     value: f32,</span>
-    <span class="doccomment">/// # }</span>
-    <span class="doccomment">/// # impl Model for AppData {}</span>
-    <span class="doccomment">/// # AppData::default().build(cx);</span>
-    <span class="doccomment">/// Slider::new(cx, AppData::value)</span>
-    <span class="doccomment">///     .on_changing(|cx, value| {</span>
-    <span class="doccomment">///         println!(&quot;Slider on_changing: {}&quot;, value);</span>
-    <span class="doccomment">///     });</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">lens</span>: <span class="ident">L</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="self">Self</span> {
-            <span class="ident">lens</span>: <span class="ident">lens</span>.<span class="ident">clone</span>(),
-            <span class="ident">is_dragging</span>: <span class="bool-val">false</span>,
+    <span class="doccomment">/// Creates a new slider bound to the value targeted by the lens.
+    ///
+    /// # Example
+    /// ```
+    /// # use vizia_core::prelude::*;
+    /// # use vizia_derive::*;
+    /// # let mut cx = &amp;mut Context::new();
+    /// # #[derive(Lens, Default)]
+    /// # pub struct AppData {
+    /// #     value: f32,
+    /// # }
+    /// # impl Model for AppData {}
+    /// # AppData::default().build(cx);
+    /// Slider::new(cx, AppData::value)
+    ///     .on_changing(|cx, value| {
+    ///         println!(&quot;Slider on_changing: {}&quot;, value);
+    ///     });
+    /// ```
+    </span><span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;mut </span>Context, lens: L) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+        <span class="self">Self </span>{
+            lens: lens.clone(),
+            is_dragging: <span class="bool-val">false</span>,
 
-            <span class="ident">internal</span>: <span class="ident">SliderDataInternal</span> {
-                <span class="ident">orientation</span>: <span class="ident">Orientation::Horizontal</span>,
-                <span class="ident">thumb_size</span>: <span class="number">0.0</span>,
-                <span class="ident">size</span>: <span class="number">0.0</span>,
-                <span class="ident">range</span>: <span class="number">0.0</span>..<span class="number">1.0</span>,
-                <span class="ident">keyboard_fraction</span>: <span class="number">0.1</span>,
+            internal: SliderDataInternal {
+                orientation: Orientation::Horizontal,
+                thumb_size: <span class="number">0.0</span>,
+                size: <span class="number">0.0</span>,
+                range: <span class="number">0.0</span>..<span class="number">1.0</span>,
+                keyboard_fraction: <span class="number">0.1</span>,
             },
 
-            <span class="ident">on_changing</span>: <span class="prelude-val">None</span>,
+            on_changing: <span class="prelude-val">None</span>,
         }
-        .<span class="ident">build</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-            <span class="ident">Binding::new</span>(<span class="ident">cx</span>, <span class="ident">Slider</span>::<span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="ident">::internal</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span>, <span class="ident">slider_data</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">lens</span> <span class="op">=</span> <span class="ident">lens</span>.<span class="ident">clone</span>();
-                <span class="ident">ZStack::new</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">slider_data</span> <span class="op">=</span> <span class="ident">slider_data</span>.<span class="ident">get</span>(<span class="ident">cx</span>);
-                    <span class="kw">let</span> <span class="ident">thumb_size</span> <span class="op">=</span> <span class="ident">slider_data</span>.<span class="ident">thumb_size</span>;
-                    <span class="kw">let</span> <span class="ident">orientation</span> <span class="op">=</span> <span class="ident">slider_data</span>.<span class="ident">orientation</span>;
-                    <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">slider_data</span>.<span class="ident">size</span>;
-                    <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">slider_data</span>.<span class="ident">range</span>;
+        .build(cx, <span class="kw">move </span>|cx| {
+            Binding::new(cx, Slider::&lt;L&gt;::internal, <span class="kw">move </span>|cx, slider_data| {
+                <span class="kw">let </span>lens = lens.clone();
+                ZStack::new(cx, <span class="kw">move </span>|cx| {
+                    <span class="kw">let </span>slider_data = slider_data.get(cx);
+                    <span class="kw">let </span>thumb_size = slider_data.thumb_size;
+                    <span class="kw">let </span>orientation = slider_data.orientation;
+                    <span class="kw">let </span>size = slider_data.size;
+                    <span class="kw">let </span>range = slider_data.range;
 
-                    <span class="comment">// Active track</span>
-                    <span class="ident">Element::new</span>(<span class="ident">cx</span>).<span class="ident">class</span>(<span class="string">&quot;active&quot;</span>).<span class="ident">bind</span>(<span class="ident">lens</span>.<span class="ident">clone</span>(), <span class="kw">move</span> <span class="op">|</span><span class="ident">handle</span>, <span class="ident">value</span><span class="op">|</span> {
-                        <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>);
-                        <span class="kw">let</span> <span class="ident">normal_val</span> <span class="op">=</span> (<span class="ident">val</span> <span class="op">-</span> <span class="ident">range</span>.<span class="ident">start</span>) <span class="op">/</span> (<span class="ident">range</span>.<span class="ident">end</span> <span class="op">-</span> <span class="ident">range</span>.<span class="ident">start</span>);
-                        <span class="kw">let</span> <span class="ident">min</span> <span class="op">=</span> <span class="ident">thumb_size</span> <span class="op">/</span> <span class="ident">size</span>;
-                        <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="number">1.0</span>;
-                        <span class="kw">let</span> <span class="ident">dx</span> <span class="op">=</span> <span class="ident">min</span> <span class="op">+</span> <span class="ident">normal_val</span> <span class="op">*</span> (<span class="ident">max</span> <span class="op">-</span> <span class="ident">min</span>);
+                    <span class="comment">// Active track
+                    </span>Element::new(cx).class(<span class="string">&quot;active&quot;</span>).bind(lens.clone(), <span class="kw">move </span>|handle, value| {
+                        <span class="kw">let </span>val = value.get(handle.cx);
+                        <span class="kw">let </span>normal_val = (val - range.start) / (range.end - range.start);
+                        <span class="kw">let </span>min = thumb_size / size;
+                        <span class="kw">let </span>max = <span class="number">1.0</span>;
+                        <span class="kw">let </span>dx = min + normal_val * (max - min);
 
-                        <span class="kw">if</span> <span class="ident">orientation</span> <span class="op">==</span> <span class="ident">Orientation::Horizontal</span> {
-                            <span class="ident">handle</span>
-                                .<span class="ident">height</span>(<span class="ident">Stretch</span>(<span class="number">1.0</span>))
-                                .<span class="ident">left</span>(<span class="ident">Pixels</span>(<span class="number">0.0</span>))
-                                .<span class="ident">right</span>(<span class="ident">Stretch</span>(<span class="number">1.0</span>))
-                                .<span class="ident">width</span>(<span class="ident">Percentage</span>(<span class="ident">dx</span> <span class="op">*</span> <span class="number">100.0</span>));
-                        } <span class="kw">else</span> {
-                            <span class="ident">handle</span>
-                                .<span class="ident">width</span>(<span class="ident">Stretch</span>(<span class="number">1.0</span>))
-                                .<span class="ident">top</span>(<span class="ident">Stretch</span>(<span class="number">1.0</span>))
-                                .<span class="ident">bottom</span>(<span class="ident">Pixels</span>(<span class="number">0.0</span>))
-                                .<span class="ident">height</span>(<span class="ident">Percentage</span>(<span class="ident">dx</span> <span class="op">*</span> <span class="number">100.0</span>));
+                        <span class="kw">if </span>orientation == Orientation::Horizontal {
+                            handle
+                                .height(Stretch(<span class="number">1.0</span>))
+                                .left(Pixels(<span class="number">0.0</span>))
+                                .right(Stretch(<span class="number">1.0</span>))
+                                .width(Percentage(dx * <span class="number">100.0</span>));
+                        } <span class="kw">else </span>{
+                            handle
+                                .width(Stretch(<span class="number">1.0</span>))
+                                .top(Stretch(<span class="number">1.0</span>))
+                                .bottom(Pixels(<span class="number">0.0</span>))
+                                .height(Percentage(dx * <span class="number">100.0</span>));
                         }
                     });
 
-                    <span class="comment">// Thumb</span>
-                    <span class="ident">Element::new</span>(<span class="ident">cx</span>)
-                        .<span class="ident">class</span>(<span class="string">&quot;thumb&quot;</span>)
-                        .<span class="ident">on_geo_changed</span>(<span class="op">|</span><span class="ident">cx</span>, <span class="ident">geo</span><span class="op">|</span> {
-                            <span class="kw">if</span> <span class="ident">geo</span>.<span class="ident">contains</span>(<span class="ident">GeometryChanged::WIDTH_CHANGED</span>) {
-                                <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-                                <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">current</span>);
-                                <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">current</span>);
-                                <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">SliderEventInternal::SetThumbSize</span>(<span class="ident">width</span>, <span class="ident">height</span>));
+                    <span class="comment">// Thumb
+                    </span>Element::new(cx)
+                        .class(<span class="string">&quot;thumb&quot;</span>)
+                        .on_geo_changed(|cx, geo| {
+                            <span class="kw">if </span>geo.contains(GeometryChanged::WIDTH_CHANGED) {
+                                <span class="kw">let </span>current = cx.current();
+                                <span class="kw">let </span>width = cx.cache.get_width(current);
+                                <span class="kw">let </span>height = cx.cache.get_height(current);
+                                cx.emit(SliderEventInternal::SetThumbSize(width, height));
                             }
                         })
-                        .<span class="ident">bind</span>(<span class="ident">lens</span>.<span class="ident">clone</span>(), <span class="kw">move</span> <span class="op">|</span><span class="ident">handle</span>, <span class="ident">value</span><span class="op">|</span> {
-                            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">get</span>(<span class="ident">handle</span>.<span class="ident">cx</span>);
-                            <span class="kw">let</span> <span class="ident">normal_val</span> <span class="op">=</span> (<span class="ident">val</span> <span class="op">-</span> <span class="ident">range</span>.<span class="ident">start</span>) <span class="op">/</span> (<span class="ident">range</span>.<span class="ident">end</span> <span class="op">-</span> <span class="ident">range</span>.<span class="ident">start</span>);
-                            <span class="kw">let</span> <span class="ident">px</span> <span class="op">=</span> <span class="ident">normal_val</span> <span class="op">*</span> (<span class="number">1.0</span> <span class="op">-</span> (<span class="ident">thumb_size</span> <span class="op">/</span> <span class="ident">size</span>));
-                            <span class="kw">if</span> <span class="ident">orientation</span> <span class="op">==</span> <span class="ident">Orientation::Horizontal</span> {
-                                <span class="ident">handle</span>
-                                    .<span class="ident">right</span>(<span class="ident">Stretch</span>(<span class="number">1.0</span>))
-                                    .<span class="ident">top</span>(<span class="ident">Stretch</span>(<span class="number">1.0</span>))
-                                    .<span class="ident">bottom</span>(<span class="ident">Stretch</span>(<span class="number">1.0</span>))
-                                    .<span class="ident">left</span>(<span class="ident">Percentage</span>(<span class="number">100.0</span> <span class="op">*</span> <span class="ident">px</span>));
-                            } <span class="kw">else</span> {
-                                <span class="ident">handle</span>
-                                    .<span class="ident">top</span>(<span class="ident">Stretch</span>(<span class="number">1.0</span>))
-                                    .<span class="ident">left</span>(<span class="ident">Stretch</span>(<span class="number">1.0</span>))
-                                    .<span class="ident">right</span>(<span class="ident">Stretch</span>(<span class="number">1.0</span>))
-                                    .<span class="ident">bottom</span>(<span class="ident">Percentage</span>(<span class="number">100.0</span> <span class="op">*</span> <span class="ident">px</span>));
+                        .bind(lens.clone(), <span class="kw">move </span>|handle, value| {
+                            <span class="kw">let </span>val = value.get(handle.cx);
+                            <span class="kw">let </span>normal_val = (val - range.start) / (range.end - range.start);
+                            <span class="kw">let </span>px = normal_val * (<span class="number">1.0 </span>- (thumb_size / size));
+                            <span class="kw">if </span>orientation == Orientation::Horizontal {
+                                handle
+                                    .right(Stretch(<span class="number">1.0</span>))
+                                    .top(Stretch(<span class="number">1.0</span>))
+                                    .bottom(Stretch(<span class="number">1.0</span>))
+                                    .left(Percentage(<span class="number">100.0 </span>* px));
+                            } <span class="kw">else </span>{
+                                handle
+                                    .top(Stretch(<span class="number">1.0</span>))
+                                    .left(Stretch(<span class="number">1.0</span>))
+                                    .right(Stretch(<span class="number">1.0</span>))
+                                    .bottom(Percentage(<span class="number">100.0 </span>* px));
                             }
                         });
                 });
             });
         })
-        .<span class="ident">navigable</span>(<span class="bool-val">true</span>)
+        .navigable(<span class="bool-val">true</span>)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">Slider</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;L: Lens&lt;Target = f32&gt;&gt; View <span class="kw">for </span>Slider&lt;L&gt; {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">&quot;slider&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
-        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">slider_event_internal</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">slider_event_internal</span> {
-            <span class="ident">SliderEventInternal::SetThumbSize</span>(<span class="ident">width</span>, <span class="ident">height</span>) =&gt; <span class="kw">match</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">orientation</span> {
-                <span class="ident">Orientation::Horizontal</span> =&gt; {
-                    <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">thumb_size</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">width</span>;
+    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
+        event.map(|slider_event_internal, <span class="kw">_</span>| <span class="kw">match </span>slider_event_internal {
+            SliderEventInternal::SetThumbSize(width, height) =&gt; <span class="kw">match </span><span class="self">self</span>.internal.orientation {
+                Orientation::Horizontal =&gt; {
+                    <span class="self">self</span>.internal.thumb_size = <span class="kw-2">*</span>width;
                 }
 
-                <span class="ident">Orientation::Vertical</span> =&gt; {
-                    <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">thumb_size</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">height</span>;
+                Orientation::Vertical =&gt; {
+                    <span class="self">self</span>.internal.thumb_size = <span class="kw-2">*</span>height;
                 }
             },
 
-            <span class="ident">SliderEventInternal::SetRange</span>(<span class="ident">range</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span> <span class="op">=</span> <span class="ident">range</span>.<span class="ident">clone</span>();
+            SliderEventInternal::SetRange(range) =&gt; {
+                <span class="self">self</span>.internal.range = range.clone();
             }
 
-            <span class="ident">SliderEventInternal::SetKeyboardFraction</span>(<span class="ident">keyboard_fraction</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">keyboard_fraction</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">keyboard_fraction</span>;
+            SliderEventInternal::SetKeyboardFraction(keyboard_fraction) =&gt; {
+                <span class="self">self</span>.internal.keyboard_fraction = <span class="kw-2">*</span>keyboard_fraction;
             }
         });
 
-        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
-            <span class="ident">WindowEvent::GeometryChanged</span>(<span class="kw">_</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-                <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">current</span>);
-                <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">current</span>);
+        event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
+            WindowEvent::GeometryChanged(<span class="kw">_</span>) =&gt; {
+                <span class="kw">let </span>current = cx.current();
+                <span class="kw">let </span>width = cx.cache.get_width(current);
+                <span class="kw">let </span>height = cx.cache.get_height(current);
 
-                <span class="kw">if</span> <span class="ident">width</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">height</span> {
-                    <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">orientation</span> <span class="op">=</span> <span class="ident">Orientation::Horizontal</span>;
-                    <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">size</span> <span class="op">=</span> <span class="ident">width</span>;
-                } <span class="kw">else</span> {
-                    <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">orientation</span> <span class="op">=</span> <span class="ident">Orientation::Vertical</span>;
-                    <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">size</span> <span class="op">=</span> <span class="ident">height</span>;
+                <span class="kw">if </span>width &gt;= height {
+                    <span class="self">self</span>.internal.orientation = Orientation::Horizontal;
+                    <span class="self">self</span>.internal.size = width;
+                } <span class="kw">else </span>{
+                    <span class="self">self</span>.internal.orientation = Orientation::Vertical;
+                    <span class="self">self</span>.internal.size = height;
                 }
             }
 
-            <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">button</span>) <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">button</span> <span class="op">==</span> <span class="ident">MouseButton::Left</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">is_dragging</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                <span class="ident">cx</span>.<span class="ident">capture</span>();
-                <span class="ident">cx</span>.<span class="ident">focus_with_visibility</span>(<span class="bool-val">false</span>);
+            WindowEvent::MouseDown(button) <span class="kw">if </span><span class="kw-2">*</span>button == MouseButton::Left =&gt; {
+                <span class="self">self</span>.is_dragging = <span class="bool-val">true</span>;
+                cx.capture();
+                cx.focus_with_visibility(<span class="bool-val">false</span>);
 
-                <span class="kw">let</span> <span class="ident">thumb_size</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">thumb_size</span>;
-                <span class="kw">let</span> <span class="ident">min</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">start</span>;
-                <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">end</span>;
+                <span class="kw">let </span>thumb_size = <span class="self">self</span>.internal.thumb_size;
+                <span class="kw">let </span>min = <span class="self">self</span>.internal.range.start;
+                <span class="kw">let </span>max = <span class="self">self</span>.internal.range.end;
 
-                <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-                <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">current</span>);
-                <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">current</span>);
-                <span class="kw">let</span> <span class="ident">posx</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posx</span>(<span class="ident">current</span>);
-                <span class="kw">let</span> <span class="ident">posy</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posy</span>(<span class="ident">current</span>);
+                <span class="kw">let </span>current = cx.current();
+                <span class="kw">let </span>width = cx.cache.get_width(current);
+                <span class="kw">let </span>height = cx.cache.get_height(current);
+                <span class="kw">let </span>posx = cx.cache.get_posx(current);
+                <span class="kw">let </span>posy = cx.cache.get_posy(current);
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dx</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">orientation</span> {
-                    <span class="ident">Orientation::Horizontal</span> =&gt; {
-                        (<span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pos_down</span>.<span class="number">0</span> <span class="op">-</span> <span class="ident">posx</span> <span class="op">-</span> <span class="ident">thumb_size</span> <span class="op">/</span> <span class="number">2.0</span>) <span class="op">/</span> (<span class="ident">width</span> <span class="op">-</span> <span class="ident">thumb_size</span>)
+                <span class="kw">let </span><span class="kw-2">mut </span>dx = <span class="kw">match </span><span class="self">self</span>.internal.orientation {
+                    Orientation::Horizontal =&gt; {
+                        (cx.mouse.left.pos_down.<span class="number">0 </span>- posx - thumb_size / <span class="number">2.0</span>) / (width - thumb_size)
                     }
 
-                    <span class="ident">Orientation::Vertical</span> =&gt; {
-                        (<span class="ident">height</span> <span class="op">-</span> (<span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pos_down</span>.<span class="number">1</span> <span class="op">-</span> <span class="ident">posy</span>) <span class="op">-</span> <span class="ident">thumb_size</span> <span class="op">/</span> <span class="number">2.0</span>)
-                            <span class="op">/</span> (<span class="ident">height</span> <span class="op">-</span> <span class="ident">thumb_size</span>)
+                    Orientation::Vertical =&gt; {
+                        (height - (cx.mouse.left.pos_down.<span class="number">1 </span>- posy) - thumb_size / <span class="number">2.0</span>)
+                            / (height - thumb_size)
                     }
                 };
 
-                <span class="ident">dx</span> <span class="op">=</span> <span class="ident">dx</span>.<span class="ident">clamp</span>(<span class="number">0.0</span>, <span class="number">1.0</span>);
+                dx = dx.clamp(<span class="number">0.0</span>, <span class="number">1.0</span>);
 
-                <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">min</span> <span class="op">+</span> <span class="ident">dx</span> <span class="op">*</span> (<span class="ident">max</span> <span class="op">-</span> <span class="ident">min</span>);
+                <span class="kw">let </span>val = min + dx * (max - min);
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">on_changing</span>.<span class="ident">take</span>() {
-                    (<span class="ident">callback</span>)(<span class="ident">cx</span>, <span class="ident">val</span>);
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="self">self</span>.on_changing.take() {
+                    (callback)(cx, val);
 
-                    <span class="self">self</span>.<span class="ident">on_changing</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>);
+                    <span class="self">self</span>.on_changing = <span class="prelude-val">Some</span>(callback);
                 }
             }
 
-            <span class="ident">WindowEvent::MouseUp</span>(<span class="ident">button</span>) <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">button</span> <span class="op">==</span> <span class="ident">MouseButton::Left</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">is_dragging</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                <span class="ident">cx</span>.<span class="ident">release</span>();
+            WindowEvent::MouseUp(button) <span class="kw">if </span><span class="kw-2">*</span>button == MouseButton::Left =&gt; {
+                <span class="self">self</span>.is_dragging = <span class="bool-val">false</span>;
+                cx.release();
             }
 
-            <span class="ident">WindowEvent::MouseMove</span>(<span class="ident">x</span>, <span class="ident">y</span>) =&gt; {
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_dragging</span> {
-                    <span class="kw">let</span> <span class="ident">thumb_size</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">thumb_size</span>;
+            WindowEvent::MouseMove(x, y) =&gt; {
+                <span class="kw">if </span><span class="self">self</span>.is_dragging {
+                    <span class="kw">let </span>thumb_size = <span class="self">self</span>.internal.thumb_size;
 
-                    <span class="kw">let</span> <span class="ident">min</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">start</span>;
-                    <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">end</span>;
+                    <span class="kw">let </span>min = <span class="self">self</span>.internal.range.start;
+                    <span class="kw">let </span>max = <span class="self">self</span>.internal.range.end;
 
-                    <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-                    <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">current</span>);
-                    <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">current</span>);
-                    <span class="kw">let</span> <span class="ident">posx</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posx</span>(<span class="ident">current</span>);
-                    <span class="kw">let</span> <span class="ident">posy</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posy</span>(<span class="ident">current</span>);
+                    <span class="kw">let </span>current = cx.current();
+                    <span class="kw">let </span>width = cx.cache.get_width(current);
+                    <span class="kw">let </span>height = cx.cache.get_height(current);
+                    <span class="kw">let </span>posx = cx.cache.get_posx(current);
+                    <span class="kw">let </span>posy = cx.cache.get_posy(current);
 
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dx</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">orientation</span> {
-                        <span class="ident">Orientation::Horizontal</span> =&gt; {
-                            (<span class="kw-2">*</span><span class="ident">x</span> <span class="op">-</span> <span class="ident">posx</span> <span class="op">-</span> <span class="ident">thumb_size</span> <span class="op">/</span> <span class="number">2.0</span>) <span class="op">/</span> (<span class="ident">width</span> <span class="op">-</span> <span class="ident">thumb_size</span>)
+                    <span class="kw">let </span><span class="kw-2">mut </span>dx = <span class="kw">match </span><span class="self">self</span>.internal.orientation {
+                        Orientation::Horizontal =&gt; {
+                            (<span class="kw-2">*</span>x - posx - thumb_size / <span class="number">2.0</span>) / (width - thumb_size)
                         }
 
-                        <span class="ident">Orientation::Vertical</span> =&gt; {
-                            (<span class="ident">height</span> <span class="op">-</span> (<span class="kw-2">*</span><span class="ident">y</span> <span class="op">-</span> <span class="ident">posy</span>) <span class="op">-</span> <span class="ident">thumb_size</span> <span class="op">/</span> <span class="number">2.0</span>) <span class="op">/</span> (<span class="ident">height</span> <span class="op">-</span> <span class="ident">thumb_size</span>)
+                        Orientation::Vertical =&gt; {
+                            (height - (<span class="kw-2">*</span>y - posy) - thumb_size / <span class="number">2.0</span>) / (height - thumb_size)
                         }
                     };
 
-                    <span class="ident">dx</span> <span class="op">=</span> <span class="ident">dx</span>.<span class="ident">clamp</span>(<span class="number">0.0</span>, <span class="number">1.0</span>);
+                    dx = dx.clamp(<span class="number">0.0</span>, <span class="number">1.0</span>);
 
-                    <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">min</span> <span class="op">+</span> <span class="ident">dx</span> <span class="op">*</span> (<span class="ident">max</span> <span class="op">-</span> <span class="ident">min</span>);
+                    <span class="kw">let </span>val = min + dx * (max - min);
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">on_changing</span> {
-                        (<span class="ident">callback</span>)(<span class="ident">cx</span>, <span class="ident">val</span>);
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_changing {
+                        (callback)(cx, val);
                     }
                 }
             }
 
-            <span class="ident">WindowEvent::KeyDown</span>(<span class="ident">Code::ArrowUp</span> <span class="op">|</span> <span class="ident">Code::ArrowRight</span>, <span class="kw">_</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">min</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">start</span>;
-                <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">end</span>;
-                <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">get</span>(<span class="ident">cx</span>) <span class="op">+</span> <span class="number">0.1</span> <span class="op">*</span> (<span class="ident">max</span> <span class="op">-</span> <span class="ident">min</span>)).<span class="ident">clamp</span>(<span class="ident">min</span>, <span class="ident">max</span>);
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">on_changing</span> {
-                    (<span class="ident">callback</span>)(<span class="ident">cx</span>, <span class="ident">val</span>);
+            WindowEvent::KeyDown(Code::ArrowUp | Code::ArrowRight, <span class="kw">_</span>) =&gt; {
+                <span class="kw">let </span>min = <span class="self">self</span>.internal.range.start;
+                <span class="kw">let </span>max = <span class="self">self</span>.internal.range.end;
+                <span class="kw">let </span>val = (<span class="self">self</span>.lens.get(cx) + <span class="number">0.1 </span>* (max - min)).clamp(min, max);
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_changing {
+                    (callback)(cx, val);
                 }
             }
 
-            <span class="ident">WindowEvent::KeyDown</span>(<span class="ident">Code::ArrowDown</span> <span class="op">|</span> <span class="ident">Code::ArrowLeft</span>, <span class="kw">_</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">min</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">start</span>;
-                <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">internal</span>.<span class="ident">range</span>.<span class="ident">end</span>;
-                <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">get</span>(<span class="ident">cx</span>) <span class="op">-</span> <span class="number">0.1</span> <span class="op">*</span> (<span class="ident">max</span> <span class="op">-</span> <span class="ident">min</span>)).<span class="ident">clamp</span>(<span class="ident">min</span>, <span class="ident">max</span>);
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">on_changing</span> {
-                    (<span class="ident">callback</span>)(<span class="ident">cx</span>, <span class="ident">val</span>);
+            WindowEvent::KeyDown(Code::ArrowDown | Code::ArrowLeft, <span class="kw">_</span>) =&gt; {
+                <span class="kw">let </span>min = <span class="self">self</span>.internal.range.start;
+                <span class="kw">let </span>max = <span class="self">self</span>.internal.range.end;
+                <span class="kw">let </span>val = (<span class="self">self</span>.lens.get(cx) - <span class="number">0.1 </span>* (max - min)).clamp(min, max);
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_changing {
+                    (callback)(cx, val);
                 }
             }
 
-            <span class="kw">_</span> =&gt; {}
+            <span class="kw">_ </span>=&gt; {}
         });
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&gt;</span> <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Slider</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Sets the callback triggered when the slider value is changing (dragging).</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Takes a closure which triggers when the slider value is changing,</span>
-    <span class="doccomment">/// either by pressing the track or dragging the thumb along the track.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use vizia_core::prelude::*;</span>
-    <span class="doccomment">/// # use vizia_derive::*;</span>
-    <span class="doccomment">/// # let mut cx = &amp;mut Context::new();</span>
-    <span class="doccomment">/// # #[derive(Lens, Default)]</span>
-    <span class="doccomment">/// # pub struct AppData {</span>
-    <span class="doccomment">/// #     value: f32,</span>
-    <span class="doccomment">/// # }</span>
-    <span class="doccomment">/// # impl Model for AppData {}</span>
-    <span class="doccomment">/// # AppData::default().build(cx);</span>
-    <span class="doccomment">/// Slider::new(cx, AppData::value)</span>
-    <span class="doccomment">///     .on_changing(|cx, value| {</span>
-    <span class="doccomment">///         println!(&quot;Slider on_changing: {}&quot;, value);</span>
-    <span class="doccomment">///     });</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_changing</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">f32</span>),
+<span class="kw">impl</span>&lt;L: Lens&gt; Handle&lt;<span class="lifetime">&#39;_</span>, Slider&lt;L&gt;&gt; {
+    <span class="doccomment">/// Sets the callback triggered when the slider value is changing (dragging).
+    ///
+    /// Takes a closure which triggers when the slider value is changing,
+    /// either by pressing the track or dragging the thumb along the track.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use vizia_core::prelude::*;
+    /// # use vizia_derive::*;
+    /// # let mut cx = &amp;mut Context::new();
+    /// # #[derive(Lens, Default)]
+    /// # pub struct AppData {
+    /// #     value: f32,
+    /// # }
+    /// # impl Model for AppData {}
+    /// # AppData::default().build(cx);
+    /// Slider::new(cx, AppData::value)
+    ///     .on_changing(|cx, value| {
+    ///         println!(&quot;Slider on_changing: {}&quot;, value);
+    ///     });
+    /// ```
+    </span><span class="kw">pub fn </span>on_changing&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, f32),
     {
-        <span class="self">self</span>.<span class="ident">modify</span>(<span class="op">|</span><span class="ident">slider</span><span class="op">|</span> <span class="ident">slider</span>.<span class="ident">on_changing</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">callback</span>)))
+        <span class="self">self</span>.modify(|slider| slider.on_changing = <span class="prelude-val">Some</span>(Box::new(callback)))
     }
 
-    <span class="doccomment">/// Sets the range of the slider.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If the bound data is outside of the range then the slider will clip to min/max of the range.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use vizia_core::prelude::*;</span>
-    <span class="doccomment">/// # use vizia_derive::*;</span>
-    <span class="doccomment">/// # let mut cx = &amp;mut Context::new();</span>
-    <span class="doccomment">/// # #[derive(Lens, Default)]</span>
-    <span class="doccomment">/// # pub struct AppData {</span>
-    <span class="doccomment">/// #     value: f32,</span>
-    <span class="doccomment">/// # }</span>
-    <span class="doccomment">/// # impl Model for AppData {}</span>
-    <span class="doccomment">/// # AppData::default().build(cx);</span>
-    <span class="doccomment">/// Slider::new(cx, AppData::value)</span>
-    <span class="doccomment">///     .range(-20.0..50.0)</span>
-    <span class="doccomment">///     .on_changing(|cx, value| {</span>
-    <span class="doccomment">///         println!(&quot;Slider on_changing: {}&quot;, value);</span>
-    <span class="doccomment">///     });</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">range</span>(<span class="self">self</span>, <span class="ident">range</span>: <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">emit_to</span>(<span class="self">self</span>.<span class="ident">entity</span>, <span class="ident">SliderEventInternal::SetRange</span>(<span class="ident">range</span>));
+    <span class="doccomment">/// Sets the range of the slider.
+    ///
+    /// If the bound data is outside of the range then the slider will clip to min/max of the range.
+    ///
+    /// # Example
+    /// ```
+    /// # use vizia_core::prelude::*;
+    /// # use vizia_derive::*;
+    /// # let mut cx = &amp;mut Context::new();
+    /// # #[derive(Lens, Default)]
+    /// # pub struct AppData {
+    /// #     value: f32,
+    /// # }
+    /// # impl Model for AppData {}
+    /// # AppData::default().build(cx);
+    /// Slider::new(cx, AppData::value)
+    ///     .range(-20.0..50.0)
+    ///     .on_changing(|cx, value| {
+    ///         println!(&quot;Slider on_changing: {}&quot;, value);
+    ///     });
+    /// ```
+    </span><span class="kw">pub fn </span>range(<span class="self">self</span>, range: Range&lt;f32&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.cx.emit_to(<span class="self">self</span>.entity, SliderEventInternal::SetRange(range));
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Sets the fraction of a slider that a press of an arrow key will change.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use vizia_core::prelude::*;</span>
-    <span class="doccomment">/// # use vizia_derive::*;</span>
-    <span class="doccomment">/// # let mut cx = &amp;mut Context::new();</span>
-    <span class="doccomment">/// # #[derive(Lens, Default)]</span>
-    <span class="doccomment">/// # pub struct AppData {</span>
-    <span class="doccomment">/// #     value: f32,</span>
-    <span class="doccomment">/// # }</span>
-    <span class="doccomment">/// # impl Model for AppData {}</span>
-    <span class="doccomment">/// # AppData::default().build(cx);</span>
-    <span class="doccomment">/// Slider::new(cx, AppData::value)</span>
-    <span class="doccomment">///     .keyboard_fraction(0.05)</span>
-    <span class="doccomment">///     .on_changing(|cx, value| {</span>
-    <span class="doccomment">///         println!(&quot;Slider on_changing: {}&quot;, value);</span>
-    <span class="doccomment">///     });</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keyboard_fraction</span>(<span class="self">self</span>, <span class="ident">keyboard_fraction</span>: <span class="ident">f32</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">emit_to</span>(<span class="self">self</span>.<span class="ident">entity</span>, <span class="ident">SliderEventInternal::SetKeyboardFraction</span>(<span class="ident">keyboard_fraction</span>));
+    <span class="doccomment">/// Sets the fraction of a slider that a press of an arrow key will change.
+    ///
+    /// # Example
+    /// ```
+    /// # use vizia_core::prelude::*;
+    /// # use vizia_derive::*;
+    /// # let mut cx = &amp;mut Context::new();
+    /// # #[derive(Lens, Default)]
+    /// # pub struct AppData {
+    /// #     value: f32,
+    /// # }
+    /// # impl Model for AppData {}
+    /// # AppData::default().build(cx);
+    /// Slider::new(cx, AppData::value)
+    ///     .keyboard_fraction(0.05)
+    ///     .on_changing(|cx, value| {
+    ///         println!(&quot;Slider on_changing: {}&quot;, value);
+    ///     });
+    /// ```
+    </span><span class="kw">pub fn </span>keyboard_fraction(<span class="self">self</span>, keyboard_fraction: f32) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.cx.emit_to(<span class="self">self</span>.entity, SliderEventInternal::SetKeyboardFraction(keyboard_fraction));
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

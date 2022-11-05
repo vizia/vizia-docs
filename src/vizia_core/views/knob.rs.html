@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/knob.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>knob.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/knob.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>knob.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -596,603 +596,603 @@
 <span id="596">596</span>
 <span id="597">597</span>
 <span id="598">598</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">femtovg</span>::{<span class="ident">LineCap</span>, <span class="ident">Paint</span>, <span class="ident">Path</span>, <span class="ident">Solidity</span>};
-<span class="kw">use</span> <span class="ident">morphorm</span>::{<span class="ident">Hierarchy</span>, <span class="ident">Units</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>femtovg::{LineCap, Paint, Path, Solidity};
+<span class="kw">use </span>morphorm::{Hierarchy, Units};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">static</span> <span class="ident">DEFAULT_DRAG_SCALAR</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">0.0042</span>;
-<span class="kw">static</span> <span class="ident">DEFAULT_WHEEL_SCALAR</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">0.005</span>;
-<span class="kw">static</span> <span class="ident">DEFAULT_ARROW_SCALAR</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">0.1</span>;
-<span class="kw">static</span> <span class="ident">DEFAULT_MODIFIER_SCALAR</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">0.04</span>;
+<span class="kw">static </span>DEFAULT_DRAG_SCALAR: f32 = <span class="number">0.0042</span>;
+<span class="kw">static </span>DEFAULT_WHEEL_SCALAR: f32 = <span class="number">0.005</span>;
+<span class="kw">static </span>DEFAULT_ARROW_SCALAR: f32 = <span class="number">0.1</span>;
+<span class="kw">static </span>DEFAULT_MODIFIER_SCALAR: f32 = <span class="number">0.04</span>;
 
-<span class="kw">use</span> <span class="ident">std::f32::consts::PI</span>;
+<span class="kw">use </span>std::f32::consts::PI;
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Knob</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="ident">lens</span>: <span class="ident">L</span>,
-    <span class="ident">default_normal</span>: <span class="ident">f32</span>,
+<span class="kw">pub struct </span>Knob&lt;L&gt; {
+    lens: L,
+    default_normal: f32,
 
-    <span class="ident">is_dragging</span>: <span class="ident">bool</span>,
-    <span class="ident">prev_drag_y</span>: <span class="ident">f32</span>,
-    <span class="ident">continuous_normal</span>: <span class="ident">f32</span>,
+    is_dragging: bool,
+    prev_drag_y: f32,
+    continuous_normal: f32,
 
-    <span class="ident">drag_scalar</span>: <span class="ident">f32</span>,
-    <span class="ident">wheel_scalar</span>: <span class="ident">f32</span>,
-    <span class="ident">arrow_scalar</span>: <span class="ident">f32</span>,
-    <span class="ident">modifier_scalar</span>: <span class="ident">f32</span>,
+    drag_scalar: f32,
+    wheel_scalar: f32,
+    arrow_scalar: f32,
+    modifier_scalar: f32,
 
-    <span class="ident">on_changing</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">f32</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
+    on_changing: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, f32)&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Knob</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>,
-        <span class="ident">normalized_default</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>,
-        <span class="ident">lens</span>: <span class="ident">L</span>,
-        <span class="ident">centered</span>: <span class="ident">bool</span>,
-    ) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="self">Self</span> {
-            <span class="ident">lens</span>: <span class="ident">lens</span>.<span class="ident">clone</span>(),
-            <span class="ident">default_normal</span>: <span class="ident">normalized_default</span>.<span class="ident">get_val</span>(<span class="ident">cx</span>),
+<span class="kw">impl</span>&lt;L: Lens&lt;Target = f32&gt;&gt; Knob&lt;L&gt; {
+    <span class="kw">pub fn </span>new(
+        cx: <span class="kw-2">&amp;mut </span>Context,
+        normalized_default: <span class="kw">impl </span>Res&lt;f32&gt;,
+        lens: L,
+        centered: bool,
+    ) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+        <span class="self">Self </span>{
+            lens: lens.clone(),
+            default_normal: normalized_default.get_val(cx),
 
-            <span class="ident">is_dragging</span>: <span class="bool-val">false</span>,
-            <span class="ident">prev_drag_y</span>: <span class="number">0.0</span>,
-            <span class="ident">continuous_normal</span>: <span class="ident">lens</span>.<span class="ident">get</span>(<span class="ident">cx</span>),
+            is_dragging: <span class="bool-val">false</span>,
+            prev_drag_y: <span class="number">0.0</span>,
+            continuous_normal: lens.get(cx),
 
-            <span class="ident">drag_scalar</span>: <span class="ident">DEFAULT_DRAG_SCALAR</span>,
-            <span class="ident">wheel_scalar</span>: <span class="ident">DEFAULT_WHEEL_SCALAR</span>,
-            <span class="ident">arrow_scalar</span>: <span class="ident">DEFAULT_ARROW_SCALAR</span>,
-            <span class="ident">modifier_scalar</span>: <span class="ident">DEFAULT_MODIFIER_SCALAR</span>,
+            drag_scalar: DEFAULT_DRAG_SCALAR,
+            wheel_scalar: DEFAULT_WHEEL_SCALAR,
+            arrow_scalar: DEFAULT_ARROW_SCALAR,
+            modifier_scalar: DEFAULT_MODIFIER_SCALAR,
 
-            <span class="ident">on_changing</span>: <span class="prelude-val">None</span>,
+            on_changing: <span class="prelude-val">None</span>,
         }
-        .<span class="ident">build</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-            <span class="ident">ZStack::new</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-                <span class="ident">ArcTrack::new</span>(
-                    <span class="ident">cx</span>,
-                    <span class="ident">centered</span>,
-                    <span class="ident">Percentage</span>(<span class="number">100.0</span>),
-                    <span class="ident">Percentage</span>(<span class="number">15.0</span>),
-                    <span class="op">-</span><span class="number">150.</span>,
+        .build(cx, <span class="kw">move </span>|cx| {
+            ZStack::new(cx, <span class="kw">move </span>|cx| {
+                ArcTrack::new(
+                    cx,
+                    centered,
+                    Percentage(<span class="number">100.0</span>),
+                    Percentage(<span class="number">15.0</span>),
+                    -<span class="number">150.</span>,
                     <span class="number">150.</span>,
-                    <span class="ident">KnobMode::Continuous</span>,
+                    KnobMode::Continuous,
                 )
-                .<span class="ident">value</span>(<span class="ident">lens</span>)
-                .<span class="ident">width</span>(<span class="ident">Stretch</span>(<span class="number">1.0</span>))
-                .<span class="ident">height</span>(<span class="ident">Stretch</span>(<span class="number">1.0</span>))
-                .<span class="ident">class</span>(<span class="string">&quot;track&quot;</span>);
+                .value(lens)
+                .width(Stretch(<span class="number">1.0</span>))
+                .height(Stretch(<span class="number">1.0</span>))
+                .class(<span class="string">&quot;track&quot;</span>);
 
-                <span class="comment">// TODO</span>
-                <span class="comment">// Element::new(cx)</span>
-                <span class="comment">//     .width(Pixels(10.0))</span>
-                <span class="comment">//     .height(Pixels(10.0))</span>
-                <span class="comment">//     .space(Stretch(1.0))</span>
-                <span class="comment">//     .background_color(Color::red())</span>
-                <span class="comment">//     .translate((30.0,0.0))</span>
-                <span class="comment">//     .rotate(30.0);</span>
-            });
+                <span class="comment">// TODO
+                // Element::new(cx)
+                //     .width(Pixels(10.0))
+                //     .height(Pixels(10.0))
+                //     .space(Stretch(1.0))
+                //     .background_color(Color::red())
+                //     .translate((30.0,0.0))
+                //     .rotate(30.0);
+            </span>});
         })
-        .<span class="ident">navigable</span>(<span class="bool-val">true</span>)
+        .navigable(<span class="bool-val">true</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">custom</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">V</span>: <span class="ident">View</span><span class="op">&gt;</span>(
-        <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>,
-        <span class="ident">default_normal</span>: <span class="ident">f32</span>,
-        <span class="ident">lens</span>: <span class="ident">L</span>,
-        <span class="ident">content</span>: <span class="ident">F</span>,
-    ) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">L</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>,
+    <span class="kw">pub fn </span>custom&lt;F, V: View&gt;(
+        cx: <span class="kw-2">&amp;mut </span>Context,
+        default_normal: f32,
+        lens: L,
+        content: F,
+    ) -&gt; Handle&lt;<span class="lifetime">&#39;_</span>, <span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, L) -&gt; Handle&lt;V&gt;,
     {
-        <span class="self">Self</span> {
-            <span class="ident">lens</span>: <span class="ident">lens</span>.<span class="ident">clone</span>(),
-            <span class="ident">default_normal</span>,
+        <span class="self">Self </span>{
+            lens: lens.clone(),
+            default_normal,
 
-            <span class="ident">is_dragging</span>: <span class="bool-val">false</span>,
-            <span class="ident">prev_drag_y</span>: <span class="number">0.0</span>,
-            <span class="ident">continuous_normal</span>: <span class="ident">lens</span>.<span class="ident">get</span>(<span class="ident">cx</span>),
+            is_dragging: <span class="bool-val">false</span>,
+            prev_drag_y: <span class="number">0.0</span>,
+            continuous_normal: lens.get(cx),
 
-            <span class="ident">drag_scalar</span>: <span class="ident">DEFAULT_DRAG_SCALAR</span>,
-            <span class="ident">wheel_scalar</span>: <span class="ident">DEFAULT_WHEEL_SCALAR</span>,
-            <span class="ident">arrow_scalar</span>: <span class="ident">DEFAULT_ARROW_SCALAR</span>,
-            <span class="ident">modifier_scalar</span>: <span class="ident">DEFAULT_MODIFIER_SCALAR</span>,
+            drag_scalar: DEFAULT_DRAG_SCALAR,
+            wheel_scalar: DEFAULT_WHEEL_SCALAR,
+            arrow_scalar: DEFAULT_ARROW_SCALAR,
+            modifier_scalar: DEFAULT_MODIFIER_SCALAR,
 
-            <span class="ident">on_changing</span>: <span class="prelude-val">None</span>,
+            on_changing: <span class="prelude-val">None</span>,
         }
-        .<span class="ident">build</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-            <span class="ident">ZStack::new</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-                (<span class="ident">content</span>)(<span class="ident">cx</span>, <span class="ident">lens</span>).<span class="ident">width</span>(<span class="ident">Percentage</span>(<span class="number">100.0</span>)).<span class="ident">height</span>(<span class="ident">Percentage</span>(<span class="number">100.0</span>));
+        .build(cx, <span class="kw">move </span>|cx| {
+            ZStack::new(cx, <span class="kw">move </span>|cx| {
+                (content)(cx, lens).width(Percentage(<span class="number">100.0</span>)).height(Percentage(<span class="number">100.0</span>));
             });
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Knob</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_changing</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">f32</span>),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, L: Lens&lt;Target = f32&gt;&gt; Handle&lt;<span class="lifetime">&#39;a</span>, Knob&lt;L&gt;&gt; {
+    <span class="kw">pub fn </span>on_changing&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, f32),
     {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">view</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">views</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">entity</span>) {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">knob</span>) <span class="op">=</span> <span class="ident">view</span>.<span class="ident">downcast_mut</span>::<span class="op">&lt;</span><span class="ident">Knob</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>() {
-                <span class="ident">knob</span>.<span class="ident">on_changing</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">callback</span>));
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(view) = <span class="self">self</span>.cx.views.get_mut(<span class="kw-2">&amp;</span><span class="self">self</span>.entity) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(knob) = view.downcast_mut::&lt;Knob&lt;L&gt;&gt;() {
+                knob.on_changing = <span class="prelude-val">Some</span>(Box::new(callback));
             }
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">Knob</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;L: Lens&lt;Target = f32&gt;&gt; View <span class="kw">for </span>Knob&lt;L&gt; {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">&quot;knob&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
-        <span class="kw">let</span> <span class="ident">move_virtual_slider</span> <span class="op">=</span> <span class="op">|</span><span class="ident">self_ref</span>: <span class="kw-2">&amp;mut</span> <span class="self">Self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">new_normal</span>: <span class="ident">f32</span><span class="op">|</span> {
-            <span class="ident">self_ref</span>.<span class="ident">continuous_normal</span> <span class="op">=</span> <span class="ident">new_normal</span>.<span class="ident">clamp</span>(<span class="number">0.0</span>, <span class="number">1.0</span>);
+    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
+        <span class="kw">let </span>move_virtual_slider = |self_ref: <span class="kw-2">&amp;mut </span><span class="self">Self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, new_normal: f32| {
+            self_ref.continuous_normal = new_normal.clamp(<span class="number">0.0</span>, <span class="number">1.0</span>);
 
-            <span class="comment">// TODO - Remove when done</span>
-            <span class="comment">//println!(&quot;Normalized: {}, Display: {}&quot;, self_ref.normalized_value, self_ref.map.normalized_to_display(self_ref.normalized_value));</span>
+            <span class="comment">// TODO - Remove when done
+            //println!(&quot;Normalized: {}, Display: {}&quot;, self_ref.normalized_value, self_ref.map.normalized_to_display(self_ref.normalized_value));
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">self_ref</span>.<span class="ident">on_changing</span> {
-                (<span class="ident">callback</span>)(<span class="ident">cx</span>, <span class="ident">self_ref</span>.<span class="ident">continuous_normal</span>);
+            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span>self_ref.on_changing {
+                (callback)(cx, self_ref.continuous_normal);
             }
 
-            <span class="comment">//entity.emit(cx, SliderEvent::ValueChanged(self_ref.normalized_value));</span>
+            <span class="comment">//entity.emit(cx, SliderEvent::ValueChanged(self_ref.normalized_value));
 
-            <span class="comment">// if let Some(track) = cx.query::&lt;ArcTrack&gt;(self_ref.value_track) {</span>
-            <span class="comment">//     track.normalized_value = self_ref.normalized_value;</span>
-            <span class="comment">// }</span>
+            // if let Some(track) = cx.query::&lt;ArcTrack&gt;(self_ref.value_track) {
+            //     track.normalized_value = self_ref.normalized_value;
+            // }
 
-            <span class="comment">//Entity::root().redraw(cx);</span>
-        };
+            //Entity::root().redraw(cx);
+        </span>};
 
-        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
-            <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">button</span>) <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">button</span> <span class="op">==</span> <span class="ident">MouseButton::Left</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">is_dragging</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                <span class="self">self</span>.<span class="ident">prev_drag_y</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pos_down</span>.<span class="number">1</span>;
+        event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
+            WindowEvent::MouseDown(button) <span class="kw">if </span><span class="kw-2">*</span>button == MouseButton::Left =&gt; {
+                <span class="self">self</span>.is_dragging = <span class="bool-val">true</span>;
+                <span class="self">self</span>.prev_drag_y = cx.mouse.left.pos_down.<span class="number">1</span>;
 
-                <span class="ident">cx</span>.<span class="ident">capture</span>();
-                <span class="ident">cx</span>.<span class="ident">focus_with_visibility</span>(<span class="bool-val">false</span>);
+                cx.capture();
+                cx.focus_with_visibility(<span class="bool-val">false</span>);
 
-                <span class="self">self</span>.<span class="ident">continuous_normal</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">get</span>(<span class="ident">cx</span>);
+                <span class="self">self</span>.continuous_normal = <span class="self">self</span>.lens.get(cx);
 
-                <span class="comment">// if let Some(callback) = self.on_press.take() {</span>
-                <span class="comment">//     (callback)(self, cx, cx.current);</span>
-                <span class="comment">//     self.on_press = Some(callback);</span>
-                <span class="comment">// }</span>
-            }
+                <span class="comment">// if let Some(callback) = self.on_press.take() {
+                //     (callback)(self, cx, cx.current);
+                //     self.on_press = Some(callback);
+                // }
+            </span>}
 
-            <span class="ident">WindowEvent::MouseUp</span>(<span class="ident">button</span>) <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">button</span> <span class="op">==</span> <span class="ident">MouseButton::Left</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">is_dragging</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                <span class="comment">//self.continuous_normal = self.normalized_value;</span>
+            WindowEvent::MouseUp(button) <span class="kw">if </span><span class="kw-2">*</span>button == MouseButton::Left =&gt; {
+                <span class="self">self</span>.is_dragging = <span class="bool-val">false</span>;
+                <span class="comment">//self.continuous_normal = self.normalized_value;
 
-                <span class="self">self</span>.<span class="ident">continuous_normal</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">get</span>(<span class="ident">cx</span>);
+                </span><span class="self">self</span>.continuous_normal = <span class="self">self</span>.lens.get(cx);
 
-                <span class="ident">cx</span>.<span class="ident">release</span>();
+                cx.release();
 
-                <span class="comment">// if let Some(callback) = self.on_release.take() {</span>
-                <span class="comment">//     (callback)(self, cx, cx.current);</span>
-                <span class="comment">//     self.on_release = Some(callback);</span>
-                <span class="comment">// }</span>
-            }
+                <span class="comment">// if let Some(callback) = self.on_release.take() {
+                //     (callback)(self, cx, cx.current);
+                //     self.on_release = Some(callback);
+                // }
+            </span>}
 
-            <span class="ident">WindowEvent::MouseMove</span>(<span class="kw">_</span>, <span class="ident">y</span>) =&gt; {
-                <span class="comment">//if meta.target == cx.current {</span>
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_dragging</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">delta_normal</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">y</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">prev_drag_y</span>) <span class="op">*</span> <span class="self">self</span>.<span class="ident">drag_scalar</span>;
+            WindowEvent::MouseMove(<span class="kw">_</span>, y) =&gt; {
+                <span class="comment">//if meta.target == cx.current {
+                </span><span class="kw">if </span><span class="self">self</span>.is_dragging {
+                    <span class="kw">let </span><span class="kw-2">mut </span>delta_normal = (<span class="kw-2">*</span>y - <span class="self">self</span>.prev_drag_y) * <span class="self">self</span>.drag_scalar;
 
-                    <span class="self">self</span>.<span class="ident">prev_drag_y</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">y</span>;
+                    <span class="self">self</span>.prev_drag_y = <span class="kw-2">*</span>y;
 
-                    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::SHIFT</span>) {
-                        <span class="ident">delta_normal</span> <span class="kw-2">*</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">modifier_scalar</span>;
+                    <span class="kw">if </span>cx.modifiers.contains(Modifiers::SHIFT) {
+                        delta_normal <span class="kw-2">*</span>= <span class="self">self</span>.modifier_scalar;
                     }
 
-                    <span class="kw">let</span> <span class="ident">new_normal</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">continuous_normal</span> <span class="op">-</span> <span class="ident">delta_normal</span>;
+                    <span class="kw">let </span>new_normal = <span class="self">self</span>.continuous_normal - delta_normal;
 
-                    <span class="ident">move_virtual_slider</span>(<span class="self">self</span>, <span class="ident">cx</span>, <span class="ident">new_normal</span>);
+                    move_virtual_slider(<span class="self">self</span>, cx, new_normal);
                 }
-                <span class="comment">//}</span>
-            }
+                <span class="comment">//}
+            </span>}
 
-            <span class="ident">WindowEvent::MouseScroll</span>(<span class="kw">_</span>, <span class="ident">y</span>) =&gt; {
-                <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">y</span> <span class="op">!</span><span class="op">=</span> <span class="number">0.0</span> {
-                    <span class="kw">let</span> <span class="ident">delta_normal</span> <span class="op">=</span> <span class="op">-</span><span class="kw-2">*</span><span class="ident">y</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">wheel_scalar</span>;
+            WindowEvent::MouseScroll(<span class="kw">_</span>, y) =&gt; {
+                <span class="kw">if </span><span class="kw-2">*</span>y != <span class="number">0.0 </span>{
+                    <span class="kw">let </span>delta_normal = -<span class="kw-2">*</span>y * <span class="self">self</span>.wheel_scalar;
 
-                    <span class="kw">let</span> <span class="ident">new_normal</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">continuous_normal</span> <span class="op">-</span> <span class="ident">delta_normal</span>;
+                    <span class="kw">let </span>new_normal = <span class="self">self</span>.continuous_normal - delta_normal;
 
-                    <span class="ident">move_virtual_slider</span>(<span class="self">self</span>, <span class="ident">cx</span>, <span class="ident">new_normal</span>);
+                    move_virtual_slider(<span class="self">self</span>, cx, new_normal);
                 }
             }
 
-            <span class="ident">WindowEvent::MouseDoubleClick</span>(<span class="ident">button</span>) <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">button</span> <span class="op">==</span> <span class="ident">MouseButton::Left</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">is_dragging</span> <span class="op">=</span> <span class="bool-val">false</span>;
+            WindowEvent::MouseDoubleClick(button) <span class="kw">if </span><span class="kw-2">*</span>button == MouseButton::Left =&gt; {
+                <span class="self">self</span>.is_dragging = <span class="bool-val">false</span>;
 
-                <span class="ident">move_virtual_slider</span>(<span class="self">self</span>, <span class="ident">cx</span>, <span class="self">self</span>.<span class="ident">default_normal</span>);
+                move_virtual_slider(<span class="self">self</span>, cx, <span class="self">self</span>.default_normal);
             }
 
-            <span class="ident">WindowEvent::KeyDown</span>(<span class="ident">Code::ArrowUp</span> <span class="op">|</span> <span class="ident">Code::ArrowRight</span>, <span class="kw">_</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">continuous_normal</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">get</span>(<span class="ident">cx</span>);
-                <span class="ident">move_virtual_slider</span>(<span class="self">self</span>, <span class="ident">cx</span>, <span class="self">self</span>.<span class="ident">continuous_normal</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">arrow_scalar</span>);
+            WindowEvent::KeyDown(Code::ArrowUp | Code::ArrowRight, <span class="kw">_</span>) =&gt; {
+                <span class="self">self</span>.continuous_normal = <span class="self">self</span>.lens.get(cx);
+                move_virtual_slider(<span class="self">self</span>, cx, <span class="self">self</span>.continuous_normal + <span class="self">self</span>.arrow_scalar);
             }
 
-            <span class="ident">WindowEvent::KeyDown</span>(<span class="ident">Code::ArrowDown</span> <span class="op">|</span> <span class="ident">Code::ArrowLeft</span>, <span class="kw">_</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">continuous_normal</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">get</span>(<span class="ident">cx</span>);
-                <span class="ident">move_virtual_slider</span>(<span class="self">self</span>, <span class="ident">cx</span>, <span class="self">self</span>.<span class="ident">continuous_normal</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">arrow_scalar</span>);
+            WindowEvent::KeyDown(Code::ArrowDown | Code::ArrowLeft, <span class="kw">_</span>) =&gt; {
+                <span class="self">self</span>.continuous_normal = <span class="self">self</span>.lens.get(cx);
+                move_virtual_slider(<span class="self">self</span>, cx, <span class="self">self</span>.continuous_normal - <span class="self">self</span>.arrow_scalar);
             }
 
-            <span class="kw">_</span> =&gt; {}
+            <span class="kw">_ </span>=&gt; {}
         });
     }
 }
 
-<span class="doccomment">/// Adds tickmarks to a knob to show the steps that a knob can be set to.</span>
-<span class="doccomment">/// When added to a knob, the knob should be made smaller (depending on span),</span>
-<span class="doccomment">/// so the knob doesn&#39;t overlap with the tick marks</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Ticks</span> {
-    <span class="ident">angle_start</span>: <span class="ident">f32</span>,
-    <span class="ident">angle_end</span>: <span class="ident">f32</span>,
-    <span class="ident">radius</span>: <span class="ident">Units</span>,
-    <span class="comment">// TODO: should this be renamed to inner_radius?</span>
-    <span class="ident">tick_len</span>: <span class="ident">Units</span>,
-    <span class="ident">tick_width</span>: <span class="ident">Units</span>,
-    <span class="comment">// steps: u32,</span>
-    <span class="ident">mode</span>: <span class="ident">KnobMode</span>,
+<span class="doccomment">/// Adds tickmarks to a knob to show the steps that a knob can be set to.
+/// When added to a knob, the knob should be made smaller (depending on span),
+/// so the knob doesn&#39;t overlap with the tick marks
+</span><span class="kw">pub struct </span>Ticks {
+    angle_start: f32,
+    angle_end: f32,
+    radius: Units,
+    <span class="comment">// TODO: should this be renamed to inner_radius?
+    </span>tick_len: Units,
+    tick_width: Units,
+    <span class="comment">// steps: u32,
+    </span>mode: KnobMode,
 }
-<span class="kw">impl</span> <span class="ident">Ticks</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>,
-        <span class="ident">radius</span>: <span class="ident">Units</span>,
-        <span class="ident">tick_len</span>: <span class="ident">Units</span>,
-        <span class="ident">tick_width</span>: <span class="ident">Units</span>,
-        <span class="ident">arc_len</span>: <span class="ident">f32</span>,
-        <span class="ident">mode</span>: <span class="ident">KnobMode</span>,
-    ) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="self">Self</span> {
-            <span class="comment">// angle_start: -150.0,</span>
-            <span class="comment">// angle_end: 150.0,</span>
-            <span class="ident">angle_start</span>: <span class="op">-</span><span class="ident">arc_len</span> <span class="op">/</span> <span class="number">2.0</span>,
-            <span class="ident">angle_end</span>: <span class="ident">arc_len</span> <span class="op">/</span> <span class="number">2.0</span>,
-            <span class="ident">radius</span>,
-            <span class="ident">tick_len</span>,
-            <span class="ident">tick_width</span>,
+<span class="kw">impl </span>Ticks {
+    <span class="kw">pub fn </span>new(
+        cx: <span class="kw-2">&amp;mut </span>Context,
+        radius: Units,
+        tick_len: Units,
+        tick_width: Units,
+        arc_len: f32,
+        mode: KnobMode,
+    ) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+        <span class="self">Self </span>{
+            <span class="comment">// angle_start: -150.0,
+            // angle_end: 150.0,
+            </span>angle_start: -arc_len / <span class="number">2.0</span>,
+            angle_end: arc_len / <span class="number">2.0</span>,
+            radius,
+            tick_len,
+            tick_width,
 
-            <span class="ident">mode</span>,
+            mode,
         }
-        .<span class="ident">build</span>(<span class="ident">cx</span>, <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {})
+        .build(cx, |<span class="kw">_</span>| {})
     }
 }
-<span class="kw">impl</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">Ticks</span> {
-    <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+<span class="kw">impl </span>View <span class="kw">for </span>Ticks {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">&quot;ticks&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">draw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">DrawContext</span>, <span class="ident">canvas</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Canvas</span>) {
-        <span class="kw">let</span> <span class="ident">opacity</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">opacity</span>();
+    <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
+        <span class="kw">let </span>opacity = cx.opacity();
 
-        <span class="comment">//let mut background_color: femtovg::Color = cx.current.get_background_color(cx).into();</span>
-        <span class="comment">// background_color.set_alphaf(background_color.a * opacity);</span>
+        <span class="comment">//let mut background_color: femtovg::Color = cx.current.get_background_color(cx).into();
+        // background_color.set_alphaf(background_color.a * opacity);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">foreground_color</span>: <span class="ident">femtovg::Color</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">background_color</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">into</span>();
-        <span class="ident">foreground_color</span>.<span class="ident">set_alphaf</span>(<span class="ident">foreground_color</span>.<span class="ident">a</span> <span class="op">*</span> <span class="ident">opacity</span>);
+        </span><span class="kw">let </span><span class="kw-2">mut </span>foreground_color: femtovg::Color =
+            cx.background_color().cloned().unwrap_or_default().into();
+        foreground_color.set_alphaf(foreground_color.a * opacity);
 
-        <span class="comment">// let background_color = femtovg::Color::rgb(54, 54, 54);</span>
-        <span class="comment">//et mut foreground_color = femtovg::Color::rgb(50, 50, 200);</span>
+        <span class="comment">// let background_color = femtovg::Color::rgb(54, 54, 54);
+        //et mut foreground_color = femtovg::Color::rgb(50, 50, 200);
 
-        <span class="kw">let</span> <span class="ident">bounds</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">bounds</span>();
+        </span><span class="kw">let </span>bounds = cx.bounds();
 
-        <span class="comment">// Clalculate arc center</span>
-        <span class="kw">let</span> <span class="ident">centerx</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">bounds</span>.<span class="ident">w</span>;
-        <span class="kw">let</span> <span class="ident">centery</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">bounds</span>.<span class="ident">h</span>;
+        <span class="comment">// Clalculate arc center
+        </span><span class="kw">let </span>centerx = bounds.x + <span class="number">0.5 </span>* bounds.w;
+        <span class="kw">let </span>centery = bounds.y + <span class="number">0.5 </span>* bounds.h;
 
-        <span class="comment">// Convert start and end angles to radians and rotate origin direction to be upwards instead of to the right</span>
-        <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">angle_start</span>.<span class="ident">to_radians</span>() <span class="op">-</span> <span class="ident">PI</span> <span class="op">/</span> <span class="number">2.0</span>;
-        <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">angle_end</span>.<span class="ident">to_radians</span>() <span class="op">-</span> <span class="ident">PI</span> <span class="op">/</span> <span class="number">2.0</span>;
+        <span class="comment">// Convert start and end angles to radians and rotate origin direction to be upwards instead of to the right
+        </span><span class="kw">let </span>start = <span class="self">self</span>.angle_start.to_radians() - PI / <span class="number">2.0</span>;
+        <span class="kw">let </span>end = <span class="self">self</span>.angle_end.to_radians() - PI / <span class="number">2.0</span>;
 
-        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">parent</span>(<span class="ident">cx</span>.<span class="ident">current</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span>parent = cx.tree.parent(cx.current).unwrap();
 
-        <span class="kw">let</span> <span class="ident">parent_width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">parent</span>);
+        <span class="kw">let </span>parent_width = cx.cache.get_width(parent);
 
-        <span class="comment">// Convert radius and span into screen coordinates</span>
-        <span class="kw">let</span> <span class="ident">radius</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">radius</span>.<span class="ident">value_or</span>(<span class="ident">parent_width</span> <span class="op">/</span> <span class="number">2.0</span>, <span class="number">0.0</span>);
-        <span class="comment">// default value of span is 15 % of radius. Original span value was 16.667%</span>
-        <span class="kw">let</span> <span class="ident">tick_len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tick_len</span>.<span class="ident">value_or</span>(<span class="ident">radius</span>, <span class="number">0.0</span>);
-        <span class="kw">let</span> <span class="ident">line_width</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tick_width</span>.<span class="ident">value_or</span>(<span class="ident">radius</span>, <span class="number">0.0</span>);
-        <span class="comment">// Draw ticks</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>();
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">mode</span> {
-            <span class="comment">// can&#39;t really make ticks for a continuous knob</span>
-            <span class="ident">KnobMode::Continuous</span> =&gt; <span class="kw">return</span>,
-            <span class="ident">KnobMode::Discrete</span>(<span class="ident">steps</span>) =&gt; {
-                <span class="kw">for</span> <span class="ident">n</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">steps</span> {
-                    <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">n</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">/</span> (<span class="ident">steps</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">f32</span>;
-                    <span class="kw">let</span> <span class="ident">angle</span> <span class="op">=</span> <span class="ident">start</span> <span class="op">+</span> (<span class="ident">end</span> <span class="op">-</span> <span class="ident">start</span>) <span class="op">*</span> <span class="ident">a</span>;
-                    <span class="ident">path</span>.<span class="ident">move_to</span>(
-                        <span class="ident">centerx</span> <span class="op">+</span> <span class="ident">angle</span>.<span class="ident">cos</span>() <span class="op">*</span> (<span class="ident">radius</span> <span class="op">-</span> <span class="ident">tick_len</span>),
-                        <span class="ident">centery</span> <span class="op">+</span> <span class="ident">angle</span>.<span class="ident">sin</span>() <span class="op">*</span> (<span class="ident">radius</span> <span class="op">-</span> <span class="ident">tick_len</span>),
+        <span class="comment">// Convert radius and span into screen coordinates
+        </span><span class="kw">let </span>radius = <span class="self">self</span>.radius.value_or(parent_width / <span class="number">2.0</span>, <span class="number">0.0</span>);
+        <span class="comment">// default value of span is 15 % of radius. Original span value was 16.667%
+        </span><span class="kw">let </span>tick_len = <span class="self">self</span>.tick_len.value_or(radius, <span class="number">0.0</span>);
+        <span class="kw">let </span>line_width = <span class="self">self</span>.tick_width.value_or(radius, <span class="number">0.0</span>);
+        <span class="comment">// Draw ticks
+        </span><span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
+        <span class="kw">match </span><span class="self">self</span>.mode {
+            <span class="comment">// can&#39;t really make ticks for a continuous knob
+            </span>KnobMode::Continuous =&gt; <span class="kw">return</span>,
+            KnobMode::Discrete(steps) =&gt; {
+                <span class="kw">for </span>n <span class="kw">in </span><span class="number">0</span>..steps {
+                    <span class="kw">let </span>a = n <span class="kw">as </span>f32 / (steps - <span class="number">1</span>) <span class="kw">as </span>f32;
+                    <span class="kw">let </span>angle = start + (end - start) * a;
+                    path.move_to(
+                        centerx + angle.cos() * (radius - tick_len),
+                        centery + angle.sin() * (radius - tick_len),
                     );
-                    <span class="ident">path</span>.<span class="ident">line_to</span>(
-                        <span class="ident">centerx</span> <span class="op">+</span> <span class="ident">angle</span>.<span class="ident">cos</span>() <span class="op">*</span> (<span class="ident">radius</span> <span class="op">-</span> <span class="ident">line_width</span> <span class="op">/</span> <span class="number">2.0</span>),
-                        <span class="ident">centery</span> <span class="op">+</span> <span class="ident">angle</span>.<span class="ident">sin</span>() <span class="op">*</span> (<span class="ident">radius</span> <span class="op">-</span> <span class="ident">line_width</span> <span class="op">/</span> <span class="number">2.0</span>),
+                    path.line_to(
+                        centerx + angle.cos() * (radius - line_width / <span class="number">2.0</span>),
+                        centery + angle.sin() * (radius - line_width / <span class="number">2.0</span>),
                     );
                 }
             }
         }
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">paint</span> <span class="op">=</span> <span class="ident">Paint::color</span>(<span class="ident">foreground_color</span>);
-        <span class="ident">paint</span>.<span class="ident">set_line_width</span>(<span class="ident">line_width</span>);
-        <span class="ident">paint</span>.<span class="ident">set_line_cap</span>(<span class="ident">LineCap::Round</span>);
-        <span class="ident">canvas</span>.<span class="ident">stroke_path</span>(<span class="kw-2">&amp;mut</span> <span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">paint</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::color(foreground_color);
+        paint.set_line_width(line_width);
+        paint.set_line_cap(LineCap::Round);
+        canvas.stroke_path(<span class="kw-2">&amp;mut </span>path, <span class="kw-2">&amp;</span>paint);
     }
 }
-<span class="doccomment">/// Makes a round knob with a tick to show the current value</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TickKnob</span> {
-    <span class="ident">angle_start</span>: <span class="ident">f32</span>,
-    <span class="ident">angle_end</span>: <span class="ident">f32</span>,
-    <span class="ident">radius</span>: <span class="ident">Units</span>,
-    <span class="ident">tick_width</span>: <span class="ident">Units</span>,
-    <span class="ident">tick_len</span>: <span class="ident">Units</span>,
-    <span class="ident">normalized_value</span>: <span class="ident">f32</span>,
-    <span class="ident">mode</span>: <span class="ident">KnobMode</span>,
+<span class="doccomment">/// Makes a round knob with a tick to show the current value
+</span><span class="kw">pub struct </span>TickKnob {
+    angle_start: f32,
+    angle_end: f32,
+    radius: Units,
+    tick_width: Units,
+    tick_len: Units,
+    normalized_value: f32,
+    mode: KnobMode,
 }
 
-<span class="kw">impl</span> <span class="ident">TickKnob</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>,
-        <span class="ident">radius</span>: <span class="ident">Units</span>,
-        <span class="ident">tick_width</span>: <span class="ident">Units</span>,
-        <span class="ident">tick_len</span>: <span class="ident">Units</span>,
-        <span class="ident">arc_len</span>: <span class="ident">f32</span>,
-        <span class="comment">// steps: u32,</span>
-        <span class="ident">mode</span>: <span class="ident">KnobMode</span>,
-    ) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="self">Self</span> {
-            <span class="comment">// angle_start: -150.0,</span>
-            <span class="comment">// angle_end: 150.0,</span>
-            <span class="ident">angle_start</span>: <span class="op">-</span><span class="ident">arc_len</span> <span class="op">/</span> <span class="number">2.0</span>,
-            <span class="ident">angle_end</span>: <span class="ident">arc_len</span> <span class="op">/</span> <span class="number">2.0</span>,
-            <span class="ident">radius</span>,
-            <span class="ident">tick_width</span>,
-            <span class="ident">tick_len</span>,
-            <span class="ident">normalized_value</span>: <span class="number">0.5</span>,
-            <span class="ident">mode</span>,
+<span class="kw">impl </span>TickKnob {
+    <span class="kw">pub fn </span>new(
+        cx: <span class="kw-2">&amp;mut </span>Context,
+        radius: Units,
+        tick_width: Units,
+        tick_len: Units,
+        arc_len: f32,
+        <span class="comment">// steps: u32,
+        </span>mode: KnobMode,
+    ) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+        <span class="self">Self </span>{
+            <span class="comment">// angle_start: -150.0,
+            // angle_end: 150.0,
+            </span>angle_start: -arc_len / <span class="number">2.0</span>,
+            angle_end: arc_len / <span class="number">2.0</span>,
+            radius,
+            tick_width,
+            tick_len,
+            normalized_value: <span class="number">0.5</span>,
+            mode,
         }
-        .<span class="ident">build</span>(<span class="ident">cx</span>, <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {})
+        .build(cx, |<span class="kw">_</span>| {})
     }
 }
-<span class="kw">impl</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">TickKnob</span> {
-    <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+<span class="kw">impl </span>View <span class="kw">for </span>TickKnob {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">&quot;tickknob&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">draw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">DrawContext</span>, <span class="ident">canvas</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Canvas</span>) {
-        <span class="kw">let</span> <span class="ident">opacity</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">opacity</span>();
+    <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
+        <span class="kw">let </span>opacity = cx.opacity();
 
-        <span class="comment">//let mut background_color: femtovg::Color = cx.current.get_background_color(cx).into();</span>
-        <span class="comment">// background_color.set_alphaf(background_color.a * opacity);</span>
+        <span class="comment">//let mut background_color: femtovg::Color = cx.current.get_background_color(cx).into();
+        // background_color.set_alphaf(background_color.a * opacity);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">foreground_color</span>: <span class="ident">femtovg::Color</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">background_color</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">into</span>();
-        <span class="ident">foreground_color</span>.<span class="ident">set_alphaf</span>(<span class="ident">foreground_color</span>.<span class="ident">a</span> <span class="op">*</span> <span class="ident">opacity</span>);
+        </span><span class="kw">let </span><span class="kw-2">mut </span>foreground_color: femtovg::Color =
+            cx.background_color().cloned().unwrap_or_default().into();
+        foreground_color.set_alphaf(foreground_color.a * opacity);
 
-        <span class="kw">let</span> <span class="ident">background_color</span> <span class="op">=</span> <span class="ident">femtovg::Color::rgb</span>(<span class="number">54</span>, <span class="number">54</span>, <span class="number">54</span>);
-        <span class="comment">//et mut foreground_color = femtovg::Color::rgb(50, 50, 200);</span>
+        <span class="kw">let </span>background_color = femtovg::Color::rgb(<span class="number">54</span>, <span class="number">54</span>, <span class="number">54</span>);
+        <span class="comment">//et mut foreground_color = femtovg::Color::rgb(50, 50, 200);
 
-        <span class="kw">let</span> <span class="ident">bounds</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">bounds</span>();
+        </span><span class="kw">let </span>bounds = cx.bounds();
 
-        <span class="comment">// Clalculate arc center</span>
-        <span class="kw">let</span> <span class="ident">centerx</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">bounds</span>.<span class="ident">w</span>;
-        <span class="kw">let</span> <span class="ident">centery</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">bounds</span>.<span class="ident">h</span>;
+        <span class="comment">// Clalculate arc center
+        </span><span class="kw">let </span>centerx = bounds.x + <span class="number">0.5 </span>* bounds.w;
+        <span class="kw">let </span>centery = bounds.y + <span class="number">0.5 </span>* bounds.h;
 
-        <span class="comment">// Convert start and end angles to radians and rotate origin direction to be upwards instead of to the right</span>
-        <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">angle_start</span>.<span class="ident">to_radians</span>() <span class="op">-</span> <span class="ident">PI</span> <span class="op">/</span> <span class="number">2.0</span>;
-        <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">angle_end</span>.<span class="ident">to_radians</span>() <span class="op">-</span> <span class="ident">PI</span> <span class="op">/</span> <span class="number">2.0</span>;
+        <span class="comment">// Convert start and end angles to radians and rotate origin direction to be upwards instead of to the right
+        </span><span class="kw">let </span>start = <span class="self">self</span>.angle_start.to_radians() - PI / <span class="number">2.0</span>;
+        <span class="kw">let </span>end = <span class="self">self</span>.angle_end.to_radians() - PI / <span class="number">2.0</span>;
 
-        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">parent</span>(<span class="ident">cx</span>.<span class="ident">current</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span>parent = cx.tree.parent(cx.current).unwrap();
 
-        <span class="kw">let</span> <span class="ident">parent_width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">parent</span>);
+        <span class="kw">let </span>parent_width = cx.cache.get_width(parent);
 
-        <span class="comment">// Convert radius and span into screen coordinates</span>
-        <span class="kw">let</span> <span class="ident">radius</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">radius</span>.<span class="ident">value_or</span>(<span class="ident">parent_width</span> <span class="op">/</span> <span class="number">2.0</span>, <span class="number">0.0</span>);
+        <span class="comment">// Convert radius and span into screen coordinates
+        </span><span class="kw">let </span>radius = <span class="self">self</span>.radius.value_or(parent_width / <span class="number">2.0</span>, <span class="number">0.0</span>);
 
-        <span class="kw">let</span> <span class="ident">tick_width</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tick_width</span>.<span class="ident">value_or</span>(<span class="ident">radius</span>, <span class="number">0.0</span>);
-        <span class="kw">let</span> <span class="ident">tick_len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tick_len</span>.<span class="ident">value_or</span>(<span class="ident">radius</span>, <span class="number">0.0</span>);
-        <span class="comment">// Draw the circle</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>();
-        <span class="ident">path</span>.<span class="ident">circle</span>(<span class="ident">centerx</span>, <span class="ident">centery</span>, <span class="ident">radius</span>);
-        <span class="comment">// path.arc(centerx, centery, radius - span / 2.0, end, start, Solidity::Solid);</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">paint</span> <span class="op">=</span> <span class="ident">Paint::color</span>(<span class="ident">background_color</span>);
-        <span class="ident">paint</span>.<span class="ident">set_line_width</span>(<span class="ident">tick_width</span>);
-        <span class="ident">paint</span>.<span class="ident">set_line_cap</span>(<span class="ident">LineCap::Round</span>);
-        <span class="ident">canvas</span>.<span class="ident">fill_path</span>(<span class="kw-2">&amp;mut</span> <span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">paint</span>);
+        <span class="kw">let </span>tick_width = <span class="self">self</span>.tick_width.value_or(radius, <span class="number">0.0</span>);
+        <span class="kw">let </span>tick_len = <span class="self">self</span>.tick_len.value_or(radius, <span class="number">0.0</span>);
+        <span class="comment">// Draw the circle
+        </span><span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
+        path.circle(centerx, centery, radius);
+        <span class="comment">// path.arc(centerx, centery, radius - span / 2.0, end, start, Solidity::Solid);
+        </span><span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::color(background_color);
+        paint.set_line_width(tick_width);
+        paint.set_line_cap(LineCap::Round);
+        canvas.fill_path(<span class="kw-2">&amp;mut </span>path, <span class="kw-2">&amp;</span>paint);
 
-        <span class="comment">// Draw the tick</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>();
+        <span class="comment">// Draw the tick
+        </span><span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
 
-        <span class="kw">let</span> <span class="ident">angle</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">mode</span> {
-            <span class="ident">KnobMode::Continuous</span> =&gt; <span class="ident">start</span> <span class="op">+</span> (<span class="ident">end</span> <span class="op">-</span> <span class="ident">start</span>) <span class="op">*</span> <span class="self">self</span>.<span class="ident">normalized_value</span>,
-            <span class="comment">// snapping</span>
-            <span class="ident">KnobMode::Discrete</span>(<span class="ident">steps</span>) =&gt; {
-                <span class="ident">start</span>
-                    <span class="op">+</span> (<span class="ident">end</span> <span class="op">-</span> <span class="ident">start</span>) <span class="op">*</span> (<span class="self">self</span>.<span class="ident">normalized_value</span> <span class="op">*</span> (<span class="ident">steps</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">f32</span>).<span class="ident">floor</span>()
-                        <span class="op">/</span> (<span class="ident">steps</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">f32</span>
+        <span class="kw">let </span>angle = <span class="kw">match </span><span class="self">self</span>.mode {
+            KnobMode::Continuous =&gt; start + (end - start) * <span class="self">self</span>.normalized_value,
+            <span class="comment">// snapping
+            </span>KnobMode::Discrete(steps) =&gt; {
+                start
+                    + (end - start) * (<span class="self">self</span>.normalized_value * (steps - <span class="number">1</span>) <span class="kw">as </span>f32).floor()
+                        / (steps - <span class="number">1</span>) <span class="kw">as </span>f32
             }
         };
 
-        <span class="ident">path</span>.<span class="ident">move_to</span>(
-            <span class="comment">// centerx + angle.cos() * (radius * 0.70),</span>
-            <span class="ident">centerx</span> <span class="op">+</span> <span class="ident">angle</span>.<span class="ident">cos</span>() <span class="op">*</span> (<span class="ident">radius</span> <span class="op">-</span> <span class="ident">tick_len</span>),
-            <span class="ident">centery</span> <span class="op">+</span> <span class="ident">angle</span>.<span class="ident">sin</span>() <span class="op">*</span> (<span class="ident">radius</span> <span class="op">-</span> <span class="ident">tick_len</span>),
+        path.move_to(
+            <span class="comment">// centerx + angle.cos() * (radius * 0.70),
+            </span>centerx + angle.cos() * (radius - tick_len),
+            centery + angle.sin() * (radius - tick_len),
         );
-        <span class="ident">path</span>.<span class="ident">line_to</span>(
-            <span class="ident">centerx</span> <span class="op">+</span> <span class="ident">angle</span>.<span class="ident">cos</span>() <span class="op">*</span> (<span class="ident">radius</span> <span class="op">-</span> <span class="ident">tick_width</span> <span class="op">/</span> <span class="number">2.0</span>),
-            <span class="ident">centery</span> <span class="op">+</span> <span class="ident">angle</span>.<span class="ident">sin</span>() <span class="op">*</span> (<span class="ident">radius</span> <span class="op">-</span> <span class="ident">tick_width</span> <span class="op">/</span> <span class="number">2.0</span>),
+        path.line_to(
+            centerx + angle.cos() * (radius - tick_width / <span class="number">2.0</span>),
+            centery + angle.sin() * (radius - tick_width / <span class="number">2.0</span>),
         );
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">paint</span> <span class="op">=</span> <span class="ident">Paint::color</span>(<span class="ident">foreground_color</span>);
-        <span class="ident">paint</span>.<span class="ident">set_line_width</span>(<span class="ident">tick_width</span>);
-        <span class="ident">paint</span>.<span class="ident">set_line_cap</span>(<span class="ident">LineCap::Round</span>);
-        <span class="ident">canvas</span>.<span class="ident">stroke_path</span>(<span class="kw-2">&amp;mut</span> <span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">paint</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::color(foreground_color);
+        paint.set_line_width(tick_width);
+        paint.set_line_cap(LineCap::Round);
+        canvas.stroke_path(<span class="kw-2">&amp;mut </span>path, <span class="kw-2">&amp;</span>paint);
     }
 }
-<span class="kw">impl</span> <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">TickKnob</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">lens</span>: <span class="ident">L</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entity</span>;
-        <span class="ident">Binding::new</span>(<span class="self">self</span>.<span class="ident">cx</span>, <span class="ident">lens</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span>, <span class="ident">value</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">get</span>(<span class="ident">cx</span>);
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">view</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">views</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">knob</span>) <span class="op">=</span> <span class="ident">view</span>.<span class="ident">downcast_mut</span>::<span class="op">&lt;</span><span class="ident">TickKnob</span><span class="op">&gt;</span>() {
-                    <span class="ident">knob</span>.<span class="ident">normalized_value</span> <span class="op">=</span> <span class="ident">value</span>;
-                    <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+<span class="kw">impl </span>Handle&lt;<span class="lifetime">&#39;_</span>, TickKnob&gt; {
+    <span class="kw">pub fn </span>value&lt;L: Lens&lt;Target = f32&gt;&gt;(<span class="self">self</span>, lens: L) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity;
+        Binding::new(<span class="self">self</span>.cx, lens, <span class="kw">move </span>|cx, value| {
+            <span class="kw">let </span>value = value.get(cx);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(view) = cx.views.get_mut(<span class="kw-2">&amp;</span>entity) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(knob) = view.downcast_mut::&lt;TickKnob&gt;() {
+                    knob.normalized_value = value;
+                    cx.style.needs_redraw = <span class="bool-val">true</span>;
                 }
             }
         });
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 }
-<span class="doccomment">/// Makes a knob that represents the current value with an arc</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ArcTrack</span> {
-    <span class="ident">angle_start</span>: <span class="ident">f32</span>,
-    <span class="ident">angle_end</span>: <span class="ident">f32</span>,
-    <span class="ident">radius</span>: <span class="ident">Units</span>,
-    <span class="ident">span</span>: <span class="ident">Units</span>,
-    <span class="ident">normalized_value</span>: <span class="ident">f32</span>,
+<span class="doccomment">/// Makes a knob that represents the current value with an arc
+</span><span class="kw">pub struct </span>ArcTrack {
+    angle_start: f32,
+    angle_end: f32,
+    radius: Units,
+    span: Units,
+    normalized_value: f32,
 
-    <span class="ident">center</span>: <span class="ident">bool</span>,
-    <span class="ident">mode</span>: <span class="ident">KnobMode</span>,
+    center: bool,
+    mode: KnobMode,
 }
 
-<span class="kw">impl</span> <span class="ident">ArcTrack</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>,
-        <span class="ident">center</span>: <span class="ident">bool</span>,
-        <span class="ident">radius</span>: <span class="ident">Units</span>,
-        <span class="ident">span</span>: <span class="ident">Units</span>,
-        <span class="ident">angle_start</span>: <span class="ident">f32</span>,
-        <span class="ident">angle_end</span>: <span class="ident">f32</span>,
-        <span class="ident">mode</span>: <span class="ident">KnobMode</span>,
-    ) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="self">Self</span> {
-            <span class="comment">// angle_start: -150.0,</span>
-            <span class="comment">// angle_end: 150.0,</span>
-            <span class="ident">angle_start</span>,
-            <span class="ident">angle_end</span>,
-            <span class="ident">radius</span>,
-            <span class="ident">span</span>,
+<span class="kw">impl </span>ArcTrack {
+    <span class="kw">pub fn </span>new(
+        cx: <span class="kw-2">&amp;mut </span>Context,
+        center: bool,
+        radius: Units,
+        span: Units,
+        angle_start: f32,
+        angle_end: f32,
+        mode: KnobMode,
+    ) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+        <span class="self">Self </span>{
+            <span class="comment">// angle_start: -150.0,
+            // angle_end: 150.0,
+            </span>angle_start,
+            angle_end,
+            radius,
+            span,
 
-            <span class="ident">normalized_value</span>: <span class="number">0.5</span>,
+            normalized_value: <span class="number">0.5</span>,
 
-            <span class="ident">center</span>,
-            <span class="ident">mode</span>,
+            center,
+            mode,
         }
-        .<span class="ident">build</span>(<span class="ident">cx</span>, <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {})
+        .build(cx, |<span class="kw">_</span>| {})
     }
 }
 
-<span class="kw">impl</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">ArcTrack</span> {
-    <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+<span class="kw">impl </span>View <span class="kw">for </span>ArcTrack {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">&quot;arctrack&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">draw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">DrawContext</span>, <span class="ident">canvas</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Canvas</span>) {
-        <span class="kw">let</span> <span class="ident">opacity</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">opacity</span>();
+    <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
+        <span class="kw">let </span>opacity = cx.opacity();
 
-        <span class="comment">//let mut background_color: femtovg::Color = cx.current.get_background_color(cx).into();</span>
-        <span class="comment">// background_color.set_alphaf(background_color.a * opacity);</span>
+        <span class="comment">//let mut background_color: femtovg::Color = cx.current.get_background_color(cx).into();
+        // background_color.set_alphaf(background_color.a * opacity);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">foreground_color</span>: <span class="ident">femtovg::Color</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">background_color</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">into</span>();
-        <span class="ident">foreground_color</span>.<span class="ident">set_alphaf</span>(<span class="ident">foreground_color</span>.<span class="ident">a</span> <span class="op">*</span> <span class="ident">opacity</span>);
+        </span><span class="kw">let </span><span class="kw-2">mut </span>foreground_color: femtovg::Color =
+            cx.background_color().cloned().unwrap_or_default().into();
+        foreground_color.set_alphaf(foreground_color.a * opacity);
 
-        <span class="kw">let</span> <span class="ident">background_color</span> <span class="op">=</span> <span class="ident">femtovg::Color::rgb</span>(<span class="number">54</span>, <span class="number">54</span>, <span class="number">54</span>);
-        <span class="comment">//et mut foreground_color = femtovg::Color::rgb(50, 50, 200);</span>
+        <span class="kw">let </span>background_color = femtovg::Color::rgb(<span class="number">54</span>, <span class="number">54</span>, <span class="number">54</span>);
+        <span class="comment">//et mut foreground_color = femtovg::Color::rgb(50, 50, 200);
 
-        <span class="kw">let</span> <span class="ident">bounds</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">bounds</span>();
+        </span><span class="kw">let </span>bounds = cx.bounds();
 
-        <span class="comment">// Calculate arc center</span>
-        <span class="kw">let</span> <span class="ident">centerx</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">bounds</span>.<span class="ident">w</span>;
-        <span class="kw">let</span> <span class="ident">centery</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="number">0.5</span> <span class="op">*</span> <span class="ident">bounds</span>.<span class="ident">h</span>;
+        <span class="comment">// Calculate arc center
+        </span><span class="kw">let </span>centerx = bounds.x + <span class="number">0.5 </span>* bounds.w;
+        <span class="kw">let </span>centery = bounds.y + <span class="number">0.5 </span>* bounds.h;
 
-        <span class="comment">// Convert start and end angles to radians and rotate origin direction to be upwards instead of to the right</span>
-        <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">angle_start</span>.<span class="ident">to_radians</span>() <span class="op">-</span> <span class="ident">PI</span> <span class="op">/</span> <span class="number">2.0</span>;
-        <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">angle_end</span>.<span class="ident">to_radians</span>() <span class="op">-</span> <span class="ident">PI</span> <span class="op">/</span> <span class="number">2.0</span>;
+        <span class="comment">// Convert start and end angles to radians and rotate origin direction to be upwards instead of to the right
+        </span><span class="kw">let </span>start = <span class="self">self</span>.angle_start.to_radians() - PI / <span class="number">2.0</span>;
+        <span class="kw">let </span>end = <span class="self">self</span>.angle_end.to_radians() - PI / <span class="number">2.0</span>;
 
-        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">parent</span>(<span class="ident">cx</span>.<span class="ident">current</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span>parent = cx.tree.parent(cx.current).unwrap();
 
-        <span class="kw">let</span> <span class="ident">parent_width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">parent</span>);
+        <span class="kw">let </span>parent_width = cx.cache.get_width(parent);
 
-        <span class="comment">// Convert radius and span into screen coordinates</span>
-        <span class="kw">let</span> <span class="ident">radius</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">radius</span>.<span class="ident">value_or</span>(<span class="ident">parent_width</span> <span class="op">/</span> <span class="number">2.0</span>, <span class="number">0.0</span>);
-        <span class="comment">// default value of span is 15 % of radius. Original span value was 16.667%</span>
-        <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">span</span>.<span class="ident">value_or</span>(<span class="ident">radius</span>, <span class="number">0.0</span>);
+        <span class="comment">// Convert radius and span into screen coordinates
+        </span><span class="kw">let </span>radius = <span class="self">self</span>.radius.value_or(parent_width / <span class="number">2.0</span>, <span class="number">0.0</span>);
+        <span class="comment">// default value of span is 15 % of radius. Original span value was 16.667%
+        </span><span class="kw">let </span>span = <span class="self">self</span>.span.value_or(radius, <span class="number">0.0</span>);
 
-        <span class="comment">// Draw the track arc</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>();
-        <span class="ident">path</span>.<span class="ident">arc</span>(<span class="ident">centerx</span>, <span class="ident">centery</span>, <span class="ident">radius</span> <span class="op">-</span> <span class="ident">span</span> <span class="op">/</span> <span class="number">2.0</span>, <span class="ident">end</span>, <span class="ident">start</span>, <span class="ident">Solidity::Solid</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">paint</span> <span class="op">=</span> <span class="ident">Paint::color</span>(<span class="ident">background_color</span>);
-        <span class="ident">paint</span>.<span class="ident">set_line_width</span>(<span class="ident">span</span>);
-        <span class="ident">paint</span>.<span class="ident">set_line_cap</span>(<span class="ident">LineCap::Round</span>);
-        <span class="ident">canvas</span>.<span class="ident">stroke_path</span>(<span class="kw-2">&amp;mut</span> <span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">paint</span>);
+        <span class="comment">// Draw the track arc
+        </span><span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
+        path.arc(centerx, centery, radius - span / <span class="number">2.0</span>, end, start, Solidity::Solid);
+        <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::color(background_color);
+        paint.set_line_width(span);
+        paint.set_line_cap(LineCap::Round);
+        canvas.stroke_path(<span class="kw-2">&amp;mut </span>path, <span class="kw-2">&amp;</span>paint);
 
-        <span class="comment">// Draw the active arc</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>();
+        <span class="comment">// Draw the active arc
+        </span><span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
 
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">mode</span> {
-            <span class="ident">KnobMode::Continuous</span> =&gt; <span class="self">self</span>.<span class="ident">normalized_value</span>,
-            <span class="comment">// snapping</span>
-            <span class="ident">KnobMode::Discrete</span>(<span class="ident">steps</span>) =&gt; {
-                (<span class="self">self</span>.<span class="ident">normalized_value</span> <span class="op">*</span> (<span class="ident">steps</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">f32</span>).<span class="ident">floor</span>() <span class="op">/</span> (<span class="ident">steps</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">f32</span>
+        <span class="kw">let </span>value = <span class="kw">match </span><span class="self">self</span>.mode {
+            KnobMode::Continuous =&gt; <span class="self">self</span>.normalized_value,
+            <span class="comment">// snapping
+            </span>KnobMode::Discrete(steps) =&gt; {
+                (<span class="self">self</span>.normalized_value * (steps - <span class="number">1</span>) <span class="kw">as </span>f32).floor() / (steps - <span class="number">1</span>) <span class="kw">as </span>f32
             }
         };
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">center</span> {
-            <span class="kw">let</span> <span class="ident">center</span> <span class="op">=</span> <span class="op">-</span><span class="ident">PI</span> <span class="op">/</span> <span class="number">2.0</span>;
+        <span class="kw">if </span><span class="self">self</span>.center {
+            <span class="kw">let </span>center = -PI / <span class="number">2.0</span>;
 
-            <span class="kw">if</span> <span class="ident">value</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">0.5</span> {
-                <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">value</span> <span class="op">*</span> <span class="number">2.0</span> <span class="op">*</span> (<span class="ident">center</span> <span class="op">-</span> <span class="ident">start</span>) <span class="op">+</span> <span class="ident">start</span>;
-                <span class="ident">path</span>.<span class="ident">arc</span>(<span class="ident">centerx</span>, <span class="ident">centery</span>, <span class="ident">radius</span> <span class="op">-</span> <span class="ident">span</span> <span class="op">/</span> <span class="number">2.0</span>, <span class="ident">center</span>, <span class="ident">current</span>, <span class="ident">Solidity::Solid</span>);
-            } <span class="kw">else</span> {
-                <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> (<span class="ident">value</span> <span class="op">*</span> <span class="number">2.0</span> <span class="op">-</span> <span class="number">1.0</span>) <span class="op">*</span> (<span class="ident">end</span> <span class="op">-</span> <span class="ident">center</span>) <span class="op">+</span> <span class="ident">center</span>;
-                <span class="ident">path</span>.<span class="ident">arc</span>(<span class="ident">centerx</span>, <span class="ident">centery</span>, <span class="ident">radius</span> <span class="op">-</span> <span class="ident">span</span> <span class="op">/</span> <span class="number">2.0</span>, <span class="ident">current</span>, <span class="ident">center</span>, <span class="ident">Solidity::Solid</span>);
+            <span class="kw">if </span>value &lt;= <span class="number">0.5 </span>{
+                <span class="kw">let </span>current = value * <span class="number">2.0 </span>* (center - start) + start;
+                path.arc(centerx, centery, radius - span / <span class="number">2.0</span>, center, current, Solidity::Solid);
+            } <span class="kw">else </span>{
+                <span class="kw">let </span>current = (value * <span class="number">2.0 </span>- <span class="number">1.0</span>) * (end - center) + center;
+                path.arc(centerx, centery, radius - span / <span class="number">2.0</span>, current, center, Solidity::Solid);
             }
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">value</span> <span class="op">*</span> (<span class="ident">end</span> <span class="op">-</span> <span class="ident">start</span>) <span class="op">+</span> <span class="ident">start</span>;
-            <span class="ident">path</span>.<span class="ident">arc</span>(<span class="ident">centerx</span>, <span class="ident">centery</span>, <span class="ident">radius</span> <span class="op">-</span> <span class="ident">span</span> <span class="op">/</span> <span class="number">2.0</span>, <span class="ident">current</span>, <span class="ident">start</span>, <span class="ident">Solidity::Solid</span>);
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>current = value * (end - start) + start;
+            path.arc(centerx, centery, radius - span / <span class="number">2.0</span>, current, start, Solidity::Solid);
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">paint</span> <span class="op">=</span> <span class="ident">Paint::color</span>(<span class="ident">foreground_color</span>);
-        <span class="ident">paint</span>.<span class="ident">set_line_width</span>(<span class="ident">span</span>);
-        <span class="ident">paint</span>.<span class="ident">set_line_cap</span>(<span class="ident">LineCap::Round</span>);
-        <span class="ident">canvas</span>.<span class="ident">stroke_path</span>(<span class="kw-2">&amp;mut</span> <span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">paint</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::color(foreground_color);
+        paint.set_line_width(span);
+        paint.set_line_cap(LineCap::Round);
+        canvas.stroke_path(<span class="kw-2">&amp;mut </span>path, <span class="kw-2">&amp;</span>paint);
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">ArcTrack</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">lens</span>: <span class="ident">L</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entity</span>;
-        <span class="ident">Binding::new</span>(<span class="self">self</span>.<span class="ident">cx</span>, <span class="ident">lens</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span>, <span class="ident">value</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">get</span>(<span class="ident">cx</span>);
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">view</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">views</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">knob</span>) <span class="op">=</span> <span class="ident">view</span>.<span class="ident">downcast_mut</span>::<span class="op">&lt;</span><span class="ident">ArcTrack</span><span class="op">&gt;</span>() {
-                    <span class="ident">knob</span>.<span class="ident">normalized_value</span> <span class="op">=</span> <span class="ident">value</span>;
-                    <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+<span class="kw">impl </span>Handle&lt;<span class="lifetime">&#39;_</span>, ArcTrack&gt; {
+    <span class="kw">pub fn </span>value&lt;L: Lens&lt;Target = f32&gt;&gt;(<span class="self">self</span>, lens: L) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity;
+        Binding::new(<span class="self">self</span>.cx, lens, <span class="kw">move </span>|cx, value| {
+            <span class="kw">let </span>value = value.get(cx);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(view) = cx.views.get_mut(<span class="kw-2">&amp;</span>entity) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(knob) = view.downcast_mut::&lt;ArcTrack&gt;() {
+                    knob.normalized_value = value;
+                    cx.style.needs_redraw = <span class="bool-val">true</span>;
                 }
             }
         });
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 }
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">KnobMode</span> {
-    <span class="ident">Discrete</span>(<span class="ident">usize</span>),
-    <span class="ident">Continuous</span>,
+<span class="attribute">#[derive(Debug, Copy, Clone, PartialEq)]
+</span><span class="kw">pub enum </span>KnobMode {
+    Discrete(usize),
+    Continuous,
 }
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">KnobMode</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">KnobMode::Continuous</span>
+<span class="kw">impl </span>Default <span class="kw">for </span>KnobMode {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        KnobMode::Continuous
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/textbox.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>textbox.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/textbox.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>textbox.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -835,842 +835,842 @@
 <span id="835">835</span>
 <span id="836">836</span>
 <span id="837">837</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::BoundingBox</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::text</span>::{
-    <span class="ident">idx_to_pos</span>, <span class="ident">measure_text_lines</span>, <span class="ident">pos_to_idx</span>, <span class="ident">text_layout</span>, <span class="ident">text_paint_general</span>, <span class="ident">Direction</span>,
-    <span class="ident">EditableText</span>, <span class="ident">Movement</span>, <span class="ident">Selection</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::cache::BoundingBox;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::text::{
+    idx_to_pos, measure_text_lines, pos_to_idx, text_layout, text_paint_general, Direction,
+    EditableText, Movement, Selection,
 };
-<span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
-<span class="kw">use</span> <span class="ident">vizia_id::GenerationalId</span>;
-<span class="kw">use</span> <span class="ident">vizia_input::Code</span>;
-<span class="kw">use</span> <span class="ident">vizia_storage::TreeExt</span>;
+<span class="kw">use </span>std::sync::Arc;
+<span class="kw">use </span>vizia_id::GenerationalId;
+<span class="kw">use </span>vizia_input::Code;
+<span class="kw">use </span>vizia_storage::TreeExt;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Lens</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TextboxData</span> {
-    <span class="ident">text</span>: <span class="ident">String</span>,
-    <span class="ident">selection</span>: <span class="ident">Selection</span>,
-    <span class="ident">sel_x</span>: <span class="ident">f32</span>,
-    <span class="ident">re_sel_x</span>: <span class="ident">bool</span>,
-    <span class="ident">edit</span>: <span class="ident">bool</span>,
-    <span class="ident">transform</span>: (<span class="ident">f32</span>, <span class="ident">f32</span>),
-    <span class="ident">line_height</span>: <span class="ident">f32</span>,
-    <span class="ident">on_edit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">String</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">content_entity</span>: <span class="ident">Entity</span>,
-    <span class="ident">kind</span>: <span class="ident">TextboxKind</span>,
-    <span class="ident">on_submit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">String</span>, <span class="ident">bool</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Lens)]
+</span><span class="kw">pub struct </span>TextboxData {
+    text: String,
+    selection: Selection,
+    sel_x: f32,
+    re_sel_x: bool,
+    edit: bool,
+    transform: (f32, f32),
+    line_height: f32,
+    on_edit: <span class="prelude-ty">Option</span>&lt;Arc&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, String) + Send + Sync&gt;&gt;,
+    content_entity: Entity,
+    kind: TextboxKind,
+    on_submit: <span class="prelude-ty">Option</span>&lt;Arc&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, String, bool) + Send + Sync&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">TextboxData</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">text</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">text_length</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">as_str</span>().<span class="ident">len</span>();
-        <span class="self">Self</span> {
-            <span class="ident">text</span>: <span class="ident">text</span>.<span class="ident">clone</span>(),
-            <span class="ident">selection</span>: <span class="ident">Selection::new</span>(<span class="number">0</span>, <span class="ident">text_length</span>),
-            <span class="ident">sel_x</span>: <span class="op">-</span><span class="number">1.0</span>,
-            <span class="ident">re_sel_x</span>: <span class="bool-val">false</span>,
-            <span class="ident">edit</span>: <span class="bool-val">false</span>,
-            <span class="ident">transform</span>: (<span class="number">0.0</span>, <span class="number">0.0</span>),
-            <span class="ident">line_height</span>: <span class="number">0.0</span>,
-            <span class="ident">on_edit</span>: <span class="prelude-val">None</span>,
-            <span class="ident">content_entity</span>: <span class="ident">Entity::null</span>(),
-            <span class="ident">kind</span>: <span class="ident">TextboxKind::SingleLine</span>,
-            <span class="ident">on_submit</span>: <span class="prelude-val">None</span>,
+<span class="kw">impl </span>TextboxData {
+    <span class="kw">pub fn </span>new(text: String) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>text_length = text.as_str().len();
+        <span class="self">Self </span>{
+            text: text.clone(),
+            selection: Selection::new(<span class="number">0</span>, text_length),
+            sel_x: -<span class="number">1.0</span>,
+            re_sel_x: <span class="bool-val">false</span>,
+            edit: <span class="bool-val">false</span>,
+            transform: (<span class="number">0.0</span>, <span class="number">0.0</span>),
+            line_height: <span class="number">0.0</span>,
+            on_edit: <span class="prelude-val">None</span>,
+            content_entity: Entity::null(),
+            kind: TextboxKind::SingleLine,
+            on_submit: <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">set_caret</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>) {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">content_entity</span>;
-        <span class="kw">if</span> <span class="ident">entity</span> <span class="op">==</span> <span class="ident">Entity::null</span>() {
+    <span class="kw">fn </span>set_caret(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
+        <span class="kw">let </span>entity = <span class="self">self</span>.content_entity;
+        <span class="kw">if </span>entity == Entity::null() {
             <span class="kw">return</span>;
         }
-        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">entity</span>.<span class="ident">parent</span>(<span class="ident">cx</span>.<span class="ident">tree</span>).<span class="ident">unwrap</span>();
-        <span class="comment">// this is a weird situation - layout and drawing must be done in physical space, but our</span>
-        <span class="comment">// output (translate) must be in logical space.</span>
-        <span class="kw">let</span> <span class="ident">scale</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
+        <span class="kw">let </span>parent = entity.parent(cx.tree).unwrap();
+        <span class="comment">// this is a weird situation - layout and drawing must be done in physical space, but our
+        // output (translate) must be in logical space.
+        </span><span class="kw">let </span>scale = cx.style.dpi_factor <span class="kw">as </span>f32;
 
-        <span class="comment">// calculate visible area for content and container</span>
-        <span class="kw">let</span> <span class="ident">bounds</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">bounds</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">unwrap</span>().<span class="ident">clone</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parent_bounds</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">bounds</span>.<span class="ident">get</span>(<span class="ident">parent</span>).<span class="ident">unwrap</span>().<span class="ident">clone</span>();
+        <span class="comment">// calculate visible area for content and container
+        </span><span class="kw">let </span>bounds = cx.cache.bounds.get(entity).unwrap().clone();
+        <span class="kw">let </span><span class="kw-2">mut </span>parent_bounds = cx.cache.bounds.get(parent).unwrap().clone();
 
-        <span class="comment">// calculate line height - we&#39;ll need this</span>
-        <span class="kw">let</span> <span class="ident">paint</span> <span class="op">=</span> <span class="ident">text_paint_general</span>(<span class="ident">cx</span>.<span class="ident">style</span>, <span class="ident">cx</span>.<span class="ident">resource_manager</span>, <span class="ident">entity</span>);
-        <span class="kw">let</span> <span class="ident">font_metrics</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">text_context</span>.<span class="ident">measure_font</span>(<span class="kw-2">&amp;</span><span class="ident">paint</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">line_height</span> <span class="op">=</span> <span class="ident">font_metrics</span>.<span class="ident">height</span>();
+        <span class="comment">// calculate line height - we&#39;ll need this
+        </span><span class="kw">let </span>paint = text_paint_general(cx.style, cx.resource_manager, entity);
+        <span class="kw">let </span>font_metrics = cx.text_context.measure_font(<span class="kw-2">&amp;</span>paint).unwrap();
+        <span class="kw">let </span>line_height = font_metrics.height();
 
-        <span class="comment">// we can&#39;t just access cache.text_lines because the text could be just-updated</span>
-        <span class="kw">let</span> <span class="ident">render_width</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">TextboxKind::MultiLineWrapped</span> =&gt; <span class="ident">parent_bounds</span>.<span class="ident">w</span>,
-            <span class="kw">_</span> =&gt; <span class="ident">f32::MAX</span>,
+        <span class="comment">// we can&#39;t just access cache.text_lines because the text could be just-updated
+        </span><span class="kw">let </span>render_width = <span class="kw">match </span><span class="self">self</span>.kind {
+            TextboxKind::MultiLineWrapped =&gt; parent_bounds.w,
+            <span class="kw">_ </span>=&gt; f32::MAX,
         };
-        <span class="kw">let</span> <span class="ident">ranges</span> <span class="op">=</span> <span class="ident">text_layout</span>(<span class="ident">render_width</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text</span>, <span class="kw-2">&amp;</span><span class="ident">paint</span>, <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">text_context</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">metrics</span> <span class="op">=</span>
-            <span class="ident">measure_text_lines</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text</span>, <span class="kw-2">&amp;</span><span class="ident">paint</span>, <span class="kw-2">&amp;</span><span class="ident">ranges</span>, <span class="ident">bounds</span>.<span class="ident">x</span>, <span class="ident">bounds</span>.<span class="ident">y</span>, <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">text_context</span>);
-        <span class="kw">let</span> <span class="ident">ranges_metrics</span> <span class="op">=</span> <span class="ident">ranges</span>.<span class="ident">into_iter</span>().<span class="ident">zip</span>(<span class="ident">metrics</span>.<span class="ident">into_iter</span>()).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-        <span class="kw">let</span> (<span class="ident">line</span>, (<span class="ident">x</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="ident">idx_to_pos</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>, <span class="ident">ranges_metrics</span>.<span class="ident">iter</span>());
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">re_sel_x</span> {
-            <span class="self">self</span>.<span class="ident">re_sel_x</span> <span class="op">=</span> <span class="bool-val">false</span>;
-            <span class="self">self</span>.<span class="ident">sel_x</span> <span class="op">=</span> <span class="ident">x</span>;
+        <span class="kw">let </span>ranges = text_layout(render_width, <span class="kw-2">&amp;</span><span class="self">self</span>.text, <span class="kw-2">&amp;</span>paint, <span class="kw-2">&amp;</span>cx.text_context).unwrap();
+        <span class="kw">let </span>metrics =
+            measure_text_lines(<span class="kw-2">&amp;</span><span class="self">self</span>.text, <span class="kw-2">&amp;</span>paint, <span class="kw-2">&amp;</span>ranges, bounds.x, bounds.y, <span class="kw-2">&amp;</span>cx.text_context);
+        <span class="kw">let </span>ranges_metrics = ranges.into_iter().zip(metrics.into_iter()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+        <span class="kw">let </span>(line, (x, <span class="kw">_</span>)) = idx_to_pos(<span class="self">self</span>.selection.active, ranges_metrics.iter());
+        <span class="kw">if </span><span class="self">self</span>.re_sel_x {
+            <span class="self">self</span>.re_sel_x = <span class="bool-val">false</span>;
+            <span class="self">self</span>.sel_x = x;
         }
 
-        <span class="comment">// do the computation</span>
-        <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">tx</span>, <span class="kw-2">mut</span> <span class="ident">ty</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">transform</span>;
-        <span class="ident">tx</span> <span class="kw-2">*</span><span class="op">=</span> <span class="ident">scale</span>;
-        <span class="ident">ty</span> <span class="kw-2">*</span><span class="op">=</span> <span class="ident">scale</span>;
-        <span class="kw">let</span> <span class="ident">text_box</span> <span class="op">=</span> <span class="ident">BoundingBox</span> { <span class="ident">x</span>: <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">tx</span>, <span class="ident">y</span>: <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">ty</span>, <span class="ident">w</span>: <span class="ident">bounds</span>.<span class="ident">w</span>, <span class="ident">h</span>: <span class="ident">bounds</span>.<span class="ident">h</span> };
-        <span class="kw">if</span> <span class="ident">text_box</span>.<span class="ident">x</span> <span class="op">&lt;</span> <span class="ident">parent_bounds</span>.<span class="ident">x</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">text_box</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">text_box</span>.<span class="ident">w</span> <span class="op">&lt;</span> <span class="ident">parent_bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">parent_bounds</span>.<span class="ident">w</span>
+        <span class="comment">// do the computation
+        </span><span class="kw">let </span>(<span class="kw-2">mut </span>tx, <span class="kw-2">mut </span>ty) = <span class="self">self</span>.transform;
+        tx <span class="kw-2">*</span>= scale;
+        ty <span class="kw-2">*</span>= scale;
+        <span class="kw">let </span>text_box = BoundingBox { x: bounds.x + tx, y: bounds.y + ty, w: bounds.w, h: bounds.h };
+        <span class="kw">if </span>text_box.x &lt; parent_bounds.x
+            &amp;&amp; text_box.x + text_box.w &lt; parent_bounds.x + parent_bounds.w
         {
-            <span class="ident">tx</span> <span class="op">+</span><span class="op">=</span> <span class="ident">parent_bounds</span>.<span class="ident">x</span> <span class="op">-</span> <span class="ident">text_box</span>.<span class="ident">x</span>;
+            tx += parent_bounds.x - text_box.x;
         }
-        <span class="kw">if</span> <span class="ident">text_box</span>.<span class="ident">x</span> <span class="op">&gt;</span> <span class="ident">parent_bounds</span>.<span class="ident">x</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">text_box</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">text_box</span>.<span class="ident">w</span> <span class="op">&gt;</span> <span class="ident">parent_bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">parent_bounds</span>.<span class="ident">w</span>
+        <span class="kw">if </span>text_box.x &gt; parent_bounds.x
+            &amp;&amp; text_box.x + text_box.w &gt; parent_bounds.x + parent_bounds.w
         {
-            <span class="ident">tx</span> <span class="op">-</span><span class="op">=</span> (<span class="ident">text_box</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">text_box</span>.<span class="ident">w</span>) <span class="op">-</span> (<span class="ident">parent_bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">parent_bounds</span>.<span class="ident">w</span>);
+            tx -= (text_box.x + text_box.w) - (parent_bounds.x + parent_bounds.w);
         }
-        <span class="kw">if</span> <span class="ident">text_box</span>.<span class="ident">w</span> <span class="op">&lt;</span> <span class="ident">parent_bounds</span>.<span class="ident">w</span> {
-            <span class="ident">tx</span> <span class="op">=</span> <span class="number">0.0</span>;
+        <span class="kw">if </span>text_box.w &lt; parent_bounds.w {
+            tx = <span class="number">0.0</span>;
         }
-        <span class="kw">if</span> <span class="ident">text_box</span>.<span class="ident">y</span> <span class="op">&lt;</span> <span class="ident">parent_bounds</span>.<span class="ident">y</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">text_box</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">text_box</span>.<span class="ident">h</span> <span class="op">&lt;</span> <span class="ident">parent_bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">parent_bounds</span>.<span class="ident">h</span>
+        <span class="kw">if </span>text_box.y &lt; parent_bounds.y
+            &amp;&amp; text_box.y + text_box.h &lt; parent_bounds.y + parent_bounds.h
         {
-            <span class="ident">ty</span> <span class="op">+</span><span class="op">=</span> <span class="ident">parent_bounds</span>.<span class="ident">y</span> <span class="op">-</span> <span class="ident">text_box</span>.<span class="ident">y</span>;
+            ty += parent_bounds.y - text_box.y;
         }
-        <span class="kw">if</span> <span class="ident">text_box</span>.<span class="ident">y</span> <span class="op">&gt;</span> <span class="ident">parent_bounds</span>.<span class="ident">y</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">text_box</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">text_box</span>.<span class="ident">h</span> <span class="op">&gt;</span> <span class="ident">parent_bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">parent_bounds</span>.<span class="ident">h</span>
+        <span class="kw">if </span>text_box.y &gt; parent_bounds.y
+            &amp;&amp; text_box.y + text_box.h &gt; parent_bounds.y + parent_bounds.h
         {
-            <span class="ident">ty</span> <span class="op">-</span><span class="op">=</span> (<span class="ident">text_box</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">text_box</span>.<span class="ident">h</span>) <span class="op">-</span> (<span class="ident">parent_bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">parent_bounds</span>.<span class="ident">h</span>);
+            ty -= (text_box.y + text_box.h) - (parent_bounds.y + parent_bounds.h);
         }
-        <span class="kw">if</span> <span class="ident">text_box</span>.<span class="ident">h</span> <span class="op">&lt;</span> <span class="ident">parent_bounds</span>.<span class="ident">h</span> {
-            <span class="ident">ty</span> <span class="op">=</span> <span class="number">0.0</span>;
+        <span class="kw">if </span>text_box.h &lt; parent_bounds.h {
+            ty = <span class="number">0.0</span>;
         }
-        <span class="kw">let</span> <span class="ident">caret_box</span> <span class="op">=</span> <span class="ident">BoundingBox</span> {
-            <span class="ident">x</span>: <span class="ident">x</span>.<span class="ident">round</span>() <span class="op">+</span> <span class="ident">tx</span>,
-            <span class="ident">y</span>: <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">line</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">*</span> <span class="ident">line_height</span> <span class="op">+</span> <span class="ident">ty</span>,
-            <span class="ident">w</span>: <span class="number">1.0</span>,
-            <span class="ident">h</span>: <span class="ident">line_height</span>,
+        <span class="kw">let </span>caret_box = BoundingBox {
+            x: x.round() + tx,
+            y: bounds.y + line <span class="kw">as </span>f32 * line_height + ty,
+            w: <span class="number">1.0</span>,
+            h: line_height,
         };
-        <span class="ident">parent_bounds</span>.<span class="ident">x</span> <span class="op">-</span><span class="op">=</span> <span class="number">1.0</span>;
-        <span class="ident">parent_bounds</span>.<span class="ident">w</span> <span class="op">+</span><span class="op">=</span> <span class="number">2.0</span>;
-        <span class="kw">if</span> <span class="ident">caret_box</span>.<span class="ident">x</span> <span class="op">&lt;</span> <span class="ident">parent_bounds</span>.<span class="ident">x</span> {
-            <span class="ident">tx</span> <span class="op">+</span><span class="op">=</span> <span class="ident">parent_bounds</span>.<span class="ident">x</span> <span class="op">-</span> <span class="ident">caret_box</span>.<span class="ident">x</span>;
+        parent_bounds.x -= <span class="number">1.0</span>;
+        parent_bounds.w += <span class="number">2.0</span>;
+        <span class="kw">if </span>caret_box.x &lt; parent_bounds.x {
+            tx += parent_bounds.x - caret_box.x;
         }
-        <span class="kw">if</span> <span class="ident">caret_box</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">caret_box</span>.<span class="ident">w</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">parent_bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">parent_bounds</span>.<span class="ident">w</span> {
-            <span class="ident">tx</span> <span class="op">-</span><span class="op">=</span> <span class="ident">caret_box</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">caret_box</span>.<span class="ident">w</span> <span class="op">-</span> (<span class="ident">parent_bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">parent_bounds</span>.<span class="ident">w</span>);
+        <span class="kw">if </span>caret_box.x + caret_box.w &gt;= parent_bounds.x + parent_bounds.w {
+            tx -= caret_box.x + caret_box.w - (parent_bounds.x + parent_bounds.w);
         }
-        <span class="kw">if</span> <span class="ident">caret_box</span>.<span class="ident">y</span> <span class="op">&lt;</span> <span class="ident">parent_bounds</span>.<span class="ident">y</span> {
-            <span class="ident">ty</span> <span class="op">+</span><span class="op">=</span> <span class="ident">parent_bounds</span>.<span class="ident">y</span> <span class="op">-</span> <span class="ident">caret_box</span>.<span class="ident">y</span>;
+        <span class="kw">if </span>caret_box.y &lt; parent_bounds.y {
+            ty += parent_bounds.y - caret_box.y;
         }
-        <span class="kw">if</span> <span class="ident">caret_box</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">caret_box</span>.<span class="ident">h</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">parent_bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">parent_bounds</span>.<span class="ident">h</span> {
-            <span class="ident">ty</span> <span class="op">-</span><span class="op">=</span> <span class="ident">caret_box</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">caret_box</span>.<span class="ident">h</span> <span class="op">-</span> (<span class="ident">parent_bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">parent_bounds</span>.<span class="ident">h</span>);
+        <span class="kw">if </span>caret_box.y + caret_box.h &gt;= parent_bounds.y + parent_bounds.h {
+            ty -= caret_box.y + caret_box.h - (parent_bounds.y + parent_bounds.h);
         }
-        <span class="self">self</span>.<span class="ident">transform</span> <span class="op">=</span> (<span class="ident">tx</span>.<span class="ident">round</span>() <span class="op">/</span> <span class="ident">scale</span>, <span class="ident">ty</span>.<span class="ident">round</span>() <span class="op">/</span> <span class="ident">scale</span>);
+        <span class="self">self</span>.transform = (tx.round() / scale, ty.round() / scale);
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert_text</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
-        <span class="kw">let</span> <span class="ident">text_length</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">len</span>();
-        <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">edit</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">range</span>(), <span class="ident">text</span>);
+    <span class="kw">pub fn </span>insert_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _cx: <span class="kw-2">&amp;mut </span>EventContext, text: <span class="kw-2">&amp;</span>str) {
+        <span class="kw">let </span>text_length = text.len();
+        <span class="self">self</span>.text.edit(<span class="self">self</span>.selection.range(), text);
 
-        <span class="self">self</span>.<span class="ident">selection</span> <span class="op">=</span> <span class="ident">Selection::caret</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">min</span>() <span class="op">+</span> <span class="ident">text_length</span>);
+        <span class="self">self</span>.selection = Selection::caret(<span class="self">self</span>.selection.min() + text_length);
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">delete_text</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">movement</span>: <span class="ident">Movement</span>) {
-        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">is_caret</span>() {
-            <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">edit</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">range</span>(), <span class="string">&quot;&quot;</span>);
+    <span class="kw">pub fn </span>delete_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _cx: <span class="kw-2">&amp;mut </span>EventContext, movement: Movement) {
+        <span class="kw">if </span>!<span class="self">self</span>.selection.is_caret() {
+            <span class="self">self</span>.text.edit(<span class="self">self</span>.selection.range(), <span class="string">&quot;&quot;</span>);
 
-            <span class="self">self</span>.<span class="ident">selection</span> <span class="op">=</span> <span class="ident">Selection::caret</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">min</span>());
-        } <span class="kw">else</span> {
-            <span class="kw">match</span> <span class="ident">movement</span> {
-                <span class="ident">Movement::Grapheme</span>(<span class="ident">Direction::Upstream</span>) =&gt; {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">offset</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">prev_grapheme_offset</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>) {
-                        <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">edit</span>(<span class="ident">offset</span>..<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>, <span class="string">&quot;&quot;</span>);
-                        <span class="self">self</span>.<span class="ident">selection</span> <span class="op">=</span> <span class="ident">Selection::caret</span>(<span class="ident">offset</span>);
+            <span class="self">self</span>.selection = Selection::caret(<span class="self">self</span>.selection.min());
+        } <span class="kw">else </span>{
+            <span class="kw">match </span>movement {
+                Movement::Grapheme(Direction::Upstream) =&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(offset) = <span class="self">self</span>.text.prev_grapheme_offset(<span class="self">self</span>.selection.active) {
+                        <span class="self">self</span>.text.edit(offset..<span class="self">self</span>.selection.active, <span class="string">&quot;&quot;</span>);
+                        <span class="self">self</span>.selection = Selection::caret(offset);
                     }
                 }
 
-                <span class="ident">Movement::Grapheme</span>(<span class="ident">Direction::Downstream</span>) =&gt; {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">offset</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">next_grapheme_offset</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>) {
-                        <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">edit</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>..<span class="ident">offset</span>, <span class="string">&quot;&quot;</span>);
-                        <span class="self">self</span>.<span class="ident">selection</span> <span class="op">=</span> <span class="ident">Selection::caret</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>);
+                Movement::Grapheme(Direction::Downstream) =&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(offset) = <span class="self">self</span>.text.next_grapheme_offset(<span class="self">self</span>.selection.active) {
+                        <span class="self">self</span>.text.edit(<span class="self">self</span>.selection.active..offset, <span class="string">&quot;&quot;</span>);
+                        <span class="self">self</span>.selection = Selection::caret(<span class="self">self</span>.selection.active);
                     }
                 }
 
-                <span class="ident">Movement::Word</span>(<span class="ident">Direction::Upstream</span>) =&gt; {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">offset</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">prev_word_offset</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>) {
-                        <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">edit</span>(<span class="ident">offset</span>..<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>, <span class="string">&quot;&quot;</span>);
-                        <span class="self">self</span>.<span class="ident">selection</span> <span class="op">=</span> <span class="ident">Selection::caret</span>(<span class="ident">offset</span>);
+                Movement::Word(Direction::Upstream) =&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(offset) = <span class="self">self</span>.text.prev_word_offset(<span class="self">self</span>.selection.active) {
+                        <span class="self">self</span>.text.edit(offset..<span class="self">self</span>.selection.active, <span class="string">&quot;&quot;</span>);
+                        <span class="self">self</span>.selection = Selection::caret(offset);
                     }
                 }
 
-                <span class="ident">Movement::Word</span>(<span class="ident">Direction::Downstream</span>) =&gt; {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">offset</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">next_word_offset</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>) {
-                        <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">edit</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>..<span class="ident">offset</span>, <span class="string">&quot;&quot;</span>);
-                        <span class="self">self</span>.<span class="ident">selection</span> <span class="op">=</span> <span class="ident">Selection::caret</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>);
+                Movement::Word(Direction::Downstream) =&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(offset) = <span class="self">self</span>.text.next_word_offset(<span class="self">self</span>.selection.active) {
+                        <span class="self">self</span>.text.edit(<span class="self">self</span>.selection.active..offset, <span class="string">&quot;&quot;</span>);
+                        <span class="self">self</span>.selection = Selection::caret(<span class="self">self</span>.selection.active);
                     }
                 }
 
-                <span class="kw">_</span> =&gt; {}
+                <span class="kw">_ </span>=&gt; {}
             }
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">move_cursor</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">movement</span>: <span class="ident">Movement</span>, <span class="ident">selection</span>: <span class="ident">bool</span>) {
-        <span class="kw">match</span> <span class="ident">movement</span> {
-            <span class="ident">Movement::Grapheme</span>(<span class="ident">Direction::Upstream</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">re_sel_x</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">offset</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">prev_grapheme_offset</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>) {
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span> <span class="op">=</span> <span class="ident">offset</span>;
-                    <span class="ident">offset</span>
-                } <span class="kw">else</span> {
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>
+    <span class="kw">pub fn </span>move_cursor(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, movement: Movement, selection: bool) {
+        <span class="kw">match </span>movement {
+            Movement::Grapheme(Direction::Upstream) =&gt; {
+                <span class="self">self</span>.re_sel_x = <span class="bool-val">true</span>;
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(offset) = <span class="self">self</span>.text.prev_grapheme_offset(<span class="self">self</span>.selection.active) {
+                    <span class="self">self</span>.selection.active = offset;
+                    offset
+                } <span class="kw">else </span>{
+                    <span class="self">self</span>.selection.active
                 };
             }
 
-            <span class="ident">Movement::Grapheme</span>(<span class="ident">Direction::Downstream</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">re_sel_x</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">offset</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">next_grapheme_offset</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>) {
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span> <span class="op">=</span> <span class="ident">offset</span>;
-                    <span class="ident">offset</span>
-                } <span class="kw">else</span> {
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>
+            Movement::Grapheme(Direction::Downstream) =&gt; {
+                <span class="self">self</span>.re_sel_x = <span class="bool-val">true</span>;
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(offset) = <span class="self">self</span>.text.next_grapheme_offset(<span class="self">self</span>.selection.active) {
+                    <span class="self">self</span>.selection.active = offset;
+                    offset
+                } <span class="kw">else </span>{
+                    <span class="self">self</span>.selection.active
                 };
             }
 
-            <span class="ident">Movement::Word</span>(<span class="ident">Direction::Upstream</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">re_sel_x</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">offset</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">prev_word_offset</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>) {
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span> <span class="op">=</span> <span class="ident">offset</span>;
-                    <span class="ident">offset</span>
-                } <span class="kw">else</span> {
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>
+            Movement::Word(Direction::Upstream) =&gt; {
+                <span class="self">self</span>.re_sel_x = <span class="bool-val">true</span>;
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(offset) = <span class="self">self</span>.text.prev_word_offset(<span class="self">self</span>.selection.active) {
+                    <span class="self">self</span>.selection.active = offset;
+                    offset
+                } <span class="kw">else </span>{
+                    <span class="self">self</span>.selection.active
                 };
             }
 
-            <span class="ident">Movement::Word</span>(<span class="ident">Direction::Downstream</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">re_sel_x</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">offset</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">next_word_offset</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>) {
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span> <span class="op">=</span> <span class="ident">offset</span>;
-                    <span class="ident">offset</span>
-                } <span class="kw">else</span> {
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>
+            Movement::Word(Direction::Downstream) =&gt; {
+                <span class="self">self</span>.re_sel_x = <span class="bool-val">true</span>;
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(offset) = <span class="self">self</span>.text.next_word_offset(<span class="self">self</span>.selection.active) {
+                    <span class="self">self</span>.selection.active = offset;
+                    offset
+                } <span class="kw">else </span>{
+                    <span class="self">self</span>.selection.active
                 };
             }
 
-            <span class="ident">Movement::Line</span>(<span class="ident">dir</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">content_entity</span>;
-                <span class="kw">let</span> <span class="ident">paint</span> <span class="op">=</span> <span class="ident">text_paint_general</span>(<span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">style</span>, <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">resource_manager</span>, <span class="ident">entity</span>);
-                <span class="kw">let</span> <span class="ident">font_metrics</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">text_context</span>.<span class="ident">measure_font</span>(<span class="kw-2">&amp;</span><span class="ident">paint</span>).<span class="ident">unwrap</span>();
-                <span class="comment">// this computation happens in physical space</span>
-                <span class="kw">let</span> <span class="ident">line_height</span> <span class="op">=</span> <span class="ident">font_metrics</span>.<span class="ident">height</span>();
+            Movement::Line(dir) =&gt; {
+                <span class="kw">let </span>entity = <span class="self">self</span>.content_entity;
+                <span class="kw">let </span>paint = text_paint_general(<span class="kw-2">&amp;</span>cx.style, <span class="kw-2">&amp;</span>cx.resource_manager, entity);
+                <span class="kw">let </span>font_metrics = cx.text_context.measure_font(<span class="kw-2">&amp;</span>paint).unwrap();
+                <span class="comment">// this computation happens in physical space
+                </span><span class="kw">let </span>line_height = font_metrics.height();
 
-                <span class="kw">let</span> <span class="ident">default</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-                <span class="kw">let</span> <span class="ident">lines</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">draw_cache</span>.<span class="ident">text_lines</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="ident">default</span>);
-                <span class="kw">let</span> (<span class="ident">line</span>, (<span class="kw">_</span>, <span class="ident">y</span>)) <span class="op">=</span> <span class="ident">idx_to_pos</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>, <span class="ident">lines</span>.<span class="ident">iter</span>());
+                <span class="kw">let </span>default = <span class="macro">vec!</span>[];
+                <span class="kw">let </span>lines = cx.draw_cache.text_lines.get(entity).unwrap_or(<span class="kw-2">&amp;</span>default);
+                <span class="kw">let </span>(line, (<span class="kw">_</span>, y)) = idx_to_pos(<span class="self">self</span>.selection.active, lines.iter());
 
-                <span class="kw">if</span> <span class="ident">line</span> <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="macro">matches!</span>(<span class="ident">dir</span>, <span class="ident">Direction::Upstream</span>) {
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span> <span class="op">=</span> <span class="number">0</span>;
-                } <span class="kw">else</span> {
-                    <span class="kw">let</span> <span class="ident">new_y</span> <span class="op">=</span> <span class="ident">y</span> <span class="op">+</span> <span class="ident">line_height</span>
-                        <span class="op">*</span> <span class="kw">match</span> <span class="ident">dir</span> {
-                            <span class="ident">Direction::Upstream</span> =&gt; <span class="op">-</span><span class="number">1.0</span>,
-                            <span class="ident">Direction::Downstream</span> =&gt; <span class="number">1.0</span>,
-                            <span class="ident">Direction::Left</span> =&gt; <span class="number">0.0</span>,
-                            <span class="ident">Direction::Right</span> =&gt; <span class="number">0.0</span>,
+                <span class="kw">if </span>line == <span class="number">0 </span>&amp;&amp; <span class="macro">matches!</span>(dir, Direction::Upstream) {
+                    <span class="self">self</span>.selection.active = <span class="number">0</span>;
+                } <span class="kw">else </span>{
+                    <span class="kw">let </span>new_y = y + line_height
+                        * <span class="kw">match </span>dir {
+                            Direction::Upstream =&gt; -<span class="number">1.0</span>,
+                            Direction::Downstream =&gt; <span class="number">1.0</span>,
+                            Direction::Left =&gt; <span class="number">0.0</span>,
+                            Direction::Right =&gt; <span class="number">0.0</span>,
                         };
 
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span> <span class="op">=</span> <span class="ident">pos_to_idx</span>(
-                        <span class="self">self</span>.<span class="ident">sel_x</span>,
-                        <span class="ident">new_y</span>,
-                        <span class="ident">lines</span>.<span class="ident">iter</span>(),
-                        <span class="self">self</span>.<span class="ident">kind</span> <span class="op">==</span> <span class="ident">TextboxKind::SingleLine</span>,
+                    <span class="self">self</span>.selection.active = pos_to_idx(
+                        <span class="self">self</span>.sel_x,
+                        new_y,
+                        lines.iter(),
+                        <span class="self">self</span>.kind == TextboxKind::SingleLine,
                     );
                 }
             }
 
-            <span class="ident">Movement::ParagraphStart</span> =&gt; {
-                <span class="kw">if</span> <span class="ident">selection</span> {
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span> <span class="op">=</span> <span class="number">0</span>;
-                } <span class="kw">else</span> {
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span> <span class="op">=</span> <span class="number">0</span>;
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">anchor</span> <span class="op">=</span> <span class="number">0</span>;
+            Movement::ParagraphStart =&gt; {
+                <span class="kw">if </span>selection {
+                    <span class="self">self</span>.selection.active = <span class="number">0</span>;
+                } <span class="kw">else </span>{
+                    <span class="self">self</span>.selection.active = <span class="number">0</span>;
+                    <span class="self">self</span>.selection.anchor = <span class="number">0</span>;
                 }
             }
 
-            <span class="ident">Movement::ParagraphEnd</span> =&gt; {
-                <span class="kw">if</span> <span class="ident">selection</span> {
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">len</span>();
-                } <span class="kw">else</span> {
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">len</span>();
-                    <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">anchor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">len</span>();
+            Movement::ParagraphEnd =&gt; {
+                <span class="kw">if </span>selection {
+                    <span class="self">self</span>.selection.active = <span class="self">self</span>.text.len();
+                } <span class="kw">else </span>{
+                    <span class="self">self</span>.selection.active = <span class="self">self</span>.text.len();
+                    <span class="self">self</span>.selection.anchor = <span class="self">self</span>.text.len();
                 }
             }
 
-            <span class="kw">_</span> =&gt; {}
+            <span class="kw">_ </span>=&gt; {}
         }
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">selection</span> {
-            <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">anchor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>;
+        <span class="kw">if </span>!selection {
+            <span class="self">self</span>.selection.anchor = <span class="self">self</span>.selection.active;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">select_all</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>) {
-        <span class="self">self</span>.<span class="ident">selection</span> <span class="op">=</span> <span class="ident">Selection::new</span>(<span class="number">0</span>, <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">len</span>());
+    <span class="kw">pub fn </span>select_all(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>EventContext) {
+        <span class="self">self</span>.selection = Selection::new(<span class="number">0</span>, <span class="self">self</span>.text.len());
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">select_range</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">range</span>: <span class="kw-2">&amp;</span><span class="ident">core::ops::RangeInclusive</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">selection</span> <span class="op">=</span> <span class="ident">Selection::new</span>(<span class="kw-2">*</span><span class="ident">range</span>.<span class="ident">start</span>(), <span class="kw-2">*</span><span class="ident">range</span>.<span class="ident">end</span>());
+    <span class="kw">pub fn </span>select_range(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>EventContext, range: <span class="kw-2">&amp;</span>core::ops::RangeInclusive&lt;usize&gt;) {
+        <span class="self">self</span>.selection = Selection::new(<span class="kw-2">*</span>range.start(), <span class="kw-2">*</span>range.end());
     }
 }
 
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TextEvent</span> {
-    <span class="ident">InsertText</span>(<span class="ident">String</span>),
-    <span class="ident">DeleteText</span>(<span class="ident">Movement</span>),
-    <span class="ident">MoveCursor</span>(<span class="ident">Movement</span>, <span class="ident">bool</span>),
-    <span class="ident">SelectAll</span>,
-    <span class="ident">SelectWord</span>,
-    <span class="ident">SelectParagraph</span>,
-    <span class="ident">StartEdit</span>,
-    <span class="ident">EndEdit</span>,
-    <span class="ident">Submit</span>(<span class="ident">bool</span>),
-    <span class="ident">Hit</span>(<span class="ident">f32</span>, <span class="ident">f32</span>),
-    <span class="ident">Drag</span>(<span class="ident">f32</span>, <span class="ident">f32</span>),
-    <span class="ident">Copy</span>,
-    <span class="ident">Paste</span>,
+<span class="kw">pub enum </span>TextEvent {
+    InsertText(String),
+    DeleteText(Movement),
+    MoveCursor(Movement, bool),
+    SelectAll,
+    SelectWord,
+    SelectParagraph,
+    StartEdit,
+    EndEdit,
+    Submit(bool),
+    Hit(f32, f32),
+    Drag(f32, f32),
+    Copy,
+    Paste,
 
-    <span class="comment">// Helpers</span>
-    <span class="ident">SetOnEdit</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">String</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>),
-    <span class="ident">SetOnSubmit</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">String</span>, <span class="ident">bool</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>),
-    <span class="ident">InitContent</span>(<span class="ident">Entity</span>, <span class="ident">TextboxKind</span>),
-    <span class="ident">GeometryChanged</span>,
+    <span class="comment">// Helpers
+    </span>SetOnEdit(<span class="prelude-ty">Option</span>&lt;Arc&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, String) + Send + Sync&gt;&gt;),
+    SetOnSubmit(<span class="prelude-ty">Option</span>&lt;Arc&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, String, bool) + Send + Sync&gt;&gt;),
+    InitContent(Entity, TextboxKind),
+    GeometryChanged,
 }
 
-<span class="kw">impl</span> <span class="ident">Model</span> <span class="kw">for</span> <span class="ident">TextboxData</span> {
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
-        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">text_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">text_event</span> {
-            <span class="ident">TextEvent::InsertText</span>(<span class="ident">text</span>) =&gt; {
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">edit</span> {
-                    <span class="self">self</span>.<span class="ident">insert_text</span>(<span class="ident">cx</span>, <span class="ident">text</span>);
-                    <span class="self">self</span>.<span class="ident">set_caret</span>(<span class="ident">cx</span>);
+<span class="kw">impl </span>Model <span class="kw">for </span>TextboxData {
+    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
+        event.map(|text_event, <span class="kw">_</span>| <span class="kw">match </span>text_event {
+            TextEvent::InsertText(text) =&gt; {
+                <span class="kw">if </span><span class="self">self</span>.edit {
+                    <span class="self">self</span>.insert_text(cx, text);
+                    <span class="self">self</span>.set_caret(cx);
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">on_edit</span>.<span class="ident">take</span>() {
-                        (<span class="ident">callback</span>)(<span class="ident">cx</span>, <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">as_str</span>().<span class="ident">to_owned</span>());
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="self">self</span>.on_edit.take() {
+                        (callback)(cx, <span class="self">self</span>.text.as_str().to_owned());
 
-                        <span class="self">self</span>.<span class="ident">on_edit</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>);
+                        <span class="self">self</span>.on_edit = <span class="prelude-val">Some</span>(callback);
                     }
                 }
             }
 
-            <span class="ident">TextEvent::DeleteText</span>(<span class="ident">movement</span>) =&gt; {
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">edit</span> {
-                    <span class="self">self</span>.<span class="ident">delete_text</span>(<span class="ident">cx</span>, <span class="kw-2">*</span><span class="ident">movement</span>);
-                    <span class="self">self</span>.<span class="ident">set_caret</span>(<span class="ident">cx</span>);
+            TextEvent::DeleteText(movement) =&gt; {
+                <span class="kw">if </span><span class="self">self</span>.edit {
+                    <span class="self">self</span>.delete_text(cx, <span class="kw-2">*</span>movement);
+                    <span class="self">self</span>.set_caret(cx);
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">on_edit</span>.<span class="ident">take</span>() {
-                        (<span class="ident">callback</span>)(<span class="ident">cx</span>, <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">as_str</span>().<span class="ident">to_owned</span>());
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="self">self</span>.on_edit.take() {
+                        (callback)(cx, <span class="self">self</span>.text.as_str().to_owned());
 
-                        <span class="self">self</span>.<span class="ident">on_edit</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>);
+                        <span class="self">self</span>.on_edit = <span class="prelude-val">Some</span>(callback);
                     }
                 }
             }
 
-            <span class="ident">TextEvent::MoveCursor</span>(<span class="ident">movement</span>, <span class="ident">selection</span>) =&gt; {
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">edit</span> {
-                    <span class="self">self</span>.<span class="ident">move_cursor</span>(<span class="ident">cx</span>, <span class="kw-2">*</span><span class="ident">movement</span>, <span class="kw-2">*</span><span class="ident">selection</span>);
-                    <span class="self">self</span>.<span class="ident">set_caret</span>(<span class="ident">cx</span>);
+            TextEvent::MoveCursor(movement, selection) =&gt; {
+                <span class="kw">if </span><span class="self">self</span>.edit {
+                    <span class="self">self</span>.move_cursor(cx, <span class="kw-2">*</span>movement, <span class="kw-2">*</span>selection);
+                    <span class="self">self</span>.set_caret(cx);
                 }
             }
 
-            <span class="ident">TextEvent::StartEdit</span> =&gt; {
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">cx</span>.<span class="ident">is_disabled</span>() {
-                    <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">edit</span> {
-                        <span class="self">self</span>.<span class="ident">edit</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                        <span class="ident">cx</span>.<span class="ident">focus_with_visibility</span>(<span class="bool-val">false</span>);
-                        <span class="ident">cx</span>.<span class="ident">capture</span>();
-                        <span class="ident">cx</span>.<span class="ident">set_checked</span>(<span class="bool-val">true</span>);
-                        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">anchor</span> {
-                            <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::SelectAll</span>);
+            TextEvent::StartEdit =&gt; {
+                <span class="kw">if </span>!cx.is_disabled() {
+                    <span class="kw">if </span>!<span class="self">self</span>.edit {
+                        <span class="self">self</span>.edit = <span class="bool-val">true</span>;
+                        cx.focus_with_visibility(<span class="bool-val">false</span>);
+                        cx.capture();
+                        cx.set_checked(<span class="bool-val">true</span>);
+                        <span class="kw">if </span><span class="self">self</span>.selection.active == <span class="self">self</span>.selection.anchor {
+                            cx.emit(TextEvent::SelectAll);
                         }
                     }
                 }
             }
 
-            <span class="ident">TextEvent::EndEdit</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">anchor</span>;
-                <span class="self">self</span>.<span class="ident">edit</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                <span class="ident">cx</span>.<span class="ident">set_checked</span>(<span class="bool-val">false</span>);
-                <span class="ident">cx</span>.<span class="ident">release</span>();
+            TextEvent::EndEdit =&gt; {
+                <span class="self">self</span>.selection.active = <span class="self">self</span>.selection.anchor;
+                <span class="self">self</span>.edit = <span class="bool-val">false</span>;
+                cx.set_checked(<span class="bool-val">false</span>);
+                cx.release();
             }
 
-            <span class="ident">TextEvent::Submit</span>(<span class="ident">reason</span>) =&gt; {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">on_submit</span>.<span class="ident">take</span>() {
-                    (<span class="ident">callback</span>)(<span class="ident">cx</span>, <span class="self">self</span>.<span class="ident">text</span>.<span class="ident">as_str</span>().<span class="ident">to_owned</span>(), <span class="kw-2">*</span><span class="ident">reason</span>);
+            TextEvent::Submit(reason) =&gt; {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="self">self</span>.on_submit.take() {
+                    (callback)(cx, <span class="self">self</span>.text.as_str().to_owned(), <span class="kw-2">*</span>reason);
 
-                    <span class="self">self</span>.<span class="ident">on_submit</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>);
+                    <span class="self">self</span>.on_submit = <span class="prelude-val">Some</span>(callback);
                 }
-                <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::EndEdit</span>);
+                cx.emit(TextEvent::EndEdit);
             }
 
-            <span class="ident">TextEvent::SelectAll</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">select_all</span>(<span class="ident">cx</span>);
-                <span class="self">self</span>.<span class="ident">set_caret</span>(<span class="ident">cx</span>);
+            TextEvent::SelectAll =&gt; {
+                <span class="self">self</span>.select_all(cx);
+                <span class="self">self</span>.set_caret(cx);
             }
 
-            <span class="ident">TextEvent::SelectWord</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">select_range</span>(<span class="ident">cx</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text</span>.<span class="ident">word_around</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>));
-                <span class="self">self</span>.<span class="ident">set_caret</span>(<span class="ident">cx</span>);
+            TextEvent::SelectWord =&gt; {
+                <span class="self">self</span>.select_range(cx, <span class="kw-2">&amp;</span><span class="self">self</span>.text.word_around(<span class="self">self</span>.selection.active));
+                <span class="self">self</span>.set_caret(cx);
             }
 
-            <span class="ident">TextEvent::SelectParagraph</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">select_range</span>(<span class="ident">cx</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text</span>.<span class="ident">paragraph_around</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">active</span>));
-                <span class="self">self</span>.<span class="ident">set_caret</span>(<span class="ident">cx</span>);
+            TextEvent::SelectParagraph =&gt; {
+                <span class="self">self</span>.select_range(cx, <span class="kw-2">&amp;</span><span class="self">self</span>.text.paragraph_around(<span class="self">self</span>.selection.active));
+                <span class="self">self</span>.set_caret(cx);
             }
 
-            <span class="ident">TextEvent::Hit</span>(<span class="ident">posx</span>, <span class="ident">posy</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">posx</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">posx</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">transform</span>.<span class="number">0</span> <span class="op">*</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
-                <span class="kw">let</span> <span class="ident">posy</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">posy</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">transform</span>.<span class="number">1</span> <span class="op">*</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
-                <span class="kw">let</span> <span class="ident">idx</span> <span class="op">=</span> <span class="ident">pos_to_idx</span>(
-                    <span class="ident">posx</span>,
-                    <span class="ident">posy</span>,
-                    <span class="ident">cx</span>.<span class="ident">draw_cache</span>.<span class="ident">text_lines</span>.<span class="ident">get</span>(<span class="self">self</span>.<span class="ident">content_entity</span>).<span class="ident">unwrap</span>().<span class="ident">iter</span>(),
-                    <span class="self">self</span>.<span class="ident">kind</span> <span class="op">==</span> <span class="ident">TextboxKind::SingleLine</span>,
+            TextEvent::Hit(posx, posy) =&gt; {
+                <span class="kw">let </span>posx = <span class="kw-2">*</span>posx - <span class="self">self</span>.transform.<span class="number">0 </span>* cx.style.dpi_factor <span class="kw">as </span>f32;
+                <span class="kw">let </span>posy = <span class="kw-2">*</span>posy - <span class="self">self</span>.transform.<span class="number">1 </span>* cx.style.dpi_factor <span class="kw">as </span>f32;
+                <span class="kw">let </span>idx = pos_to_idx(
+                    posx,
+                    posy,
+                    cx.draw_cache.text_lines.get(<span class="self">self</span>.content_entity).unwrap().iter(),
+                    <span class="self">self</span>.kind == TextboxKind::SingleLine,
                 );
-                <span class="self">self</span>.<span class="ident">selection</span> <span class="op">=</span> <span class="ident">Selection::new</span>(<span class="ident">idx</span>, <span class="ident">idx</span>);
-                <span class="self">self</span>.<span class="ident">sel_x</span> <span class="op">=</span> <span class="ident">posx</span>;
-                <span class="self">self</span>.<span class="ident">set_caret</span>(<span class="ident">cx</span>);
+                <span class="self">self</span>.selection = Selection::new(idx, idx);
+                <span class="self">self</span>.sel_x = posx;
+                <span class="self">self</span>.set_caret(cx);
             }
 
-            <span class="ident">TextEvent::Drag</span>(<span class="ident">posx</span>, <span class="ident">posy</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">posx</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">posx</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">transform</span>.<span class="number">0</span> <span class="op">*</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
-                <span class="kw">let</span> <span class="ident">posy</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">posy</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">transform</span>.<span class="number">1</span> <span class="op">*</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
-                <span class="kw">let</span> <span class="ident">idx</span> <span class="op">=</span> <span class="ident">pos_to_idx</span>(
-                    <span class="ident">posx</span>,
-                    <span class="ident">posy</span>,
-                    <span class="ident">cx</span>.<span class="ident">draw_cache</span>.<span class="ident">text_lines</span>.<span class="ident">get</span>(<span class="self">self</span>.<span class="ident">content_entity</span>).<span class="ident">unwrap</span>().<span class="ident">iter</span>(),
-                    <span class="self">self</span>.<span class="ident">kind</span> <span class="op">==</span> <span class="ident">TextboxKind::SingleLine</span>,
+            TextEvent::Drag(posx, posy) =&gt; {
+                <span class="kw">let </span>posx = <span class="kw-2">*</span>posx - <span class="self">self</span>.transform.<span class="number">0 </span>* cx.style.dpi_factor <span class="kw">as </span>f32;
+                <span class="kw">let </span>posy = <span class="kw-2">*</span>posy - <span class="self">self</span>.transform.<span class="number">1 </span>* cx.style.dpi_factor <span class="kw">as </span>f32;
+                <span class="kw">let </span>idx = pos_to_idx(
+                    posx,
+                    posy,
+                    cx.draw_cache.text_lines.get(<span class="self">self</span>.content_entity).unwrap().iter(),
+                    <span class="self">self</span>.kind == TextboxKind::SingleLine,
                 );
-                <span class="self">self</span>.<span class="ident">selection</span> <span class="op">=</span> <span class="ident">Selection::new</span>(<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">anchor</span>, <span class="ident">idx</span>);
-                <span class="self">self</span>.<span class="ident">sel_x</span> <span class="op">=</span> <span class="ident">posx</span>;
-                <span class="self">self</span>.<span class="ident">set_caret</span>(<span class="ident">cx</span>);
+                <span class="self">self</span>.selection = Selection::new(<span class="self">self</span>.selection.anchor, idx);
+                <span class="self">self</span>.sel_x = posx;
+                <span class="self">self</span>.set_caret(cx);
             }
 
-            <span class="ident">TextEvent::Copy</span> =&gt;
+            TextEvent::Copy =&gt;
             {
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;clipboard&quot;</span>)]</span>
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">edit</span> {
-                    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::CTRL</span>) {
-                        <span class="kw">let</span> <span class="ident">selected_text</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">text</span>.<span class="ident">as_str</span>()[<span class="self">self</span>.<span class="ident">selection</span>.<span class="ident">range</span>()];
-                        <span class="kw">if</span> <span class="ident">selected_text</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">0</span> {
-                            <span class="ident">cx</span>.<span class="ident">set_clipboard</span>(<span class="ident">selected_text</span>.<span class="ident">to_owned</span>())
-                                .<span class="ident">expect</span>(<span class="string">&quot;Failed to add text to clipboard&quot;</span>);
+                <span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+                </span><span class="kw">if </span><span class="self">self</span>.edit {
+                    <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
+                        <span class="kw">let </span>selected_text = <span class="kw-2">&amp;</span><span class="self">self</span>.text.as_str()[<span class="self">self</span>.selection.range()];
+                        <span class="kw">if </span>selected_text.len() &gt; <span class="number">0 </span>{
+                            cx.set_clipboard(selected_text.to_owned())
+                                .expect(<span class="string">&quot;Failed to add text to clipboard&quot;</span>);
                         }
                     }
                 }
             }
 
-            <span class="ident">TextEvent::Paste</span> =&gt;
+            TextEvent::Paste =&gt;
             {
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;clipboard&quot;</span>)]</span>
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">edit</span> {
-                    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::CTRL</span>) {
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">text</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">get_clipboard</span>() {
-                            <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::InsertText</span>(<span class="ident">text</span>));
+                <span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+                </span><span class="kw">if </span><span class="self">self</span>.edit {
+                    <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
+                        <span class="kw">if let </span><span class="prelude-val">Ok</span>(text) = cx.get_clipboard() {
+                            cx.emit(TextEvent::InsertText(text));
                         }
                     }
                 }
             }
 
-            <span class="ident">TextEvent::SetOnEdit</span>(<span class="ident">on_edit</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">on_edit</span> <span class="op">=</span> <span class="ident">on_edit</span>.<span class="ident">clone</span>();
+            TextEvent::SetOnEdit(on_edit) =&gt; {
+                <span class="self">self</span>.on_edit = on_edit.clone();
             }
 
-            <span class="ident">TextEvent::InitContent</span>(<span class="ident">content</span>, <span class="ident">kind</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">content_entity</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">content</span>;
-                <span class="self">self</span>.<span class="ident">kind</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">kind</span>;
+            TextEvent::InitContent(content, kind) =&gt; {
+                <span class="self">self</span>.content_entity = <span class="kw-2">*</span>content;
+                <span class="self">self</span>.kind = <span class="kw-2">*</span>kind;
             }
 
-            <span class="ident">TextEvent::GeometryChanged</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">set_caret</span>(<span class="ident">cx</span>);
+            TextEvent::GeometryChanged =&gt; {
+                <span class="self">self</span>.set_caret(cx);
             }
 
-            <span class="ident">TextEvent::SetOnSubmit</span>(<span class="ident">on_submit</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">on_submit</span> <span class="op">=</span> <span class="ident">on_submit</span>.<span class="ident">clone</span>();
+            TextEvent::SetOnSubmit(on_submit) =&gt; {
+                <span class="self">self</span>.on_submit = on_submit.clone();
             }
         });
     }
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Textbox</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&gt;</span> {
-    <span class="ident">lens</span>: <span class="ident">L</span>,
-    <span class="ident">kind</span>: <span class="ident">TextboxKind</span>,
+<span class="kw">pub struct </span>Textbox&lt;L: Lens&gt; {
+    lens: L,
+    kind: TextboxKind,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TextboxKind</span> {
-    <span class="ident">SingleLine</span>,
-    <span class="ident">MultiLineUnwrapped</span>,
-    <span class="ident">MultiLineWrapped</span>,
+<span class="attribute">#[derive(Copy, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>TextboxKind {
+    SingleLine,
+    MultiLineUnwrapped,
+    MultiLineWrapped,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&gt;</span> <span class="ident">Textbox</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="op">&lt;</span><span class="ident">L</span> <span class="kw">as</span> <span class="ident">Lens</span><span class="op">&gt;</span><span class="ident">::Target</span>: <span class="ident">Data</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">ToString</span>,
+<span class="kw">impl</span>&lt;L: Lens&gt; Textbox&lt;L&gt;
+<span class="kw">where
+    </span>&lt;L <span class="kw">as </span>Lens&gt;::Target: Data + Clone + ToString,
 {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">lens</span>: <span class="ident">L</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident"><span class="self">Self</span>::new_core</span>(<span class="ident">cx</span>, <span class="ident">lens</span>, <span class="ident">TextboxKind::SingleLine</span>)
+    <span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;mut </span>Context, lens: L) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+        <span class="self">Self</span>::new_core(cx, lens, TextboxKind::SingleLine)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_multiline</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">lens</span>: <span class="ident">L</span>, <span class="ident">wrap</span>: <span class="ident">bool</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident"><span class="self">Self</span>::new_core</span>(
-            <span class="ident">cx</span>,
-            <span class="ident">lens</span>,
-            <span class="kw">if</span> <span class="ident">wrap</span> { <span class="ident">TextboxKind::MultiLineWrapped</span> } <span class="kw">else</span> { <span class="ident">TextboxKind::MultiLineUnwrapped</span> },
+    <span class="kw">pub fn </span>new_multiline(cx: <span class="kw-2">&amp;mut </span>Context, lens: L, wrap: bool) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+        <span class="self">Self</span>::new_core(
+            cx,
+            lens,
+            <span class="kw">if </span>wrap { TextboxKind::MultiLineWrapped } <span class="kw">else </span>{ TextboxKind::MultiLineUnwrapped },
         )
     }
 
-    <span class="kw">fn</span> <span class="ident">new_core</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">lens</span>: <span class="ident">L</span>, <span class="ident">kind</span>: <span class="ident">TextboxKind</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">Self</span> { <span class="ident">lens</span>: <span class="ident">lens</span>.<span class="ident">clone</span>(), <span class="ident">kind</span> }.<span class="ident">build</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-            <span class="ident">Binding::new</span>(<span class="ident">cx</span>, <span class="ident">lens</span>.<span class="ident">clone</span>(), <span class="op">|</span><span class="ident">cx</span>, <span class="ident">text</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span>
-                    <span class="ident">text</span>.<span class="ident">get_fallible</span>(<span class="ident">cx</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">to_string</span>()).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;&quot;</span>.<span class="ident">to_owned</span>());
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">text_data</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">data</span>::<span class="op">&lt;</span><span class="ident">TextboxData</span><span class="op">&gt;</span>() {
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">text_data</span>.<span class="ident">edit</span> {
-                        <span class="kw">let</span> <span class="ident">td</span> <span class="op">=</span> <span class="ident">TextboxData</span> {
-                            <span class="ident">text</span>: <span class="ident">text</span>.<span class="ident">clone</span>(),
-                            <span class="ident">selection</span>: <span class="ident">text_data</span>.<span class="ident">selection</span>,
-                            <span class="ident">edit</span>: <span class="ident">text_data</span>.<span class="ident">edit</span>,
-                            <span class="ident">sel_x</span>: <span class="ident">text_data</span>.<span class="ident">sel_x</span>,
-                            <span class="ident">re_sel_x</span>: <span class="ident">text_data</span>.<span class="ident">re_sel_x</span>,
-                            <span class="ident">transform</span>: <span class="ident">text_data</span>.<span class="ident">transform</span>,
-                            <span class="ident">line_height</span>: <span class="ident">text_data</span>.<span class="ident">line_height</span>,
-                            <span class="ident">on_edit</span>: <span class="ident">text_data</span>.<span class="ident">on_edit</span>.<span class="ident">clone</span>(),
-                            <span class="ident">content_entity</span>: <span class="ident">text_data</span>.<span class="ident">content_entity</span>,
-                            <span class="ident">kind</span>: <span class="ident">text_data</span>.<span class="ident">kind</span>,
-                            <span class="ident">on_submit</span>: <span class="ident">text_data</span>.<span class="ident">on_submit</span>.<span class="ident">clone</span>(),
+    <span class="kw">fn </span>new_core(cx: <span class="kw-2">&amp;mut </span>Context, lens: L, kind: TextboxKind) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>result = <span class="self">Self </span>{ lens: lens.clone(), kind }.build(cx, <span class="kw">move </span>|cx| {
+            Binding::new(cx, lens.clone(), |cx, text| {
+                <span class="kw">let </span>text =
+                    text.get_fallible(cx).map(|x| x.to_string()).unwrap_or_else(|| <span class="string">&quot;&quot;</span>.to_owned());
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(text_data) = cx.data::&lt;TextboxData&gt;() {
+                    <span class="kw">if </span>!text_data.edit {
+                        <span class="kw">let </span>td = TextboxData {
+                            text: text.clone(),
+                            selection: text_data.selection,
+                            edit: text_data.edit,
+                            sel_x: text_data.sel_x,
+                            re_sel_x: text_data.re_sel_x,
+                            transform: text_data.transform,
+                            line_height: text_data.line_height,
+                            on_edit: text_data.on_edit.clone(),
+                            content_entity: text_data.content_entity,
+                            kind: text_data.kind,
+                            on_submit: text_data.on_submit.clone(),
                         };
-                        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>().<span class="ident">parent</span>(<span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">tree</span>).<span class="ident">unwrap</span>();
-                        <span class="ident">cx</span>.<span class="ident">with_current</span>(<span class="ident">parent</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> <span class="ident">td</span>.<span class="ident">build</span>(<span class="ident">cx</span>));
-                        <span class="comment">// push an event into the queue to force an update because the textbox data</span>
-                        <span class="comment">// may have already been observed this update cycle</span>
-                        <span class="ident">cx</span>.<span class="ident">emit_to</span>(<span class="ident">cx</span>.<span class="ident">current</span>(), ());
+                        <span class="kw">let </span>parent = cx.current().parent(<span class="kw-2">&amp;</span>cx.tree).unwrap();
+                        cx.with_current(parent, |cx| td.build(cx));
+                        <span class="comment">// push an event into the queue to force an update because the textbox data
+                        // may have already been observed this update cycle
+                        </span>cx.emit_to(cx.current(), ());
                     }
-                } <span class="kw">else</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">td</span> <span class="op">=</span> <span class="ident">TextboxData::new</span>(<span class="ident">text</span>.<span class="ident">clone</span>());
-                    <span class="ident">td</span>.<span class="ident">set_caret</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext::new</span>(<span class="ident">cx</span>));
-                    <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>().<span class="ident">parent</span>(<span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">tree</span>).<span class="ident">unwrap</span>();
-                    <span class="ident">cx</span>.<span class="ident">with_current</span>(<span class="ident">parent</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> <span class="ident">td</span>.<span class="ident">build</span>(<span class="ident">cx</span>));
-                    <span class="ident">cx</span>.<span class="ident">emit_to</span>(<span class="ident">cx</span>.<span class="ident">current</span>(), ());
+                } <span class="kw">else </span>{
+                    <span class="kw">let </span><span class="kw-2">mut </span>td = TextboxData::new(text.clone());
+                    td.set_caret(<span class="kw-2">&amp;mut </span>EventContext::new(cx));
+                    <span class="kw">let </span>parent = cx.current().parent(<span class="kw-2">&amp;</span>cx.tree).unwrap();
+                    cx.with_current(parent, |cx| td.build(cx));
+                    cx.emit_to(cx.current(), ());
                 }
             });
-            <span class="ident">TextboxContainer</span> {}
-                .<span class="ident">build</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">lbl</span> <span class="op">=</span> <span class="ident">TextboxLabel</span> {}
-                        .<span class="ident">build</span>(<span class="ident">cx</span>, <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {})
-                        .<span class="ident">hoverable</span>(<span class="bool-val">false</span>)
-                        .<span class="ident">class</span>(<span class="string">&quot;textbox_content&quot;</span>)
-                        .<span class="ident">text</span>(<span class="ident">TextboxData::text</span>)
-                        .<span class="ident">text_selection</span>(<span class="ident">TextboxData::selection</span>)
-                        .<span class="ident">translate</span>(<span class="ident">TextboxData::transform</span>)
-                        .<span class="ident">on_geo_changed</span>(<span class="op">|</span><span class="ident">cx</span>, <span class="kw">_</span><span class="op">|</span> <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::GeometryChanged</span>))
-                        .<span class="ident">entity</span>;
+            TextboxContainer {}
+                .build(cx, <span class="kw">move </span>|cx| {
+                    <span class="kw">let </span>lbl = TextboxLabel {}
+                        .build(cx, |<span class="kw">_</span>| {})
+                        .hoverable(<span class="bool-val">false</span>)
+                        .class(<span class="string">&quot;textbox_content&quot;</span>)
+                        .text(TextboxData::text)
+                        .text_selection(TextboxData::selection)
+                        .translate(TextboxData::transform)
+                        .on_geo_changed(|cx, <span class="kw">_</span>| cx.emit(TextEvent::GeometryChanged))
+                        .entity;
 
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::InitContent</span>(<span class="ident">lbl</span>, <span class="ident">kind</span>));
+                    cx.emit(TextEvent::InitContent(lbl, kind));
                 })
-                .<span class="ident">hoverable</span>(<span class="bool-val">false</span>)
-                .<span class="ident">class</span>(<span class="string">&quot;textbox_container&quot;</span>);
+                .hoverable(<span class="bool-val">false</span>)
+                .class(<span class="string">&quot;textbox_container&quot;</span>);
         });
 
-        <span class="ident">result</span>
-            .<span class="ident">class</span>(<span class="kw">match</span> <span class="ident">kind</span> {
-                <span class="ident">TextboxKind::SingleLine</span> =&gt; <span class="string">&quot;single_line&quot;</span>,
-                <span class="ident">TextboxKind::MultiLineUnwrapped</span> =&gt; <span class="string">&quot;multi_line_unwrapped&quot;</span>,
-                <span class="ident">TextboxKind::MultiLineWrapped</span> =&gt; <span class="string">&quot;multi_line_wrapped&quot;</span>,
+        result
+            .class(<span class="kw">match </span>kind {
+                TextboxKind::SingleLine =&gt; <span class="string">&quot;single_line&quot;</span>,
+                TextboxKind::MultiLineUnwrapped =&gt; <span class="string">&quot;multi_line_unwrapped&quot;</span>,
+                TextboxKind::MultiLineWrapped =&gt; <span class="string">&quot;multi_line_wrapped&quot;</span>,
             })
-            .<span class="ident">cursor</span>(<span class="ident">CursorIcon::Text</span>)
-            .<span class="ident">navigable</span>(<span class="bool-val">true</span>)
+            .cursor(CursorIcon::Text)
+            .navigable(<span class="bool-val">true</span>)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&gt;</span> <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Textbox</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_edit</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">String</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, L: Lens&gt; Handle&lt;<span class="lifetime">&#39;a</span>, Textbox&lt;L&gt;&gt; {
+    <span class="kw">pub fn </span>on_edit&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, String) + Send + Sync,
     {
-        <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">emit_to</span>(<span class="self">self</span>.<span class="ident">entity</span>, <span class="ident">TextEvent::SetOnEdit</span>(<span class="prelude-val">Some</span>(<span class="ident">Arc::new</span>(<span class="ident">callback</span>))));
+        <span class="self">self</span>.cx.emit_to(<span class="self">self</span>.entity, TextEvent::SetOnEdit(<span class="prelude-val">Some</span>(Arc::new(callback))));
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_submit</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">String</span>, <span class="ident">bool</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
+    <span class="kw">pub fn </span>on_submit&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, String, bool) + Send + Sync,
     {
-        <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">emit_to</span>(<span class="self">self</span>.<span class="ident">entity</span>, <span class="ident">TextEvent::SetOnSubmit</span>(<span class="prelude-val">Some</span>(<span class="ident">Arc::new</span>(<span class="ident">callback</span>))));
+        <span class="self">self</span>.cx.emit_to(<span class="self">self</span>.entity, TextEvent::SetOnSubmit(<span class="prelude-val">Some</span>(Arc::new(callback))));
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&gt;</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">Textbox</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="op">&lt;</span><span class="ident">L</span> <span class="kw">as</span> <span class="ident">Lens</span><span class="op">&gt;</span><span class="ident">::Target</span>: <span class="ident">Data</span> <span class="op">+</span> <span class="ident">ToString</span>,
+<span class="kw">impl</span>&lt;L: Lens&gt; View <span class="kw">for </span>Textbox&lt;L&gt;
+<span class="kw">where
+    </span>&lt;L <span class="kw">as </span>Lens&gt;::Target: Data + ToString,
 {
-    <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">&quot;textbox&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
-        <span class="comment">//let selection = cx.tree.get_child(cx.current, 0).unwrap();</span>
-        <span class="comment">//let caret = cx.tree.get_child(cx.current, 1).unwrap();</span>
+    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
+        <span class="comment">//let selection = cx.tree.get_child(cx.current, 0).unwrap();
+        //let caret = cx.tree.get_child(cx.current, 1).unwrap();
 
-        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
-            <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">is_over</span>() {
-                    <span class="ident">cx</span>.<span class="ident">focus_with_visibility</span>(<span class="bool-val">false</span>);
-                    <span class="ident">cx</span>.<span class="ident">capture</span>();
-                    <span class="ident">cx</span>.<span class="ident">set_checked</span>(<span class="bool-val">true</span>);
-                    <span class="ident">cx</span>.<span class="ident">lock_cursor_icon</span>();
+        </span>event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
+            WindowEvent::MouseDown(MouseButton::Left) =&gt; {
+                <span class="kw">if </span>cx.is_over() {
+                    cx.focus_with_visibility(<span class="bool-val">false</span>);
+                    cx.capture();
+                    cx.set_checked(<span class="bool-val">true</span>);
+                    cx.lock_cursor_icon();
 
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::Hit</span>(<span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span>, <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span>));
-                } <span class="kw">else</span> {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::Submit</span>(<span class="bool-val">false</span>));
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">data</span>::<span class="op">&lt;</span><span class="ident">L::Source</span><span class="op">&gt;</span>() {
-                        <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">view</span>(<span class="ident">source</span>, <span class="op">|</span><span class="ident">t</span><span class="op">|</span> {
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span> <span class="ident">t</span> {
-                                <span class="ident">t</span>.<span class="ident">to_string</span>()
-                            } <span class="kw">else</span> {
-                                <span class="string">&quot;&quot;</span>.<span class="ident">to_owned</span>()
+                    cx.emit(TextEvent::Hit(cx.mouse.cursorx, cx.mouse.cursory));
+                } <span class="kw">else </span>{
+                    cx.emit(TextEvent::Submit(<span class="bool-val">false</span>));
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(source) = cx.data::&lt;L::Source&gt;() {
+                        <span class="kw">let </span>text = <span class="self">self</span>.lens.view(source, |t| {
+                            <span class="kw">if let </span><span class="prelude-val">Some</span>(t) = t {
+                                t.to_string()
+                            } <span class="kw">else </span>{
+                                <span class="string">&quot;&quot;</span>.to_owned()
                             }
                         });
 
-                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::SelectAll</span>);
-                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::InsertText</span>(<span class="ident">text</span>));
+                        cx.emit(TextEvent::SelectAll);
+                        cx.emit(TextEvent::InsertText(text));
                     };
-                    <span class="ident">cx</span>.<span class="ident">release</span>();
-                    <span class="ident">cx</span>.<span class="ident">set_checked</span>(<span class="bool-val">false</span>);
+                    cx.release();
+                    cx.set_checked(<span class="bool-val">false</span>);
 
-                    <span class="comment">// Forward event to hovered</span>
-                    <span class="ident">cx</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
-                        <span class="ident">Event::new</span>(<span class="ident">WindowEvent::MouseDown</span>(<span class="ident">MouseButton::Left</span>)).<span class="ident">target</span>(<span class="ident">cx</span>.<span class="ident">hovered</span>()),
+                    <span class="comment">// Forward event to hovered
+                    </span>cx.event_queue.push_back(
+                        Event::new(WindowEvent::MouseDown(MouseButton::Left)).target(cx.hovered()),
                     );
-                    <span class="ident">cx</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
-                        <span class="ident">Event::new</span>(<span class="ident">WindowEvent::PressDown</span> { <span class="ident">mouse</span>: <span class="bool-val">true</span> }).<span class="ident">target</span>(<span class="ident">cx</span>.<span class="ident">hovered</span>()),
+                    cx.event_queue.push_back(
+                        Event::new(WindowEvent::PressDown { mouse: <span class="bool-val">true </span>}).target(cx.hovered()),
                     );
                 }
             }
 
-            <span class="ident">WindowEvent::FocusIn</span> =&gt; {
-                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pressed</span> <span class="op">!</span><span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>()
-                    <span class="op">|</span><span class="op">|</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">state</span> <span class="op">==</span> <span class="ident">MouseButtonState::Released</span>
+            WindowEvent::FocusIn =&gt; {
+                <span class="kw">if </span>cx.mouse.left.pressed != cx.current()
+                    || cx.mouse.left.state == MouseButtonState::Released
                 {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::StartEdit</span>);
+                    cx.emit(TextEvent::StartEdit);
                 }
             }
 
-            <span class="ident">WindowEvent::FocusOut</span> =&gt; {
-                <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::EndEdit</span>);
+            WindowEvent::FocusOut =&gt; {
+                cx.emit(TextEvent::EndEdit);
             }
 
-            <span class="ident">WindowEvent::MouseDoubleClick</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
-                <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::SelectWord</span>);
+            WindowEvent::MouseDoubleClick(MouseButton::Left) =&gt; {
+                cx.emit(TextEvent::SelectWord);
             }
 
-            <span class="ident">WindowEvent::MouseTripleClick</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
-                <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::SelectParagraph</span>);
+            WindowEvent::MouseTripleClick(MouseButton::Left) =&gt; {
+                cx.emit(TextEvent::SelectParagraph);
             }
 
-            <span class="ident">WindowEvent::MouseUp</span>(<span class="ident">MouseButton::Left</span>) =&gt; {
-                <span class="ident">cx</span>.<span class="ident">unlock_cursor_icon</span>();
-                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pressed</span> <span class="op">==</span> <span class="ident">cx</span>.<span class="ident">current</span>() {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::StartEdit</span>);
+            WindowEvent::MouseUp(MouseButton::Left) =&gt; {
+                cx.unlock_cursor_icon();
+                <span class="kw">if </span>cx.mouse.left.pressed == cx.current() {
+                    cx.emit(TextEvent::StartEdit);
                 }
             }
 
-            <span class="ident">WindowEvent::MouseMove</span>(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">state</span> <span class="op">==</span> <span class="ident">MouseButtonState::Pressed</span> {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::Drag</span>(<span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span>, <span class="ident">cx</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span>));
+            WindowEvent::MouseMove(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
+                <span class="kw">if </span>cx.mouse.left.state == MouseButtonState::Pressed {
+                    cx.emit(TextEvent::Drag(cx.mouse.cursorx, cx.mouse.cursory));
                 }
             }
 
-            <span class="ident">WindowEvent::CharInput</span>(<span class="ident">c</span>) =&gt; {
-                <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="string">&#39;\u{1b}&#39;</span> <span class="op">&amp;&amp;</span> <span class="comment">// Escape</span>
-                            <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="string">&#39;\u{8}&#39;</span> <span class="op">&amp;&amp;</span> <span class="comment">// Backspace</span>
-                            <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="string">&#39;\u{9}&#39;</span> <span class="op">&amp;&amp;</span> <span class="comment">// Tab</span>
-                            <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="string">&#39;\u{7f}&#39;</span> <span class="op">&amp;&amp;</span> <span class="comment">// Delete</span>
-                            <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="string">&#39;\u{0d}&#39;</span> <span class="op">&amp;&amp;</span> <span class="comment">// Carriage return</span>
-                            <span class="op">!</span><span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::CTRL</span>)
+            WindowEvent::CharInput(c) =&gt; {
+                <span class="kw">if </span><span class="kw-2">*</span>c != <span class="string">&#39;\u{1b}&#39; </span>&amp;&amp; <span class="comment">// Escape
+                            </span><span class="kw-2">*</span>c != <span class="string">&#39;\u{8}&#39; </span>&amp;&amp; <span class="comment">// Backspace
+                            </span><span class="kw-2">*</span>c != <span class="string">&#39;\u{9}&#39; </span>&amp;&amp; <span class="comment">// Tab
+                            </span><span class="kw-2">*</span>c != <span class="string">&#39;\u{7f}&#39; </span>&amp;&amp; <span class="comment">// Delete
+                            </span><span class="kw-2">*</span>c != <span class="string">&#39;\u{0d}&#39; </span>&amp;&amp; <span class="comment">// Carriage return
+                            </span>!cx.modifiers.contains(Modifiers::CTRL)
                 {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::InsertText</span>(<span class="ident">String::from</span>(<span class="kw-2">*</span><span class="ident">c</span>)));
+                    cx.emit(TextEvent::InsertText(String::from(<span class="kw-2">*</span>c)));
                 }
             }
 
-            <span class="ident">WindowEvent::KeyDown</span>(<span class="ident">code</span>, <span class="kw">_</span>) =&gt; <span class="kw">match</span> <span class="ident">code</span> {
-                <span class="ident">Code::Enter</span> =&gt; {
-                    <span class="comment">// Finish editing</span>
-                    <span class="comment">// self.edit = false;</span>
+            WindowEvent::KeyDown(code, <span class="kw">_</span>) =&gt; <span class="kw">match </span>code {
+                Code::Enter =&gt; {
+                    <span class="comment">// Finish editing
+                    // self.edit = false;
 
-                    <span class="comment">//cx.emit(TextEvent::EndEdit);</span>
+                    //cx.emit(TextEvent::EndEdit);
 
-                    <span class="kw">if</span> <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">kind</span>, <span class="ident">TextboxKind::SingleLine</span>) {
-                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::Submit</span>(<span class="bool-val">true</span>));
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">data</span>::<span class="op">&lt;</span><span class="ident">L::Source</span><span class="op">&gt;</span>() {
-                            <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lens</span>.<span class="ident">view</span>(<span class="ident">source</span>, <span class="op">|</span><span class="ident">t</span><span class="op">|</span> {
-                                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span> <span class="ident">t</span> {
-                                    <span class="ident">t</span>.<span class="ident">to_string</span>()
-                                } <span class="kw">else</span> {
-                                    <span class="string">&quot;&quot;</span>.<span class="ident">to_owned</span>()
+                    </span><span class="kw">if </span><span class="macro">matches!</span>(<span class="self">self</span>.kind, TextboxKind::SingleLine) {
+                        cx.emit(TextEvent::Submit(<span class="bool-val">true</span>));
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(source) = cx.data::&lt;L::Source&gt;() {
+                            <span class="kw">let </span>text = <span class="self">self</span>.lens.view(source, |t| {
+                                <span class="kw">if let </span><span class="prelude-val">Some</span>(t) = t {
+                                    t.to_string()
+                                } <span class="kw">else </span>{
+                                    <span class="string">&quot;&quot;</span>.to_owned()
                                 }
                             });
 
-                            <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::SelectAll</span>);
-                            <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::InsertText</span>(<span class="ident">text</span>));
+                            cx.emit(TextEvent::SelectAll);
+                            cx.emit(TextEvent::InsertText(text));
                         };
 
-                        <span class="ident">cx</span>.<span class="ident">set_checked</span>(<span class="bool-val">false</span>);
-                        <span class="ident">cx</span>.<span class="ident">release</span>();
-                    } <span class="kw">else</span> {
-                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::InsertText</span>(<span class="string">&quot;\n&quot;</span>.<span class="ident">to_owned</span>()));
+                        cx.set_checked(<span class="bool-val">false</span>);
+                        cx.release();
+                    } <span class="kw">else </span>{
+                        cx.emit(TextEvent::InsertText(<span class="string">&quot;\n&quot;</span>.to_owned()));
                     }
                 }
 
-                <span class="ident">Code::ArrowLeft</span> =&gt; {
-                    <span class="comment">//if self.edit {</span>
-                    <span class="kw">let</span> <span class="ident">movement</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::CTRL</span>) {
-                        <span class="ident">Movement::Word</span>(<span class="ident">Direction::Upstream</span>)
-                    } <span class="kw">else</span> {
-                        <span class="ident">Movement::Grapheme</span>(<span class="ident">Direction::Upstream</span>)
+                Code::ArrowLeft =&gt; {
+                    <span class="comment">//if self.edit {
+                    </span><span class="kw">let </span>movement = <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
+                        Movement::Word(Direction::Upstream)
+                    } <span class="kw">else </span>{
+                        Movement::Grapheme(Direction::Upstream)
                     };
 
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::MoveCursor</span>(
-                        <span class="ident">movement</span>,
-                        <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::SHIFT</span>),
+                    cx.emit(TextEvent::MoveCursor(
+                        movement,
+                        cx.modifiers.contains(Modifiers::SHIFT),
                     ));
 
-                    <span class="comment">//self.move_cursor(cx, movement, cx.modifiers.contains(Modifiers::SHIFT));</span>
+                    <span class="comment">//self.move_cursor(cx, movement, cx.modifiers.contains(Modifiers::SHIFT));
 
-                    <span class="comment">//self.set_caret(cx, cx.current);</span>
-                    <span class="comment">//}</span>
-                }
+                    //self.set_caret(cx, cx.current);
+                    //}
+                </span>}
 
-                <span class="ident">Code::ArrowRight</span> =&gt; {
-                    <span class="comment">//if self.edit {</span>
-                    <span class="kw">let</span> <span class="ident">movement</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::CTRL</span>) {
-                        <span class="ident">Movement::Word</span>(<span class="ident">Direction::Downstream</span>)
-                    } <span class="kw">else</span> {
-                        <span class="ident">Movement::Grapheme</span>(<span class="ident">Direction::Downstream</span>)
+                Code::ArrowRight =&gt; {
+                    <span class="comment">//if self.edit {
+                    </span><span class="kw">let </span>movement = <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
+                        Movement::Word(Direction::Downstream)
+                    } <span class="kw">else </span>{
+                        Movement::Grapheme(Direction::Downstream)
                     };
 
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::MoveCursor</span>(
-                        <span class="ident">movement</span>,
-                        <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::SHIFT</span>),
+                    cx.emit(TextEvent::MoveCursor(
+                        movement,
+                        cx.modifiers.contains(Modifiers::SHIFT),
                     ));
 
-                    <span class="comment">// self.move_cursor(cx, movement, cx.modifiers.contains(Modifiers::SHIFT));</span>
+                    <span class="comment">// self.move_cursor(cx, movement, cx.modifiers.contains(Modifiers::SHIFT));
 
-                    <span class="comment">// self.set_caret(cx, cx.current);</span>
-                    <span class="comment">//}</span>
-                }
+                    // self.set_caret(cx, cx.current);
+                    //}
+                </span>}
 
-                <span class="ident">Code::ArrowUp</span> =&gt; {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::MoveCursor</span>(
-                        <span class="ident">Movement::Line</span>(<span class="ident">Direction::Upstream</span>),
-                        <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::SHIFT</span>),
-                    ));
-                }
-
-                <span class="ident">Code::ArrowDown</span> =&gt; {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::MoveCursor</span>(
-                        <span class="ident">Movement::Line</span>(<span class="ident">Direction::Downstream</span>),
-                        <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::SHIFT</span>),
+                Code::ArrowUp =&gt; {
+                    cx.emit(TextEvent::MoveCursor(
+                        Movement::Line(Direction::Upstream),
+                        cx.modifiers.contains(Modifiers::SHIFT),
                     ));
                 }
 
-                <span class="ident">Code::Backspace</span> =&gt; {
-                    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::CTRL</span>) {
-                        <span class="comment">//self.delete_text(cx, Movement::Word(Direction::Upstream));</span>
-                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::DeleteText</span>(<span class="ident">Movement::Word</span>(<span class="ident">Direction::Upstream</span>)));
-                    } <span class="kw">else</span> {
-                        <span class="comment">//self.delete_text(cx, Movement::Grapheme(Direction::Upstream));</span>
-                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::DeleteText</span>(<span class="ident">Movement::Grapheme</span>(<span class="ident">Direction::Upstream</span>)));
+                Code::ArrowDown =&gt; {
+                    cx.emit(TextEvent::MoveCursor(
+                        Movement::Line(Direction::Downstream),
+                        cx.modifiers.contains(Modifiers::SHIFT),
+                    ));
+                }
+
+                Code::Backspace =&gt; {
+                    <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
+                        <span class="comment">//self.delete_text(cx, Movement::Word(Direction::Upstream));
+                        </span>cx.emit(TextEvent::DeleteText(Movement::Word(Direction::Upstream)));
+                    } <span class="kw">else </span>{
+                        <span class="comment">//self.delete_text(cx, Movement::Grapheme(Direction::Upstream));
+                        </span>cx.emit(TextEvent::DeleteText(Movement::Grapheme(Direction::Upstream)));
                     }
 
-                    <span class="comment">//self.set_caret(cx, cx.current);</span>
-                }
+                    <span class="comment">//self.set_caret(cx, cx.current);
+                </span>}
 
-                <span class="ident">Code::Delete</span> =&gt; {
-                    <span class="comment">//if self.edit {</span>
-                    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::CTRL</span>) {
-                        <span class="comment">//self.delete_text(cx, Movement::Word(Direction::Downstream));</span>
-                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::DeleteText</span>(<span class="ident">Movement::Word</span>(<span class="ident">Direction::Downstream</span>)));
-                    } <span class="kw">else</span> {
-                        <span class="comment">//self.delete_text(cx, Movement::Grapheme(Direction::Downstream));</span>
-                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::DeleteText</span>(<span class="ident">Movement::Grapheme</span>(<span class="ident">Direction::Downstream</span>)));
+                Code::Delete =&gt; {
+                    <span class="comment">//if self.edit {
+                    </span><span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
+                        <span class="comment">//self.delete_text(cx, Movement::Word(Direction::Downstream));
+                        </span>cx.emit(TextEvent::DeleteText(Movement::Word(Direction::Downstream)));
+                    } <span class="kw">else </span>{
+                        <span class="comment">//self.delete_text(cx, Movement::Grapheme(Direction::Downstream));
+                        </span>cx.emit(TextEvent::DeleteText(Movement::Grapheme(Direction::Downstream)));
                     }
-                    <span class="comment">//self.set_caret(cx, cx.current);</span>
-                    <span class="comment">//}</span>
+                    <span class="comment">//self.set_caret(cx, cx.current);
+                    //}
+                </span>}
+
+                Code::Escape =&gt; {
+                    <span class="comment">//self.edit = false;
+                    </span>cx.emit(TextEvent::EndEdit);
+                    cx.set_checked(<span class="bool-val">false</span>);
                 }
 
-                <span class="ident">Code::Escape</span> =&gt; {
-                    <span class="comment">//self.edit = false;</span>
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::EndEdit</span>);
-                    <span class="ident">cx</span>.<span class="ident">set_checked</span>(<span class="bool-val">false</span>);
-                }
-
-                <span class="ident">Code::Home</span> =&gt; {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::MoveCursor</span>(
-                        <span class="ident">Movement::ParagraphStart</span>,
-                        <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::SHIFT</span>),
+                Code::Home =&gt; {
+                    cx.emit(TextEvent::MoveCursor(
+                        Movement::ParagraphStart,
+                        cx.modifiers.contains(Modifiers::SHIFT),
                     ));
                 }
 
-                <span class="ident">Code::End</span> =&gt; {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::MoveCursor</span>(
-                        <span class="ident">Movement::ParagraphEnd</span>,
-                        <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::SHIFT</span>),
+                Code::End =&gt; {
+                    cx.emit(TextEvent::MoveCursor(
+                        Movement::ParagraphEnd,
+                        cx.modifiers.contains(Modifiers::SHIFT),
                     ));
                 }
 
-                <span class="comment">// TODO</span>
-                <span class="ident">Code::PageUp</span> =&gt; {}
+                <span class="comment">// TODO
+                </span>Code::PageUp =&gt; {}
 
-                <span class="comment">// TODO</span>
-                <span class="ident">Code::PageDown</span> =&gt; {}
+                <span class="comment">// TODO
+                </span>Code::PageDown =&gt; {}
 
-                <span class="ident">Code::KeyA</span> =&gt; {
-                    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::CTRL</span>) {
-                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::SelectAll</span>);
+                Code::KeyA =&gt; {
+                    <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
+                        cx.emit(TextEvent::SelectAll);
                     }
                 }
 
-                <span class="ident">Code::KeyC</span> =&gt; {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::Copy</span>);
+                Code::KeyC =&gt; {
+                    cx.emit(TextEvent::Copy);
                 }
 
-                <span class="ident">Code::KeyV</span> =&gt; {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">TextEvent::Paste</span>);
+                Code::KeyV =&gt; {
+                    cx.emit(TextEvent::Paste);
                 }
 
-                <span class="kw">_</span> =&gt; {}
+                <span class="kw">_ </span>=&gt; {}
             },
 
-            <span class="kw">_</span> =&gt; {}
+            <span class="kw">_ </span>=&gt; {}
         });
     }
 }
 
-<span class="comment">// can&#39;t just be a stack because what if you&#39;ve styled stacks</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TextboxContainer</span> {}
-<span class="kw">impl</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">TextboxContainer</span> {
-    <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+<span class="comment">// can&#39;t just be a stack because what if you&#39;ve styled stacks
+</span><span class="kw">pub struct </span>TextboxContainer {}
+<span class="kw">impl </span>View <span class="kw">for </span>TextboxContainer {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">&quot;textboxcontainer&quot;</span>)
     }
 }
 
-<span class="comment">// can&#39;t just be a label because what if you&#39;ve styled labels</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TextboxLabel</span> {}
-<span class="kw">impl</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">TextboxLabel</span> {
-    <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+<span class="comment">// can&#39;t just be a label because what if you&#39;ve styled labels
+</span><span class="kw">pub struct </span>TextboxLabel {}
+<span class="kw">impl </span>View <span class="kw">for </span>TextboxLabel {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">&quot;textboxlabel&quot;</span>)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

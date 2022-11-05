@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/view.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>view.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../vizia_core/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/view.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>view.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../vizia_core/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -711,718 +711,718 @@
 <span id="711">711</span>
 <span id="712">712</span>
 <span id="713">713</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">any::Any</span>, <span class="ident">collections::HashMap</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>std::{any::Any, collections::HashMap};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::events::ViewHandler</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::resource::ImageOrId</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::state::ModelDataStore</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::text</span>::{<span class="ident">idx_to_pos</span>, <span class="ident">measure_text_lines</span>, <span class="ident">text_layout</span>, <span class="ident">text_paint_draw</span>};
-<span class="kw">use</span> <span class="ident">femtovg</span>::{
-    <span class="ident">renderer::OpenGl</span>, <span class="ident">Align</span>, <span class="ident">Baseline</span>, <span class="ident">ImageFlags</span>, <span class="ident">Paint</span>, <span class="ident">Path</span>, <span class="ident">PixelFormat</span>, <span class="ident">RenderTarget</span>,
-    <span class="ident">TextMetrics</span>,
+<span class="kw">use </span><span class="kw">crate</span>::events::ViewHandler;
+<span class="kw">use </span><span class="kw">crate</span>::resource::ImageOrId;
+<span class="kw">use </span><span class="kw">crate</span>::state::ModelDataStore;
+<span class="kw">use </span><span class="kw">crate</span>::text::{idx_to_pos, measure_text_lines, text_layout, text_paint_draw};
+<span class="kw">use </span>femtovg::{
+    renderer::OpenGl, Align, Baseline, ImageFlags, Paint, Path, PixelFormat, RenderTarget,
+    TextMetrics,
 };
-<span class="kw">use</span> <span class="ident">morphorm::Units</span>;
+<span class="kw">use </span>morphorm::Units;
 
-<span class="doccomment">/// The canvas we will be drawing to.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This type is part of the prelude.</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Canvas</span> <span class="op">=</span> <span class="ident">femtovg::Canvas</span><span class="op">&lt;</span><span class="ident">OpenGl</span><span class="op">&gt;</span>;
+<span class="doccomment">/// The canvas we will be drawing to.
+///
+/// This type is part of the prelude.
+</span><span class="kw">pub type </span>Canvas = femtovg::Canvas&lt;OpenGl&gt;;
 
-<span class="comment">// Length proportional to radius of a cubic bezier handle for 90deg arcs.</span>
-<span class="kw">const</span> <span class="ident">KAPPA90</span>: <span class="ident">f32</span> <span class="op">=</span> <span class="number">0.5522847493</span>;
+<span class="comment">// Length proportional to radius of a cubic bezier handle for 90deg arcs.
+</span><span class="kw">const </span>KAPPA90: f32 = <span class="number">0.5522847493</span>;
 
-<span class="doccomment">/// A view is any object which can be displayed on the screen.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This trait is part of the prelude.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">View</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Sized</span> {
-    <span class="kw">fn</span> <span class="ident">build</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">content</span>: <span class="ident">F</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
+<span class="doccomment">/// A view is any object which can be displayed on the screen.
+///
+/// This trait is part of the prelude.
+</span><span class="kw">pub trait </span>View: <span class="lifetime">&#39;static </span>+ Sized {
+    <span class="kw">fn </span>build&lt;F&gt;(<span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, content: F) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>F: FnOnce(<span class="kw-2">&amp;mut </span>Context),
     {
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">entity_manager</span>.<span class="ident">create</span>();
-        <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">current</span>();
-        <span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">add</span>(<span class="ident">id</span>, <span class="ident">current</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to add to tree&quot;</span>);
-        <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">add</span>(<span class="ident">id</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to add to cache&quot;</span>);
-        <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">add</span>(<span class="ident">id</span>);
-        <span class="ident">cx</span>.<span class="ident">views</span>.<span class="ident">insert</span>(<span class="ident">id</span>, <span class="ident">Box::new</span>(<span class="self">self</span>));
+        <span class="kw">let </span>id = cx.entity_manager.create();
+        <span class="kw">let </span>current = cx.current();
+        cx.tree.add(id, current).expect(<span class="string">&quot;Failed to add to tree&quot;</span>);
+        cx.cache.add(id).expect(<span class="string">&quot;Failed to add to cache&quot;</span>);
+        cx.style.add(id);
+        cx.views.insert(id, Box::new(<span class="self">self</span>));
 
-        <span class="ident">cx</span>.<span class="ident">data</span>
-            .<span class="ident">insert</span>(<span class="ident">id</span>, <span class="ident">ModelDataStore</span> { <span class="ident">models</span>: <span class="ident">HashMap::default</span>(), <span class="ident">stores</span>: <span class="ident">HashMap::default</span>() })
-            .<span class="ident">expect</span>(<span class="string">&quot;Failed to insert model data store&quot;</span>);
+        cx.data
+            .insert(id, ModelDataStore { models: HashMap::default(), stores: HashMap::default() })
+            .expect(<span class="string">&quot;Failed to insert model data store&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">Handle</span> { <span class="ident">entity</span>: <span class="ident">id</span>, <span class="ident">p</span>: <span class="ident">Default::default</span>(), <span class="ident">cx</span> };
+        <span class="kw">let </span>handle = Handle { entity: id, p: Default::default(), cx };
 
-        <span class="ident">handle</span>.<span class="ident">cx</span>.<span class="ident">with_current</span>(<span class="ident">handle</span>.<span class="ident">entity</span>, <span class="ident">content</span>);
+        handle.cx.with_current(handle.entity, content);
 
-        <span class="ident">handle</span>
+        handle
     }
 
-    <span class="doccomment">/// The name of the view. This is used in css: to style every single one of a given view, you</span>
-    <span class="doccomment">/// specify the element name.</span>
-    <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-        <span class="prelude-val">None</span>
-    }
+    <span class="doccomment">/// The name of the view. This is used in css: to style every single one of a given view, you
+    /// specify the element name.
+    </span><span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+        <span class="prelude-val">None
+    </span>}
 
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_variables</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {}
+    <span class="attribute">#[allow(unused_variables)]
+    </span><span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {}
 
-    <span class="kw">fn</span> <span class="ident">draw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">DrawContext</span>, <span class="ident">canvas</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Canvas</span>) {
-        <span class="kw">let</span> <span class="ident">bounds</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">bounds</span>();
+    <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
+        <span class="kw">let </span>bounds = cx.bounds();
 
-        <span class="comment">//Skip widgets with no width or no height</span>
-        <span class="kw">if</span> <span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">==</span> <span class="number">0.0</span> <span class="op">|</span><span class="op">|</span> <span class="ident">bounds</span>.<span class="ident">h</span> <span class="op">==</span> <span class="number">0.0</span> {
+        <span class="comment">//Skip widgets with no width or no height
+        </span><span class="kw">if </span>bounds.w == <span class="number">0.0 </span>|| bounds.h == <span class="number">0.0 </span>{
             <span class="kw">return</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">background_color</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">background_color</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
+        <span class="kw">let </span>background_color = cx.background_color().cloned().unwrap_or_default();
 
-        <span class="kw">let</span> <span class="ident">font_color</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">font_color</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or</span>(<span class="ident">Color::rgb</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>));
+        <span class="kw">let </span>font_color = cx.font_color().cloned().unwrap_or(Color::rgb(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>));
 
-        <span class="kw">let</span> <span class="ident">border_color</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">border_color</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
-        <span class="kw">let</span> <span class="ident">outline_color</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">outline_color</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
+        <span class="kw">let </span>border_color = cx.border_color().cloned().unwrap_or_default();
+        <span class="kw">let </span>outline_color = cx.outline_color().cloned().unwrap_or_default();
 
-        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">cx</span>
-            .<span class="ident">tree</span>
-            .<span class="ident">get_layout_parent</span>(<span class="ident">cx</span>.<span class="ident">current</span>)
-            .<span class="ident">expect</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;Failed to find parent somehow: {}&quot;</span>, <span class="ident">cx</span>.<span class="ident">current</span>));
+        <span class="kw">let </span>parent = cx
+            .tree
+            .get_layout_parent(cx.current)
+            .expect(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;Failed to find parent somehow: {}&quot;</span>, cx.current));
 
-        <span class="kw">let</span> <span class="ident">parent_width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">parent</span>);
-        <span class="kw">let</span> <span class="ident">parent_height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">parent</span>);
+        <span class="kw">let </span>parent_width = cx.cache.get_width(parent);
+        <span class="kw">let </span>parent_height = cx.cache.get_height(parent);
 
-        <span class="kw">let</span> <span class="ident">border_shape_top_left</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">border_shape_top_left</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
+        <span class="kw">let </span>border_shape_top_left = cx.border_shape_top_left().cloned().unwrap_or_default();
 
-        <span class="kw">let</span> <span class="ident">border_shape_top_right</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">border_shape_top_right</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
+        <span class="kw">let </span>border_shape_top_right = cx.border_shape_top_right().cloned().unwrap_or_default();
 
-        <span class="kw">let</span> <span class="ident">border_shape_bottom_left</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">border_shape_bottom_left</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
+        <span class="kw">let </span>border_shape_bottom_left = cx.border_shape_bottom_left().cloned().unwrap_or_default();
 
-        <span class="kw">let</span> <span class="ident">border_shape_bottom_right</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">border_shape_bottom_right</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
+        <span class="kw">let </span>border_shape_bottom_right = cx.border_shape_bottom_right().cloned().unwrap_or_default();
 
-        <span class="kw">let</span> <span class="ident">border_radius_top_left</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">border_radius_top_left</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">value_or</span>(<span class="ident">bounds</span>.<span class="ident">w</span>.<span class="ident">min</span>(<span class="ident">bounds</span>.<span class="ident">h</span>), <span class="number">0.0</span>);
+        <span class="kw">let </span>border_radius_top_left =
+            cx.border_radius_top_left().unwrap_or_default().value_or(bounds.w.min(bounds.h), <span class="number">0.0</span>);
 
-        <span class="kw">let</span> <span class="ident">border_radius_top_right</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">border_radius_top_right</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">value_or</span>(<span class="ident">bounds</span>.<span class="ident">w</span>.<span class="ident">min</span>(<span class="ident">bounds</span>.<span class="ident">h</span>), <span class="number">0.0</span>);
+        <span class="kw">let </span>border_radius_top_right =
+            cx.border_radius_top_right().unwrap_or_default().value_or(bounds.w.min(bounds.h), <span class="number">0.0</span>);
 
-        <span class="kw">let</span> <span class="ident">border_radius_bottom_left</span> <span class="op">=</span> <span class="ident">cx</span>
-            .<span class="ident">border_radius_bottom_left</span>()
-            .<span class="ident">unwrap_or_default</span>()
-            .<span class="ident">value_or</span>(<span class="ident">bounds</span>.<span class="ident">w</span>.<span class="ident">min</span>(<span class="ident">bounds</span>.<span class="ident">h</span>), <span class="number">0.0</span>);
-        <span class="kw">let</span> <span class="ident">border_radius_bottom_right</span> <span class="op">=</span> <span class="ident">cx</span>
-            .<span class="ident">border_radius_bottom_right</span>()
-            .<span class="ident">unwrap_or_default</span>()
-            .<span class="ident">value_or</span>(<span class="ident">bounds</span>.<span class="ident">w</span>.<span class="ident">min</span>(<span class="ident">bounds</span>.<span class="ident">h</span>), <span class="number">0.0</span>);
+        <span class="kw">let </span>border_radius_bottom_left = cx
+            .border_radius_bottom_left()
+            .unwrap_or_default()
+            .value_or(bounds.w.min(bounds.h), <span class="number">0.0</span>);
+        <span class="kw">let </span>border_radius_bottom_right = cx
+            .border_radius_bottom_right()
+            .unwrap_or_default()
+            .value_or(bounds.w.min(bounds.h), <span class="number">0.0</span>);
 
-        <span class="kw">let</span> <span class="ident">opacity</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">opacity</span>();
+        <span class="kw">let </span>opacity = cx.opacity();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">background_color</span>: <span class="ident">femtovg::Color</span> <span class="op">=</span> <span class="ident">background_color</span>.<span class="ident">into</span>();
-        <span class="ident">background_color</span>.<span class="ident">set_alphaf</span>(<span class="ident">background_color</span>.<span class="ident">a</span> <span class="op">*</span> <span class="ident">opacity</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>background_color: femtovg::Color = background_color.into();
+        background_color.set_alphaf(background_color.a * opacity);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">border_color</span>: <span class="ident">femtovg::Color</span> <span class="op">=</span> <span class="ident">border_color</span>.<span class="ident">into</span>();
-        <span class="ident">border_color</span>.<span class="ident">set_alphaf</span>(<span class="ident">border_color</span>.<span class="ident">a</span> <span class="op">*</span> <span class="ident">opacity</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>border_color: femtovg::Color = border_color.into();
+        border_color.set_alphaf(border_color.a * opacity);
 
-        <span class="kw">let</span> <span class="ident">border_width</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">border_width</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">value_or</span>(<span class="ident">bounds</span>.<span class="ident">w</span>.<span class="ident">min</span>(<span class="ident">bounds</span>.<span class="ident">h</span>), <span class="number">0.0</span>);
+        <span class="kw">let </span>border_width =
+            cx.border_width().unwrap_or_default().value_or(bounds.w.min(bounds.h), <span class="number">0.0</span>);
 
-        <span class="kw">let</span> <span class="ident">outline_width</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">outline_width</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">value_or</span>(<span class="ident">bounds</span>.<span class="ident">w</span>.<span class="ident">min</span>(<span class="ident">bounds</span>.<span class="ident">h</span>), <span class="number">0.0</span>);
+        <span class="kw">let </span>outline_width =
+            cx.outline_width().unwrap_or_default().value_or(bounds.w.min(bounds.h), <span class="number">0.0</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outline_color</span>: <span class="ident">femtovg::Color</span> <span class="op">=</span> <span class="ident">outline_color</span>.<span class="ident">into</span>();
-        <span class="ident">outline_color</span>.<span class="ident">set_alphaf</span>(<span class="ident">outline_color</span>.<span class="ident">a</span> <span class="op">*</span> <span class="ident">opacity</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>outline_color: femtovg::Color = outline_color.into();
+        outline_color.set_alphaf(outline_color.a * opacity);
 
-        <span class="kw">let</span> <span class="ident">outline_offset</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">outline_offset</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">value_or</span>(<span class="ident">bounds</span>.<span class="ident">w</span>.<span class="ident">min</span>(<span class="ident">bounds</span>.<span class="ident">h</span>), <span class="number">0.0</span>);
+        <span class="kw">let </span>outline_offset =
+            cx.outline_offset().unwrap_or_default().value_or(bounds.w.min(bounds.h), <span class="number">0.0</span>);
 
-        <span class="kw">let</span> <span class="ident">outer_shadow_h_offset</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">outer_shadow_h_offset</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">value_or</span>(<span class="ident">bounds</span>.<span class="ident">w</span>, <span class="number">0.0</span>);
-        <span class="kw">let</span> <span class="ident">outer_shadow_v_offset</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">outer_shadow_v_offset</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">value_or</span>(<span class="ident">bounds</span>.<span class="ident">w</span>, <span class="number">0.0</span>);
-        <span class="kw">let</span> <span class="ident">outer_shadow_blur</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">outer_shadow_blur</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">value_or</span>(<span class="ident">bounds</span>.<span class="ident">w</span>, <span class="number">0.0</span>);
+        <span class="kw">let </span>outer_shadow_h_offset =
+            cx.outer_shadow_h_offset().unwrap_or_default().value_or(bounds.w, <span class="number">0.0</span>);
+        <span class="kw">let </span>outer_shadow_v_offset =
+            cx.outer_shadow_v_offset().unwrap_or_default().value_or(bounds.w, <span class="number">0.0</span>);
+        <span class="kw">let </span>outer_shadow_blur = cx.outer_shadow_blur().unwrap_or_default().value_or(bounds.w, <span class="number">0.0</span>);
 
-        <span class="kw">let</span> <span class="ident">outer_shadow_color</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">outer_shadow_color</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
+        <span class="kw">let </span>outer_shadow_color = cx.outer_shadow_color().cloned().unwrap_or_default();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outer_shadow_color</span>: <span class="ident">femtovg::Color</span> <span class="op">=</span> <span class="ident">outer_shadow_color</span>.<span class="ident">into</span>();
-        <span class="ident">outer_shadow_color</span>.<span class="ident">set_alphaf</span>(<span class="ident">outer_shadow_color</span>.<span class="ident">a</span> <span class="op">*</span> <span class="ident">opacity</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>outer_shadow_color: femtovg::Color = outer_shadow_color.into();
+        outer_shadow_color.set_alphaf(outer_shadow_color.a * opacity);
 
-        <span class="kw">let</span> <span class="ident">_inner_shadow_h_offset</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">inner_shadow_h_offset</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">value_or</span>(<span class="ident">bounds</span>.<span class="ident">w</span>, <span class="number">0.0</span>);
+        <span class="kw">let </span>_inner_shadow_h_offset =
+            cx.inner_shadow_h_offset().unwrap_or_default().value_or(bounds.w, <span class="number">0.0</span>);
 
-        <span class="kw">let</span> <span class="ident">_inner_shadow_v_offset</span> <span class="op">=</span>
-            <span class="ident">cx</span>.<span class="ident">inner_shadow_v_offset</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">value_or</span>(<span class="ident">bounds</span>.<span class="ident">w</span>, <span class="number">0.0</span>);
+        <span class="kw">let </span>_inner_shadow_v_offset =
+            cx.inner_shadow_v_offset().unwrap_or_default().value_or(bounds.w, <span class="number">0.0</span>);
 
-        <span class="kw">let</span> <span class="ident">_inner_shadow_blur</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">inner_shadow_blur</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">value_or</span>(<span class="ident">bounds</span>.<span class="ident">w</span>, <span class="number">0.0</span>);
+        <span class="kw">let </span>_inner_shadow_blur = cx.inner_shadow_blur().unwrap_or_default().value_or(bounds.w, <span class="number">0.0</span>);
 
-        <span class="kw">let</span> <span class="ident">inner_shadow_color</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">inner_shadow_color</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
+        <span class="kw">let </span>inner_shadow_color = cx.inner_shadow_color().cloned().unwrap_or_default();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner_shadow_color</span>: <span class="ident">femtovg::Color</span> <span class="op">=</span> <span class="ident">inner_shadow_color</span>.<span class="ident">into</span>();
-        <span class="ident">inner_shadow_color</span>.<span class="ident">set_alphaf</span>(<span class="ident">inner_shadow_color</span>.<span class="ident">a</span> <span class="op">*</span> <span class="ident">opacity</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>inner_shadow_color: femtovg::Color = inner_shadow_color.into();
+        inner_shadow_color.set_alphaf(inner_shadow_color.a * opacity);
 
-        <span class="comment">// // Draw outer shadow</span>
-        <span class="comment">// let mut path = Path::new();</span>
-        <span class="comment">// path.rounded_rect_varying(</span>
-        <span class="comment">//     bounds.x - outer_shadow_blur + outer_shadow_h_offset,</span>
-        <span class="comment">//     bounds.y - outer_shadow_blur + outer_shadow_v_offset,</span>
-        <span class="comment">//     bounds.w + 2.0 * outer_shadow_blur,</span>
-        <span class="comment">//     bounds.h + 2.0 * outer_shadow_blur,</span>
-        <span class="comment">//     border_radius_top_left,</span>
-        <span class="comment">//     border_radius_top_right,</span>
-        <span class="comment">//     border_radius_bottom_right,</span>
-        <span class="comment">//     border_radius_bottom_left,</span>
-        <span class="comment">// );</span>
-        <span class="comment">// path.rounded_rect_varying(</span>
-        <span class="comment">//     bounds.x,</span>
-        <span class="comment">//     bounds.y,</span>
-        <span class="comment">//     bounds.w,</span>
-        <span class="comment">//     bounds.h,</span>
-        <span class="comment">//     border_radius_top_left,</span>
-        <span class="comment">//     border_radius_top_right,</span>
-        <span class="comment">//     border_radius_bottom_right,</span>
-        <span class="comment">//     border_radius_bottom_left,</span>
-        <span class="comment">// );</span>
-        <span class="comment">// path.solidity(Solidity::Hole);</span>
+        <span class="comment">// // Draw outer shadow
+        // let mut path = Path::new();
+        // path.rounded_rect_varying(
+        //     bounds.x - outer_shadow_blur + outer_shadow_h_offset,
+        //     bounds.y - outer_shadow_blur + outer_shadow_v_offset,
+        //     bounds.w + 2.0 * outer_shadow_blur,
+        //     bounds.h + 2.0 * outer_shadow_blur,
+        //     border_radius_top_left,
+        //     border_radius_top_right,
+        //     border_radius_bottom_right,
+        //     border_radius_bottom_left,
+        // );
+        // path.rounded_rect_varying(
+        //     bounds.x,
+        //     bounds.y,
+        //     bounds.w,
+        //     bounds.h,
+        //     border_radius_top_left,
+        //     border_radius_top_right,
+        //     border_radius_bottom_right,
+        //     border_radius_bottom_left,
+        // );
+        // path.solidity(Solidity::Hole);
 
-        <span class="comment">// let mut paint = Paint::box_gradient(</span>
-        <span class="comment">//     bounds.x + outer_shadow_h_offset,</span>
-        <span class="comment">//     bounds.y + outer_shadow_v_offset,</span>
-        <span class="comment">//     bounds.w,</span>
-        <span class="comment">//     bounds.h,</span>
-        <span class="comment">//     border_radius_top_left</span>
-        <span class="comment">//         .max(border_radius_top_right)</span>
-        <span class="comment">//         .max(border_radius_bottom_left)</span>
-        <span class="comment">//         .max(border_radius_bottom_right),</span>
-        <span class="comment">//     outer_shadow_blur,</span>
-        <span class="comment">//     outer_shadow_color,</span>
-        <span class="comment">//     femtovg::Color::rgba(0, 0, 0, 0),</span>
-        <span class="comment">// );</span>
+        // let mut paint = Paint::box_gradient(
+        //     bounds.x + outer_shadow_h_offset,
+        //     bounds.y + outer_shadow_v_offset,
+        //     bounds.w,
+        //     bounds.h,
+        //     border_radius_top_left
+        //         .max(border_radius_top_right)
+        //         .max(border_radius_bottom_left)
+        //         .max(border_radius_bottom_right),
+        //     outer_shadow_blur,
+        //     outer_shadow_color,
+        //     femtovg::Color::rgba(0, 0, 0, 0),
+        // );
 
-        <span class="comment">// canvas.fill_path(&amp;mut path, paint);</span>
+        // canvas.fill_path(&amp;mut path, paint);
 
-        <span class="comment">//let start = instant::Instant::now();</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>();
+        //let start = instant::Instant::now();
+        </span><span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
 
-        <span class="kw">if</span> <span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">==</span> <span class="ident">bounds</span>.<span class="ident">h</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">border_radius_bottom_left</span> <span class="op">==</span> (<span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">-</span> <span class="number">2.0</span> <span class="op">*</span> <span class="ident">border_width</span>) <span class="op">/</span> <span class="number">2.0</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">border_radius_bottom_right</span> <span class="op">==</span> (<span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">-</span> <span class="number">2.0</span> <span class="op">*</span> <span class="ident">border_width</span>) <span class="op">/</span> <span class="number">2.0</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">border_radius_top_left</span> <span class="op">==</span> (<span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">-</span> <span class="number">2.0</span> <span class="op">*</span> <span class="ident">border_width</span>) <span class="op">/</span> <span class="number">2.0</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">border_radius_top_right</span> <span class="op">==</span> (<span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">-</span> <span class="number">2.0</span> <span class="op">*</span> <span class="ident">border_width</span>) <span class="op">/</span> <span class="number">2.0</span>
-        {
-            <span class="ident">path</span>.<span class="ident">circle</span>(
-                <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">+</span> (<span class="ident">border_width</span> <span class="op">/</span> <span class="number">2.0</span>) <span class="op">+</span> (<span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">-</span> <span class="ident">border_width</span>) <span class="op">/</span> <span class="number">2.0</span>,
-                <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">+</span> (<span class="ident">border_width</span> <span class="op">/</span> <span class="number">2.0</span>) <span class="op">+</span> (<span class="ident">bounds</span>.<span class="ident">h</span> <span class="op">-</span> <span class="ident">border_width</span>) <span class="op">/</span> <span class="number">2.0</span>,
-                <span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">/</span> <span class="number">2.0</span>,
+        <span class="kw">if </span>bounds.w == bounds.h
+            &amp;&amp; border_radius_bottom_left == (bounds.w - <span class="number">2.0 </span>* border_width) / <span class="number">2.0
+            </span>&amp;&amp; border_radius_bottom_right == (bounds.w - <span class="number">2.0 </span>* border_width) / <span class="number">2.0
+            </span>&amp;&amp; border_radius_top_left == (bounds.w - <span class="number">2.0 </span>* border_width) / <span class="number">2.0
+            </span>&amp;&amp; border_radius_top_right == (bounds.w - <span class="number">2.0 </span>* border_width) / <span class="number">2.0
+        </span>{
+            path.circle(
+                bounds.x + (border_width / <span class="number">2.0</span>) + (bounds.w - border_width) / <span class="number">2.0</span>,
+                bounds.y + (border_width / <span class="number">2.0</span>) + (bounds.h - border_width) / <span class="number">2.0</span>,
+                bounds.w / <span class="number">2.0</span>,
             );
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">border_width</span> <span class="op">/</span> <span class="number">2.0</span>;
-            <span class="kw">let</span> <span class="ident">y</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">border_width</span> <span class="op">/</span> <span class="number">2.0</span>;
-            <span class="kw">let</span> <span class="ident">w</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">-</span> <span class="ident">border_width</span>;
-            <span class="kw">let</span> <span class="ident">h</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">h</span> <span class="op">-</span> <span class="ident">border_width</span>;
-            <span class="kw">let</span> <span class="ident">halfw</span> <span class="op">=</span> <span class="ident">w</span>.<span class="ident">abs</span>() <span class="op">*</span> <span class="number">0.5</span>;
-            <span class="kw">let</span> <span class="ident">halfh</span> <span class="op">=</span> <span class="ident">h</span>.<span class="ident">abs</span>() <span class="op">*</span> <span class="number">0.5</span>;
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>x = bounds.x + border_width / <span class="number">2.0</span>;
+            <span class="kw">let </span>y = bounds.y + border_width / <span class="number">2.0</span>;
+            <span class="kw">let </span>w = bounds.w - border_width;
+            <span class="kw">let </span>h = bounds.h - border_width;
+            <span class="kw">let </span>halfw = w.abs() * <span class="number">0.5</span>;
+            <span class="kw">let </span>halfh = h.abs() * <span class="number">0.5</span>;
 
-            <span class="kw">let</span> <span class="ident">rx_bl</span> <span class="op">=</span> <span class="ident">border_radius_bottom_left</span>.<span class="ident">min</span>(<span class="ident">halfw</span>) <span class="op">*</span> <span class="ident">w</span>.<span class="ident">signum</span>();
-            <span class="kw">let</span> <span class="ident">ry_bl</span> <span class="op">=</span> <span class="ident">border_radius_bottom_left</span>.<span class="ident">min</span>(<span class="ident">halfh</span>) <span class="op">*</span> <span class="ident">h</span>.<span class="ident">signum</span>();
+            <span class="kw">let </span>rx_bl = border_radius_bottom_left.min(halfw) * w.signum();
+            <span class="kw">let </span>ry_bl = border_radius_bottom_left.min(halfh) * h.signum();
 
-            <span class="kw">let</span> <span class="ident">rx_br</span> <span class="op">=</span> <span class="ident">border_radius_bottom_right</span>.<span class="ident">min</span>(<span class="ident">halfw</span>) <span class="op">*</span> <span class="ident">w</span>.<span class="ident">signum</span>();
-            <span class="kw">let</span> <span class="ident">ry_br</span> <span class="op">=</span> <span class="ident">border_radius_bottom_right</span>.<span class="ident">min</span>(<span class="ident">halfh</span>) <span class="op">*</span> <span class="ident">h</span>.<span class="ident">signum</span>();
+            <span class="kw">let </span>rx_br = border_radius_bottom_right.min(halfw) * w.signum();
+            <span class="kw">let </span>ry_br = border_radius_bottom_right.min(halfh) * h.signum();
 
-            <span class="kw">let</span> <span class="ident">rx_tr</span> <span class="op">=</span> <span class="ident">border_radius_top_right</span>.<span class="ident">min</span>(<span class="ident">halfw</span>) <span class="op">*</span> <span class="ident">w</span>.<span class="ident">signum</span>();
-            <span class="kw">let</span> <span class="ident">ry_tr</span> <span class="op">=</span> <span class="ident">border_radius_top_right</span>.<span class="ident">min</span>(<span class="ident">halfh</span>) <span class="op">*</span> <span class="ident">h</span>.<span class="ident">signum</span>();
+            <span class="kw">let </span>rx_tr = border_radius_top_right.min(halfw) * w.signum();
+            <span class="kw">let </span>ry_tr = border_radius_top_right.min(halfh) * h.signum();
 
-            <span class="kw">let</span> <span class="ident">rx_tl</span> <span class="op">=</span> <span class="ident">border_radius_top_left</span>.<span class="ident">min</span>(<span class="ident">halfw</span>) <span class="op">*</span> <span class="ident">w</span>.<span class="ident">signum</span>();
-            <span class="kw">let</span> <span class="ident">ry_tl</span> <span class="op">=</span> <span class="ident">border_radius_top_left</span>.<span class="ident">min</span>(<span class="ident">halfh</span>) <span class="op">*</span> <span class="ident">h</span>.<span class="ident">signum</span>();
+            <span class="kw">let </span>rx_tl = border_radius_top_left.min(halfw) * w.signum();
+            <span class="kw">let </span>ry_tl = border_radius_top_left.min(halfh) * h.signum();
 
-            <span class="ident">path</span>.<span class="ident">move_to</span>(<span class="ident">x</span>, <span class="ident">y</span> <span class="op">+</span> <span class="ident">ry_tl</span>);
-            <span class="ident">path</span>.<span class="ident">line_to</span>(<span class="ident">x</span>, <span class="ident">y</span> <span class="op">+</span> <span class="ident">h</span> <span class="op">-</span> <span class="ident">ry_bl</span>);
-            <span class="kw">if</span> <span class="ident">border_radius_bottom_left</span> <span class="op">!</span><span class="op">=</span> <span class="number">0.0</span> {
-                <span class="kw">if</span> <span class="ident">border_shape_bottom_left</span> <span class="op">==</span> <span class="ident">BorderCornerShape::Round</span> {
-                    <span class="ident">path</span>.<span class="ident">bezier_to</span>(
-                        <span class="ident">x</span>,
-                        <span class="ident">y</span> <span class="op">+</span> <span class="ident">h</span> <span class="op">-</span> <span class="ident">ry_bl</span> <span class="op">*</span> (<span class="number">1.0</span> <span class="op">-</span> <span class="ident">KAPPA90</span>),
-                        <span class="ident">x</span> <span class="op">+</span> <span class="ident">rx_bl</span> <span class="op">*</span> (<span class="number">1.0</span> <span class="op">-</span> <span class="ident">KAPPA90</span>),
-                        <span class="ident">y</span> <span class="op">+</span> <span class="ident">h</span>,
-                        <span class="ident">x</span> <span class="op">+</span> <span class="ident">rx_bl</span>,
-                        <span class="ident">y</span> <span class="op">+</span> <span class="ident">h</span>,
+            path.move_to(x, y + ry_tl);
+            path.line_to(x, y + h - ry_bl);
+            <span class="kw">if </span>border_radius_bottom_left != <span class="number">0.0 </span>{
+                <span class="kw">if </span>border_shape_bottom_left == BorderCornerShape::Round {
+                    path.bezier_to(
+                        x,
+                        y + h - ry_bl * (<span class="number">1.0 </span>- KAPPA90),
+                        x + rx_bl * (<span class="number">1.0 </span>- KAPPA90),
+                        y + h,
+                        x + rx_bl,
+                        y + h,
                     );
-                } <span class="kw">else</span> {
-                    <span class="ident">path</span>.<span class="ident">line_to</span>(<span class="ident">x</span> <span class="op">+</span> <span class="ident">rx_bl</span>, <span class="ident">y</span> <span class="op">+</span> <span class="ident">h</span>);
+                } <span class="kw">else </span>{
+                    path.line_to(x + rx_bl, y + h);
                 }
             }
 
-            <span class="ident">path</span>.<span class="ident">line_to</span>(<span class="ident">x</span> <span class="op">+</span> <span class="ident">w</span> <span class="op">-</span> <span class="ident">rx_br</span>, <span class="ident">y</span> <span class="op">+</span> <span class="ident">h</span>);
+            path.line_to(x + w - rx_br, y + h);
 
-            <span class="kw">if</span> <span class="ident">border_radius_bottom_right</span> <span class="op">!</span><span class="op">=</span> <span class="number">0.0</span> {
-                <span class="kw">if</span> <span class="ident">border_shape_bottom_right</span> <span class="op">==</span> <span class="ident">BorderCornerShape::Round</span> {
-                    <span class="ident">path</span>.<span class="ident">bezier_to</span>(
-                        <span class="ident">x</span> <span class="op">+</span> <span class="ident">w</span> <span class="op">-</span> <span class="ident">rx_br</span> <span class="op">*</span> (<span class="number">1.0</span> <span class="op">-</span> <span class="ident">KAPPA90</span>),
-                        <span class="ident">y</span> <span class="op">+</span> <span class="ident">h</span>,
-                        <span class="ident">x</span> <span class="op">+</span> <span class="ident">w</span>,
-                        <span class="ident">y</span> <span class="op">+</span> <span class="ident">h</span> <span class="op">-</span> <span class="ident">ry_br</span> <span class="op">*</span> (<span class="number">1.0</span> <span class="op">-</span> <span class="ident">KAPPA90</span>),
-                        <span class="ident">x</span> <span class="op">+</span> <span class="ident">w</span>,
-                        <span class="ident">y</span> <span class="op">+</span> <span class="ident">h</span> <span class="op">-</span> <span class="ident">ry_br</span>,
+            <span class="kw">if </span>border_radius_bottom_right != <span class="number">0.0 </span>{
+                <span class="kw">if </span>border_shape_bottom_right == BorderCornerShape::Round {
+                    path.bezier_to(
+                        x + w - rx_br * (<span class="number">1.0 </span>- KAPPA90),
+                        y + h,
+                        x + w,
+                        y + h - ry_br * (<span class="number">1.0 </span>- KAPPA90),
+                        x + w,
+                        y + h - ry_br,
                     );
-                } <span class="kw">else</span> {
-                    <span class="ident">path</span>.<span class="ident">line_to</span>(<span class="ident">x</span> <span class="op">+</span> <span class="ident">w</span>, <span class="ident">y</span> <span class="op">+</span> <span class="ident">h</span> <span class="op">-</span> <span class="ident">ry_br</span>);
+                } <span class="kw">else </span>{
+                    path.line_to(x + w, y + h - ry_br);
                 }
             }
 
-            <span class="ident">path</span>.<span class="ident">line_to</span>(<span class="ident">x</span> <span class="op">+</span> <span class="ident">w</span>, <span class="ident">y</span> <span class="op">+</span> <span class="ident">ry_tr</span>);
+            path.line_to(x + w, y + ry_tr);
 
-            <span class="kw">if</span> <span class="ident">border_radius_top_right</span> <span class="op">!</span><span class="op">=</span> <span class="number">0.0</span> {
-                <span class="kw">if</span> <span class="ident">border_shape_top_right</span> <span class="op">==</span> <span class="ident">BorderCornerShape::Round</span> {
-                    <span class="ident">path</span>.<span class="ident">bezier_to</span>(
-                        <span class="ident">x</span> <span class="op">+</span> <span class="ident">w</span>,
-                        <span class="ident">y</span> <span class="op">+</span> <span class="ident">ry_tr</span> <span class="op">*</span> (<span class="number">1.0</span> <span class="op">-</span> <span class="ident">KAPPA90</span>),
-                        <span class="ident">x</span> <span class="op">+</span> <span class="ident">w</span> <span class="op">-</span> <span class="ident">rx_tr</span> <span class="op">*</span> (<span class="number">1.0</span> <span class="op">-</span> <span class="ident">KAPPA90</span>),
-                        <span class="ident">y</span>,
-                        <span class="ident">x</span> <span class="op">+</span> <span class="ident">w</span> <span class="op">-</span> <span class="ident">rx_tr</span>,
-                        <span class="ident">y</span>,
+            <span class="kw">if </span>border_radius_top_right != <span class="number">0.0 </span>{
+                <span class="kw">if </span>border_shape_top_right == BorderCornerShape::Round {
+                    path.bezier_to(
+                        x + w,
+                        y + ry_tr * (<span class="number">1.0 </span>- KAPPA90),
+                        x + w - rx_tr * (<span class="number">1.0 </span>- KAPPA90),
+                        y,
+                        x + w - rx_tr,
+                        y,
                     );
-                } <span class="kw">else</span> {
-                    <span class="ident">path</span>.<span class="ident">line_to</span>(<span class="ident">x</span> <span class="op">+</span> <span class="ident">w</span> <span class="op">-</span> <span class="ident">rx_tr</span>, <span class="ident">y</span>);
+                } <span class="kw">else </span>{
+                    path.line_to(x + w - rx_tr, y);
                 }
             }
 
-            <span class="ident">path</span>.<span class="ident">line_to</span>(<span class="ident">x</span> <span class="op">+</span> <span class="ident">rx_tl</span>, <span class="ident">y</span>);
+            path.line_to(x + rx_tl, y);
 
-            <span class="kw">if</span> <span class="ident">border_radius_top_left</span> <span class="op">!</span><span class="op">=</span> <span class="number">0.0</span> {
-                <span class="kw">if</span> <span class="ident">border_shape_top_left</span> <span class="op">==</span> <span class="ident">BorderCornerShape::Round</span> {
-                    <span class="ident">path</span>.<span class="ident">bezier_to</span>(
-                        <span class="ident">x</span> <span class="op">+</span> <span class="ident">rx_tl</span> <span class="op">*</span> (<span class="number">1.0</span> <span class="op">-</span> <span class="ident">KAPPA90</span>),
-                        <span class="ident">y</span>,
-                        <span class="ident">x</span>,
-                        <span class="ident">y</span> <span class="op">+</span> <span class="ident">ry_tl</span> <span class="op">*</span> (<span class="number">1.0</span> <span class="op">-</span> <span class="ident">KAPPA90</span>),
-                        <span class="ident">x</span>,
-                        <span class="ident">y</span> <span class="op">+</span> <span class="ident">ry_tl</span>,
+            <span class="kw">if </span>border_radius_top_left != <span class="number">0.0 </span>{
+                <span class="kw">if </span>border_shape_top_left == BorderCornerShape::Round {
+                    path.bezier_to(
+                        x + rx_tl * (<span class="number">1.0 </span>- KAPPA90),
+                        y,
+                        x,
+                        y + ry_tl * (<span class="number">1.0 </span>- KAPPA90),
+                        x,
+                        y + ry_tl,
                     );
-                } <span class="kw">else</span> {
-                    <span class="ident">path</span>.<span class="ident">line_to</span>(<span class="ident">x</span>, <span class="ident">y</span> <span class="op">+</span> <span class="ident">ry_tl</span>);
+                } <span class="kw">else </span>{
+                    path.line_to(x, y + ry_tl);
                 }
             }
 
-            <span class="ident">path</span>.<span class="ident">close</span>();
+            path.close();
         }
 
-        <span class="comment">// Draw outer shadow</span>
+        <span class="comment">// Draw outer shadow
 
-        <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">outer_shadow_color</span>().<span class="ident">is_some</span>() {
-            <span class="kw">let</span> <span class="ident">sigma</span> <span class="op">=</span> <span class="ident">outer_shadow_blur</span> <span class="op">/</span> <span class="number">2.0</span>;
-            <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> (<span class="ident">sigma</span> <span class="op">*</span> <span class="number">5.0</span>).<span class="ident">ceil</span>();
+        </span><span class="kw">if </span>cx.outer_shadow_color().is_some() {
+            <span class="kw">let </span>sigma = outer_shadow_blur / <span class="number">2.0</span>;
+            <span class="kw">let </span>d = (sigma * <span class="number">5.0</span>).ceil();
 
-            <span class="kw">let</span> <span class="ident">shadow_image</span> <span class="op">=</span>
-                <span class="ident">cx</span>.<span class="ident">draw_cache</span>.<span class="ident">shadow_image</span>.<span class="ident">get</span>(<span class="ident">cx</span>.<span class="ident">current</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> {
+            <span class="kw">let </span>shadow_image =
+                cx.draw_cache.shadow_image.get(cx.current).cloned().unwrap_or_else(|| {
                     (
-                        <span class="ident">canvas</span>
-                            .<span class="ident">create_image_empty</span>(
-                                (<span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">+</span> <span class="ident">d</span>) <span class="kw">as</span> <span class="ident">usize</span>,
-                                (<span class="ident">bounds</span>.<span class="ident">h</span> <span class="op">+</span> <span class="ident">d</span>) <span class="kw">as</span> <span class="ident">usize</span>,
-                                <span class="ident">PixelFormat::Rgba8</span>,
-                                <span class="ident">ImageFlags::FLIP_Y</span> <span class="op">|</span> <span class="ident">ImageFlags::PREMULTIPLIED</span>,
+                        canvas
+                            .create_image_empty(
+                                (bounds.w + d) <span class="kw">as </span>usize,
+                                (bounds.h + d) <span class="kw">as </span>usize,
+                                PixelFormat::Rgba8,
+                                ImageFlags::FLIP_Y | ImageFlags::PREMULTIPLIED,
                             )
-                            .<span class="ident">expect</span>(<span class="string">&quot;Failed to create image&quot;</span>),
-                        <span class="ident">canvas</span>
-                            .<span class="ident">create_image_empty</span>(
-                                (<span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">+</span> <span class="ident">d</span>) <span class="kw">as</span> <span class="ident">usize</span>,
-                                (<span class="ident">bounds</span>.<span class="ident">h</span> <span class="op">+</span> <span class="ident">d</span>) <span class="kw">as</span> <span class="ident">usize</span>,
-                                <span class="ident">PixelFormat::Rgba8</span>,
-                                <span class="ident">ImageFlags::FLIP_Y</span> <span class="op">|</span> <span class="ident">ImageFlags::PREMULTIPLIED</span>,
+                            .expect(<span class="string">&quot;Failed to create image&quot;</span>),
+                        canvas
+                            .create_image_empty(
+                                (bounds.w + d) <span class="kw">as </span>usize,
+                                (bounds.h + d) <span class="kw">as </span>usize,
+                                PixelFormat::Rgba8,
+                                ImageFlags::FLIP_Y | ImageFlags::PREMULTIPLIED,
                             )
-                            .<span class="ident">expect</span>(<span class="string">&quot;Failed to create image&quot;</span>),
+                            .expect(<span class="string">&quot;Failed to create image&quot;</span>),
                     )
                 });
 
-            <span class="ident">canvas</span>.<span class="ident">save</span>();
-            <span class="ident">canvas</span>.<span class="ident">reset_scissor</span>();
-            <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">canvas</span>.<span class="ident">image_size</span>(<span class="ident">shadow_image</span>.<span class="number">0</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to get image&quot;</span>);
+            canvas.save();
+            canvas.reset_scissor();
+            <span class="kw">let </span>size = canvas.image_size(shadow_image.<span class="number">0</span>).expect(<span class="string">&quot;Failed to get image&quot;</span>);
 
-            <span class="kw">let</span> (<span class="ident">source</span>, <span class="ident">target</span>) <span class="op">=</span>
-                <span class="kw">if</span> <span class="ident">size</span>.<span class="number">0</span> <span class="op">!</span><span class="op">=</span> (<span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">+</span> <span class="ident">d</span>) <span class="kw">as</span> <span class="ident">usize</span> <span class="op">|</span><span class="op">|</span> <span class="ident">size</span>.<span class="number">1</span> <span class="op">!</span><span class="op">=</span> (<span class="ident">bounds</span>.<span class="ident">h</span> <span class="op">+</span> <span class="ident">d</span>) <span class="kw">as</span> <span class="ident">usize</span> {
-                    <span class="ident">canvas</span>.<span class="ident">delete_image</span>(<span class="ident">shadow_image</span>.<span class="number">0</span>);
-                    <span class="ident">canvas</span>.<span class="ident">delete_image</span>(<span class="ident">shadow_image</span>.<span class="number">1</span>);
+            <span class="kw">let </span>(source, target) =
+                <span class="kw">if </span>size.<span class="number">0 </span>!= (bounds.w + d) <span class="kw">as </span>usize || size.<span class="number">1 </span>!= (bounds.h + d) <span class="kw">as </span>usize {
+                    canvas.delete_image(shadow_image.<span class="number">0</span>);
+                    canvas.delete_image(shadow_image.<span class="number">1</span>);
 
                     (
-                        <span class="ident">canvas</span>
-                            .<span class="ident">create_image_empty</span>(
-                                (<span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">+</span> <span class="ident">d</span>) <span class="kw">as</span> <span class="ident">usize</span>,
-                                (<span class="ident">bounds</span>.<span class="ident">h</span> <span class="op">+</span> <span class="ident">d</span>) <span class="kw">as</span> <span class="ident">usize</span>,
-                                <span class="ident">PixelFormat::Rgba8</span>,
-                                <span class="ident">ImageFlags::FLIP_Y</span> <span class="op">|</span> <span class="ident">ImageFlags::PREMULTIPLIED</span>,
+                        canvas
+                            .create_image_empty(
+                                (bounds.w + d) <span class="kw">as </span>usize,
+                                (bounds.h + d) <span class="kw">as </span>usize,
+                                PixelFormat::Rgba8,
+                                ImageFlags::FLIP_Y | ImageFlags::PREMULTIPLIED,
                             )
-                            .<span class="ident">expect</span>(<span class="string">&quot;Failed to create image&quot;</span>),
-                        <span class="ident">canvas</span>
-                            .<span class="ident">create_image_empty</span>(
-                                (<span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">+</span> <span class="ident">d</span>) <span class="kw">as</span> <span class="ident">usize</span>,
-                                (<span class="ident">bounds</span>.<span class="ident">h</span> <span class="op">+</span> <span class="ident">d</span>) <span class="kw">as</span> <span class="ident">usize</span>,
-                                <span class="ident">PixelFormat::Rgba8</span>,
-                                <span class="ident">ImageFlags::FLIP_Y</span> <span class="op">|</span> <span class="ident">ImageFlags::PREMULTIPLIED</span>,
+                            .expect(<span class="string">&quot;Failed to create image&quot;</span>),
+                        canvas
+                            .create_image_empty(
+                                (bounds.w + d) <span class="kw">as </span>usize,
+                                (bounds.h + d) <span class="kw">as </span>usize,
+                                PixelFormat::Rgba8,
+                                ImageFlags::FLIP_Y | ImageFlags::PREMULTIPLIED,
                             )
-                            .<span class="ident">expect</span>(<span class="string">&quot;Failed to create image&quot;</span>),
+                            .expect(<span class="string">&quot;Failed to create image&quot;</span>),
                     )
-                } <span class="kw">else</span> {
-                    (<span class="ident">shadow_image</span>.<span class="number">0</span>, <span class="ident">shadow_image</span>.<span class="number">1</span>)
+                } <span class="kw">else </span>{
+                    (shadow_image.<span class="number">0</span>, shadow_image.<span class="number">1</span>)
                 };
 
-            <span class="ident">cx</span>.<span class="ident">draw_cache</span>.<span class="ident">shadow_image</span>.<span class="ident">insert</span>(<span class="ident">cx</span>.<span class="ident">current</span>, (<span class="ident">source</span>, <span class="ident">target</span>)).<span class="ident">unwrap</span>();
+            cx.draw_cache.shadow_image.insert(cx.current, (source, target)).unwrap();
 
-            <span class="ident">canvas</span>.<span class="ident">set_render_target</span>(<span class="ident">RenderTarget::Image</span>(<span class="ident">source</span>));
-            <span class="ident">canvas</span>.<span class="ident">clear_rect</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="ident">size</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">size</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">femtovg::Color::rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>));
-            <span class="ident">canvas</span>.<span class="ident">translate</span>(<span class="op">-</span><span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">d</span> <span class="op">/</span> <span class="number">2.0</span>, <span class="op">-</span><span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">d</span> <span class="op">/</span> <span class="number">2.0</span>);
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outer_shadow</span> <span class="op">=</span> <span class="ident">path</span>.<span class="ident">clone</span>();
-            <span class="kw">let</span> <span class="ident">paint</span> <span class="op">=</span> <span class="ident">Paint::color</span>(<span class="ident">outer_shadow_color</span>);
-            <span class="ident">canvas</span>.<span class="ident">fill_path</span>(<span class="kw-2">&amp;mut</span> <span class="ident">outer_shadow</span>, <span class="kw-2">&amp;</span><span class="ident">paint</span>);
+            canvas.set_render_target(RenderTarget::Image(source));
+            canvas.clear_rect(<span class="number">0</span>, <span class="number">0</span>, size.<span class="number">0 </span><span class="kw">as </span>u32, size.<span class="number">1 </span><span class="kw">as </span>u32, femtovg::Color::rgba(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>));
+            canvas.translate(-bounds.x + d / <span class="number">2.0</span>, -bounds.y + d / <span class="number">2.0</span>);
+            <span class="kw">let </span><span class="kw-2">mut </span>outer_shadow = path.clone();
+            <span class="kw">let </span>paint = Paint::color(outer_shadow_color);
+            canvas.fill_path(<span class="kw-2">&amp;mut </span>outer_shadow, <span class="kw-2">&amp;</span>paint);
 
-            <span class="ident">canvas</span>.<span class="ident">restore</span>();
+            canvas.restore();
 
-            <span class="kw">let</span> <span class="ident">target_image</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">outer_shadow_blur</span> <span class="op">&gt;</span> <span class="number">0.0</span> {
-                <span class="ident">canvas</span>.<span class="ident">filter_image</span>(<span class="ident">target</span>, <span class="ident">femtovg::ImageFilter::GaussianBlur</span> { <span class="ident">sigma</span> }, <span class="ident">source</span>);
-                <span class="ident">target</span>
-            } <span class="kw">else</span> {
-                <span class="ident">source</span>
+            <span class="kw">let </span>target_image = <span class="kw">if </span>outer_shadow_blur &gt; <span class="number">0.0 </span>{
+                canvas.filter_image(target, femtovg::ImageFilter::GaussianBlur { sigma }, source);
+                target
+            } <span class="kw">else </span>{
+                source
             };
 
-            <span class="ident">canvas</span>.<span class="ident">set_render_target</span>(<span class="ident">RenderTarget::Screen</span>);
+            canvas.set_render_target(RenderTarget::Screen);
 
-            <span class="ident">canvas</span>.<span class="ident">save</span>();
-            <span class="ident">canvas</span>.<span class="ident">translate</span>(<span class="ident">outer_shadow_h_offset</span>, <span class="ident">outer_shadow_v_offset</span>);
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>();
-            <span class="ident">path</span>.<span class="ident">rect</span>(<span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">-</span> <span class="ident">d</span> <span class="op">/</span> <span class="number">2.0</span>, <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">-</span> <span class="ident">d</span> <span class="op">/</span> <span class="number">2.0</span>, <span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">+</span> <span class="ident">d</span>, <span class="ident">bounds</span>.<span class="ident">h</span> <span class="op">+</span> <span class="ident">d</span>);
+            canvas.save();
+            canvas.translate(outer_shadow_h_offset, outer_shadow_v_offset);
+            <span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
+            path.rect(bounds.x - d / <span class="number">2.0</span>, bounds.y - d / <span class="number">2.0</span>, bounds.w + d, bounds.h + d);
 
-            <span class="ident">canvas</span>.<span class="ident">fill_path</span>(
-                <span class="kw-2">&amp;mut</span> <span class="ident">path</span>,
-                <span class="kw-2">&amp;</span><span class="ident">Paint::image</span>(
-                    <span class="ident">target_image</span>,
-                    <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">-</span> <span class="ident">d</span> <span class="op">/</span> <span class="number">2.0</span>,
-                    <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">-</span> <span class="ident">d</span> <span class="op">/</span> <span class="number">2.0</span>,
-                    <span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">+</span> <span class="ident">d</span>,
-                    <span class="ident">bounds</span>.<span class="ident">h</span> <span class="op">+</span> <span class="ident">d</span>,
+            canvas.fill_path(
+                <span class="kw-2">&amp;mut </span>path,
+                <span class="kw-2">&amp;</span>Paint::image(
+                    target_image,
+                    bounds.x - d / <span class="number">2.0</span>,
+                    bounds.y - d / <span class="number">2.0</span>,
+                    bounds.w + d,
+                    bounds.h + d,
                     <span class="number">0f32</span>,
                     <span class="number">1f32</span>,
                 ),
             );
-            <span class="comment">//canvas.fill_path(&amp;mut path, Paint::color(femtovg::Color::rgb(0,0,0)));</span>
-            <span class="ident">canvas</span>.<span class="ident">restore</span>();
+            <span class="comment">//canvas.fill_path(&amp;mut path, Paint::color(femtovg::Color::rgb(0,0,0)));
+            </span>canvas.restore();
         }
 
-        <span class="comment">// Fill with background color</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">paint</span> <span class="op">=</span> <span class="ident">Paint::color</span>(<span class="ident">background_color</span>);
+        <span class="comment">// Fill with background color
+        </span><span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::color(background_color);
 
-        <span class="comment">// Gradient overrides background color</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">background_gradient</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">background_gradient</span>() {
-            <span class="kw">let</span> (<span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">end_x</span>, <span class="ident">end_y</span>, <span class="ident">parent_length</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">background_gradient</span>.<span class="ident">direction</span> {
-                <span class="ident">GradientDirection::LeftToRight</span> =&gt; (<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="ident">bounds</span>.<span class="ident">w</span>, <span class="number">0.0</span>, <span class="ident">parent_width</span>),
-                <span class="ident">GradientDirection::TopToBottom</span> =&gt; (<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="ident">bounds</span>.<span class="ident">h</span>, <span class="ident">parent_height</span>),
-                <span class="kw">_</span> =&gt; (<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="ident">bounds</span>.<span class="ident">w</span>, <span class="number">0.0</span>, <span class="ident">parent_width</span>),
+        <span class="comment">// Gradient overrides background color
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(background_gradient) = cx.background_gradient() {
+            <span class="kw">let </span>(<span class="kw">_</span>, <span class="kw">_</span>, end_x, end_y, parent_length) = <span class="kw">match </span>background_gradient.direction {
+                GradientDirection::LeftToRight =&gt; (<span class="number">0.0</span>, <span class="number">0.0</span>, bounds.w, <span class="number">0.0</span>, parent_width),
+                GradientDirection::TopToBottom =&gt; (<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, bounds.h, parent_height),
+                <span class="kw">_ </span>=&gt; (<span class="number">0.0</span>, <span class="number">0.0</span>, bounds.w, <span class="number">0.0</span>, parent_width),
             };
 
-            <span class="ident">paint</span> <span class="op">=</span> <span class="ident">Paint::linear_gradient_stops</span>(
-                <span class="ident">bounds</span>.<span class="ident">x</span>,
-                <span class="ident">bounds</span>.<span class="ident">y</span>,
-                <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">end_x</span>,
-                <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">end_y</span>,
-                <span class="ident">background_gradient</span>
-                    .<span class="ident">get_stops</span>(<span class="ident">parent_length</span>)
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">stop</span><span class="op">|</span> {
-                        <span class="kw">let</span> <span class="ident">col</span>: <span class="ident">femtovg::Color</span> <span class="op">=</span> <span class="ident">stop</span>.<span class="number">1</span>.<span class="ident">into</span>();
-                        (<span class="ident">stop</span>.<span class="number">0</span>, <span class="ident">col</span>)
+            paint = Paint::linear_gradient_stops(
+                bounds.x,
+                bounds.y,
+                bounds.x + end_x,
+                bounds.y + end_y,
+                background_gradient
+                    .get_stops(parent_length)
+                    .iter()
+                    .map(|stop| {
+                        <span class="kw">let </span>col: femtovg::Color = stop.<span class="number">1</span>.into();
+                        (stop.<span class="number">0</span>, col)
                     })
-                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-                    .<span class="ident">as_slice</span>(),
+                    .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+                    .as_slice(),
             );
         }
 
-        <span class="comment">// background-image overrides gradient</span>
-        <span class="comment">// TODO should we draw image on top of colors?</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">background_image</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">background_image</span>() {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">img</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">resource_manager</span>.<span class="ident">images</span>.<span class="ident">get</span>(<span class="ident">background_image</span>) {
-                <span class="kw">match</span> <span class="ident">img</span>.<span class="ident">image</span> {
-                    <span class="ident">ImageOrId::Id</span>(<span class="ident">id</span>, <span class="ident">dim</span>) =&gt; {
-                        <span class="ident">paint</span> <span class="op">=</span> <span class="ident">Paint::image</span>(
-                            <span class="ident">id</span>,
-                            <span class="ident">bounds</span>.<span class="ident">x</span>,
-                            <span class="ident">bounds</span>.<span class="ident">y</span>,
-                            <span class="ident">dim</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">f32</span>,
-                            <span class="ident">dim</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">f32</span>,
+        <span class="comment">// background-image overrides gradient
+        // TODO should we draw image on top of colors?
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(background_image) = cx.background_image() {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(img) = cx.resource_manager.images.get(background_image) {
+                <span class="kw">match </span>img.image {
+                    ImageOrId::Id(id, dim) =&gt; {
+                        paint = Paint::image(
+                            id,
+                            bounds.x,
+                            bounds.y,
+                            dim.<span class="number">0 </span><span class="kw">as </span>f32,
+                            dim.<span class="number">1 </span><span class="kw">as </span>f32,
                             <span class="number">0.0</span>,
                             <span class="number">1.0</span>,
                         );
                     }
 
-                    <span class="kw">_</span> =&gt; {}
+                    <span class="kw">_ </span>=&gt; {}
                 }
             }
         }
 
-        <span class="comment">//canvas.global_composite_blend_func(BlendFactor::DstColor, BlendFactor::OneMinusSrcAlpha);</span>
+        <span class="comment">//canvas.global_composite_blend_func(BlendFactor::DstColor, BlendFactor::OneMinusSrcAlpha);
 
-        <span class="comment">// Fill the quad</span>
-        <span class="ident">canvas</span>.<span class="ident">fill_path</span>(<span class="kw-2">&amp;mut</span> <span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">paint</span>);
+        // Fill the quad
+        </span>canvas.fill_path(<span class="kw-2">&amp;mut </span>path, <span class="kw-2">&amp;</span>paint);
 
-        <span class="comment">//println!(&quot;{:.2?} seconds for whatever you did.&quot;, start.elapsed());</span>
+        <span class="comment">//println!(&quot;{:.2?} seconds for whatever you did.&quot;, start.elapsed());
 
-        <span class="comment">// Draw border</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">paint</span> <span class="op">=</span> <span class="ident">Paint::color</span>(<span class="ident">border_color</span>);
-        <span class="ident">paint</span>.<span class="ident">set_line_width</span>(<span class="ident">border_width</span>);
-        <span class="ident">canvas</span>.<span class="ident">stroke_path</span>(<span class="kw-2">&amp;mut</span> <span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">paint</span>);
+        // Draw border
+        </span><span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::color(border_color);
+        paint.set_line_width(border_width);
+        canvas.stroke_path(<span class="kw-2">&amp;mut </span>path, <span class="kw-2">&amp;</span>paint);
 
-        <span class="comment">// Draw outline</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outline_path</span> <span class="op">=</span> <span class="ident">Path::new</span>();
-        <span class="kw">let</span> <span class="ident">half_outline_width</span> <span class="op">=</span> <span class="ident">outline_width</span> <span class="op">/</span> <span class="number">2.0</span>;
-        <span class="ident">outline_path</span>.<span class="ident">rounded_rect_varying</span>(
-            <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">-</span> <span class="ident">half_outline_width</span> <span class="op">-</span> <span class="ident">outline_offset</span>,
-            <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">-</span> <span class="ident">half_outline_width</span> <span class="op">-</span> <span class="ident">outline_offset</span>,
-            <span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">+</span> <span class="ident">outline_width</span> <span class="op">+</span> <span class="number">2.0</span> <span class="op">*</span> <span class="ident">outline_offset</span>,
-            <span class="ident">bounds</span>.<span class="ident">h</span> <span class="op">+</span> <span class="ident">outline_width</span> <span class="op">+</span> <span class="number">2.0</span> <span class="op">*</span> <span class="ident">outline_offset</span>,
-            <span class="ident">border_radius_top_left</span> <span class="op">*</span> <span class="number">1.5</span>,
-            <span class="ident">border_radius_top_right</span> <span class="op">*</span> <span class="number">1.5</span>,
-            <span class="ident">border_radius_bottom_right</span> <span class="op">*</span> <span class="number">1.5</span>,
-            <span class="ident">border_radius_bottom_left</span> <span class="op">*</span> <span class="number">1.5</span>,
+        <span class="comment">// Draw outline
+        </span><span class="kw">let </span><span class="kw-2">mut </span>outline_path = Path::new();
+        <span class="kw">let </span>half_outline_width = outline_width / <span class="number">2.0</span>;
+        outline_path.rounded_rect_varying(
+            bounds.x - half_outline_width - outline_offset,
+            bounds.y - half_outline_width - outline_offset,
+            bounds.w + outline_width + <span class="number">2.0 </span>* outline_offset,
+            bounds.h + outline_width + <span class="number">2.0 </span>* outline_offset,
+            border_radius_top_left * <span class="number">1.5</span>,
+            border_radius_top_right * <span class="number">1.5</span>,
+            border_radius_bottom_right * <span class="number">1.5</span>,
+            border_radius_bottom_left * <span class="number">1.5</span>,
         );
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outline_paint</span> <span class="op">=</span> <span class="ident">Paint::color</span>(<span class="ident">outline_color</span>);
-        <span class="ident">outline_paint</span>.<span class="ident">set_line_width</span>(<span class="ident">outline_width</span>);
-        <span class="ident">canvas</span>.<span class="ident">stroke_path</span>(<span class="kw-2">&amp;mut</span> <span class="ident">outline_path</span>, <span class="kw-2">&amp;</span><span class="ident">outline_paint</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>outline_paint = Paint::color(outline_color);
+        outline_paint.set_line_width(outline_width);
+        canvas.stroke_path(<span class="kw-2">&amp;mut </span>outline_path, <span class="kw-2">&amp;</span>outline_paint);
 
-        <span class="comment">// // Draw inner shadow</span>
-        <span class="comment">// let mut path = Path::new();</span>
-        <span class="comment">// path.rounded_rect_varying(</span>
-        <span class="comment">//     0.0 + border_width,</span>
-        <span class="comment">//     0.0 + border_width,</span>
-        <span class="comment">//     bounds.w - border_width * 2.0,</span>
-        <span class="comment">//     bounds.h - border_width * 2.0,</span>
-        <span class="comment">//     border_radius_top_left,</span>
-        <span class="comment">//     border_radius_top_right,</span>
-        <span class="comment">//     border_radius_bottom_right,</span>
-        <span class="comment">//     border_radius_bottom_left,</span>
-        <span class="comment">// );</span>
+        <span class="comment">// // Draw inner shadow
+        // let mut path = Path::new();
+        // path.rounded_rect_varying(
+        //     0.0 + border_width,
+        //     0.0 + border_width,
+        //     bounds.w - border_width * 2.0,
+        //     bounds.h - border_width * 2.0,
+        //     border_radius_top_left,
+        //     border_radius_top_right,
+        //     border_radius_bottom_right,
+        //     border_radius_bottom_left,
+        // );
 
-        <span class="comment">// let mut paint = Paint::box_gradient(</span>
-        <span class="comment">//     0.0 + inner_shadow_h_offset + border_width,</span>
-        <span class="comment">//     0.0 + inner_shadow_v_offset + border_width,</span>
-        <span class="comment">//     bounds.w - border_width * 2.0,</span>
-        <span class="comment">//     bounds.h - border_width * 2.0,</span>
-        <span class="comment">//     border_radius_top_left</span>
-        <span class="comment">//         .max(border_radius_top_right)</span>
-        <span class="comment">//         .max(border_radius_bottom_left)</span>
-        <span class="comment">//         .max(border_radius_bottom_right),</span>
-        <span class="comment">//     inner_shadow_blur,</span>
-        <span class="comment">//     femtovg::Color::rgba(0, 0, 0, 0),</span>
-        <span class="comment">//     inner_shadow_color,</span>
-        <span class="comment">// );</span>
-        <span class="comment">// canvas.fill_path(&amp;mut path, paint);</span>
+        // let mut paint = Paint::box_gradient(
+        //     0.0 + inner_shadow_h_offset + border_width,
+        //     0.0 + inner_shadow_v_offset + border_width,
+        //     bounds.w - border_width * 2.0,
+        //     bounds.h - border_width * 2.0,
+        //     border_radius_top_left
+        //         .max(border_radius_top_right)
+        //         .max(border_radius_bottom_left)
+        //         .max(border_radius_bottom_right),
+        //     inner_shadow_blur,
+        //     femtovg::Color::rgba(0, 0, 0, 0),
+        //     inner_shadow_color,
+        // );
+        // canvas.fill_path(&amp;mut path, paint);
 
-        <span class="comment">// Draw text and image</span>
-        <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">text</span>().<span class="ident">is_some</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">cx</span>.<span class="ident">image</span>().<span class="ident">is_some</span>() {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">border_width</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">y</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">border_width</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">w</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">w</span> <span class="op">-</span> <span class="ident">border_width</span> <span class="op">*</span> <span class="number">2.0</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">h</span> <span class="op">=</span> <span class="ident">bounds</span>.<span class="ident">h</span> <span class="op">-</span> <span class="ident">border_width</span> <span class="op">*</span> <span class="number">2.0</span>;
+        // Draw text and image
+        </span><span class="kw">if </span>cx.text().is_some() || cx.image().is_some() {
+            <span class="kw">let </span><span class="kw-2">mut </span>x = bounds.x + border_width;
+            <span class="kw">let </span><span class="kw-2">mut </span>y = bounds.y + border_width;
+            <span class="kw">let </span><span class="kw-2">mut </span>w = bounds.w - border_width * <span class="number">2.0</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>h = bounds.h - border_width * <span class="number">2.0</span>;
 
-            <span class="comment">// TODO - Move this to a text layout system and include constraints</span>
-            <span class="kw">let</span> <span class="ident">child_left</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">child_left</span>().<span class="ident">unwrap_or_default</span>();
-            <span class="kw">let</span> <span class="ident">child_right</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">child_right</span>().<span class="ident">unwrap_or_default</span>();
-            <span class="kw">let</span> <span class="ident">child_top</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">child_top</span>().<span class="ident">unwrap_or_default</span>();
-            <span class="kw">let</span> <span class="ident">child_bottom</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">child_bottom</span>().<span class="ident">unwrap_or_default</span>();
+            <span class="comment">// TODO - Move this to a text layout system and include constraints
+            </span><span class="kw">let </span>child_left = cx.child_left().unwrap_or_default();
+            <span class="kw">let </span>child_right = cx.child_right().unwrap_or_default();
+            <span class="kw">let </span>child_top = cx.child_top().unwrap_or_default();
+            <span class="kw">let </span>child_bottom = cx.child_bottom().unwrap_or_default();
 
-            <span class="comment">// shrink the bounding box based on pixel values</span>
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Units::Pixels</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">child_left</span> {
-                <span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">val</span>;
-                <span class="ident">w</span> <span class="op">-</span><span class="op">=</span> <span class="ident">val</span>;
+            <span class="comment">// shrink the bounding box based on pixel values
+            </span><span class="kw">if let </span>Units::Pixels(val) = child_left {
+                x += val;
+                w -= val;
             }
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Units::Pixels</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">child_right</span> {
-                <span class="ident">w</span> <span class="op">-</span><span class="op">=</span> <span class="ident">val</span>;
+            <span class="kw">if let </span>Units::Pixels(val) = child_right {
+                w -= val;
             }
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Units::Pixels</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">child_top</span> {
-                <span class="ident">y</span> <span class="op">+</span><span class="op">=</span> <span class="ident">val</span>;
-                <span class="ident">h</span> <span class="op">-</span><span class="op">=</span> <span class="ident">val</span>;
+            <span class="kw">if let </span>Units::Pixels(val) = child_top {
+                y += val;
+                h -= val;
             }
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Units::Pixels</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">child_bottom</span> {
-                <span class="ident">h</span> <span class="op">-</span><span class="op">=</span> <span class="ident">val</span>;
+            <span class="kw">if let </span>Units::Pixels(val) = child_bottom {
+                h -= val;
             }
 
-            <span class="comment">// set align/baseline and move the start coordinate to the appropriate place in the box</span>
-            <span class="kw">let</span> <span class="ident">align</span> <span class="op">=</span> <span class="kw">match</span> (<span class="ident">child_left</span>, <span class="ident">child_right</span>) {
-                (<span class="ident">Units::Stretch</span>(<span class="kw">_</span>), <span class="ident">Units::Stretch</span>(<span class="kw">_</span>)) =&gt; {
-                    <span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">w</span> <span class="op">/</span> <span class="number">2.0</span>;
-                    <span class="ident">Align::Center</span>
+            <span class="comment">// set align/baseline and move the start coordinate to the appropriate place in the box
+            </span><span class="kw">let </span>align = <span class="kw">match </span>(child_left, child_right) {
+                (Units::Stretch(<span class="kw">_</span>), Units::Stretch(<span class="kw">_</span>)) =&gt; {
+                    x += w / <span class="number">2.0</span>;
+                    Align::Center
                 }
-                (<span class="ident">Units::Stretch</span>(<span class="kw">_</span>), <span class="kw">_</span>) =&gt; {
-                    <span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">w</span>;
-                    <span class="ident">Align::Right</span>
+                (Units::Stretch(<span class="kw">_</span>), <span class="kw">_</span>) =&gt; {
+                    x += w;
+                    Align::Right
                 }
-                <span class="kw">_</span> =&gt; <span class="ident">Align::Left</span>,
+                <span class="kw">_ </span>=&gt; Align::Left,
             };
-            <span class="kw">let</span> <span class="ident">baseline</span> <span class="op">=</span> <span class="kw">match</span> (<span class="ident">child_top</span>, <span class="ident">child_bottom</span>) {
-                (<span class="ident">Units::Stretch</span>(<span class="kw">_</span>), <span class="ident">Units::Stretch</span>(<span class="kw">_</span>)) =&gt; {
-                    <span class="ident">y</span> <span class="op">+</span><span class="op">=</span> <span class="ident">h</span> <span class="op">/</span> <span class="number">2.0</span>;
-                    <span class="ident">Baseline::Middle</span>
+            <span class="kw">let </span>baseline = <span class="kw">match </span>(child_top, child_bottom) {
+                (Units::Stretch(<span class="kw">_</span>), Units::Stretch(<span class="kw">_</span>)) =&gt; {
+                    y += h / <span class="number">2.0</span>;
+                    Baseline::Middle
                 }
-                (<span class="ident">Units::Stretch</span>(<span class="kw">_</span>), <span class="kw">_</span>) =&gt; {
-                    <span class="ident">y</span> <span class="op">+</span><span class="op">=</span> <span class="ident">h</span>;
-                    <span class="ident">Baseline::Bottom</span>
+                (Units::Stretch(<span class="kw">_</span>), <span class="kw">_</span>) =&gt; {
+                    y += h;
+                    Baseline::Bottom
                 }
-                <span class="kw">_</span> =&gt; <span class="ident">Baseline::Top</span>,
+                <span class="kw">_ </span>=&gt; Baseline::Top,
             };
 
-            <span class="comment">// Draw image</span>
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">image_name</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">image</span>() {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">img</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">resource_manager</span>.<span class="ident">images</span>.<span class="ident">get</span>(<span class="ident">image_name</span>) {
-                    <span class="kw">match</span> <span class="ident">img</span>.<span class="ident">image</span> {
-                        <span class="ident">ImageOrId::Id</span>(<span class="ident">id</span>, <span class="kw">_</span>) =&gt; {
-                            <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">align</span> {
-                                <span class="ident">Align::Left</span> =&gt; <span class="ident">x</span>,
-                                <span class="ident">Align::Center</span> =&gt; <span class="ident">x</span> <span class="op">-</span> <span class="ident">w</span> <span class="op">*</span> <span class="number">0.5</span>,
-                                <span class="ident">Align::Right</span> =&gt; <span class="ident">x</span> <span class="op">-</span> <span class="ident">w</span>,
+            <span class="comment">// Draw image
+            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(image_name) = cx.image() {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(img) = cx.resource_manager.images.get(image_name) {
+                    <span class="kw">match </span>img.image {
+                        ImageOrId::Id(id, <span class="kw">_</span>) =&gt; {
+                            <span class="kw">let </span>x = <span class="kw">match </span>align {
+                                Align::Left =&gt; x,
+                                Align::Center =&gt; x - w * <span class="number">0.5</span>,
+                                Align::Right =&gt; x - w,
                             };
-                            <span class="kw">let</span> <span class="ident">y</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">baseline</span> {
-                                <span class="ident">Baseline::Top</span> =&gt; <span class="ident">y</span>,
-                                <span class="ident">Baseline::Middle</span> =&gt; <span class="ident">y</span> <span class="op">-</span> <span class="ident">h</span> <span class="op">*</span> <span class="number">0.5</span>,
-                                <span class="ident">Baseline::Alphabetic</span> <span class="op">|</span> <span class="ident">Baseline::Bottom</span> =&gt; <span class="ident">y</span> <span class="op">-</span> <span class="ident">h</span>,
+                            <span class="kw">let </span>y = <span class="kw">match </span>baseline {
+                                Baseline::Top =&gt; y,
+                                Baseline::Middle =&gt; y - h * <span class="number">0.5</span>,
+                                Baseline::Alphabetic | Baseline::Bottom =&gt; y - h,
                             };
 
-                            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>();
-                            <span class="ident">path</span>.<span class="ident">rect</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">w</span>, <span class="ident">h</span>);
+                            <span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
+                            path.rect(x, y, w, h);
 
-                            <span class="kw">let</span> <span class="ident">paint</span> <span class="op">=</span> <span class="ident">Paint::image</span>(<span class="ident">id</span>, <span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">w</span>, <span class="ident">h</span>, <span class="number">0.0</span>, <span class="number">1.0</span>);
-                            <span class="ident">canvas</span>.<span class="ident">fill_path</span>(<span class="kw-2">&amp;mut</span> <span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">paint</span>);
+                            <span class="kw">let </span>paint = Paint::image(id, x, y, w, h, <span class="number">0.0</span>, <span class="number">1.0</span>);
+                            canvas.fill_path(<span class="kw-2">&amp;mut </span>path, <span class="kw-2">&amp;</span>paint);
                         }
 
-                        <span class="kw">_</span> =&gt; {}
+                        <span class="kw">_ </span>=&gt; {}
                     }
                 }
             }
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">text</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">text</span>().<span class="ident">cloned</span>() {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">font_color</span>: <span class="ident">femtovg::Color</span> <span class="op">=</span> <span class="ident">font_color</span>.<span class="ident">into</span>();
-                <span class="ident">font_color</span>.<span class="ident">set_alphaf</span>(<span class="ident">font_color</span>.<span class="ident">a</span> <span class="op">*</span> <span class="ident">opacity</span>);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.text().cloned() {
+                <span class="kw">let </span><span class="kw-2">mut </span>font_color: femtovg::Color = font_color.into();
+                font_color.set_alphaf(font_color.a * opacity);
 
-                <span class="kw">let</span> <span class="ident">text_wrap</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">text_wrap</span>().<span class="ident">cloned</span>().<span class="ident">unwrap_or</span>(<span class="bool-val">true</span>);
+                <span class="kw">let </span>text_wrap = cx.text_wrap().cloned().unwrap_or(<span class="bool-val">true</span>);
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">paint</span> <span class="op">=</span> <span class="ident">text_paint_draw</span>(<span class="ident">cx</span>, <span class="ident">cx</span>.<span class="ident">current</span>);
-                <span class="ident">paint</span>.<span class="ident">set_color</span>(<span class="ident">font_color</span>);
-                <span class="ident">paint</span>.<span class="ident">set_text_align</span>(<span class="ident">align</span>);
-                <span class="ident">paint</span>.<span class="ident">set_text_baseline</span>(<span class="ident">baseline</span>);
+                <span class="kw">let </span><span class="kw-2">mut </span>paint = text_paint_draw(cx, cx.current);
+                paint.set_color(font_color);
+                paint.set_text_align(align);
+                paint.set_text_baseline(baseline);
 
-                <span class="kw">let</span> <span class="ident">font_metrics</span> <span class="op">=</span>
-                    <span class="ident">cx</span>.<span class="ident">text_context</span>.<span class="ident">measure_font</span>(<span class="kw-2">&amp;</span><span class="ident">paint</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to read font metrics&quot;</span>);
+                <span class="kw">let </span>font_metrics =
+                    cx.text_context.measure_font(<span class="kw-2">&amp;</span>paint).expect(<span class="string">&quot;Failed to read font metrics&quot;</span>);
 
-                <span class="kw">let</span> <span class="ident">text_width</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">text_wrap</span> { <span class="ident">w</span> } <span class="kw">else</span> { <span class="ident">f32::MAX</span> };
+                <span class="kw">let </span>text_width = <span class="kw">if </span>text_wrap { w } <span class="kw">else </span>{ f32::MAX };
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">lines</span>) <span class="op">=</span> <span class="ident">text_layout</span>(<span class="ident">text_width</span>, <span class="kw-2">&amp;</span><span class="ident">text</span>, <span class="kw-2">&amp;</span><span class="ident">paint</span>, <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">text_context</span>) {
-                    <span class="comment">// difference between first line and last line</span>
-                    <span class="kw">let</span> <span class="ident">delta_height</span> <span class="op">=</span> <span class="ident">font_metrics</span>.<span class="ident">height</span>() <span class="op">*</span> (<span class="ident">lines</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">f32</span>;
-                    <span class="kw">let</span> <span class="ident">first_line_y</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">baseline</span> {
-                        <span class="ident">Baseline::Top</span> =&gt; <span class="ident">y</span>,
-                        <span class="ident">Baseline::Middle</span> =&gt; <span class="ident">y</span> <span class="op">-</span> <span class="ident">delta_height</span> <span class="op">/</span> <span class="number">2.0</span>,
-                        <span class="ident">Baseline::Alphabetic</span> <span class="op">|</span> <span class="ident">Baseline::Bottom</span> =&gt; <span class="ident">y</span> <span class="op">-</span> <span class="ident">delta_height</span>,
+                <span class="kw">if let </span><span class="prelude-val">Ok</span>(lines) = text_layout(text_width, <span class="kw-2">&amp;</span>text, <span class="kw-2">&amp;</span>paint, <span class="kw-2">&amp;</span>cx.text_context) {
+                    <span class="comment">// difference between first line and last line
+                    </span><span class="kw">let </span>delta_height = font_metrics.height() * (lines.len() - <span class="number">1</span>) <span class="kw">as </span>f32;
+                    <span class="kw">let </span>first_line_y = <span class="kw">match </span>baseline {
+                        Baseline::Top =&gt; y,
+                        Baseline::Middle =&gt; y - delta_height / <span class="number">2.0</span>,
+                        Baseline::Alphabetic | Baseline::Bottom =&gt; y - delta_height,
                     };
-                    <span class="kw">let</span> <span class="ident">metrics</span> <span class="op">=</span> <span class="ident">measure_text_lines</span>(
-                        <span class="kw-2">&amp;</span><span class="ident">text</span>,
-                        <span class="kw-2">&amp;</span><span class="ident">paint</span>,
-                        <span class="kw-2">&amp;</span><span class="ident">lines</span>,
-                        <span class="ident">x</span>,
-                        <span class="ident">first_line_y</span>,
-                        <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">text_context</span>,
+                    <span class="kw">let </span>metrics = measure_text_lines(
+                        <span class="kw-2">&amp;</span>text,
+                        <span class="kw-2">&amp;</span>paint,
+                        <span class="kw-2">&amp;</span>lines,
+                        x,
+                        first_line_y,
+                        <span class="kw-2">&amp;</span>cx.text_context,
                     );
-                    <span class="kw">let</span> <span class="ident">cached</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">std::ops::Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">TextMetrics</span>)<span class="op">&gt;</span> <span class="op">=</span>
-                        <span class="ident">lines</span>.<span class="ident">into_iter</span>().<span class="ident">zip</span>(<span class="ident">metrics</span>.<span class="ident">into_iter</span>()).<span class="ident">collect</span>();
-                    <span class="kw">let</span> <span class="ident">selection</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">text_selection</span>();
-                    <span class="kw">let</span> (<span class="ident">anchor</span>, <span class="ident">active</span>) <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">cursor</span>) <span class="op">=</span> <span class="ident">selection</span> {
+                    <span class="kw">let </span>cached: Vec&lt;(std::ops::Range&lt;usize&gt;, TextMetrics)&gt; =
+                        lines.into_iter().zip(metrics.into_iter()).collect();
+                    <span class="kw">let </span>selection = cx.text_selection();
+                    <span class="kw">let </span>(anchor, active) = <span class="kw">if let </span><span class="prelude-val">Some</span>(cursor) = selection {
                         (
-                            <span class="ident">idx_to_pos</span>(<span class="ident">cursor</span>.<span class="ident">anchor</span>, <span class="ident">cached</span>.<span class="ident">iter</span>()),
-                            <span class="ident">idx_to_pos</span>(<span class="ident">cursor</span>.<span class="ident">active</span>, <span class="ident">cached</span>.<span class="ident">iter</span>()),
+                            idx_to_pos(cursor.anchor, cached.iter()),
+                            idx_to_pos(cursor.active, cached.iter()),
                         )
-                    } <span class="kw">else</span> {
-                        ((<span class="ident">usize::MAX</span>, (<span class="ident">f32::MAX</span>, <span class="ident">f32::MAX</span>)), (<span class="ident">usize::MAX</span>, (<span class="ident">f32::MAX</span>, <span class="ident">f32::MAX</span>)))
+                    } <span class="kw">else </span>{
+                        ((usize::MAX, (f32::MAX, f32::MAX)), (usize::MAX, (f32::MAX, f32::MAX)))
                     };
-                    <span class="kw">let</span> (<span class="ident">first</span>, <span class="ident">last</span>) <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">cursor</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">selection</span> {
-                        <span class="kw">if</span> <span class="ident">cursor</span>.<span class="ident">anchor</span> <span class="op">&lt;</span> <span class="ident">cursor</span>.<span class="ident">active</span> {
-                            (<span class="ident">anchor</span>, <span class="ident">active</span>)
-                        } <span class="kw">else</span> {
-                            (<span class="ident">active</span>, <span class="ident">anchor</span>)
+                    <span class="kw">let </span>(first, last) = <span class="kw">if let </span><span class="prelude-val">Some</span>(cursor) = <span class="kw-2">&amp;</span>selection {
+                        <span class="kw">if </span>cursor.anchor &lt; cursor.active {
+                            (anchor, active)
+                        } <span class="kw">else </span>{
+                            (active, anchor)
                         }
-                    } <span class="kw">else</span> {
-                        (<span class="ident">anchor</span>, <span class="ident">active</span>)
+                    } <span class="kw">else </span>{
+                        (anchor, active)
                     };
-                    <span class="kw">let</span> <span class="ident">selection_color</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">selection_color</span>();
-                    <span class="kw">let</span> <span class="ident">cursor_color</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">caret_color</span>();
-                    <span class="kw">for</span> (<span class="ident">line</span>, (<span class="ident">range</span>, <span class="ident">metrics</span>)) <span class="kw">in</span> <span class="ident">cached</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                        <span class="kw">let</span> <span class="ident">y</span> <span class="op">=</span> <span class="ident">first_line_y</span> <span class="op">+</span> <span class="ident">line</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">*</span> <span class="ident">font_metrics</span>.<span class="ident">height</span>();
-                        <span class="kw">let</span> <span class="ident">min_y</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">baseline</span> {
-                            <span class="ident">Baseline::Top</span> =&gt; <span class="ident">y</span>,
-                            <span class="ident">Baseline::Middle</span> =&gt; <span class="ident">y</span> <span class="op">-</span> <span class="ident">font_metrics</span>.<span class="ident">height</span>() <span class="op">/</span> <span class="number">2.0</span>,
-                            <span class="ident">Baseline::Alphabetic</span> <span class="op">|</span> <span class="ident">Baseline::Bottom</span> =&gt; <span class="ident">y</span> <span class="op">-</span> <span class="ident">font_metrics</span>.<span class="ident">height</span>(),
+                    <span class="kw">let </span>selection_color = cx.selection_color();
+                    <span class="kw">let </span>cursor_color = cx.caret_color();
+                    <span class="kw">for </span>(line, (range, metrics)) <span class="kw">in </span>cached.iter().enumerate() {
+                        <span class="kw">let </span>y = first_line_y + line <span class="kw">as </span>f32 * font_metrics.height();
+                        <span class="kw">let </span>min_y = <span class="kw">match </span>baseline {
+                            Baseline::Top =&gt; y,
+                            Baseline::Middle =&gt; y - font_metrics.height() / <span class="number">2.0</span>,
+                            Baseline::Alphabetic | Baseline::Bottom =&gt; y - font_metrics.height(),
                         };
-                        <span class="comment">// should we draw part of the selection?</span>
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">color</span>) <span class="op">=</span> <span class="ident">selection_color</span> {
-                            <span class="kw">if</span> <span class="ident">line</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">first</span>.<span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">line</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">last</span>.<span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">first</span> <span class="op">!</span><span class="op">=</span> <span class="ident">last</span> {
-                                <span class="kw">let</span> <span class="ident">first_x</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">line</span> <span class="op">==</span> <span class="ident">first</span>.<span class="number">0</span> {
-                                    <span class="ident">first</span>.<span class="number">1</span> .<span class="number">0</span>
-                                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">glyph</span>) <span class="op">=</span> <span class="ident">metrics</span>.<span class="ident">glyphs</span>.<span class="ident">first</span>() {
-                                    <span class="ident">glyph</span>.<span class="ident">x</span>
-                                } <span class="kw">else</span> {
-                                    <span class="ident">x</span>
+                        <span class="comment">// should we draw part of the selection?
+                        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(color) = selection_color {
+                            <span class="kw">if </span>line &gt;= first.<span class="number">0 </span>&amp;&amp; line &lt;= last.<span class="number">0 </span>&amp;&amp; first != last {
+                                <span class="kw">let </span>first_x = <span class="kw">if </span>line == first.<span class="number">0 </span>{
+                                    first.<span class="number">1 </span>.<span class="number">0
+                                </span>} <span class="kw">else if let </span><span class="prelude-val">Some</span>(glyph) = metrics.glyphs.first() {
+                                    glyph.x
+                                } <span class="kw">else </span>{
+                                    x
                                 };
-                                <span class="kw">let</span> <span class="ident">last_x</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">line</span> <span class="op">==</span> <span class="ident">last</span>.<span class="number">0</span> {
-                                    <span class="ident">last</span>.<span class="number">1</span> .<span class="number">0</span>
-                                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">glyph</span>) <span class="op">=</span> <span class="ident">metrics</span>.<span class="ident">glyphs</span>.<span class="ident">last</span>() {
-                                    <span class="ident">glyph</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">glyph</span>.<span class="ident">advance_x</span>
-                                } <span class="kw">else</span> {
-                                    <span class="ident">x</span> <span class="op">+</span> <span class="number">10.0</span>
-                                };
-                                <span class="kw">let</span> <span class="ident">min_x</span> <span class="op">=</span> <span class="ident">first_x</span>.<span class="ident">min</span>(<span class="ident">last_x</span>).<span class="ident">round</span>();
-                                <span class="kw">let</span> <span class="ident">max_x</span> <span class="op">=</span> <span class="ident">first_x</span>.<span class="ident">max</span>(<span class="ident">last_x</span>).<span class="ident">round</span>();
-                                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>();
-                                <span class="ident">path</span>.<span class="ident">rect</span>(<span class="ident">min_x</span>, <span class="ident">min_y</span>, <span class="ident">max_x</span> <span class="op">-</span> <span class="ident">min_x</span>, <span class="ident">font_metrics</span>.<span class="ident">height</span>());
-                                <span class="ident">canvas</span>.<span class="ident">fill_path</span>(<span class="kw-2">&amp;mut</span> <span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">Paint::color</span>(<span class="ident">color</span>.<span class="ident">clone</span>().<span class="ident">into</span>()));
+                                <span class="kw">let </span>last_x = <span class="kw">if </span>line == last.<span class="number">0 </span>{
+                                    last.<span class="number">1 </span>.<span class="number">0
+                                </span>} <span class="kw">else if let </span><span class="prelude-val">Some</span>(glyph) = metrics.glyphs.last() {
+                                    glyph.x + glyph.advance_x
+                                } <span class="kw">else </span>{
+                                    x + <span class="number">10.0
+                                </span>};
+                                <span class="kw">let </span>min_x = first_x.min(last_x).round();
+                                <span class="kw">let </span>max_x = first_x.max(last_x).round();
+                                <span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
+                                path.rect(min_x, min_y, max_x - min_x, font_metrics.height());
+                                canvas.fill_path(<span class="kw-2">&amp;mut </span>path, <span class="kw-2">&amp;</span>Paint::color(color.clone().into()));
                             }
                         }
-                        <span class="comment">// should we draw the cursor?</span>
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">color</span>) <span class="op">=</span> <span class="ident">cursor_color</span> {
-                            <span class="kw">if</span> <span class="ident">line</span> <span class="op">==</span> <span class="ident">active</span>.<span class="number">0</span> {
-                                <span class="kw">let</span> (<span class="ident">x</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">active</span>.<span class="number">1</span>;
-                                <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">x</span>.<span class="ident">round</span>();
-                                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>();
-                                <span class="ident">path</span>.<span class="ident">rect</span>(
-                                    <span class="ident">x</span>,
-                                    <span class="ident">min_y</span>,
-                                    <span class="ident">cx</span>.<span class="ident">logical_to_physical</span>(<span class="number">1.0</span>),
-                                    <span class="ident">font_metrics</span>.<span class="ident">height</span>(),
+                        <span class="comment">// should we draw the cursor?
+                        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(color) = cursor_color {
+                            <span class="kw">if </span>line == active.<span class="number">0 </span>{
+                                <span class="kw">let </span>(x, <span class="kw">_</span>) = active.<span class="number">1</span>;
+                                <span class="kw">let </span>x = x.round();
+                                <span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
+                                path.rect(
+                                    x,
+                                    min_y,
+                                    cx.logical_to_physical(<span class="number">1.0</span>),
+                                    font_metrics.height(),
                                 );
-                                <span class="ident">canvas</span>.<span class="ident">fill_path</span>(<span class="kw-2">&amp;mut</span> <span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">Paint::color</span>(<span class="ident">color</span>.<span class="ident">clone</span>().<span class="ident">into</span>()));
+                                canvas.fill_path(<span class="kw-2">&amp;mut </span>path, <span class="kw-2">&amp;</span>Paint::color(color.clone().into()));
                             }
                         }
-                        <span class="ident">canvas</span>.<span class="ident">fill_text</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="kw-2">&amp;</span><span class="ident">text</span>[<span class="ident">range</span>.<span class="ident">clone</span>()], <span class="kw-2">&amp;</span><span class="ident">paint</span>).<span class="ident">ok</span>();
+                        canvas.fill_text(x, y, <span class="kw-2">&amp;</span>text[range.clone()], <span class="kw-2">&amp;</span>paint).ok();
                     }
 
-                    <span class="ident">cx</span>.<span class="ident">draw_cache</span>.<span class="ident">text_lines</span>.<span class="ident">insert</span>(<span class="ident">cx</span>.<span class="ident">current</span>, <span class="ident">cached</span>).<span class="ident">unwrap</span>();
+                    cx.draw_cache.text_lines.insert(cx.current, cached).unwrap();
                 }
             }
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">View</span><span class="op">&gt;</span> <span class="ident">ViewHandler</span> <span class="kw">for</span> <span class="ident">T</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std::marker::Sized</span> <span class="op">+</span> <span class="ident">View</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+<span class="kw">impl</span>&lt;T: View&gt; ViewHandler <span class="kw">for </span>T
+<span class="kw">where
+    </span>T: std::marker::Sized + View + <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-        <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">View</span><span class="op">&gt;</span><span class="ident">::element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>)
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+        &lt;T <span class="kw">as </span>View&gt;::element(<span class="kw-2">&amp;</span><span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
-        <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">View</span><span class="op">&gt;</span><span class="ident">::event</span>(<span class="self">self</span>, <span class="ident">cx</span>, <span class="ident">event</span>);
+    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
+        &lt;T <span class="kw">as </span>View&gt;::event(<span class="self">self</span>, cx, event);
     }
 
-    <span class="kw">fn</span> <span class="ident">draw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">DrawContext</span>, <span class="ident">canvas</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Canvas</span>) {
-        <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">View</span><span class="op">&gt;</span><span class="ident">::draw</span>(<span class="self">self</span>, <span class="ident">cx</span>, <span class="ident">canvas</span>);
+    <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
+        &lt;T <span class="kw">as </span>View&gt;::draw(<span class="self">self</span>, cx, canvas);
     }
 
-    <span class="kw">fn</span> <span class="ident">as_any_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Any</span> {
-        <span class="self">self</span>
-    }
+    <span class="kw">fn </span>as_any_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Any {
+        <span class="self">self
+    </span>}
 
-    <span class="kw">fn</span> <span class="ident">as_any_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Any</span> {
-        <span class="self">self</span>
-    }
+    <span class="kw">fn </span>as_any_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Any {
+        <span class="self">self
+    </span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

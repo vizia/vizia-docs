@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/layout/cache.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>cache.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/layout/cache.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>cache.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -238,245 +238,245 @@
 <span id="238">238</span>
 <span id="239">239</span>
 <span id="240">240</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::cache::CachedData</span>;
-<span class="kw">use</span> <span class="ident">morphorm</span>::{<span class="ident">Cache</span>, <span class="ident">GeometryChanged</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::cache::CachedData;
+<span class="kw">use </span>morphorm::{Cache, GeometryChanged};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">impl</span> <span class="ident">Cache</span> <span class="kw">for</span> <span class="ident">CachedData</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Entity</span>;
+<span class="kw">impl </span>Cache <span class="kw">for </span>CachedData {
+    <span class="kw">type </span>Item = Entity;
 
-    <span class="kw">fn</span> <span class="ident">visible</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">get</span>(<span class="ident">node</span>).<span class="ident">cloned</span>().<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">display</span><span class="op">|</span> <span class="ident">display</span> <span class="op">==</span> <span class="ident">Display::Flex</span>)
+    <span class="kw">fn </span>visible(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; bool {
+        <span class="self">self</span>.display.get(node).cloned().map_or(<span class="bool-val">true</span>, |display| display == Display::Flex)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_visible</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">bool</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">visibility</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">visibility</span>.<span class="ident">get_mut</span>(<span class="ident">node</span>) {
-            <span class="kw-2">*</span><span class="ident">visibility</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">value</span> { <span class="ident">Visibility::Visible</span> } <span class="kw">else</span> { <span class="ident">Visibility::Invisible</span> }
+    <span class="kw">fn </span>set_visible(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: bool) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(visibility) = <span class="self">self</span>.visibility.get_mut(node) {
+            <span class="kw-2">*</span>visibility = <span class="kw">if </span>value { Visibility::Visible } <span class="kw">else </span>{ Visibility::Invisible }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">geometry_changed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">GeometryChanged</span> {
-        <span class="self">self</span>.<span class="ident">geometry_changed</span>.<span class="ident">get</span>(<span class="ident">node</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>()
+    <span class="kw">fn </span>geometry_changed(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; GeometryChanged {
+        <span class="self">self</span>.geometry_changed.get(node).cloned().unwrap_or_default()
     }
 
-    <span class="kw">fn</span> <span class="ident">set_geo_changed</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">flag</span>: <span class="ident">GeometryChanged</span>, <span class="ident">value</span>: <span class="ident">bool</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">geometry_changed</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">geometry_changed</span>.<span class="ident">get_mut</span>(<span class="ident">node</span>) {
-            <span class="ident">geometry_changed</span>.<span class="ident">set</span>(<span class="ident">flag</span>, <span class="ident">value</span>);
+    <span class="kw">fn </span>set_geo_changed(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, flag: GeometryChanged, value: bool) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(geometry_changed) = <span class="self">self</span>.geometry_changed.get_mut(node) {
+            geometry_changed.set(flag, value);
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">new_width</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">get</span>(<span class="ident">node</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">width</span>
+    <span class="kw">fn </span>new_width(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.size.get(node).cloned().unwrap_or_default().width
     }
 
-    <span class="kw">fn</span> <span class="ident">new_height</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">get</span>(<span class="ident">node</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">height</span>
+    <span class="kw">fn </span>new_height(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.size.get(node).cloned().unwrap_or_default().height
     }
 
-    <span class="kw">fn</span> <span class="ident">set_new_width</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">size</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">get_mut</span>(<span class="ident">node</span>) {
-            <span class="ident">size</span>.<span class="ident">width</span> <span class="op">=</span> <span class="ident">value</span>;
+    <span class="kw">fn </span>set_new_width(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(size) = <span class="self">self</span>.size.get_mut(node) {
+            size.width = value;
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">set_new_height</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">size</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">size</span>.<span class="ident">get_mut</span>(<span class="ident">node</span>) {
-            <span class="ident">size</span>.<span class="ident">height</span> <span class="op">=</span> <span class="ident">value</span>;
+    <span class="kw">fn </span>set_new_height(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(size) = <span class="self">self</span>.size.get_mut(node) {
+            size.height = value;
         }
     }
 
-    <span class="comment">// Width</span>
-    <span class="kw">fn</span> <span class="ident">width</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">get_width</span>(<span class="ident">node</span>)
+    <span class="comment">// Width
+    </span><span class="kw">fn </span>width(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.get_width(node)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_width</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_width</span>(<span class="ident">node</span>, <span class="ident">value</span>);
+    <span class="kw">fn </span>set_width(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_width(node, value);
     }
 
-    <span class="comment">// Height</span>
-    <span class="kw">fn</span> <span class="ident">height</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">get_height</span>(<span class="ident">node</span>)
+    <span class="comment">// Height
+    </span><span class="kw">fn </span>height(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.get_height(node)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_height</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_height</span>(<span class="ident">node</span>, <span class="ident">value</span>);
+    <span class="kw">fn </span>set_height(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_height(node, value);
     }
 
-    <span class="comment">// Posx</span>
-    <span class="kw">fn</span> <span class="ident">posx</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">get_posx</span>(<span class="ident">node</span>)
+    <span class="comment">// Posx
+    </span><span class="kw">fn </span>posx(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.get_posx(node)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_posx</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_posx</span>(<span class="ident">node</span>, <span class="ident">value</span>)
+    <span class="kw">fn </span>set_posx(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_posx(node, value)
     }
 
-    <span class="comment">// Posy</span>
-    <span class="kw">fn</span> <span class="ident">posy</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">get_posy</span>(<span class="ident">node</span>)
+    <span class="comment">// Posy
+    </span><span class="kw">fn </span>posy(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.get_posy(node)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_posy</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_posy</span>(<span class="ident">node</span>, <span class="ident">value</span>)
+    <span class="kw">fn </span>set_posy(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_posy(node, value)
     }
 
-    <span class="comment">// Left</span>
-    <span class="kw">fn</span> <span class="ident">left</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="comment">//self.get_space_left(node)</span>
-        <span class="self">self</span>.<span class="ident">space</span>.<span class="ident">get</span>(<span class="ident">node</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">left</span>
+    <span class="comment">// Left
+    </span><span class="kw">fn </span>left(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="comment">//self.get_space_left(node)
+        </span><span class="self">self</span>.space.get(node).cloned().unwrap_or_default().left
     }
 
-    <span class="kw">fn</span> <span class="ident">set_left</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">space</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">space</span>.<span class="ident">get_mut</span>(<span class="ident">node</span>) {
-            <span class="ident">space</span>.<span class="ident">left</span> <span class="op">=</span> <span class="ident">value</span>;
+    <span class="kw">fn </span>set_left(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(space) = <span class="self">self</span>.space.get_mut(node) {
+            space.left = value;
         }
     }
 
-    <span class="comment">// Right</span>
-    <span class="kw">fn</span> <span class="ident">right</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="comment">//self.get_space_right(node)</span>
-        <span class="self">self</span>.<span class="ident">space</span>.<span class="ident">get</span>(<span class="ident">node</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">right</span>
+    <span class="comment">// Right
+    </span><span class="kw">fn </span>right(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="comment">//self.get_space_right(node)
+        </span><span class="self">self</span>.space.get(node).cloned().unwrap_or_default().right
     }
 
-    <span class="kw">fn</span> <span class="ident">set_right</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_space_right</span>(<span class="ident">node</span>, <span class="ident">value</span>);
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">space</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">space</span>.<span class="ident">get_mut</span>(<span class="ident">node</span>) {
-            <span class="ident">space</span>.<span class="ident">right</span> <span class="op">=</span> <span class="ident">value</span>;
+    <span class="kw">fn </span>set_right(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_space_right(node, value);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(space) = <span class="self">self</span>.space.get_mut(node) {
+            space.right = value;
         }
     }
 
-    <span class="comment">// Top</span>
+    <span class="comment">// Top
 
-    <span class="kw">fn</span> <span class="ident">top</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="comment">//self.get_space_top(node)</span>
-        <span class="self">self</span>.<span class="ident">space</span>.<span class="ident">get</span>(<span class="ident">node</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">top</span>
+    </span><span class="kw">fn </span>top(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="comment">//self.get_space_top(node)
+        </span><span class="self">self</span>.space.get(node).cloned().unwrap_or_default().top
     }
 
-    <span class="kw">fn</span> <span class="ident">set_top</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="comment">//self.set_space_top(node, value)</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">space</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">space</span>.<span class="ident">get_mut</span>(<span class="ident">node</span>) {
-            <span class="ident">space</span>.<span class="ident">top</span> <span class="op">=</span> <span class="ident">value</span>;
+    <span class="kw">fn </span>set_top(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="comment">//self.set_space_top(node, value)
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(space) = <span class="self">self</span>.space.get_mut(node) {
+            space.top = value;
         }
     }
 
-    <span class="comment">// Bottom</span>
+    <span class="comment">// Bottom
 
-    <span class="kw">fn</span> <span class="ident">bottom</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="comment">//self.get_space_bottom(node)</span>
-        <span class="self">self</span>.<span class="ident">space</span>.<span class="ident">get</span>(<span class="ident">node</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">bottom</span>
+    </span><span class="kw">fn </span>bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="comment">//self.get_space_bottom(node)
+        </span><span class="self">self</span>.space.get(node).cloned().unwrap_or_default().bottom
     }
 
-    <span class="kw">fn</span> <span class="ident">set_bottom</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="comment">//self.set_space_bottom(node, value)</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">space</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">space</span>.<span class="ident">get_mut</span>(<span class="ident">node</span>) {
-            <span class="ident">space</span>.<span class="ident">bottom</span> <span class="op">=</span> <span class="ident">value</span>;
+    <span class="kw">fn </span>set_bottom(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="comment">//self.set_space_bottom(node, value)
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(space) = <span class="self">self</span>.space.get_mut(node) {
+            space.bottom = value;
         }
     }
 
-    <span class="comment">// Child Width Max</span>
+    <span class="comment">// Child Width Max
 
-    <span class="kw">fn</span> <span class="ident">child_width_max</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">get_child_width_max</span>(<span class="ident">node</span>)
+    </span><span class="kw">fn </span>child_width_max(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.get_child_width_max(node)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_child_width_max</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_child_width_max</span>(<span class="ident">node</span>, <span class="ident">value</span>)
+    <span class="kw">fn </span>set_child_width_max(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_child_width_max(node, value)
     }
 
-    <span class="comment">// Child Width Sum</span>
-    <span class="kw">fn</span> <span class="ident">child_width_sum</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">get_child_width_sum</span>(<span class="ident">node</span>)
+    <span class="comment">// Child Width Sum
+    </span><span class="kw">fn </span>child_width_sum(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.get_child_width_sum(node)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_child_width_sum</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_child_width_sum</span>(<span class="ident">node</span>, <span class="ident">value</span>)
+    <span class="kw">fn </span>set_child_width_sum(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_child_width_sum(node, value)
     }
 
-    <span class="comment">// Child Height Max</span>
-    <span class="kw">fn</span> <span class="ident">child_height_max</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">get_child_height_max</span>(<span class="ident">node</span>)
+    <span class="comment">// Child Height Max
+    </span><span class="kw">fn </span>child_height_max(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.get_child_height_max(node)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_child_height_max</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_child_height_max</span>(<span class="ident">node</span>, <span class="ident">value</span>);
+    <span class="kw">fn </span>set_child_height_max(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_child_height_max(node, value);
     }
 
-    <span class="comment">// Child Height Sum</span>
-    <span class="kw">fn</span> <span class="ident">child_height_sum</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">get_child_height_sum</span>(<span class="ident">node</span>)
+    <span class="comment">// Child Height Sum
+    </span><span class="kw">fn </span>child_height_sum(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.get_child_height_sum(node)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_child_height_sum</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_child_height_sum</span>(<span class="ident">node</span>, <span class="ident">value</span>)
+    <span class="kw">fn </span>set_child_height_sum(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_child_height_sum(node, value)
     }
 
-    <span class="comment">//</span>
+    <span class="comment">//
 
-    <span class="kw">fn</span> <span class="ident">stack_first_child</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">get_stack_child</span>(<span class="ident">node</span>).<span class="number">0</span>
+    </span><span class="kw">fn </span>stack_first_child(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; bool {
+        <span class="self">self</span>.get_stack_child(node).<span class="number">0
+    </span>}
+
+    <span class="kw">fn </span>stack_last_child(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; bool {
+        <span class="self">self</span>.get_stack_child(node).<span class="number">1
+    </span>}
+
+    <span class="kw">fn </span>set_stack_first_child(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: bool) {
+        <span class="self">self</span>.set_stack_first_child(node, value)
     }
 
-    <span class="kw">fn</span> <span class="ident">stack_last_child</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">get_stack_child</span>(<span class="ident">node</span>).<span class="number">1</span>
+    <span class="kw">fn </span>set_stack_last_child(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: bool) {
+        <span class="self">self</span>.set_stack_last_child(node, value)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_stack_first_child</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">bool</span>) {
-        <span class="self">self</span>.<span class="ident">set_stack_first_child</span>(<span class="ident">node</span>, <span class="ident">value</span>)
+    <span class="kw">fn </span>horizontal_free_space(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.get_horizontal_free_space(node)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_stack_last_child</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">bool</span>) {
-        <span class="self">self</span>.<span class="ident">set_stack_last_child</span>(<span class="ident">node</span>, <span class="ident">value</span>)
+    <span class="kw">fn </span>set_horizontal_free_space(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_horizontal_free_space(node, value);
     }
 
-    <span class="kw">fn</span> <span class="ident">horizontal_free_space</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">get_horizontal_free_space</span>(<span class="ident">node</span>)
+    <span class="kw">fn </span>vertical_free_space(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.get_vertical_free_space(node)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_horizontal_free_space</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_horizontal_free_space</span>(<span class="ident">node</span>, <span class="ident">value</span>);
+    <span class="kw">fn </span>set_vertical_free_space(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_vertical_free_space(node, value);
     }
 
-    <span class="kw">fn</span> <span class="ident">vertical_free_space</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">get_vertical_free_space</span>(<span class="ident">node</span>)
+    <span class="kw">fn </span>horizontal_stretch_sum(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.get_horizontal_stretch_sum(node)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_vertical_free_space</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_vertical_free_space</span>(<span class="ident">node</span>, <span class="ident">value</span>);
+    <span class="kw">fn </span>set_horizontal_stretch_sum(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_horizontal_stretch_sum(node, value);
     }
 
-    <span class="kw">fn</span> <span class="ident">horizontal_stretch_sum</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">get_horizontal_stretch_sum</span>(<span class="ident">node</span>)
+    <span class="kw">fn </span>vertical_stretch_sum(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.get_vertical_stretch_sum(node)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_horizontal_stretch_sum</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_horizontal_stretch_sum</span>(<span class="ident">node</span>, <span class="ident">value</span>);
+    <span class="kw">fn </span>set_vertical_stretch_sum(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_vertical_stretch_sum(node, value);
     }
 
-    <span class="kw">fn</span> <span class="ident">vertical_stretch_sum</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">get_vertical_stretch_sum</span>(<span class="ident">node</span>)
+    <span class="kw">fn </span>grid_row_max(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.get_grid_row_max(node)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_vertical_stretch_sum</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_vertical_stretch_sum</span>(<span class="ident">node</span>, <span class="ident">value</span>);
+    <span class="kw">fn </span>set_grid_row_max(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_grid_row_max(node, value);
     }
 
-    <span class="kw">fn</span> <span class="ident">grid_row_max</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">get_grid_row_max</span>(<span class="ident">node</span>)
+    <span class="kw">fn </span>grid_col_max(<span class="kw-2">&amp;</span><span class="self">self</span>, node: <span class="self">Self</span>::Item) -&gt; f32 {
+        <span class="self">self</span>.get_grid_col_max(node)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_grid_row_max</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_grid_row_max</span>(<span class="ident">node</span>, <span class="ident">value</span>);
-    }
-
-    <span class="kw">fn</span> <span class="ident">grid_col_max</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>) -&gt; <span class="ident">f32</span> {
-        <span class="self">self</span>.<span class="ident">get_grid_col_max</span>(<span class="ident">node</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">set_grid_col_max</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident"><span class="self">Self</span>::Item</span>, <span class="ident">value</span>: <span class="ident">f32</span>) {
-        <span class="self">self</span>.<span class="ident">set_grid_col_max</span>(<span class="ident">node</span>, <span class="ident">value</span>);
+    <span class="kw">fn </span>set_grid_col_max(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="self">Self</span>::Item, value: f32) {
+        <span class="self">self</span>.set_grid_col_max(node, value);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

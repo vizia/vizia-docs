@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/backend.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>backend.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/backend.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>backend.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -310,317 +310,317 @@
 <span id="310">310</span>
 <span id="311">311</span>
 <span id="312">312</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::any::Any</span>;
-<span class="kw">use</span> <span class="ident">std::collections::HashSet</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::any::Any;
+<span class="kw">use </span>std::collections::HashSet;
 
-<span class="kw">use</span> <span class="ident">femtovg</span>::{<span class="ident">renderer::OpenGl</span>, <span class="ident">Canvas</span>, <span class="ident">TextContext</span>};
-<span class="kw">use</span> <span class="ident">fnv::FnvHashMap</span>;
+<span class="kw">use </span>femtovg::{renderer::OpenGl, Canvas, TextContext};
+<span class="kw">use </span>fnv::FnvHashMap;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::EventProxy</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">cache</span>::{<span class="ident">BoundingBox</span>, <span class="ident">CachedData</span>},
-    <span class="ident">environment::Environment</span>,
-    <span class="ident">events::ViewHandler</span>,
-    <span class="ident">fonts</span>,
-    <span class="ident">layout::geometry_changed</span>,
-    <span class="ident">prelude</span>::<span class="kw-2">*</span>,
-    <span class="ident">resource::FontOrId</span>,
-    <span class="ident">state::ModelOrView</span>,
-    <span class="ident">style::Style</span>,
-    <span class="ident">systems</span>::<span class="kw-2">*</span>,
+<span class="kw">use </span><span class="kw">super</span>::EventProxy;
+<span class="kw">use crate</span>::{
+    cache::{BoundingBox, CachedData},
+    environment::Environment,
+    events::ViewHandler,
+    fonts,
+    layout::geometry_changed,
+    prelude::<span class="kw-2">*</span>,
+    resource::FontOrId,
+    state::ModelOrView,
+    style::Style,
+    systems::<span class="kw-2">*</span>,
 };
-<span class="kw">use</span> <span class="ident">vizia_id::GenerationalId</span>;
+<span class="kw">use </span>vizia_id::GenerationalId;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::systems::animation::has_animations</span>;
+<span class="kw">pub use </span><span class="kw">crate</span>::systems::animation::has_animations;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;clipboard&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">copypasta::ClipboardProvider</span>;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+</span><span class="kw">use </span>copypasta::ClipboardProvider;
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BackendContext</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw">pub</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Context</span>);
+<span class="kw">pub struct </span>BackendContext&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw">pub </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">BackendContext</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Context</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">cx</span>)
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; BackendContext&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(cx)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">views</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">FnvHashMap</span><span class="op">&lt;</span><span class="ident">Entity</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">ViewHandler</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">views</span>
+    <span class="kw">pub fn </span>views(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt; {
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.views
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">style</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Style</span> {
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">style</span>
+    <span class="kw">pub fn </span>style(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Style {
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.style
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cache</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">CachedData</span> {
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">cache</span>
+    <span class="kw">pub fn </span>cache(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>CachedData {
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.cache
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">modifiers</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Modifiers</span> {
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">modifiers</span>
+    <span class="kw">pub fn </span>modifiers(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Modifiers {
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.modifiers
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_main_window</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">window_description</span>: <span class="kw-2">&amp;</span><span class="ident">WindowDescription</span>,
-        <span class="kw-2">mut</span> <span class="ident">canvas</span>: <span class="ident">Canvas</span><span class="op">&lt;</span><span class="ident">OpenGl</span><span class="op">&gt;</span>,
-        <span class="ident">scale_factor</span>: <span class="ident">f32</span>,
+    <span class="kw">pub fn </span>add_main_window(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        window_description: <span class="kw-2">&amp;</span>WindowDescription,
+        <span class="kw-2">mut </span>canvas: Canvas&lt;OpenGl&gt;,
+        scale_factor: f32,
     ) {
-        <span class="comment">// Add default fonts</span>
-        <span class="kw">let</span> <span class="ident">regular_font</span> <span class="op">=</span> <span class="ident">fonts::ROBOTO_REGULAR</span>;
-        <span class="kw">let</span> <span class="ident">bold_font</span> <span class="op">=</span> <span class="ident">fonts::ROBOTO_BOLD</span>;
-        <span class="kw">let</span> <span class="ident">icon_font</span> <span class="op">=</span> <span class="ident">fonts::ENTYPO</span>;
-        <span class="kw">let</span> <span class="ident">emoji_font</span> <span class="op">=</span> <span class="ident">fonts::OPEN_SANS_EMOJI</span>;
-        <span class="kw">let</span> <span class="ident">arabic_font</span> <span class="op">=</span> <span class="ident">fonts::AMIRI_REGULAR</span>;
-        <span class="kw">let</span> <span class="ident">material_font</span> <span class="op">=</span> <span class="ident">fonts::MATERIAL_ICONS_REGULAR</span>;
+        <span class="comment">// Add default fonts
+        </span><span class="kw">let </span>regular_font = fonts::ROBOTO_REGULAR;
+        <span class="kw">let </span>bold_font = fonts::ROBOTO_BOLD;
+        <span class="kw">let </span>icon_font = fonts::ENTYPO;
+        <span class="kw">let </span>emoji_font = fonts::OPEN_SANS_EMOJI;
+        <span class="kw">let </span>arabic_font = fonts::AMIRI_REGULAR;
+        <span class="kw">let </span>material_font = fonts::MATERIAL_ICONS_REGULAR;
 
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">add_font_mem</span>(<span class="string">&quot;roboto&quot;</span>, <span class="ident">regular_font</span>);
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">add_font_mem</span>(<span class="string">&quot;roboto-bold&quot;</span>, <span class="ident">bold_font</span>);
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">add_font_mem</span>(<span class="string">&quot;icons&quot;</span>, <span class="ident">icon_font</span>);
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">add_font_mem</span>(<span class="string">&quot;emoji&quot;</span>, <span class="ident">emoji_font</span>);
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">add_font_mem</span>(<span class="string">&quot;arabic&quot;</span>, <span class="ident">arabic_font</span>);
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">add_font_mem</span>(<span class="string">&quot;material&quot;</span>, <span class="ident">material_font</span>);
+        <span class="self">self</span>.<span class="number">0</span>.add_font_mem(<span class="string">&quot;roboto&quot;</span>, regular_font);
+        <span class="self">self</span>.<span class="number">0</span>.add_font_mem(<span class="string">&quot;roboto-bold&quot;</span>, bold_font);
+        <span class="self">self</span>.<span class="number">0</span>.add_font_mem(<span class="string">&quot;icons&quot;</span>, icon_font);
+        <span class="self">self</span>.<span class="number">0</span>.add_font_mem(<span class="string">&quot;emoji&quot;</span>, emoji_font);
+        <span class="self">self</span>.<span class="number">0</span>.add_font_mem(<span class="string">&quot;arabic&quot;</span>, arabic_font);
+        <span class="self">self</span>.<span class="number">0</span>.add_font_mem(<span class="string">&quot;material&quot;</span>, material_font);
 
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">style</span>.<span class="ident">default_font</span> <span class="op">=</span> <span class="ident">String::from</span>(<span class="string">&quot;roboto&quot;</span>);
+        <span class="self">self</span>.<span class="number">0</span>.style.default_font = String::from(<span class="string">&quot;roboto&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">physical_width</span> <span class="op">=</span> <span class="ident">window_description</span>.<span class="ident">inner_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">*</span> <span class="ident">scale_factor</span>;
-        <span class="kw">let</span> <span class="ident">physical_height</span> <span class="op">=</span> <span class="ident">window_description</span>.<span class="ident">inner_size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">*</span> <span class="ident">scale_factor</span>;
+        <span class="kw">let </span>physical_width = window_description.inner_size.width <span class="kw">as </span>f32 * scale_factor;
+        <span class="kw">let </span>physical_height = window_description.inner_size.height <span class="kw">as </span>f32 * scale_factor;
 
-        <span class="comment">// Scale factor is set to 1.0 here because scaling is applied prior to rendering</span>
-        <span class="ident">canvas</span>.<span class="ident">set_size</span>(<span class="ident">physical_width</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">physical_height</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="number">1.0</span>);
-        <span class="ident">canvas</span>.<span class="ident">clear_rect</span>(
+        <span class="comment">// Scale factor is set to 1.0 here because scaling is applied prior to rendering
+        </span>canvas.set_size(physical_width <span class="kw">as </span>u32, physical_height <span class="kw">as </span>u32, <span class="number">1.0</span>);
+        canvas.clear_rect(
             <span class="number">0</span>,
             <span class="number">0</span>,
-            <span class="ident">physical_width</span> <span class="kw">as</span> <span class="ident">u32</span>,
-            <span class="ident">physical_height</span> <span class="kw">as</span> <span class="ident">u32</span>,
-            <span class="ident">femtovg::Color::rgb</span>(<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>),
+            physical_width <span class="kw">as </span>u32,
+            physical_height <span class="kw">as </span>u32,
+            femtovg::Color::rgb(<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>),
         );
 
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="op">=</span> <span class="ident">scale_factor</span> <span class="kw">as</span> <span class="ident">f64</span>;
+        <span class="self">self</span>.<span class="number">0</span>.style.dpi_factor = scale_factor <span class="kw">as </span>f64;
 
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">cache</span>.<span class="ident">set_width</span>(<span class="ident">Entity::root</span>(), <span class="ident">physical_width</span>);
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">cache</span>.<span class="ident">set_height</span>(<span class="ident">Entity::root</span>(), <span class="ident">physical_height</span>);
+        <span class="self">self</span>.<span class="number">0</span>.cache.set_width(Entity::root(), physical_width);
+        <span class="self">self</span>.<span class="number">0</span>.cache.set_height(Entity::root(), physical_height);
 
-        <span class="self">self</span>.<span class="number">0</span>
-            .<span class="ident">style</span>
-            .<span class="ident">width</span>
-            .<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="ident">Units::Pixels</span>(<span class="ident">window_description</span>.<span class="ident">inner_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">f32</span>));
-        <span class="self">self</span>.<span class="number">0</span>
-            .<span class="ident">style</span>
-            .<span class="ident">height</span>
-            .<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="ident">Units::Pixels</span>(<span class="ident">window_description</span>.<span class="ident">inner_size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">f32</span>));
+        <span class="self">self</span>.<span class="number">0
+            </span>.style
+            .width
+            .insert(Entity::root(), Units::Pixels(window_description.inner_size.width <span class="kw">as </span>f32));
+        <span class="self">self</span>.<span class="number">0
+            </span>.style
+            .height
+            .insert(Entity::root(), Units::Pixels(window_description.inner_size.height <span class="kw">as </span>f32));
 
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="ident">PseudoClass::ROOT</span>).<span class="ident">unwrap</span>();
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">style</span>.<span class="ident">disabled</span>.<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="bool-val">false</span>);
+        <span class="self">self</span>.<span class="number">0</span>.style.pseudo_classes.insert(Entity::root(), PseudoClass::ROOT).unwrap();
+        <span class="self">self</span>.<span class="number">0</span>.style.disabled.insert(Entity::root(), <span class="bool-val">false</span>);
 
-        <span class="kw">let</span> <span class="ident">bounding_box</span> <span class="op">=</span>
-            <span class="ident">BoundingBox</span> { <span class="ident">w</span>: <span class="ident">physical_width</span>, <span class="ident">h</span>: <span class="ident">physical_height</span>, ..<span class="ident">Default::default</span>() };
+        <span class="kw">let </span>bounding_box =
+            BoundingBox { w: physical_width, h: physical_height, ..Default::default() };
 
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">cache</span>.<span class="ident">set_clip_region</span>(<span class="ident">Entity::root</span>(), <span class="ident">bounding_box</span>);
+        <span class="self">self</span>.<span class="number">0</span>.cache.set_clip_region(Entity::root(), bounding_box);
 
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">canvases</span>.<span class="ident">insert</span>(<span class="ident">Entity::root</span>(), <span class="ident">canvas</span>);
+        <span class="self">self</span>.<span class="number">0</span>.canvases.insert(Entity::root(), canvas);
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">environment</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Environment</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">data</span>::<span class="op">&lt;</span><span class="ident">Environment</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>()
+    <span class="kw">pub fn </span>environment(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Environment {
+        <span class="self">self</span>.<span class="number">0</span>.data::&lt;Environment&gt;().unwrap()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Context</span> {
-        <span class="self">self</span>.<span class="number">0</span>
+    <span class="kw">pub fn </span>context(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Context {
+        <span class="self">self</span>.<span class="number">0
+    </span>}
+
+    <span class="kw">pub fn </span>remove_all_children(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.<span class="number">0</span>.remove_children(Entity::root());
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_all_children</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">remove_children</span>(<span class="ident">Entity::root</span>());
+    <span class="kw">pub fn </span>draw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        draw_system(<span class="self">self</span>.<span class="number">0</span>);
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">draw</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="ident">draw_system</span>(<span class="self">self</span>.<span class="number">0</span>);
+    <span class="kw">pub fn </span>load_images(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        image_system(<span class="self">self</span>.<span class="number">0</span>);
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">load_images</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="ident">image_system</span>(<span class="self">self</span>.<span class="number">0</span>);
+    <span class="doccomment">/// Set the current entity. This is useful in user code when you&#39;re performing black magic and
+    /// want to trick other parts of the code into thinking you&#39;re processing some other part of the
+    /// tree.
+    </span><span class="kw">pub fn </span>set_current(<span class="kw-2">&amp;mut </span><span class="self">self</span>, e: Entity) {
+        <span class="self">self</span>.<span class="number">0</span>.current = e;
     }
 
-    <span class="doccomment">/// Set the current entity. This is useful in user code when you&#39;re performing black magic and</span>
-    <span class="doccomment">/// want to trick other parts of the code into thinking you&#39;re processing some other part of the</span>
-    <span class="doccomment">/// tree.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_current</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">e</span>: <span class="ident">Entity</span>) {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">current</span> <span class="op">=</span> <span class="ident">e</span>;
+    <span class="doccomment">/// Temporarily sets the current entity, calls the provided closure, and then resets the current entity back to previous.
+    </span><span class="kw">pub fn </span>with_current(<span class="kw-2">&amp;mut </span><span class="self">self</span>, e: Entity, f: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;mut </span>Context)) {
+        <span class="kw">let </span>prev = <span class="self">self</span>.<span class="number">0</span>.current;
+        <span class="self">self</span>.<span class="number">0</span>.current = e;
+        f(<span class="self">self</span>.<span class="number">0</span>);
+        <span class="self">self</span>.<span class="number">0</span>.current = prev;
     }
 
-    <span class="doccomment">/// Temporarily sets the current entity, calls the provided closure, and then resets the current entity back to previous.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_current</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">e</span>: <span class="ident">Entity</span>, <span class="ident">f</span>: <span class="kw">impl</span> <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>)) {
-        <span class="kw">let</span> <span class="ident">prev</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">current</span>;
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">current</span> <span class="op">=</span> <span class="ident">e</span>;
-        <span class="ident">f</span>(<span class="self">self</span>.<span class="number">0</span>);
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">current</span> <span class="op">=</span> <span class="ident">prev</span>;
-    }
-
-    <span class="doccomment">/// You should not call this method unless you are writing a windowing backend, in which case</span>
-    <span class="doccomment">/// you should consult the existing windowing backends for usage information.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_event_proxy</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">proxy</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">EventProxy</span><span class="op">&gt;</span>) {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">event_proxy</span>.<span class="ident">is_some</span>() {
+    <span class="doccomment">/// You should not call this method unless you are writing a windowing backend, in which case
+    /// you should consult the existing windowing backends for usage information.
+    </span><span class="kw">pub fn </span>set_event_proxy(<span class="kw-2">&amp;mut </span><span class="self">self</span>, proxy: Box&lt;<span class="kw">dyn </span>EventProxy&gt;) {
+        <span class="kw">if </span><span class="self">self</span>.<span class="number">0</span>.event_proxy.is_some() {
             <span class="macro">panic!</span>(<span class="string">&quot;Set the event proxy twice. This should never happen.&quot;</span>);
         }
 
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">event_proxy</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">proxy</span>);
+        <span class="self">self</span>.<span class="number">0</span>.event_proxy = <span class="prelude-val">Some</span>(proxy);
     }
 
-    <span class="doccomment">/// You should not call this method unless you are writing a windowing backend, in which case</span>
-    <span class="doccomment">/// you should consult the existing windowing backends for usage information.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;clipboard&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_clipboard_provider</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">clipboard</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">ClipboardProvider</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">clipboard</span> <span class="op">=</span> <span class="ident">clipboard</span>;
+    <span class="doccomment">/// You should not call this method unless you are writing a windowing backend, in which case
+    /// you should consult the existing windowing backends for usage information.
+    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+    </span><span class="kw">pub fn </span>set_clipboard_provider(<span class="kw-2">&amp;mut </span><span class="self">self</span>, clipboard: Box&lt;<span class="kw">dyn </span>ClipboardProvider&gt;) {
+        <span class="self">self</span>.<span class="number">0</span>.clipboard = clipboard;
     }
 
-    <span class="doccomment">/// Send an event with custom origin and propagation information.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">event</span>: <span class="ident">Event</span>) {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(<span class="ident">event</span>);
+    <span class="doccomment">/// Send an event with custom origin and propagation information.
+    </span><span class="kw">pub fn </span>send_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: Event) {
+        <span class="self">self</span>.<span class="number">0</span>.event_queue.push_back(event);
     }
 
-    <span class="doccomment">/// Check whether there are any events in the queue waiting for the next event dispatch cycle.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_queued_events</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="op">!</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">event_queue</span>.<span class="ident">is_empty</span>()
+    <span class="doccomment">/// Check whether there are any events in the queue waiting for the next event dispatch cycle.
+    </span><span class="kw">pub fn </span>has_queued_events(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        !<span class="self">self</span>.<span class="number">0</span>.event_queue.is_empty()
     }
 
-    <span class="doccomment">/// Ensure all FontOrId entires are loaded into the contexts and become Ids.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">synchronize_fonts</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">canvas</span>) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">canvases</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">Entity::root</span>()) {
-            <span class="kw">for</span> (<span class="ident">name</span>, <span class="ident">font</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">resource_manager</span>.<span class="ident">fonts</span>.<span class="ident">iter_mut</span>() {
-                <span class="kw">match</span> <span class="ident">font</span> {
-                    <span class="ident">FontOrId::Font</span>(<span class="ident">data</span>) =&gt; {
-                        <span class="kw">let</span> <span class="ident">id1</span> <span class="op">=</span> <span class="ident">canvas</span>
-                            .<span class="ident">add_font_mem</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">clone</span>())
-                            .<span class="ident">expect</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;Failed to load font file for: {}&quot;</span>, <span class="ident">name</span>));
-                        <span class="kw">let</span> <span class="ident">id2</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text_context</span>.<span class="ident">add_font_mem</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">clone</span>()).<span class="ident">expect</span>(<span class="string">&quot;failed&quot;</span>);
-                        <span class="kw">if</span> <span class="ident">id1</span> <span class="op">!</span><span class="op">=</span> <span class="ident">id2</span> {
+    <span class="doccomment">/// Ensure all FontOrId entires are loaded into the contexts and become Ids.
+    </span><span class="kw">pub fn </span>synchronize_fonts(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(canvas) = <span class="self">self</span>.<span class="number">0</span>.canvases.get_mut(<span class="kw-2">&amp;</span>Entity::root()) {
+            <span class="kw">for </span>(name, font) <span class="kw">in </span><span class="self">self</span>.<span class="number">0</span>.resource_manager.fonts.iter_mut() {
+                <span class="kw">match </span>font {
+                    FontOrId::Font(data) =&gt; {
+                        <span class="kw">let </span>id1 = canvas
+                            .add_font_mem(<span class="kw-2">&amp;</span>data.clone())
+                            .expect(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;Failed to load font file for: {}&quot;</span>, name));
+                        <span class="kw">let </span>id2 = <span class="self">self</span>.<span class="number">0</span>.text_context.add_font_mem(<span class="kw-2">&amp;</span>data.clone()).expect(<span class="string">&quot;failed&quot;</span>);
+                        <span class="kw">if </span>id1 != id2 {
                             <span class="macro">panic!</span>(
-                                <span class="string">&quot;Fonts in canvas must have the same id as fonts in the text context&quot;</span>
-                            );
+                                <span class="string">&quot;Fonts in canvas must have the same id as fonts in the text context&quot;
+                            </span>);
                         }
-                        <span class="kw-2">*</span><span class="ident">font</span> <span class="op">=</span> <span class="ident">FontOrId::Id</span>(<span class="ident">id1</span>);
+                        <span class="kw-2">*</span>font = FontOrId::Id(id1);
                     }
 
-                    <span class="kw">_</span> =&gt; {}
+                    <span class="kw">_ </span>=&gt; {}
                 }
             }
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_context</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">TextContext</span> {
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">text_context</span>
+    <span class="kw">pub fn </span>text_context(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>TextContext {
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.text_context
     }
 
-    <span class="doccomment">/// For each binding or data observer, check if its data has changed, and if so, rerun its</span>
-    <span class="doccomment">/// builder/body.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">process_data_updates</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">observers</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashSet::new</span>();
+    <span class="doccomment">/// For each binding or data observer, check if its data has changed, and if so, rerun its
+    /// builder/body.
+    </span><span class="kw">pub fn </span>process_data_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let </span><span class="kw-2">mut </span>observers: HashSet&lt;Entity&gt; = HashSet::new();
 
-        <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">tree</span>.<span class="ident">into_iter</span>() {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">model_data_store</span>) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">data</span>.<span class="ident">get_mut</span>(<span class="ident">entity</span>) {
-                <span class="comment">// Determine observers of model data</span>
-                <span class="kw">for</span> (<span class="kw">_</span>, <span class="ident">model</span>) <span class="kw">in</span> <span class="ident">model_data_store</span>.<span class="ident">models</span>.<span class="ident">iter</span>() {
-                    <span class="kw">let</span> <span class="ident">model</span> <span class="op">=</span> <span class="ident">ModelOrView::Model</span>(<span class="ident">model</span>.<span class="ident">as_ref</span>());
+        <span class="kw">for </span>entity <span class="kw">in </span><span class="self">self</span>.<span class="number">0</span>.tree.into_iter() {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = <span class="self">self</span>.<span class="number">0</span>.data.get_mut(entity) {
+                <span class="comment">// Determine observers of model data
+                </span><span class="kw">for </span>(<span class="kw">_</span>, model) <span class="kw">in </span>model_data_store.models.iter() {
+                    <span class="kw">let </span>model = ModelOrView::Model(model.as_ref());
 
-                    <span class="kw">for</span> (<span class="kw">_</span>, <span class="ident">store</span>) <span class="kw">in</span> <span class="ident">model_data_store</span>.<span class="ident">stores</span>.<span class="ident">iter_mut</span>() {
-                        <span class="kw">if</span> <span class="ident">store</span>.<span class="ident">update</span>(<span class="ident">model</span>) {
-                            <span class="ident">observers</span>.<span class="ident">extend</span>(<span class="ident">store</span>.<span class="ident">observers</span>().<span class="ident">iter</span>())
+                    <span class="kw">for </span>(<span class="kw">_</span>, store) <span class="kw">in </span>model_data_store.stores.iter_mut() {
+                        <span class="kw">if </span>store.update(model) {
+                            observers.extend(store.observers().iter())
                         }
                     }
                 }
 
-                <span class="comment">// Determine observers of view data</span>
-                <span class="kw">for</span> (<span class="kw">_</span>, <span class="ident">store</span>) <span class="kw">in</span> <span class="ident">model_data_store</span>.<span class="ident">stores</span>.<span class="ident">iter_mut</span>() {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">view_handler</span>) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">views</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>) {
-                        <span class="kw">let</span> <span class="ident">view_model</span> <span class="op">=</span> <span class="ident">ModelOrView::View</span>(<span class="ident">view_handler</span>.<span class="ident">as_ref</span>());
+                <span class="comment">// Determine observers of view data
+                </span><span class="kw">for </span>(<span class="kw">_</span>, store) <span class="kw">in </span>model_data_store.stores.iter_mut() {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = <span class="self">self</span>.<span class="number">0</span>.views.get(<span class="kw-2">&amp;</span>entity) {
+                        <span class="kw">let </span>view_model = ModelOrView::View(view_handler.as_ref());
 
-                        <span class="kw">if</span> <span class="ident">store</span>.<span class="ident">update</span>(<span class="ident">view_model</span>) {
-                            <span class="ident">observers</span>.<span class="ident">extend</span>(<span class="ident">store</span>.<span class="ident">observers</span>().<span class="ident">iter</span>())
+                        <span class="kw">if </span>store.update(view_model) {
+                            observers.extend(store.observers().iter())
                         }
                     }
                 }
             }
         }
 
-        <span class="kw">for</span> <span class="ident">img</span> <span class="kw">in</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">resource_manager</span>.<span class="ident">images</span>.<span class="ident">values_mut</span>() {
-            <span class="kw">if</span> <span class="ident">img</span>.<span class="ident">dirty</span> {
-                <span class="ident">observers</span>.<span class="ident">extend</span>(<span class="ident">img</span>.<span class="ident">observers</span>.<span class="ident">iter</span>());
-                <span class="ident">img</span>.<span class="ident">dirty</span> <span class="op">=</span> <span class="bool-val">false</span>;
+        <span class="kw">for </span>img <span class="kw">in </span><span class="self">self</span>.<span class="number">0</span>.resource_manager.images.values_mut() {
+            <span class="kw">if </span>img.dirty {
+                observers.extend(img.observers.iter());
+                img.dirty = <span class="bool-val">false</span>;
             }
         }
 
-        <span class="kw">let</span> <span class="ident">ordered_observers</span> <span class="op">=</span>
-            <span class="self">self</span>.<span class="number">0</span>.<span class="ident">tree</span>.<span class="ident">into_iter</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="ident">ent</span><span class="op">|</span> <span class="ident">observers</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">ent</span>)).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+        <span class="kw">let </span>ordered_observers =
+            <span class="self">self</span>.<span class="number">0</span>.tree.into_iter().filter(|ent| observers.contains(<span class="kw-2">&amp;</span>ent)).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-        <span class="comment">// Update observers in tree order</span>
-        <span class="kw">for</span> <span class="ident">observer</span> <span class="kw">in</span> <span class="ident">ordered_observers</span>.<span class="ident">into_iter</span>() {
-            <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">entity_manager</span>.<span class="ident">is_alive</span>(<span class="ident">observer</span>) {
+        <span class="comment">// Update observers in tree order
+        </span><span class="kw">for </span>observer <span class="kw">in </span>ordered_observers.into_iter() {
+            <span class="kw">if </span>!<span class="self">self</span>.<span class="number">0</span>.entity_manager.is_alive(observer) {
                 <span class="kw">continue</span>;
             }
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">binding</span>) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">bindings</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">observer</span>) {
-                <span class="kw">let</span> <span class="ident">prev</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">current</span>;
-                <span class="self">self</span>.<span class="number">0</span>.<span class="ident">current</span> <span class="op">=</span> <span class="ident">observer</span>;
-                <span class="ident">binding</span>.<span class="ident">update</span>(<span class="self">self</span>.<span class="number">0</span>);
-                <span class="self">self</span>.<span class="number">0</span>.<span class="ident">current</span> <span class="op">=</span> <span class="ident">prev</span>;
-                <span class="self">self</span>.<span class="number">0</span>.<span class="ident">bindings</span>.<span class="ident">insert</span>(<span class="ident">observer</span>, <span class="ident">binding</span>);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>binding) = <span class="self">self</span>.<span class="number">0</span>.bindings.remove(<span class="kw-2">&amp;</span>observer) {
+                <span class="kw">let </span>prev = <span class="self">self</span>.<span class="number">0</span>.current;
+                <span class="self">self</span>.<span class="number">0</span>.current = observer;
+                binding.update(<span class="self">self</span>.<span class="number">0</span>);
+                <span class="self">self</span>.<span class="number">0</span>.current = prev;
+                <span class="self">self</span>.<span class="number">0</span>.bindings.insert(observer, binding);
             }
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">process_style_updates</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="comment">// Not ideal</span>
-        <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">tree</span>.<span class="ident">clone</span>();
+    <span class="kw">pub fn </span>process_style_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="comment">// Not ideal
+        </span><span class="kw">let </span>tree = <span class="self">self</span>.<span class="number">0</span>.tree.clone();
 
-        <span class="comment">// Apply any inline style inheritance.</span>
-        <span class="ident">inline_inheritance_system</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>);
+        <span class="comment">// Apply any inline style inheritance.
+        </span>inline_inheritance_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
 
-        <span class="comment">//</span>
-        <span class="ident">style_system</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>);
+        <span class="comment">//
+        </span>style_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
 
-        <span class="ident">shared_inheritance_system</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>);
+        shared_inheritance_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
 
-        <span class="comment">// Load any unloaded images and remove unused images.</span>
-        <span class="ident">image_system</span>(<span class="self">self</span>.<span class="number">0</span>);
+        <span class="comment">// Load any unloaded images and remove unused images.
+        </span>image_system(<span class="self">self</span>.<span class="number">0</span>);
     }
 
-    <span class="doccomment">/// Massages the style system until everything is coherent</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">process_visual_updates</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="comment">// Not ideal</span>
-        <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">tree</span>.<span class="ident">clone</span>();
+    <span class="doccomment">/// Massages the style system until everything is coherent
+    </span><span class="kw">pub fn </span>process_visual_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="comment">// Not ideal
+        </span><span class="kw">let </span>tree = <span class="self">self</span>.<span class="number">0</span>.tree.clone();
 
-        <span class="comment">// Compute any animations for this frame.</span>
-        <span class="ident">animation_system</span>(<span class="self">self</span>.<span class="number">0</span>);
+        <span class="comment">// Compute any animations for this frame.
+        </span>animation_system(<span class="self">self</span>.<span class="number">0</span>);
 
-        <span class="comment">// Apply z-order inheritance.</span>
-        <span class="ident">z_ordering_system</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>);
+        <span class="comment">// Apply z-order inheritance.
+        </span>z_ordering_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
 
-        <span class="comment">// Apply visibility inheritance.</span>
-        <span class="ident">visibility_system</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>);
+        <span class="comment">// Apply visibility inheritance.
+        </span>visibility_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
 
-        <span class="comment">// Perform layout.</span>
-        <span class="ident">layout_system</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>);
+        <span class="comment">// Perform layout.
+        </span>layout_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
 
-        <span class="comment">// Apply transform inheritance.</span>
-        <span class="ident">transform_system</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>);
+        <span class="comment">// Apply transform inheritance.
+        </span>transform_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
 
-        <span class="comment">// Determine hovered entity.</span>
-        <span class="ident">hover_system</span>(<span class="self">self</span>.<span class="number">0</span>);
+        <span class="comment">// Determine hovered entity.
+        </span>hover_system(<span class="self">self</span>.<span class="number">0</span>);
 
-        <span class="comment">// Apply clipping inheritance.</span>
-        <span class="ident">clipping_system</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>);
+        <span class="comment">// Apply clipping inheritance.
+        </span>clipping_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
 
-        <span class="comment">// Emit any geometry changed events.</span>
-        <span class="ident">geometry_changed</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">tree</span>);
+        <span class="comment">// Emit any geometry changed events.
+        </span>geometry_changed(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">emit_origin</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Any</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">message</span>: <span class="ident">M</span>) {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
-            <span class="ident">Event::new</span>(<span class="ident">message</span>)
-                .<span class="ident">target</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">current</span>)
-                .<span class="ident">origin</span>(<span class="ident">Entity::root</span>())
-                .<span class="ident">propagate</span>(<span class="ident">Propagation::Up</span>),
+    <span class="kw">pub fn </span>emit_origin&lt;M: Send + Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M) {
+        <span class="self">self</span>.<span class="number">0</span>.event_queue.push_back(
+            Event::new(message)
+                .target(<span class="self">self</span>.<span class="number">0</span>.current)
+                .origin(Entity::root())
+                .propagate(Propagation::Up),
         );
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

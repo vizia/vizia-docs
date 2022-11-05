@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/list.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>list.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/list.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>list.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -128,135 +128,135 @@
 <span id="128">128</span>
 <span id="129">129</span>
 <span id="130">130</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::state</span>::{<span class="ident">Index</span>, <span class="ident">Then</span>};
-<span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
-<span class="kw">use</span> <span class="ident">vizia_input::Code</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::state::{Index, Then};
+<span class="kw">use </span>std::marker::PhantomData;
+<span class="kw">use </span>vizia_input::Code;
 
-<span class="doccomment">/// A view for creating a list of items from a binding to a Vec&lt;T&gt;</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">List</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">T</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A view for creating a list of items from a binding to a Vec&lt;T&gt;
+</span><span class="kw">pub struct </span>List&lt;L, T: <span class="lifetime">&#39;static</span>&gt;
+<span class="kw">where
+    </span>L: Lens&lt;Target = Vec&lt;T&gt;&gt;,
 {
-    <span class="ident">p</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-    <span class="ident">increment_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">decrement_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">clear_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
+    p: PhantomData&lt;L&gt;,
+    increment_callback: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext)&gt;&gt;,
+    decrement_callback: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext)&gt;&gt;,
+    clear_callback: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext)&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">T</span>: <span class="ident">Clone</span><span class="op">&gt;</span> <span class="ident">List</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Creates a new List view with a binding to the given lens and a template for constructing the list items</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">lens</span>: <span class="ident">L</span>, <span class="ident">item</span>: <span class="ident">F</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">usize</span>, <span class="ident">Then</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">Index</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>),
-        <span class="op">&lt;</span><span class="ident">L</span> <span class="kw">as</span> <span class="ident">Lens</span><span class="op">&gt;</span><span class="ident">::Source</span>: <span class="ident">Model</span>,
+<span class="kw">impl</span>&lt;L: <span class="lifetime">&#39;static </span>+ Lens&lt;Target = Vec&lt;T&gt;&gt;, T: Clone&gt; List&lt;L, T&gt; {
+    <span class="doccomment">/// Creates a new List view with a binding to the given lens and a template for constructing the list items
+    </span><span class="kw">pub fn </span>new&lt;F&gt;(cx: <span class="kw-2">&amp;mut </span>Context, lens: L, item: F) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, usize, Then&lt;L, Index&lt;Vec&lt;T&gt;, T&gt;&gt;),
+        &lt;L <span class="kw">as </span>Lens&gt;::Source: Model,
     {
-        <span class="comment">//let item_template = Rc::new(item);</span>
-        <span class="ident">List</span> {
-            <span class="ident">p</span>: <span class="ident">PhantomData::default</span>(),
-            <span class="ident">increment_callback</span>: <span class="prelude-val">None</span>,
-            <span class="ident">decrement_callback</span>: <span class="prelude-val">None</span>,
-            <span class="ident">clear_callback</span>: <span class="prelude-val">None</span>,
+        <span class="comment">//let item_template = Rc::new(item);
+        </span>List {
+            p: PhantomData::default(),
+            increment_callback: <span class="prelude-val">None</span>,
+            decrement_callback: <span class="prelude-val">None</span>,
+            clear_callback: <span class="prelude-val">None</span>,
         }
-        .<span class="ident">build</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-            <span class="comment">//let list_lens = lens.clone();</span>
-            <span class="comment">// Bind to the list data</span>
-            <span class="ident">Binding::new</span>(<span class="ident">cx</span>, <span class="ident">lens</span>.<span class="ident">clone</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">lst</span><span class="op">|</span> <span class="ident">lst</span>.<span class="ident">len</span>()), <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span>, <span class="ident">list_len</span><span class="op">|</span> {
-                <span class="comment">// If the number of list items is different to the number of children of the ListView</span>
-                <span class="comment">// then remove and rebuild all the children</span>
-                <span class="kw">let</span> <span class="ident">list_len</span> <span class="op">=</span> <span class="ident">list_len</span>.<span class="ident">get_fallible</span>(<span class="ident">cx</span>).<span class="ident">map_or</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>);
+        .build(cx, <span class="kw">move </span>|cx| {
+            <span class="comment">//let list_lens = lens.clone();
+            // Bind to the list data
+            </span>Binding::new(cx, lens.clone().map(|lst| lst.len()), <span class="kw">move </span>|cx, list_len| {
+                <span class="comment">// If the number of list items is different to the number of children of the ListView
+                // then remove and rebuild all the children
+                </span><span class="kw">let </span>list_len = list_len.get_fallible(cx).map_or(<span class="number">0</span>, |d| d);
 
-                <span class="kw">for</span> <span class="ident">index</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">list_len</span> {
-                    <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">lens</span>.<span class="ident">clone</span>().<span class="ident">index</span>(<span class="ident">index</span>);
-                    (<span class="ident">item</span>)(<span class="ident">cx</span>, <span class="ident">index</span>, <span class="ident">ptr</span>);
+                <span class="kw">for </span>index <span class="kw">in </span><span class="number">0</span>..list_len {
+                    <span class="kw">let </span>ptr = lens.clone().index(index);
+                    (item)(cx, index, ptr);
                 }
             });
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">List</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;L: <span class="lifetime">&#39;static </span>+ Lens&lt;Target = Vec&lt;T&gt;&gt;, T&gt; View <span class="kw">for </span>List&lt;L, T&gt; {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">&quot;list&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
-        <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">window_event</span> {
-            <span class="ident">WindowEvent::KeyDown</span>(<span class="ident">code</span>, <span class="kw">_</span>) =&gt; <span class="kw">match</span> <span class="ident">code</span> {
-                <span class="ident">Code::ArrowDown</span> =&gt; {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">increment_callback</span> {
-                        (<span class="ident">callback</span>)(<span class="ident">cx</span>);
+    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
+        event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
+            WindowEvent::KeyDown(code, <span class="kw">_</span>) =&gt; <span class="kw">match </span>code {
+                Code::ArrowDown =&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.increment_callback {
+                        (callback)(cx);
                     }
                 }
 
-                <span class="ident">Code::ArrowUp</span> =&gt; {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">decrement_callback</span> {
-                        (<span class="ident">callback</span>)(<span class="ident">cx</span>);
+                Code::ArrowUp =&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.decrement_callback {
+                        (callback)(cx);
                     }
                 }
 
-                <span class="ident">Code::Escape</span> =&gt; {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">clear_callback</span> {
-                        (<span class="ident">callback</span>)(<span class="ident">cx</span>);
+                Code::Escape =&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.clear_callback {
+                        (callback)(cx);
                     }
                 }
 
-                <span class="kw">_</span> =&gt; {}
+                <span class="kw">_ </span>=&gt; {}
             },
 
-            <span class="kw">_</span> =&gt; {}
+            <span class="kw">_ </span>=&gt; {}
         });
 
-        <span class="comment">// event.map(|window_event, _| match window_event {</span>
-        <span class="comment">//     WindowEvent::MouseDown(MouseButton::Left) =&gt; {</span>
-        <span class="comment">//         if !cx.focused.is_child_of(&amp;cx.tree, cx.current) {</span>
-        <span class="comment">//             cx.focused = cx.current;</span>
-        <span class="comment">//         }</span>
-        <span class="comment">//     }</span>
-        <span class="comment">//     _ =&gt; {}</span>
-        <span class="comment">// });</span>
-    }
+        <span class="comment">// event.map(|window_event, _| match window_event {
+        //     WindowEvent::MouseDown(MouseButton::Left) =&gt; {
+        //         if !cx.focused.is_child_of(&amp;cx.tree, cx.current) {
+        //             cx.focused = cx.current;
+        //         }
+        //     }
+        //     _ =&gt; {}
+        // });
+    </span>}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span>: <span class="ident">Lens</span><span class="op">&lt;</span><span class="ident">Target</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">T</span>: <span class="ident">Data</span><span class="op">&gt;</span> <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">List</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_increment</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>),
+<span class="kw">impl</span>&lt;L: Lens&lt;Target = Vec&lt;T&gt;&gt;, T: Data&gt; Handle&lt;<span class="lifetime">&#39;_</span>, List&lt;L, T&gt;&gt; {
+    <span class="kw">pub fn </span>on_increment&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext),
     {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">list</span>) <span class="op">=</span>
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">views</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">entity</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">downcast_mut</span>::<span class="op">&lt;</span><span class="ident">List</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>())
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(list) =
+            <span class="self">self</span>.cx.views.get_mut(<span class="kw-2">&amp;</span><span class="self">self</span>.entity).and_then(|f| f.downcast_mut::&lt;List&lt;L, T&gt;&gt;())
         {
-            <span class="ident">list</span>.<span class="ident">increment_callback</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">callback</span>));
+            list.increment_callback = <span class="prelude-val">Some</span>(Box::new(callback));
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_decrement</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>),
+    <span class="kw">pub fn </span>on_decrement&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext),
     {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">list</span>) <span class="op">=</span>
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">views</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">entity</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">downcast_mut</span>::<span class="op">&lt;</span><span class="ident">List</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>())
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(list) =
+            <span class="self">self</span>.cx.views.get_mut(<span class="kw-2">&amp;</span><span class="self">self</span>.entity).and_then(|f| f.downcast_mut::&lt;List&lt;L, T&gt;&gt;())
         {
-            <span class="ident">list</span>.<span class="ident">decrement_callback</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">callback</span>));
+            list.decrement_callback = <span class="prelude-val">Some</span>(Box::new(callback));
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_clear</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext</span>),
+    <span class="kw">pub fn </span>on_clear&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext),
     {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">list</span>) <span class="op">=</span>
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">views</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">entity</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">downcast_mut</span>::<span class="op">&lt;</span><span class="ident">List</span><span class="op">&lt;</span><span class="ident">L</span>, <span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>())
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(list) =
+            <span class="self">self</span>.cx.views.get_mut(<span class="kw-2">&amp;</span><span class="self">self</span>.entity).and_then(|f| f.downcast_mut::&lt;List&lt;L, T&gt;&gt;())
         {
-            <span class="ident">list</span>.<span class="ident">clear_callback</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">callback</span>));
+            list.clear_callback = <span class="prelude-val">Some</span>(Box::new(callback));
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

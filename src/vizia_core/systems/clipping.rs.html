@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/clipping.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>clipping.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/clipping.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>clipping.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -58,65 +58,65 @@
 <span id="58">58</span>
 <span id="59">59</span>
 <span id="60">60</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">cache::BoundingBox</span>, <span class="ident">prelude</span>::<span class="kw-2">*</span>};
-<span class="kw">use</span> <span class="ident">vizia_id::GenerationalId</span>;
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{cache::BoundingBox, prelude::<span class="kw-2">*</span>};
+<span class="kw">use </span>vizia_id::GenerationalId;
 
-<span class="comment">// Iterate tree and apply clip region to nodes based on specified clip widget and parent clip region.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clipping_system</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>) {
-    <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">tree</span>.<span class="ident">into_iter</span>() {
-        <span class="kw">if</span> <span class="ident">entity</span> <span class="op">==</span> <span class="ident">Entity::root</span>() {
+<span class="comment">// Iterate tree and apply clip region to nodes based on specified clip widget and parent clip region.
+</span><span class="kw">pub fn </span>clipping_system(cx: <span class="kw-2">&amp;mut </span>Context, tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;) {
+    <span class="kw">for </span>entity <span class="kw">in </span>tree.into_iter() {
+        <span class="kw">if </span>entity == Entity::root() {
             <span class="kw">continue</span>;
         }
 
-        <span class="kw">if</span> <span class="ident">tree</span>.<span class="ident">is_ignored</span>(<span class="ident">entity</span>) {
+        <span class="kw">if </span>tree.is_ignored(entity) {
             <span class="kw">continue</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">get_layout_parent</span>(<span class="ident">entity</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span>parent = tree.get_layout_parent(entity).unwrap();
 
-        <span class="kw">let</span> <span class="ident">parent_clip_region</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_clip_region</span>(<span class="ident">parent</span>);
+        <span class="kw">let </span>parent_clip_region = cx.cache.get_clip_region(parent);
 
-        <span class="kw">let</span> <span class="ident">overflow</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">overflow</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
+        <span class="kw">let </span>overflow = cx.style.overflow.get(entity).cloned().unwrap_or_default();
 
-        <span class="kw">let</span> <span class="ident">clip_region</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">overflow</span> <span class="op">==</span> <span class="ident">Overflow::Hidden</span> {
-            <span class="kw">let</span> <span class="ident">clip_widget</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">clip_widget</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or</span>(<span class="ident">entity</span>);
+        <span class="kw">let </span>clip_region = <span class="kw">if </span>overflow == Overflow::Hidden {
+            <span class="kw">let </span>clip_widget = cx.style.clip_widget.get(entity).cloned().unwrap_or(entity);
 
-            <span class="kw">let</span> <span class="ident">clip_x</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posx</span>(<span class="ident">clip_widget</span>);
-            <span class="kw">let</span> <span class="ident">clip_y</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posy</span>(<span class="ident">clip_widget</span>);
-            <span class="kw">let</span> <span class="ident">clip_w</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">clip_widget</span>);
-            <span class="kw">let</span> <span class="ident">clip_h</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">clip_widget</span>);
+            <span class="kw">let </span>clip_x = cx.cache.get_posx(clip_widget);
+            <span class="kw">let </span>clip_y = cx.cache.get_posy(clip_widget);
+            <span class="kw">let </span>clip_w = cx.cache.get_width(clip_widget);
+            <span class="kw">let </span>clip_h = cx.cache.get_height(clip_widget);
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">intersection</span> <span class="op">=</span> <span class="ident">BoundingBox::default</span>();
-            <span class="ident">intersection</span>.<span class="ident">x</span> <span class="op">=</span> <span class="ident">clip_x</span>.<span class="ident">max</span>(<span class="ident">parent_clip_region</span>.<span class="ident">x</span>);
-            <span class="ident">intersection</span>.<span class="ident">y</span> <span class="op">=</span> <span class="ident">clip_y</span>.<span class="ident">max</span>(<span class="ident">parent_clip_region</span>.<span class="ident">y</span>);
+            <span class="kw">let </span><span class="kw-2">mut </span>intersection = BoundingBox::default();
+            intersection.x = clip_x.max(parent_clip_region.x);
+            intersection.y = clip_y.max(parent_clip_region.y);
 
-            <span class="ident">intersection</span>.<span class="ident">w</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">clip_x</span> <span class="op">+</span> <span class="ident">clip_w</span> <span class="op">&lt;</span> <span class="ident">parent_clip_region</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">parent_clip_region</span>.<span class="ident">w</span> {
-                <span class="ident">clip_x</span> <span class="op">+</span> <span class="ident">clip_w</span> <span class="op">-</span> <span class="ident">intersection</span>.<span class="ident">x</span>
-            } <span class="kw">else</span> {
-                <span class="ident">parent_clip_region</span>.<span class="ident">x</span> <span class="op">+</span> <span class="ident">parent_clip_region</span>.<span class="ident">w</span> <span class="op">-</span> <span class="ident">intersection</span>.<span class="ident">x</span>
+            intersection.w = <span class="kw">if </span>clip_x + clip_w &lt; parent_clip_region.x + parent_clip_region.w {
+                clip_x + clip_w - intersection.x
+            } <span class="kw">else </span>{
+                parent_clip_region.x + parent_clip_region.w - intersection.x
             };
 
-            <span class="ident">intersection</span>.<span class="ident">h</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">clip_y</span> <span class="op">+</span> <span class="ident">clip_h</span> <span class="op">&lt;</span> <span class="ident">parent_clip_region</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">parent_clip_region</span>.<span class="ident">h</span> {
-                <span class="ident">clip_y</span> <span class="op">+</span> <span class="ident">clip_h</span> <span class="op">-</span> <span class="ident">intersection</span>.<span class="ident">y</span>
-            } <span class="kw">else</span> {
-                <span class="ident">parent_clip_region</span>.<span class="ident">y</span> <span class="op">+</span> <span class="ident">parent_clip_region</span>.<span class="ident">h</span> <span class="op">-</span> <span class="ident">intersection</span>.<span class="ident">y</span>
+            intersection.h = <span class="kw">if </span>clip_y + clip_h &lt; parent_clip_region.y + parent_clip_region.h {
+                clip_y + clip_h - intersection.y
+            } <span class="kw">else </span>{
+                parent_clip_region.y + parent_clip_region.h - intersection.y
             };
 
-            <span class="ident">intersection</span>.<span class="ident">w</span> <span class="op">=</span> <span class="ident">intersection</span>.<span class="ident">w</span>.<span class="ident">max</span>(<span class="number">0.0</span>);
-            <span class="ident">intersection</span>.<span class="ident">h</span> <span class="op">=</span> <span class="ident">intersection</span>.<span class="ident">h</span>.<span class="ident">max</span>(<span class="number">0.0</span>);
+            intersection.w = intersection.w.max(<span class="number">0.0</span>);
+            intersection.h = intersection.h.max(<span class="number">0.0</span>);
 
-            <span class="ident">intersection</span>
-        } <span class="kw">else</span> {
-            <span class="ident">parent_clip_region</span>
+            intersection
+        } <span class="kw">else </span>{
+            parent_clip_region
         };
 
-        <span class="comment">// Absolute positioned nodes ignore overflow hidden</span>
-        <span class="comment">//if position_type == PositionType::SelfDirected {</span>
-        <span class="comment">//    cx.cache().set_clip_region(entity, root_clip_region);</span>
-        <span class="comment">//} else {</span>
-        <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">set_clip_region</span>(<span class="ident">entity</span>, <span class="ident">clip_region</span>);
-        <span class="comment">//}</span>
-    }
+        <span class="comment">// Absolute positioned nodes ignore overflow hidden
+        //if position_type == PositionType::SelfDirected {
+        //    cx.cache().set_clip_region(entity, root_clip_region);
+        //} else {
+        </span>cx.cache.set_clip_region(entity, clip_region);
+        <span class="comment">//}
+    </span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

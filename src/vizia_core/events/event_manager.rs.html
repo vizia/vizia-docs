@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/events/event_manager.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event_manager.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/events/event_manager.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event_manager.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -557,564 +557,564 @@
 <span id="557">557</span>
 <span id="558">558</span>
 <span id="559">559</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::context::InternalEvent</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::events::EventMeta</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::systems</span>::{<span class="ident">compute_matched_rules</span>, <span class="ident">hover_system</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::tree</span>::{<span class="ident">focus_backward</span>, <span class="ident">focus_forward</span>, <span class="ident">is_navigatable</span>};
-<span class="kw">use</span> <span class="ident">instant</span>::{<span class="ident">Duration</span>, <span class="ident">Instant</span>};
-<span class="kw">use</span> <span class="ident">std::any::Any</span>;
-<span class="kw">use</span> <span class="ident">vizia_id::GenerationalId</span>;
-<span class="kw">use</span> <span class="ident">vizia_storage::TreeExt</span>;
-<span class="kw">use</span> <span class="ident">vizia_storage::TreeIterator</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::InternalEvent;
+<span class="kw">use </span><span class="kw">crate</span>::events::EventMeta;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::systems::{compute_matched_rules, hover_system};
+<span class="kw">use </span><span class="kw">crate</span>::tree::{focus_backward, focus_forward, is_navigatable};
+<span class="kw">use </span>instant::{Duration, Instant};
+<span class="kw">use </span>std::any::Any;
+<span class="kw">use </span>vizia_id::GenerationalId;
+<span class="kw">use </span>vizia_storage::TreeExt;
+<span class="kw">use </span>vizia_storage::TreeIterator;
 
-<span class="kw">const</span> <span class="ident">DOUBLE_CLICK_INTERVAL</span>: <span class="ident">Duration</span> <span class="op">=</span> <span class="ident">Duration::from_millis</span>(<span class="number">500</span>);
+<span class="kw">const </span>DOUBLE_CLICK_INTERVAL: Duration = Duration::from_millis(<span class="number">500</span>);
 
-<span class="doccomment">/// Dispatches events to views and models.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The [EventManager] is responsible for taking the events in the event queue in context</span>
-<span class="doccomment">/// and dispatching them to views and models based on the target and propagation metadata of the event.</span>
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EventManager</span> {
-    <span class="comment">// Queue of events to be processed</span>
-    <span class="ident">event_queue</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Dispatches events to views and models.
+///
+/// The [EventManager] is responsible for taking the events in the event queue in context
+/// and dispatching them to views and models based on the target and propagation metadata of the event.
+</span><span class="attribute">#[doc(hidden)]
+</span><span class="kw">pub struct </span>EventManager {
+    <span class="comment">// Queue of events to be processed
+    </span>event_queue: Vec&lt;Event&gt;,
 
-    <span class="comment">// A copy of the tree for iteration</span>
-    <span class="ident">tree</span>: <span class="ident">Tree</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>,
+    <span class="comment">// A copy of the tree for iteration
+    </span>tree: Tree&lt;Entity&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">EventManager</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">EventManager</span> { <span class="ident">event_queue</span>: <span class="ident">Vec::new</span>(), <span class="ident">tree</span>: <span class="ident">Tree::new</span>() }
+<span class="kw">impl </span>EventManager {
+    <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+        EventManager { event_queue: Vec::new(), tree: Tree::new() }
     }
 
-    <span class="doccomment">/// Flush the event queue, dispatching events to their targets.</span>
-    <span class="doccomment">/// Returns whether there are still more events to process, i.e. the event handlers sent events.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flush_events</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">context</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) -&gt; <span class="ident">bool</span> {
-        <span class="comment">// Clear the event queue in the event manager</span>
-        <span class="self">self</span>.<span class="ident">event_queue</span>.<span class="ident">clear</span>();
+    <span class="doccomment">/// Flush the event queue, dispatching events to their targets.
+    /// Returns whether there are still more events to process, i.e. the event handlers sent events.
+    </span><span class="kw">pub fn </span>flush_events(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: <span class="kw-2">&amp;mut </span>Context) -&gt; bool {
+        <span class="comment">// Clear the event queue in the event manager
+        </span><span class="self">self</span>.event_queue.clear();
 
-        <span class="comment">// Move events from state to event manager</span>
-        <span class="self">self</span>.<span class="ident">event_queue</span>.<span class="ident">extend</span>(<span class="ident">context</span>.<span class="ident">event_queue</span>.<span class="ident">drain</span>(<span class="number">0</span>..));
+        <span class="comment">// Move events from state to event manager
+        </span><span class="self">self</span>.event_queue.extend(context.event_queue.drain(<span class="number">0</span>..));
 
-        <span class="kw">if</span> <span class="ident">context</span>.<span class="ident">tree</span>.<span class="ident">changed</span> {
-            <span class="self">self</span>.<span class="ident">tree</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">tree</span>.<span class="ident">clone</span>();
+        <span class="kw">if </span>context.tree.changed {
+            <span class="self">self</span>.tree = context.tree.clone();
         }
 
-        <span class="comment">// Loop over the events in the event queue</span>
-        <span class="lifetime">&#39;events</span>: <span class="kw">for</span> <span class="ident">event</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">event_queue</span>.<span class="ident">iter_mut</span>() {
-            <span class="comment">// handle internal events</span>
-            <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">internal_event</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">internal_event</span> {
-                <span class="ident">InternalEvent::Redraw</span> =&gt; <span class="ident">context</span>.<span class="ident">need_redraw</span>(),
-                <span class="ident">InternalEvent::LoadImage</span> { <span class="ident">path</span>, <span class="ident">image</span>, <span class="ident">policy</span> } =&gt; {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">image</span>) <span class="op">=</span> <span class="ident">image</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>().<span class="ident">take</span>() {
-                        <span class="ident">context</span>.<span class="ident">load_image</span>(<span class="ident">path</span>.<span class="ident">clone</span>(), <span class="ident">image</span>, <span class="kw-2">*</span><span class="ident">policy</span>);
+        <span class="comment">// Loop over the events in the event queue
+        </span><span class="lifetime">&#39;events</span>: <span class="kw">for </span>event <span class="kw">in </span><span class="self">self</span>.event_queue.iter_mut() {
+            <span class="comment">// handle internal events
+            </span>event.map(|internal_event, <span class="kw">_</span>| <span class="kw">match </span>internal_event {
+                InternalEvent::Redraw =&gt; context.need_redraw(),
+                InternalEvent::LoadImage { path, image, policy } =&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(image) = image.lock().unwrap().take() {
+                        context.load_image(path.clone(), image, <span class="kw-2">*</span>policy);
                     }
                 }
             });
-            <span class="comment">// handle state updates for window events</span>
-            <span class="ident">event</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">window_event</span>, <span class="ident">meta</span><span class="op">|</span> {
-                <span class="kw">if</span> <span class="ident">meta</span>.<span class="ident">origin</span> <span class="op">==</span> <span class="ident">Entity::root</span>() {
-                    <span class="ident">internal_state_updates</span>(<span class="ident">context</span>, <span class="kw-2">&amp;</span><span class="ident">window_event</span>, <span class="ident">meta</span>);
+            <span class="comment">// handle state updates for window events
+            </span>event.map(|window_event, meta| {
+                <span class="kw">if </span>meta.origin == Entity::root() {
+                    internal_state_updates(context, <span class="kw-2">&amp;</span>window_event, meta);
                 }
             });
 
-            <span class="kw">if</span> <span class="ident">event</span>.<span class="ident">meta</span>.<span class="ident">consumed</span> {
-                <span class="kw">continue</span> <span class="lifetime">&#39;events</span>;
+            <span class="kw">if </span>event.meta.consumed {
+                <span class="kw">continue </span><span class="lifetime">&#39;events</span>;
             }
 
-            <span class="comment">// Send events to any global listeners</span>
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">global_listeners</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-            <span class="ident">std::mem::swap</span>(<span class="kw-2">&amp;mut</span> <span class="ident">context</span>.<span class="ident">global_listeners</span>, <span class="kw-2">&amp;mut</span> <span class="ident">global_listeners</span>);
-            <span class="kw">for</span> <span class="ident">listener</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">global_listeners</span> {
-                <span class="ident">context</span>
-                    .<span class="ident">with_current</span>(<span class="ident">Entity::root</span>(), <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> <span class="ident">listener</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext::new</span>(<span class="ident">cx</span>), <span class="ident">event</span>));
+            <span class="comment">// Send events to any global listeners
+            </span><span class="kw">let </span><span class="kw-2">mut </span>global_listeners = <span class="macro">vec!</span>[];
+            std::mem::swap(<span class="kw-2">&amp;mut </span>context.global_listeners, <span class="kw-2">&amp;mut </span>global_listeners);
+            <span class="kw">for </span>listener <span class="kw">in </span><span class="kw-2">&amp;</span>global_listeners {
+                context
+                    .with_current(Entity::root(), |cx| listener(<span class="kw-2">&amp;mut </span>EventContext::new(cx), event));
             }
-            <span class="ident">std::mem::swap</span>(<span class="kw-2">&amp;mut</span> <span class="ident">context</span>.<span class="ident">global_listeners</span>, <span class="kw-2">&amp;mut</span> <span class="ident">global_listeners</span>);
+            std::mem::swap(<span class="kw-2">&amp;mut </span>context.global_listeners, <span class="kw-2">&amp;mut </span>global_listeners);
 
-            <span class="comment">// Send events to any local listeners</span>
-            <span class="kw">let</span> <span class="ident">listeners</span> <span class="op">=</span>
-                <span class="ident">context</span>.<span class="ident">listeners</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">entity</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="kw-2">*</span><span class="ident">entity</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-            <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">listeners</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">listener</span>) <span class="op">=</span> <span class="ident">context</span>.<span class="ident">listeners</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>) {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">event_handler</span>) <span class="op">=</span> <span class="ident">context</span>.<span class="ident">views</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>) {
-                        <span class="ident">context</span>.<span class="ident">with_current</span>(<span class="ident">entity</span>, <span class="op">|</span><span class="ident">context</span><span class="op">|</span> {
-                            (<span class="ident">listener</span>)(
-                                <span class="ident">event_handler</span>.<span class="ident">as_mut</span>(),
-                                <span class="kw-2">&amp;mut</span> <span class="ident">EventContext::new</span>(<span class="ident">context</span>),
-                                <span class="ident">event</span>,
+            <span class="comment">// Send events to any local listeners
+            </span><span class="kw">let </span>listeners =
+                context.listeners.iter().map(|(entity, <span class="kw">_</span>)| <span class="kw-2">*</span>entity).collect::&lt;Vec&lt;Entity&gt;&gt;();
+            <span class="kw">for </span>entity <span class="kw">in </span>listeners {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(listener) = context.listeners.remove(<span class="kw-2">&amp;</span>entity) {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>event_handler) = context.views.remove(<span class="kw-2">&amp;</span>entity) {
+                        context.with_current(entity, |context| {
+                            (listener)(
+                                event_handler.as_mut(),
+                                <span class="kw-2">&amp;mut </span>EventContext::new(context),
+                                event,
                             );
                         });
 
-                        <span class="ident">context</span>.<span class="ident">views</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">event_handler</span>);
+                        context.views.insert(entity, event_handler);
                     }
 
-                    <span class="ident">context</span>.<span class="ident">listeners</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">listener</span>);
+                    context.listeners.insert(entity, listener);
                 }
 
-                <span class="kw">if</span> <span class="ident">event</span>.<span class="ident">meta</span>.<span class="ident">consumed</span> {
-                    <span class="kw">continue</span> <span class="lifetime">&#39;events</span>;
+                <span class="kw">if </span>event.meta.consumed {
+                    <span class="kw">continue </span><span class="lifetime">&#39;events</span>;
                 }
             }
 
-            <span class="comment">// Define the target to prevent multiple mutable borrows error</span>
-            <span class="kw">let</span> <span class="ident">target</span> <span class="op">=</span> <span class="ident">event</span>.<span class="ident">meta</span>.<span class="ident">target</span>;
+            <span class="comment">// Define the target to prevent multiple mutable borrows error
+            </span><span class="kw">let </span>target = event.meta.target;
 
-            <span class="comment">// Send event to target</span>
-            <span class="ident">visit_entity</span>(<span class="ident">context</span>, <span class="ident">target</span>, <span class="ident">event</span>);
+            <span class="comment">// Send event to target
+            </span>visit_entity(context, target, event);
 
-            <span class="kw">if</span> <span class="ident">event</span>.<span class="ident">meta</span>.<span class="ident">consumed</span> {
-                <span class="kw">continue</span> <span class="lifetime">&#39;events</span>;
+            <span class="kw">if </span>event.meta.consumed {
+                <span class="kw">continue </span><span class="lifetime">&#39;events</span>;
             }
 
-            <span class="comment">// Propagate up from target to root (not including target)</span>
-            <span class="kw">if</span> <span class="ident">event</span>.<span class="ident">meta</span>.<span class="ident">propagation</span> <span class="op">==</span> <span class="ident">Propagation::Up</span> {
-                <span class="comment">// Walk up the tree from parent to parent</span>
-                <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">target</span>.<span class="ident">parent_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tree</span>) {
-                    <span class="comment">// Skip the target entity</span>
-                    <span class="kw">if</span> <span class="ident">entity</span> <span class="op">==</span> <span class="ident">event</span>.<span class="ident">meta</span>.<span class="ident">target</span> {
+            <span class="comment">// Propagate up from target to root (not including target)
+            </span><span class="kw">if </span>event.meta.propagation == Propagation::Up {
+                <span class="comment">// Walk up the tree from parent to parent
+                </span><span class="kw">for </span>entity <span class="kw">in </span>target.parent_iter(<span class="kw-2">&amp;</span><span class="self">self</span>.tree) {
+                    <span class="comment">// Skip the target entity
+                    </span><span class="kw">if </span>entity == event.meta.target {
                         <span class="kw">continue</span>;
                     }
 
-                    <span class="comment">// Send event to all entities before the target</span>
-                    <span class="ident">visit_entity</span>(<span class="ident">context</span>, <span class="ident">entity</span>, <span class="ident">event</span>);
+                    <span class="comment">// Send event to all entities before the target
+                    </span>visit_entity(context, entity, event);
 
-                    <span class="comment">// Skip to the next event if the current event is consumed</span>
-                    <span class="kw">if</span> <span class="ident">event</span>.<span class="ident">meta</span>.<span class="ident">consumed</span> {
-                        <span class="kw">continue</span> <span class="lifetime">&#39;events</span>;
+                    <span class="comment">// Skip to the next event if the current event is consumed
+                    </span><span class="kw">if </span>event.meta.consumed {
+                        <span class="kw">continue </span><span class="lifetime">&#39;events</span>;
                     }
                 }
             }
 
-            <span class="kw">if</span> <span class="ident">event</span>.<span class="ident">meta</span>.<span class="ident">propagation</span> <span class="op">==</span> <span class="ident">Propagation::Subtree</span> {
-                <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">target</span>.<span class="ident">branch_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tree</span>) {
-                    <span class="comment">// Skip the target entity</span>
-                    <span class="kw">if</span> <span class="ident">entity</span> <span class="op">==</span> <span class="ident">event</span>.<span class="ident">meta</span>.<span class="ident">target</span> {
+            <span class="kw">if </span>event.meta.propagation == Propagation::Subtree {
+                <span class="kw">for </span>entity <span class="kw">in </span>target.branch_iter(<span class="kw-2">&amp;</span><span class="self">self</span>.tree) {
+                    <span class="comment">// Skip the target entity
+                    </span><span class="kw">if </span>entity == event.meta.target {
                         <span class="kw">continue</span>;
                     }
 
-                    <span class="comment">// Send event to all entities before the target</span>
-                    <span class="ident">visit_entity</span>(<span class="ident">context</span>, <span class="ident">entity</span>, <span class="ident">event</span>);
+                    <span class="comment">// Send event to all entities before the target
+                    </span>visit_entity(context, entity, event);
 
-                    <span class="comment">// Skip to the next event if the current event is consumed</span>
-                    <span class="kw">if</span> <span class="ident">event</span>.<span class="ident">meta</span>.<span class="ident">consumed</span> {
-                        <span class="kw">continue</span> <span class="lifetime">&#39;events</span>;
+                    <span class="comment">// Skip to the next event if the current event is consumed
+                    </span><span class="kw">if </span>event.meta.consumed {
+                        <span class="kw">continue </span><span class="lifetime">&#39;events</span>;
                     }
                 }
             }
         }
 
-        <span class="op">!</span><span class="ident">context</span>.<span class="ident">event_queue</span>.<span class="ident">is_empty</span>()
+        !context.event_queue.is_empty()
     }
 }
 
-<span class="kw">fn</span> <span class="ident">visit_entity</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">event</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Event</span>) {
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">view</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">views</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>) {
-        <span class="ident">cx</span>.<span class="ident">with_current</span>(<span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-            <span class="ident">view</span>.<span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="ident">EventContext::new</span>(<span class="ident">cx</span>), <span class="ident">event</span>);
+<span class="kw">fn </span>visit_entity(cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, event: <span class="kw-2">&amp;mut </span>Event) {
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>view) = cx.views.remove(<span class="kw-2">&amp;</span>entity) {
+        cx.with_current(entity, |cx| {
+            view.event(<span class="kw-2">&amp;mut </span>EventContext::new(cx), event);
         });
 
-        <span class="ident">cx</span>.<span class="ident">views</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">view</span>);
+        cx.views.insert(entity, view);
     }
 
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ids</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">data</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">model_data_store</span><span class="op">|</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">model_data_store</span>.<span class="ident">models</span>.<span class="ident">keys</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>())
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(ids) = cx.data.get(entity).and_then(|model_data_store| {
+        <span class="prelude-val">Some</span>(model_data_store.models.keys().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;())
     }) {
-        <span class="kw">for</span> <span class="ident">id</span> <span class="kw">in</span> <span class="ident">ids</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">model</span>) <span class="op">=</span> <span class="ident">cx</span>
-                .<span class="ident">data</span>
-                .<span class="ident">get_mut</span>(<span class="ident">entity</span>)
-                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">model_data_store</span><span class="op">|</span> <span class="ident">model_data_store</span>.<span class="ident">models</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>))
+        <span class="kw">for </span>id <span class="kw">in </span>ids {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>model) = cx
+                .data
+                .get_mut(entity)
+                .and_then(|model_data_store| model_data_store.models.remove(<span class="kw-2">&amp;</span>id))
             {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">EventContext::new</span>(<span class="ident">cx</span>);
-                <span class="ident">context</span>.<span class="ident">current</span> <span class="op">=</span> <span class="ident">entity</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>context = EventContext::new(cx);
+                context.current = entity;
 
-                <span class="ident">model</span>.<span class="ident">event</span>(<span class="kw-2">&amp;mut</span> <span class="ident">context</span>, <span class="ident">event</span>);
+                model.event(<span class="kw-2">&amp;mut </span>context, event);
 
-                <span class="ident">cx</span>.<span class="ident">data</span>
-                    .<span class="ident">get_mut</span>(<span class="ident">entity</span>)
-                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">model_data_store</span><span class="op">|</span> <span class="ident">model_data_store</span>.<span class="ident">models</span>.<span class="ident">insert</span>(<span class="ident">id</span>, <span class="ident">model</span>));
+                cx.data
+                    .get_mut(entity)
+                    .and_then(|model_data_store| model_data_store.models.insert(id, model));
             }
         }
     }
 }
 
-<span class="kw">fn</span> <span class="ident">internal_state_updates</span>(<span class="ident">context</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">window_event</span>: <span class="kw-2">&amp;</span><span class="ident">WindowEvent</span>, <span class="ident">meta</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventMeta</span>) {
-    <span class="kw">match</span> <span class="ident">window_event</span> {
-        <span class="ident">WindowEvent::MouseMove</span>(<span class="ident">x</span>, <span class="ident">y</span>) =&gt; {
-            <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">previous_cursorx</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span>;
-            <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">previous_cursory</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span>;
-            <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">x</span>;
-            <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">y</span>;
+<span class="kw">fn </span>internal_state_updates(context: <span class="kw-2">&amp;mut </span>Context, window_event: <span class="kw-2">&amp;</span>WindowEvent, meta: <span class="kw-2">&amp;mut </span>EventMeta) {
+    <span class="kw">match </span>window_event {
+        WindowEvent::MouseMove(x, y) =&gt; {
+            context.mouse.previous_cursorx = context.mouse.cursorx;
+            context.mouse.previous_cursory = context.mouse.cursory;
+            context.mouse.cursorx = <span class="kw-2">*</span>x;
+            context.mouse.cursory = <span class="kw-2">*</span>y;
 
-            <span class="ident">hover_system</span>(<span class="ident">context</span>);
-            <span class="ident">mutate_direct_or_up</span>(<span class="ident">meta</span>, <span class="ident">context</span>.<span class="ident">captured</span>, <span class="ident">context</span>.<span class="ident">hovered</span>, <span class="bool-val">false</span>);
+            hover_system(context);
+            mutate_direct_or_up(meta, context.captured, context.hovered, <span class="bool-val">false</span>);
         }
-        <span class="ident">WindowEvent::MouseDown</span>(<span class="ident">button</span>) =&gt; {
-            <span class="comment">// do direct state-updates</span>
-            <span class="kw">match</span> <span class="ident">button</span> {
-                <span class="ident">MouseButton::Left</span> =&gt; {
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">MouseButtonState::Pressed</span>;
+        WindowEvent::MouseDown(button) =&gt; {
+            <span class="comment">// do direct state-updates
+            </span><span class="kw">match </span>button {
+                MouseButton::Left =&gt; {
+                    context.mouse.left.state = MouseButtonState::Pressed;
 
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pos_down</span> <span class="op">=</span> (<span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span>, <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span>);
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pressed</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">hovered</span>;
-                    <span class="ident">context</span>.<span class="ident">triggered</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">hovered</span>;
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span>
-                        <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">context</span>.<span class="ident">triggered</span>)
+                    context.mouse.left.pos_down = (context.mouse.cursorx, context.mouse.cursory);
+                    context.mouse.left.pressed = context.hovered;
+                    context.triggered = context.hovered;
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) =
+                        context.style.pseudo_classes.get_mut(context.triggered)
                     {
-                        <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::ACTIVE</span>, <span class="bool-val">true</span>);
+                        pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">true</span>);
                     }
-                    <span class="kw">let</span> <span class="ident">focusable</span> <span class="op">=</span> <span class="ident">context</span>
-                        .<span class="ident">style</span>
-                        .<span class="ident">abilities</span>
-                        .<span class="ident">get</span>(<span class="ident">context</span>.<span class="ident">hovered</span>)
-                        .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">abilities</span><span class="op">|</span> <span class="ident">abilities</span>.<span class="ident">contains</span>(<span class="ident">Abilities::FOCUSABLE</span>))
-                        .<span class="ident">is_some</span>();
+                    <span class="kw">let </span>focusable = context
+                        .style
+                        .abilities
+                        .get(context.hovered)
+                        .filter(|abilities| abilities.contains(Abilities::FOCUSABLE))
+                        .is_some();
 
-                    <span class="ident">context</span>.<span class="ident">with_current</span>(
-                        <span class="kw">if</span> <span class="ident">focusable</span> { <span class="ident">context</span>.<span class="ident">hovered</span> } <span class="kw">else</span> { <span class="ident">context</span>.<span class="ident">focused</span> },
-                        <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> <span class="ident">cx</span>.<span class="ident">focus_with_visibility</span>(<span class="bool-val">false</span>),
+                    context.with_current(
+                        <span class="kw">if </span>focusable { context.hovered } <span class="kw">else </span>{ context.focused },
+                        |cx| cx.focus_with_visibility(<span class="bool-val">false</span>),
                     );
                 }
-                <span class="ident">MouseButton::Right</span> =&gt; {
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">right</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">MouseButtonState::Pressed</span>;
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">right</span>.<span class="ident">pos_down</span> <span class="op">=</span> (<span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span>, <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span>);
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">right</span>.<span class="ident">pressed</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">hovered</span>;
+                MouseButton::Right =&gt; {
+                    context.mouse.right.state = MouseButtonState::Pressed;
+                    context.mouse.right.pos_down = (context.mouse.cursorx, context.mouse.cursory);
+                    context.mouse.right.pressed = context.hovered;
                 }
-                <span class="ident">MouseButton::Middle</span> =&gt; {
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">middle</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">MouseButtonState::Pressed</span>;
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">middle</span>.<span class="ident">pos_down</span> <span class="op">=</span> (<span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span>, <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span>);
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">middle</span>.<span class="ident">pressed</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">hovered</span>;
+                MouseButton::Middle =&gt; {
+                    context.mouse.middle.state = MouseButtonState::Pressed;
+                    context.mouse.middle.pos_down = (context.mouse.cursorx, context.mouse.cursory);
+                    context.mouse.middle.pressed = context.hovered;
                 }
-                <span class="kw">_</span> =&gt; {}
+                <span class="kw">_ </span>=&gt; {}
             }
 
-            <span class="comment">// emit trigger events</span>
-            <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">button</span>, <span class="ident">MouseButton::Left</span>) {
-                <span class="ident">emit_direct_or_up</span>(
-                    <span class="ident">context</span>,
-                    <span class="ident">WindowEvent::PressDown</span> { <span class="ident">mouse</span>: <span class="bool-val">true</span> },
-                    <span class="ident">context</span>.<span class="ident">captured</span>,
-                    <span class="ident">context</span>.<span class="ident">triggered</span>,
+            <span class="comment">// emit trigger events
+            </span><span class="kw">if </span><span class="macro">matches!</span>(button, MouseButton::Left) {
+                emit_direct_or_up(
+                    context,
+                    WindowEvent::PressDown { mouse: <span class="bool-val">true </span>},
+                    context.captured,
+                    context.triggered,
                     <span class="bool-val">true</span>,
                 );
             }
 
-            <span class="comment">// track double-click</span>
-            <span class="kw">let</span> <span class="ident">new_click_time</span> <span class="op">=</span> <span class="ident">Instant::now</span>();
-            <span class="kw">let</span> <span class="ident">click_duration</span> <span class="op">=</span> <span class="ident">new_click_time</span> <span class="op">-</span> <span class="ident">context</span>.<span class="ident">click_time</span>;
-            <span class="kw">let</span> <span class="ident">new_click_pos</span> <span class="op">=</span> (<span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span>, <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span>);
-            <span class="kw">if</span> <span class="ident">click_duration</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">DOUBLE_CLICK_INTERVAL</span> <span class="op">&amp;&amp;</span> <span class="ident">new_click_pos</span> <span class="op">==</span> <span class="ident">context</span>.<span class="ident">click_pos</span> {
-                <span class="kw">if</span> <span class="ident">context</span>.<span class="ident">clicks</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">2</span> {
-                    <span class="ident">context</span>.<span class="ident">clicks</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-                    <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">context</span>.<span class="ident">clicks</span> <span class="op">==</span> <span class="number">3</span> {
-                        <span class="ident">WindowEvent::MouseTripleClick</span>(<span class="kw-2">*</span><span class="ident">button</span>)
-                    } <span class="kw">else</span> {
-                        <span class="ident">WindowEvent::MouseDoubleClick</span>(<span class="kw-2">*</span><span class="ident">button</span>)
+            <span class="comment">// track double-click
+            </span><span class="kw">let </span>new_click_time = Instant::now();
+            <span class="kw">let </span>click_duration = new_click_time - context.click_time;
+            <span class="kw">let </span>new_click_pos = (context.mouse.cursorx, context.mouse.cursory);
+            <span class="kw">if </span>click_duration &lt;= DOUBLE_CLICK_INTERVAL &amp;&amp; new_click_pos == context.click_pos {
+                <span class="kw">if </span>context.clicks &lt;= <span class="number">2 </span>{
+                    context.clicks += <span class="number">1</span>;
+                    <span class="kw">let </span>event = <span class="kw">if </span>context.clicks == <span class="number">3 </span>{
+                        WindowEvent::MouseTripleClick(<span class="kw-2">*</span>button)
+                    } <span class="kw">else </span>{
+                        WindowEvent::MouseDoubleClick(<span class="kw-2">*</span>button)
                     };
-                    <span class="ident">meta</span>.<span class="ident">consume</span>();
-                    <span class="ident">emit_direct_or_up</span>(<span class="ident">context</span>, <span class="ident">event</span>, <span class="ident">context</span>.<span class="ident">captured</span>, <span class="ident">context</span>.<span class="ident">hovered</span>, <span class="bool-val">true</span>);
+                    meta.consume();
+                    emit_direct_or_up(context, event, context.captured, context.hovered, <span class="bool-val">true</span>);
                 }
-            } <span class="kw">else</span> {
-                <span class="ident">context</span>.<span class="ident">clicks</span> <span class="op">=</span> <span class="number">1</span>;
+            } <span class="kw">else </span>{
+                context.clicks = <span class="number">1</span>;
             }
-            <span class="ident">context</span>.<span class="ident">click_time</span> <span class="op">=</span> <span class="ident">new_click_time</span>;
-            <span class="ident">context</span>.<span class="ident">click_pos</span> <span class="op">=</span> <span class="ident">new_click_pos</span>;
+            context.click_time = new_click_time;
+            context.click_pos = new_click_pos;
 
-            <span class="ident">mutate_direct_or_up</span>(<span class="ident">meta</span>, <span class="ident">context</span>.<span class="ident">captured</span>, <span class="ident">context</span>.<span class="ident">hovered</span>, <span class="bool-val">true</span>);
+            mutate_direct_or_up(meta, context.captured, context.hovered, <span class="bool-val">true</span>);
         }
-        <span class="ident">WindowEvent::MouseUp</span>(<span class="ident">button</span>) =&gt; {
-            <span class="kw">match</span> <span class="ident">button</span> {
-                <span class="ident">MouseButton::Left</span> =&gt; {
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">pos_up</span> <span class="op">=</span> (<span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span>, <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span>);
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">released</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">hovered</span>;
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">left</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">MouseButtonState::Released</span>;
+        WindowEvent::MouseUp(button) =&gt; {
+            <span class="kw">match </span>button {
+                MouseButton::Left =&gt; {
+                    context.mouse.left.pos_up = (context.mouse.cursorx, context.mouse.cursory);
+                    context.mouse.left.released = context.hovered;
+                    context.mouse.left.state = MouseButtonState::Released;
                 }
-                <span class="ident">MouseButton::Right</span> =&gt; {
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">right</span>.<span class="ident">pos_up</span> <span class="op">=</span> (<span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span>, <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span>);
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">right</span>.<span class="ident">released</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">hovered</span>;
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">right</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">MouseButtonState::Released</span>;
+                MouseButton::Right =&gt; {
+                    context.mouse.right.pos_up = (context.mouse.cursorx, context.mouse.cursory);
+                    context.mouse.right.released = context.hovered;
+                    context.mouse.right.state = MouseButtonState::Released;
                 }
-                <span class="ident">MouseButton::Middle</span> =&gt; {
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">middle</span>.<span class="ident">pos_up</span> <span class="op">=</span> (<span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursorx</span>, <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">cursory</span>);
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">middle</span>.<span class="ident">released</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">hovered</span>;
-                    <span class="ident">context</span>.<span class="ident">mouse</span>.<span class="ident">middle</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">MouseButtonState::Released</span>;
+                MouseButton::Middle =&gt; {
+                    context.mouse.middle.pos_up = (context.mouse.cursorx, context.mouse.cursory);
+                    context.mouse.middle.released = context.hovered;
+                    context.mouse.middle.state = MouseButtonState::Released;
                 }
-                <span class="kw">_</span> =&gt; {}
+                <span class="kw">_ </span>=&gt; {}
             }
 
-            <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">button</span>, <span class="ident">MouseButton::Left</span>) {
-                <span class="kw">if</span> <span class="ident">context</span>.<span class="ident">hovered</span> <span class="op">==</span> <span class="ident">context</span>.<span class="ident">triggered</span> {
-                    <span class="ident">emit_direct_or_up</span>(
-                        <span class="ident">context</span>,
-                        <span class="ident">WindowEvent::Press</span> { <span class="ident">mouse</span>: <span class="bool-val">true</span> },
-                        <span class="ident">context</span>.<span class="ident">captured</span>,
-                        <span class="ident">context</span>.<span class="ident">triggered</span>,
+            <span class="kw">if </span><span class="macro">matches!</span>(button, MouseButton::Left) {
+                <span class="kw">if </span>context.hovered == context.triggered {
+                    emit_direct_or_up(
+                        context,
+                        WindowEvent::Press { mouse: <span class="bool-val">true </span>},
+                        context.captured,
+                        context.triggered,
                         <span class="bool-val">true</span>,
                     );
                 }
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span>
-                    <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">context</span>.<span class="ident">triggered</span>)
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) =
+                    context.style.pseudo_classes.get_mut(context.triggered)
                 {
-                    <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::ACTIVE</span>, <span class="bool-val">false</span>);
+                    pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">false</span>);
                 }
-                <span class="ident">context</span>.<span class="ident">need_restyle</span>();
+                context.need_restyle();
 
-                <span class="ident">context</span>.<span class="ident">triggered</span> <span class="op">=</span> <span class="ident">Entity::null</span>();
+                context.triggered = Entity::null();
             }
 
-            <span class="ident">mutate_direct_or_up</span>(<span class="ident">meta</span>, <span class="ident">context</span>.<span class="ident">captured</span>, <span class="ident">context</span>.<span class="ident">hovered</span>, <span class="bool-val">true</span>);
+            mutate_direct_or_up(meta, context.captured, context.hovered, <span class="bool-val">true</span>);
         }
-        <span class="ident">WindowEvent::MouseScroll</span>(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
-            <span class="ident">meta</span>.<span class="ident">target</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">hovered</span>;
+        WindowEvent::MouseScroll(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
+            meta.target = context.hovered;
         }
-        <span class="ident">WindowEvent::KeyDown</span>(<span class="ident">code</span>, <span class="kw">_</span>) =&gt; {
-            <span class="ident">meta</span>.<span class="ident">target</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">focused</span>;
+        WindowEvent::KeyDown(code, <span class="kw">_</span>) =&gt; {
+            meta.target = context.focused;
 
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">code</span> <span class="op">==</span> <span class="ident">Code::KeyH</span> {
-                <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">context</span>.<span class="ident">tree</span>.<span class="ident">into_iter</span>() {
+            <span class="attribute">#[cfg(debug_assertions)]
+            </span><span class="kw">if </span><span class="kw-2">*</span>code == Code::KeyH {
+                <span class="kw">for </span>entity <span class="kw">in </span>context.tree.into_iter() {
                     <span class="macro">println!</span>(
                         <span class="string">&quot;Entity: {} Parent: {:?} View: {} posx: {} posy: {} width: {} height: {}&quot;</span>,
-                        <span class="ident">entity</span>,
-                        <span class="ident">entity</span>.<span class="ident">parent</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>.<span class="ident">tree</span>),
-                        <span class="ident">context</span>
-                            .<span class="ident">views</span>
-                            .<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>)
-                            .<span class="ident">map_or</span>(<span class="string">&quot;&lt;None&gt;&quot;</span>, <span class="op">|</span><span class="ident">view</span><span class="op">|</span> <span class="ident">view</span>.<span class="ident">element</span>().<span class="ident">unwrap_or</span>(<span class="string">&quot;&lt;Unnamed&gt;&quot;</span>)),
-                        <span class="ident">context</span>.<span class="ident">cache</span>.<span class="ident">get_posx</span>(<span class="ident">entity</span>),
-                        <span class="ident">context</span>.<span class="ident">cache</span>.<span class="ident">get_posy</span>(<span class="ident">entity</span>),
-                        <span class="ident">context</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">entity</span>),
-                        <span class="ident">context</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">entity</span>)
+                        entity,
+                        entity.parent(<span class="kw-2">&amp;</span>context.tree),
+                        context
+                            .views
+                            .get(<span class="kw-2">&amp;</span>entity)
+                            .map_or(<span class="string">&quot;&lt;None&gt;&quot;</span>, |view| view.element().unwrap_or(<span class="string">&quot;&lt;Unnamed&gt;&quot;</span>)),
+                        context.cache.get_posx(entity),
+                        context.cache.get_posy(entity),
+                        context.cache.get_width(entity),
+                        context.cache.get_height(entity)
                     );
                 }
             }
 
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">code</span> <span class="op">==</span> <span class="ident">Code::KeyI</span> <span class="op">&amp;&amp;</span> <span class="ident">context</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::CTRL</span>) {
+            <span class="attribute">#[cfg(debug_assertions)]
+            </span><span class="kw">if </span><span class="kw-2">*</span>code == Code::KeyI &amp;&amp; context.modifiers.contains(Modifiers::CTRL) {
                 <span class="macro">println!</span>(<span class="string">&quot;Entity tree&quot;</span>);
-                <span class="kw">let</span> (<span class="ident">tree</span>, <span class="ident">views</span>, <span class="ident">cache</span>) <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="ident">context</span>.<span class="ident">tree</span>, <span class="kw-2">&amp;</span><span class="ident">context</span>.<span class="ident">views</span>, <span class="kw-2">&amp;</span><span class="ident">context</span>.<span class="ident">cache</span>);
-                <span class="kw">let</span> <span class="ident">has_next_sibling</span> <span class="op">=</span> <span class="op">|</span><span class="ident">entity</span><span class="op">|</span> <span class="ident">tree</span>.<span class="ident">get_next_sibling</span>(<span class="ident">entity</span>).<span class="ident">is_some</span>();
-                <span class="kw">let</span> <span class="ident">root_indents</span> <span class="op">=</span> <span class="op">|</span><span class="ident">entity</span>: <span class="ident">Entity</span><span class="op">|</span> {
-                    <span class="ident">entity</span>
-                        .<span class="ident">parent_iter</span>(<span class="ident">tree</span>)
-                        .<span class="ident">skip</span>(<span class="number">1</span>)
-                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-                        .<span class="ident">into_iter</span>()
-                        .<span class="ident">rev</span>()
-                        .<span class="ident">skip</span>(<span class="number">1</span>)
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">entity</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">has_next_sibling</span>(<span class="ident">entity</span>) { <span class="string">&quot;│   &quot;</span> } <span class="kw">else</span> { <span class="string">&quot;    &quot;</span> })
-                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>()
+                <span class="kw">let </span>(tree, views, cache) = (<span class="kw-2">&amp;</span>context.tree, <span class="kw-2">&amp;</span>context.views, <span class="kw-2">&amp;</span>context.cache);
+                <span class="kw">let </span>has_next_sibling = |entity| tree.get_next_sibling(entity).is_some();
+                <span class="kw">let </span>root_indents = |entity: Entity| {
+                    entity
+                        .parent_iter(tree)
+                        .skip(<span class="number">1</span>)
+                        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+                        .into_iter()
+                        .rev()
+                        .skip(<span class="number">1</span>)
+                        .map(|entity| <span class="kw">if </span>has_next_sibling(entity) { <span class="string">&quot;│   &quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;    &quot; </span>})
+                        .collect::&lt;String&gt;()
                 };
-                <span class="kw">let</span> <span class="ident">local_idents</span> <span class="op">=</span>
-                    <span class="op">|</span><span class="ident">entity</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">has_next_sibling</span>(<span class="ident">entity</span>) { <span class="string">&quot;├── &quot;</span> } <span class="kw">else</span> { <span class="string">&quot;└── &quot;</span> };
-                <span class="kw">let</span> <span class="ident">indents</span> <span class="op">=</span> <span class="op">|</span><span class="ident">entity</span><span class="op">|</span> <span class="ident">root_indents</span>(<span class="ident">entity</span>) <span class="op">+</span> <span class="ident">local_idents</span>(<span class="ident">entity</span>);
+                <span class="kw">let </span>local_idents =
+                    |entity| <span class="kw">if </span>has_next_sibling(entity) { <span class="string">&quot;├── &quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;└── &quot; </span>};
+                <span class="kw">let </span>indents = |entity| root_indents(entity) + local_idents(entity);
 
-                <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">TreeIterator::full</span>(<span class="ident">tree</span>).<span class="ident">skip</span>(<span class="number">1</span>) {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">element_name</span>) <span class="op">=</span> <span class="ident">views</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">view</span><span class="op">|</span> <span class="ident">view</span>.<span class="ident">element</span>()) {
+                <span class="kw">for </span>entity <span class="kw">in </span>TreeIterator::full(tree).skip(<span class="number">1</span>) {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(element_name) = views.get(<span class="kw-2">&amp;</span>entity).and_then(|view| view.element()) {
                         <span class="macro">println!</span>(
                             <span class="string">&quot;{}{} {} {:?} display={:?} bounds={} clip={}&quot;</span>,
-                            <span class="ident">indents</span>(<span class="ident">entity</span>),
-                            <span class="ident">entity</span>,
-                            <span class="ident">element_name</span>,
-                            <span class="ident">cache</span>.<span class="ident">get_visibility</span>(<span class="ident">entity</span>),
-                            <span class="ident">cache</span>.<span class="ident">get_display</span>(<span class="ident">entity</span>),
-                            <span class="ident">cache</span>.<span class="ident">get_bounds</span>(<span class="ident">entity</span>),
-                            <span class="ident">cache</span>.<span class="ident">get_clip_region</span>(<span class="ident">entity</span>),
+                            indents(entity),
+                            entity,
+                            element_name,
+                            cache.get_visibility(entity),
+                            cache.get_display(entity),
+                            cache.get_bounds(entity),
+                            cache.get_clip_region(entity),
                         );
-                    } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">binding_name</span>) <span class="op">=</span>
-                        <span class="ident">context</span>.<span class="ident">bindings</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">binding</span><span class="op">|</span> <span class="ident">binding</span>.<span class="ident">name</span>())
+                    } <span class="kw">else if let </span><span class="prelude-val">Some</span>(binding_name) =
+                        context.bindings.get(<span class="kw-2">&amp;</span>entity).and_then(|binding| binding.name())
                     {
                         <span class="macro">println!</span>(
                             <span class="string">&quot;{}{} binding observing {}&quot;</span>,
-                            <span class="ident">indents</span>(<span class="ident">entity</span>),
-                            <span class="ident">entity</span>,
-                            <span class="ident">binding_name</span>
+                            indents(entity),
+                            entity,
+                            binding_name
                         );
-                    } <span class="kw">else</span> {
+                    } <span class="kw">else </span>{
                         <span class="macro">println!</span>(
                             <span class="string">&quot;{}{} {}&quot;</span>,
-                            <span class="ident">indents</span>(<span class="ident">entity</span>),
-                            <span class="ident">entity</span>,
-                            <span class="kw">if</span> <span class="ident">views</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>).<span class="ident">is_some</span>() {
-                                <span class="string">&quot;unnamed view&quot;</span>
-                            } <span class="kw">else</span> {
-                                <span class="string">&quot;no binding or view&quot;</span>
-                            }
+                            indents(entity),
+                            entity,
+                            <span class="kw">if </span>views.get(<span class="kw-2">&amp;</span>entity).is_some() {
+                                <span class="string">&quot;unnamed view&quot;
+                            </span>} <span class="kw">else </span>{
+                                <span class="string">&quot;no binding or view&quot;
+                            </span>}
                         );
                     }
                 }
             }
 
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">code</span> <span class="op">==</span> <span class="ident">Code::KeyS</span>
-                <span class="op">&amp;&amp;</span> <span class="ident">context</span>.<span class="ident">modifiers</span> <span class="op">==</span> <span class="ident">Modifiers::CTRL</span> <span class="op">|</span> <span class="ident">Modifiers::SHIFT</span> <span class="op">|</span> <span class="ident">Modifiers::ALT</span>
+            <span class="attribute">#[cfg(debug_assertions)]
+            </span><span class="kw">if </span><span class="kw-2">*</span>code == Code::KeyS
+                &amp;&amp; context.modifiers == Modifiers::CTRL | Modifiers::SHIFT | Modifiers::ALT
             {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-                <span class="ident">compute_matched_rules</span>(<span class="ident">context</span>, <span class="kw-2">&amp;</span><span class="ident">context</span>.<span class="ident">tree</span>, <span class="ident">context</span>.<span class="ident">hovered</span>, <span class="kw-2">&amp;mut</span> <span class="ident">result</span>);
+                <span class="kw">let </span><span class="kw-2">mut </span>result = <span class="macro">vec!</span>[];
+                compute_matched_rules(context, <span class="kw-2">&amp;</span>context.tree, context.hovered, <span class="kw-2">&amp;mut </span>result);
 
-                <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">hovered</span>;
+                <span class="kw">let </span>entity = context.hovered;
                 <span class="macro">println!</span>(<span class="string">&quot;/* Matched rules for Entity: {} Parent: {:?} View: {} posx: {} posy: {} width: {} height: {}&quot;</span>,
-                    <span class="ident">entity</span>,
-                    <span class="ident">entity</span>.<span class="ident">parent</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>.<span class="ident">tree</span>),
-                    <span class="ident">context</span>
-                        .<span class="ident">views</span>
-                        .<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>)
-                        .<span class="ident">map_or</span>(<span class="string">&quot;&lt;None&gt;&quot;</span>, <span class="op">|</span><span class="ident">view</span><span class="op">|</span> <span class="ident">view</span>.<span class="ident">element</span>().<span class="ident">unwrap_or</span>(<span class="string">&quot;&lt;Unnamed&gt;&quot;</span>)),
-                    <span class="ident">context</span>.<span class="ident">cache</span>.<span class="ident">get_posx</span>(<span class="ident">entity</span>),
-                    <span class="ident">context</span>.<span class="ident">cache</span>.<span class="ident">get_posy</span>(<span class="ident">entity</span>),
-                    <span class="ident">context</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">entity</span>),
-                    <span class="ident">context</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">entity</span>)
+                    entity,
+                    entity.parent(<span class="kw-2">&amp;</span>context.tree),
+                    context
+                        .views
+                        .get(<span class="kw-2">&amp;</span>entity)
+                        .map_or(<span class="string">&quot;&lt;None&gt;&quot;</span>, |view| view.element().unwrap_or(<span class="string">&quot;&lt;Unnamed&gt;&quot;</span>)),
+                    context.cache.get_posx(entity),
+                    context.cache.get_posy(entity),
+                    context.cache.get_width(entity),
+                    context.cache.get_height(entity)
                 );
-                <span class="kw">for</span> <span class="ident">rule</span> <span class="kw">in</span> <span class="ident">result</span>.<span class="ident">into_iter</span>() {
-                    <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">rule</span>);
+                <span class="kw">for </span>rule <span class="kw">in </span>result.into_iter() {
+                    <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, rule);
                 }
             }
 
-            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">code</span> <span class="op">==</span> <span class="ident">Code::F5</span> {
-                <span class="ident">context</span>.<span class="ident">reload_styles</span>().<span class="ident">unwrap</span>();
+            <span class="kw">if </span><span class="kw-2">*</span>code == Code::F5 {
+                context.reload_styles().unwrap();
             }
 
-            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">code</span> <span class="op">==</span> <span class="ident">Code::Tab</span> {
-                <span class="kw">let</span> <span class="ident">lock_focus_to</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">tree</span>.<span class="ident">lock_focus_within</span>(<span class="ident">context</span>.<span class="ident">focused</span>);
-                <span class="kw">if</span> <span class="ident">context</span>.<span class="ident">modifiers</span>.<span class="ident">contains</span>(<span class="ident">Modifiers::SHIFT</span>) {
-                    <span class="kw">let</span> <span class="ident">prev_focused</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">prev_focused</span>) <span class="op">=</span>
-                        <span class="ident">focus_backward</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">context</span>.<span class="ident">focused</span>, <span class="ident">lock_focus_to</span>)
+            <span class="kw">if </span><span class="kw-2">*</span>code == Code::Tab {
+                <span class="kw">let </span>lock_focus_to = context.tree.lock_focus_within(context.focused);
+                <span class="kw">if </span>context.modifiers.contains(Modifiers::SHIFT) {
+                    <span class="kw">let </span>prev_focused = <span class="kw">if let </span><span class="prelude-val">Some</span>(prev_focused) =
+                        focus_backward(<span class="kw-2">&amp;</span>context, context.focused, lock_focus_to)
                     {
-                        <span class="ident">prev_focused</span>
-                    } <span class="kw">else</span> {
-                        <span class="ident">TreeIterator::full</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>.<span class="ident">tree</span>)
-                            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">is_navigatable</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="kw-2">*</span><span class="ident">node</span>, <span class="ident">lock_focus_to</span>))
-                            .<span class="ident">next_back</span>()
-                            .<span class="ident">unwrap_or</span>(<span class="ident">Entity::root</span>())
+                        prev_focused
+                    } <span class="kw">else </span>{
+                        TreeIterator::full(<span class="kw-2">&amp;</span>context.tree)
+                            .filter(|node| is_navigatable(<span class="kw-2">&amp;</span>context, <span class="kw-2">*</span>node, lock_focus_to))
+                            .next_back()
+                            .unwrap_or(Entity::root())
                     };
 
-                    <span class="kw">if</span> <span class="ident">prev_focused</span> <span class="op">!</span><span class="op">=</span> <span class="ident">context</span>.<span class="ident">focused</span> {
-                        <span class="ident">context</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
-                            <span class="ident">Event::new</span>(<span class="ident">WindowEvent::FocusOut</span>)
-                                .<span class="ident">target</span>(<span class="ident">context</span>.<span class="ident">focused</span>)
-                                .<span class="ident">origin</span>(<span class="ident">Entity::root</span>()),
+                    <span class="kw">if </span>prev_focused != context.focused {
+                        context.event_queue.push_back(
+                            Event::new(WindowEvent::FocusOut)
+                                .target(context.focused)
+                                .origin(Entity::root()),
                         );
-                        <span class="ident">context</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
-                            <span class="ident">Event::new</span>(<span class="ident">WindowEvent::FocusIn</span>)
-                                .<span class="ident">target</span>(<span class="ident">prev_focused</span>)
-                                .<span class="ident">origin</span>(<span class="ident">Entity::root</span>()),
+                        context.event_queue.push_back(
+                            Event::new(WindowEvent::FocusIn)
+                                .target(prev_focused)
+                                .origin(Entity::root()),
                         );
 
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span>
-                            <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">context</span>.<span class="ident">triggered</span>)
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) =
+                            context.style.pseudo_classes.get_mut(context.triggered)
                         {
-                            <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::ACTIVE</span>, <span class="bool-val">false</span>);
+                            pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">false</span>);
                         }
-                        <span class="ident">context</span>.<span class="ident">need_restyle</span>();
-                        <span class="ident">context</span>.<span class="ident">triggered</span> <span class="op">=</span> <span class="ident">Entity::null</span>();
+                        context.need_restyle();
+                        context.triggered = Entity::null();
                     }
-                } <span class="kw">else</span> {
-                    <span class="kw">let</span> <span class="ident">next_focused</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">next_focused</span>) <span class="op">=</span>
-                        <span class="ident">focus_forward</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="ident">context</span>.<span class="ident">focused</span>, <span class="ident">lock_focus_to</span>)
+                } <span class="kw">else </span>{
+                    <span class="kw">let </span>next_focused = <span class="kw">if let </span><span class="prelude-val">Some</span>(next_focused) =
+                        focus_forward(<span class="kw-2">&amp;</span>context, context.focused, lock_focus_to)
                     {
-                        <span class="ident">next_focused</span>
-                    } <span class="kw">else</span> {
-                        <span class="ident">TreeIterator::full</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>.<span class="ident">tree</span>)
-                            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">is_navigatable</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>, <span class="kw-2">*</span><span class="ident">node</span>, <span class="ident">lock_focus_to</span>))
-                            .<span class="ident">next</span>()
-                            .<span class="ident">unwrap_or</span>(<span class="ident">Entity::root</span>())
+                        next_focused
+                    } <span class="kw">else </span>{
+                        TreeIterator::full(<span class="kw-2">&amp;</span>context.tree)
+                            .filter(|node| is_navigatable(<span class="kw-2">&amp;</span>context, <span class="kw-2">*</span>node, lock_focus_to))
+                            .next()
+                            .unwrap_or(Entity::root())
                     };
 
-                    <span class="kw">if</span> <span class="ident">next_focused</span> <span class="op">!</span><span class="op">=</span> <span class="ident">context</span>.<span class="ident">focused</span> {
-                        <span class="ident">context</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
-                            <span class="ident">Event::new</span>(<span class="ident">WindowEvent::FocusOut</span>)
-                                .<span class="ident">target</span>(<span class="ident">context</span>.<span class="ident">focused</span>)
-                                .<span class="ident">origin</span>(<span class="ident">Entity::root</span>()),
+                    <span class="kw">if </span>next_focused != context.focused {
+                        context.event_queue.push_back(
+                            Event::new(WindowEvent::FocusOut)
+                                .target(context.focused)
+                                .origin(Entity::root()),
                         );
-                        <span class="ident">context</span>.<span class="ident">event_queue</span>.<span class="ident">push_back</span>(
-                            <span class="ident">Event::new</span>(<span class="ident">WindowEvent::FocusIn</span>)
-                                .<span class="ident">target</span>(<span class="ident">next_focused</span>)
-                                .<span class="ident">origin</span>(<span class="ident">Entity::root</span>()),
+                        context.event_queue.push_back(
+                            Event::new(WindowEvent::FocusIn)
+                                .target(next_focused)
+                                .origin(Entity::root()),
                         );
 
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span>
-                            <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">context</span>.<span class="ident">triggered</span>)
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) =
+                            context.style.pseudo_classes.get_mut(context.triggered)
                         {
-                            <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::ACTIVE</span>, <span class="bool-val">false</span>);
+                            pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">false</span>);
                         }
-                        <span class="ident">context</span>.<span class="ident">need_restyle</span>();
-                        <span class="ident">context</span>.<span class="ident">triggered</span> <span class="op">=</span> <span class="ident">Entity::null</span>();
+                        context.need_restyle();
+                        context.triggered = Entity::null();
                     }
                 }
 
-                <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">needs_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">needs_restyle</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                context.style.needs_relayout = <span class="bool-val">true</span>;
+                context.style.needs_redraw = <span class="bool-val">true</span>;
+                context.style.needs_restyle = <span class="bool-val">true</span>;
             }
 
-            <span class="kw">if</span> <span class="macro">matches!</span>(<span class="kw-2">*</span><span class="ident">code</span>, <span class="ident">Code::Enter</span> <span class="op">|</span> <span class="ident">Code::NumpadEnter</span> <span class="op">|</span> <span class="ident">Code::Space</span>) {
-                <span class="ident">context</span>.<span class="ident">triggered</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">focused</span>;
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span>
-                    <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">context</span>.<span class="ident">triggered</span>)
+            <span class="kw">if </span><span class="macro">matches!</span>(<span class="kw-2">*</span>code, Code::Enter | Code::NumpadEnter | Code::Space) {
+                context.triggered = context.focused;
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) =
+                    context.style.pseudo_classes.get_mut(context.triggered)
                 {
-                    <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::ACTIVE</span>, <span class="bool-val">true</span>);
+                    pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">true</span>);
                 }
-                <span class="ident">context</span>.<span class="ident">with_current</span>(<span class="ident">context</span>.<span class="ident">focused</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-                    <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::PressDown</span> { <span class="ident">mouse</span>: <span class="bool-val">false</span> })
+                context.with_current(context.focused, |cx| {
+                    cx.emit(WindowEvent::PressDown { mouse: <span class="bool-val">false </span>})
                 });
             }
         }
-        <span class="ident">WindowEvent::KeyUp</span>(<span class="ident">code</span>, <span class="kw">_</span>) =&gt; {
-            <span class="ident">meta</span>.<span class="ident">target</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">focused</span>;
-            <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">code</span>, <span class="ident">Code::Enter</span> <span class="op">|</span> <span class="ident">Code::NumpadEnter</span> <span class="op">|</span> <span class="ident">Code::Space</span>) {
-                <span class="kw">if</span> <span class="ident">context</span>.<span class="ident">focused</span> <span class="op">==</span> <span class="ident">context</span>.<span class="ident">triggered</span> {
-                    <span class="ident">context</span>.<span class="ident">with_current</span>(<span class="ident">context</span>.<span class="ident">triggered</span>, <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-                        <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">WindowEvent::Press</span> { <span class="ident">mouse</span>: <span class="bool-val">false</span> })
+        WindowEvent::KeyUp(code, <span class="kw">_</span>) =&gt; {
+            meta.target = context.focused;
+            <span class="kw">if </span><span class="macro">matches!</span>(code, Code::Enter | Code::NumpadEnter | Code::Space) {
+                <span class="kw">if </span>context.focused == context.triggered {
+                    context.with_current(context.triggered, |cx| {
+                        cx.emit(WindowEvent::Press { mouse: <span class="bool-val">false </span>})
                     });
                 }
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pseudo_classes</span>) <span class="op">=</span>
-                    <span class="ident">context</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get_mut</span>(<span class="ident">context</span>.<span class="ident">triggered</span>)
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) =
+                    context.style.pseudo_classes.get_mut(context.triggered)
                 {
-                    <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::ACTIVE</span>, <span class="bool-val">false</span>);
+                    pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">false</span>);
                 }
-                <span class="ident">context</span>.<span class="ident">need_restyle</span>();
-                <span class="ident">context</span>.<span class="ident">triggered</span> <span class="op">=</span> <span class="ident">Entity::null</span>();
+                context.need_restyle();
+                context.triggered = Entity::null();
             }
         }
-        <span class="ident">WindowEvent::CharInput</span>(<span class="kw">_</span>) =&gt; {
-            <span class="ident">meta</span>.<span class="ident">target</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">focused</span>;
+        WindowEvent::CharInput(<span class="kw">_</span>) =&gt; {
+            meta.target = context.focused;
         }
-        <span class="ident">WindowEvent::FocusOut</span> =&gt; {
-            <span class="ident">context</span>.<span class="ident">set_focus_pseudo_classes</span>(<span class="ident">context</span>.<span class="ident">focused</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>);
-            <span class="ident">context</span>.<span class="ident">focused</span> <span class="op">=</span> <span class="ident">Entity::null</span>();
+        WindowEvent::FocusOut =&gt; {
+            context.set_focus_pseudo_classes(context.focused, <span class="bool-val">false</span>, <span class="bool-val">true</span>);
+            context.focused = Entity::null();
         }
-        <span class="ident">WindowEvent::FocusIn</span> =&gt; {
-            <span class="ident">context</span>.<span class="ident">focused</span> <span class="op">=</span> <span class="ident">meta</span>.<span class="ident">target</span>;
-            <span class="ident">context</span>.<span class="ident">set_focus_pseudo_classes</span>(<span class="ident">context</span>.<span class="ident">focused</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>);
+        WindowEvent::FocusIn =&gt; {
+            context.focused = meta.target;
+            context.set_focus_pseudo_classes(context.focused, <span class="bool-val">true</span>, <span class="bool-val">true</span>);
         }
-        <span class="kw">_</span> =&gt; {}
+        <span class="kw">_ </span>=&gt; {}
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mutate_direct_or_up</span>(<span class="ident">meta</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EventMeta</span>, <span class="ident">direct</span>: <span class="ident">Entity</span>, <span class="ident">up</span>: <span class="ident">Entity</span>, <span class="ident">root</span>: <span class="ident">bool</span>) {
-    <span class="kw">if</span> <span class="ident">direct</span> <span class="op">!</span><span class="op">=</span> <span class="ident">Entity::null</span>() {
-        <span class="ident">meta</span>.<span class="ident">target</span> <span class="op">=</span> <span class="ident">direct</span>;
-        <span class="ident">meta</span>.<span class="ident">propagation</span> <span class="op">=</span> <span class="ident">Propagation::Direct</span>;
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">up</span> <span class="op">!</span><span class="op">=</span> <span class="ident">Entity::root</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">root</span> {
-        <span class="ident">meta</span>.<span class="ident">target</span> <span class="op">=</span> <span class="ident">up</span>;
-        <span class="ident">meta</span>.<span class="ident">propagation</span> <span class="op">=</span> <span class="ident">Propagation::Up</span>;
-    } <span class="kw">else</span> {
-        <span class="ident">meta</span>.<span class="ident">consume</span>();
+<span class="kw">pub fn </span>mutate_direct_or_up(meta: <span class="kw-2">&amp;mut </span>EventMeta, direct: Entity, up: Entity, root: bool) {
+    <span class="kw">if </span>direct != Entity::null() {
+        meta.target = direct;
+        meta.propagation = Propagation::Direct;
+    } <span class="kw">else if </span>up != Entity::root() || root {
+        meta.target = up;
+        meta.propagation = Propagation::Up;
+    } <span class="kw">else </span>{
+        meta.consume();
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">emit_direct_or_up</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(
-    <span class="ident">context</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>,
-    <span class="ident">message</span>: <span class="ident">M</span>,
-    <span class="ident">direct</span>: <span class="ident">Entity</span>,
-    <span class="ident">up</span>: <span class="ident">Entity</span>,
-    <span class="ident">root</span>: <span class="ident">bool</span>,
+<span class="kw">pub fn </span>emit_direct_or_up&lt;M: Any + Send&gt;(
+    context: <span class="kw-2">&amp;mut </span>Context,
+    message: M,
+    direct: Entity,
+    up: Entity,
+    root: bool,
 ) {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">Event::new</span>(<span class="ident">message</span>);
-    <span class="ident">mutate_direct_or_up</span>(<span class="kw-2">&amp;mut</span> <span class="ident">event</span>.<span class="ident">meta</span>, <span class="ident">direct</span>, <span class="ident">up</span>, <span class="ident">root</span>);
-    <span class="ident">context</span>.<span class="ident">emit_custom</span>(<span class="ident">event</span>);
+    <span class="kw">let </span><span class="kw-2">mut </span>event = Event::new(message);
+    mutate_direct_or_up(<span class="kw-2">&amp;mut </span>event.meta, direct, up, root);
+    context.emit_custom(event);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

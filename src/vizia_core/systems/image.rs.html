@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/image.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>image.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/image.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>image.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -86,93 +86,93 @@
 <span id="86">86</span>
 <span id="87">87</span>
 <span id="88">88</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::context::Context</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::resource</span>::{<span class="ident">ImageRetentionPolicy</span>, <span class="ident">StoredImage</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">prelude</span>::<span class="kw-2">*</span>, <span class="ident">resource::ImageOrId</span>};
-<span class="kw">use</span> <span class="ident">std::collections::HashSet</span>;
-<span class="kw">use</span> <span class="ident">vizia_id::GenerationalId</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::Context;
+<span class="kw">use </span><span class="kw">crate</span>::resource::{ImageRetentionPolicy, StoredImage};
+<span class="kw">use crate</span>::{prelude::<span class="kw-2">*</span>, resource::ImageOrId};
+<span class="kw">use </span>std::collections::HashSet;
+<span class="kw">use </span>vizia_id::GenerationalId;
 
-<span class="comment">// Iterate he tree and load any images used by entities which aren&#39;t already loaded. Remove any images no longer being used.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">image_system</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) {
-    <span class="ident">cx</span>.<span class="ident">resource_manager</span>.<span class="ident">mark_images_unused</span>();
+<span class="comment">// Iterate he tree and load any images used by entities which aren&#39;t already loaded. Remove any images no longer being used.
+</span><span class="kw">pub fn </span>image_system(cx: <span class="kw-2">&amp;mut </span>Context) {
+    cx.resource_manager.mark_images_unused();
 
-    <span class="comment">// Iterate the tree and load any defined images that aren&#39;t already loaded</span>
-    <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">clone</span>().<span class="ident">into_iter</span>() {
-        <span class="comment">// Load a background-image if the entity has one</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">background_image</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">background_image</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>() {
-            <span class="ident">load_image</span>(<span class="ident">cx</span>, <span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">background_image</span>);
+    <span class="comment">// Iterate the tree and load any defined images that aren&#39;t already loaded
+    </span><span class="kw">for </span>entity <span class="kw">in </span>cx.tree.clone().into_iter() {
+        <span class="comment">// Load a background-image if the entity has one
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(background_image) = cx.style.background_image.get(entity).cloned() {
+            load_image(cx, entity, <span class="kw-2">&amp;</span>background_image);
         }
 
-        <span class="comment">// Load an image if the entity has one</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">image_name</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">image</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>() {
-            <span class="ident">load_image</span>(<span class="ident">cx</span>, <span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">image_name</span>);
-        }
-    }
-
-    <span class="ident">cx</span>.<span class="ident">resource_manager</span>.<span class="ident">evict_unused_images</span>();
-}
-
-<span class="kw">fn</span> <span class="ident">load_image</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">image_name</span>: <span class="kw-2">&amp;</span><span class="ident">String</span>) {
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">try_load_image</span>(<span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">image_name</span>) {
-        <span class="comment">// Image doesn&#39;t exists yet so call the image loader</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">resource_manager</span>.<span class="ident">image_loader</span>.<span class="ident">take</span>() {
-            (<span class="ident">callback</span>)(<span class="ident">cx</span>, <span class="ident">image_name</span>);
-
-            <span class="ident">cx</span>.<span class="ident">resource_manager</span>.<span class="ident">image_loader</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">callback</span>);
-
-            <span class="comment">// Then try to load the image again</span>
-            <span class="ident">try_load_image</span>(<span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">image_name</span>);
+        <span class="comment">// Load an image if the entity has one
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(image_name) = cx.style.image.get(entity).cloned() {
+            load_image(cx, entity, <span class="kw-2">&amp;</span>image_name);
         }
     }
+
+    cx.resource_manager.evict_unused_images();
 }
 
-<span class="kw">fn</span> <span class="ident">try_load_image</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">image_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">bool</span> {
-    <span class="comment">// Check if the image is already loaded</span>
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">image_store</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">resource_manager</span>.<span class="ident">images</span>.<span class="ident">get_mut</span>(<span class="ident">image_name</span>) {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">image_store</span>.<span class="ident">image</span> {
-            <span class="comment">// Image exists and is already loaded so just add this entity as an observer and mark image as used</span>
-            <span class="ident">ImageOrId::Id</span>(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
-                <span class="comment">// TODO: check if the image is actually the same?</span>
-                <span class="ident">image_store</span>.<span class="ident">observers</span>.<span class="ident">insert</span>(<span class="ident">entity</span>);
-                <span class="ident">image_store</span>.<span class="ident">used</span> <span class="op">=</span> <span class="bool-val">true</span>;
+<span class="kw">fn </span>load_image(cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, image_name: <span class="kw-2">&amp;</span>String) {
+    <span class="kw">if </span>!try_load_image(cx, entity, image_name) {
+        <span class="comment">// Image doesn&#39;t exists yet so call the image loader
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = cx.resource_manager.image_loader.take() {
+            (callback)(cx, image_name);
+
+            cx.resource_manager.image_loader = <span class="prelude-val">Some</span>(callback);
+
+            <span class="comment">// Then try to load the image again
+            </span>try_load_image(cx, entity, image_name);
+        }
+    }
+}
+
+<span class="kw">fn </span>try_load_image(cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, image_name: <span class="kw-2">&amp;</span>str) -&gt; bool {
+    <span class="comment">// Check if the image is already loaded
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(image_store) = cx.resource_manager.images.get_mut(image_name) {
+        <span class="kw">match </span><span class="kw-2">&amp;</span>image_store.image {
+            <span class="comment">// Image exists and is already loaded so just add this entity as an observer and mark image as used
+            </span>ImageOrId::Id(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
+                <span class="comment">// TODO: check if the image is actually the same?
+                </span>image_store.observers.insert(entity);
+                image_store.used = <span class="bool-val">true</span>;
             }
 
-            <span class="comment">// Image exists but isn&#39;t loaded yet</span>
-            <span class="ident">ImageOrId::Image</span>(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">canvas</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">canvases</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">Entity::root</span>()) {
-                    <span class="comment">// This loads the image and sets the image id</span>
-                    <span class="ident">image_store</span>.<span class="ident">image</span>.<span class="ident">id</span>(<span class="ident">canvas</span>);
-                    <span class="ident">image_store</span>.<span class="ident">used</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                    <span class="ident">cx</span>.<span class="ident">need_relayout</span>();
-                    <span class="ident">cx</span>.<span class="ident">need_redraw</span>();
+            <span class="comment">// Image exists but isn&#39;t loaded yet
+            </span>ImageOrId::Image(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(canvas) = cx.canvases.get_mut(<span class="kw-2">&amp;</span>Entity::root()) {
+                    <span class="comment">// This loads the image and sets the image id
+                    </span>image_store.image.id(canvas);
+                    image_store.used = <span class="bool-val">true</span>;
+                    cx.need_relayout();
+                    cx.need_redraw();
                 }
             }
         }
 
-        <span class="kw">return</span> <span class="bool-val">true</span>;
-    } <span class="kw">else</span> {
-        <span class="comment">// Image doesn&#39;t exist yet so load and show placeholder image</span>
-        <span class="comment">// TODO: Add way to configure the placeholder image</span>
-        <span class="ident">cx</span>.<span class="ident">resource_manager</span>.<span class="ident">images</span>.<span class="ident">insert</span>(
-            <span class="ident">image_name</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">StoredImage</span> {
-                <span class="ident">image</span>: <span class="ident">ImageOrId::Image</span>(
-                    <span class="ident">image::load_from_memory_with_format</span>(
+        <span class="kw">return </span><span class="bool-val">true</span>;
+    } <span class="kw">else </span>{
+        <span class="comment">// Image doesn&#39;t exist yet so load and show placeholder image
+        // TODO: Add way to configure the placeholder image
+        </span>cx.resource_manager.images.insert(
+            image_name.to_owned(),
+            StoredImage {
+                image: ImageOrId::Image(
+                    image::load_from_memory_with_format(
                         <span class="macro">include_bytes!</span>(<span class="string">&quot;../../resources/images/broken_image.png&quot;</span>),
-                        <span class="ident">image::ImageFormat::Png</span>,
+                        image::ImageFormat::Png,
                     )
-                    .<span class="ident">unwrap</span>(),
-                    <span class="ident">femtovg::ImageFlags::NEAREST</span>,
+                    .unwrap(),
+                    femtovg::ImageFlags::NEAREST,
                 ),
-                <span class="ident">retention_policy</span>: <span class="ident">ImageRetentionPolicy::Forever</span>,
-                <span class="ident">used</span>: <span class="bool-val">true</span>,
-                <span class="ident">dirty</span>: <span class="bool-val">false</span>,
-                <span class="ident">observers</span>: <span class="ident">HashSet::new</span>(),
+                retention_policy: ImageRetentionPolicy::Forever,
+                used: <span class="bool-val">true</span>,
+                dirty: <span class="bool-val">false</span>,
+                observers: HashSet::new(),
             },
         );
     }
 
-    <span class="bool-val">false</span>
-}
+    <span class="bool-val">false
+</span>}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

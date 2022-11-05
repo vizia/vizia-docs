@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/state/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/state/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -148,155 +148,155 @@
 <span id="148">148</span>
 <span id="149">149</span>
 <span id="150">150</span>
-</pre><pre class="rust"><code><span class="doccomment">//! # Data Binding</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Binding provides reactivity to a vizia application. Rather than sending events back and forth between widgets</span>
-<span class="doccomment">//! to update local widget data, widgets can instead `bind` to application data.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Example</span>
-<span class="doccomment">//! Fist we declare the data for our application. The [Lens] trait has been derived for the data, which allows us to bind to fields of the struct:</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//! # use vizia_core::prelude::*;</span>
-<span class="doccomment">//! # use vizia_derive::*;</span>
-<span class="doccomment">//! #[derive(Lens)]</span>
-<span class="doccomment">//! struct AppData {</span>
-<span class="doccomment">//!     count: i32,</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//! Next we&#39;ll declare some events which will be sent by widgets to modify the app data. Data binding in vizia is one-way, events are sent up the tree</span>
-<span class="doccomment">//! to the app data to mutate it and updated values are sent to observers, such as a [`Binding`] view.</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//! enum AppEvent {</span>
-<span class="doccomment">//!     Increment,</span>
-<span class="doccomment">//!     Decrement,</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//! Next we implement the [`Model`] trait on our app data, which allows us to modify the data in response to an `Event`:</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//! # use vizia_core::prelude::*;</span>
-<span class="doccomment">//! # use vizia_derive::*;</span>
-<span class="doccomment">//! # #[derive(Lens)]</span>
-<span class="doccomment">//! # struct AppData {</span>
-<span class="doccomment">//! #     count: i32,</span>
-<span class="doccomment">//! # }</span>
-<span class="doccomment">//! # enum AppEvent {</span>
-<span class="doccomment">//! #     Increment,</span>
-<span class="doccomment">//! #     Decrement,</span>
-<span class="doccomment">//! # }</span>
-<span class="doccomment">//! impl Model for AppData {</span>
-<span class="doccomment">//!     fn event(&amp;mut self, cx: &amp;mut EventContext, event: &amp;mut Event) {</span>
-<span class="doccomment">//!         event.map(|app_event, _| match app_event {</span>
-<span class="doccomment">//!             AppEvent::Increment =&gt; {</span>
-<span class="doccomment">//!                 self.count += 1;</span>
-<span class="doccomment">//!             }</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!             AppEvent::Decrement =&gt; {</span>
-<span class="doccomment">//!                 self.count -= 1;</span>
-<span class="doccomment">//!             }</span>
-<span class="doccomment">//!         });</span>
-<span class="doccomment">//!     }</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//! This trait also allows data to be built into the application [Tree](crate::prelude::Tree):</span>
-<span class="doccomment">//! ```no_run</span>
-<span class="doccomment">//! # use vizia_core::prelude::*;</span>
-<span class="doccomment">//! # use vizia_derive::*;</span>
-<span class="doccomment">//! # use vizia_winit::application::Application;</span>
-<span class="doccomment">//! # #[derive(Lens)]</span>
-<span class="doccomment">//! # struct AppData {</span>
-<span class="doccomment">//! #     count: i32,</span>
-<span class="doccomment">//! # }</span>
-<span class="doccomment">//! # impl Model for AppData {}</span>
-<span class="doccomment">//! fn main() {</span>
-<span class="doccomment">//!     Application::new(|cx|{</span>
-<span class="doccomment">//!         AppData {</span>
-<span class="doccomment">//!             count: 0,</span>
-<span class="doccomment">//!         }.build(cx);</span>
-<span class="doccomment">//!     }).run();  </span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//! A [`Binding`] view is one way in which data can be used by widgets. A [`Lens`] is used to determine what data the binding should react to:</span>
-<span class="doccomment">//! ```no_run</span>
-<span class="doccomment">//! # use vizia_core::prelude::*;</span>
-<span class="doccomment">//! # use vizia_derive::*;</span>
-<span class="doccomment">//! # use vizia_winit::application::Application;</span>
-<span class="doccomment">//! # #[derive(Lens)]</span>
-<span class="doccomment">//! # struct AppData {</span>
-<span class="doccomment">//! #     count: i32,</span>
-<span class="doccomment">//! # }</span>
-<span class="doccomment">//! # impl Model for AppData {}</span>
-<span class="doccomment">//! fn main() {</span>
-<span class="doccomment">//!     Application::new(|cx|{</span>
-<span class="doccomment">//!         AppData {</span>
-<span class="doccomment">//!             count: 0,</span>
-<span class="doccomment">//!         }.build(cx);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!         Binding::new(cx, AppData::count, |cx, count|{</span>
-<span class="doccomment">//!             Label::new(cx, &amp;count.get(cx).to_string());</span>
-<span class="doccomment">//!         });</span>
-<span class="doccomment">//!     }).run();</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//! The second parameter to the [Binding] view is a [Lens], allowing us to bind to some field of the application data.</span>
-<span class="doccomment">//! The third parameter is a closure which provides the context and the lens, which can be used to retrieve the bound data using the `.get()`</span>
-<span class="doccomment">//! method, which takes the [Context](crate::prelude::Context) as an argument.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Now when the data is modified by another widget, the label will update, for example:</span>
-<span class="doccomment">//! ```no_run</span>
-<span class="doccomment">//! # use vizia_core::prelude::*;</span>
-<span class="doccomment">//! # use vizia_derive::*;</span>
-<span class="doccomment">//! # use vizia_winit::application::Application;</span>
-<span class="doccomment">//! # #[derive(Lens)]</span>
-<span class="doccomment">//! # struct AppData {</span>
-<span class="doccomment">//! #     count: i32,</span>
-<span class="doccomment">//! # }</span>
-<span class="doccomment">//! # impl Model for AppData {}</span>
-<span class="doccomment">//! # enum AppEvent {</span>
-<span class="doccomment">//! #     Increment,</span>
-<span class="doccomment">//! #     Decrement,</span>
-<span class="doccomment">//! # }</span>
-<span class="doccomment">//! fn main() {</span>
-<span class="doccomment">//!     Application::new(|cx|{</span>
-<span class="doccomment">//!         AppData {</span>
-<span class="doccomment">//!             count: 0,</span>
-<span class="doccomment">//!         }.build(cx);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!         Binding::new(cx, AppData::count, |cx, count|{</span>
-<span class="doccomment">//!             Label::new(cx, &amp;count.get(cx).to_string());</span>
-<span class="doccomment">//!         });</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!         Button::new(cx, |cx| cx.emit(AppEvent::Increment), |cx|{</span>
-<span class="doccomment">//!             Label::new(cx, &quot;Increment&quot;)</span>
-<span class="doccomment">//!         });</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!         Button::new(cx, |cx| cx.emit(AppEvent::Increment), |cx|{</span>
-<span class="doccomment">//!             Label::new(cx, &quot;Decrement&quot;)</span>
-<span class="doccomment">//!         });</span>
-<span class="doccomment">//!     }).run();</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//! Note, the checkbox does not need to be bound to the data to send an event to it. By default events will propagate up the tree.</span>
-<span class="doccomment">//!</span>
-<span class="kw">mod</span> <span class="ident">lens</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">lens</span>::<span class="kw-2">*</span>;
+</pre><pre class="rust"><code><span class="doccomment">//! # Data Binding
+//!
+//! Binding provides reactivity to a vizia application. Rather than sending events back and forth between widgets
+//! to update local widget data, widgets can instead `bind` to application data.
+//!
+//! # Example
+//! Fist we declare the data for our application. The [Lens] trait has been derived for the data, which allows us to bind to fields of the struct:
+//! ```
+//! # use vizia_core::prelude::*;
+//! # use vizia_derive::*;
+//! #[derive(Lens)]
+//! struct AppData {
+//!     count: i32,
+//! }
+//!
+//! ```
+//! Next we&#39;ll declare some events which will be sent by widgets to modify the app data. Data binding in vizia is one-way, events are sent up the tree
+//! to the app data to mutate it and updated values are sent to observers, such as a [`Binding`] view.
+//! ```
+//! enum AppEvent {
+//!     Increment,
+//!     Decrement,
+//! }
+//! ```
+//! Next we implement the [`Model`] trait on our app data, which allows us to modify the data in response to an `Event`:
+//! ```
+//! # use vizia_core::prelude::*;
+//! # use vizia_derive::*;
+//! # #[derive(Lens)]
+//! # struct AppData {
+//! #     count: i32,
+//! # }
+//! # enum AppEvent {
+//! #     Increment,
+//! #     Decrement,
+//! # }
+//! impl Model for AppData {
+//!     fn event(&amp;mut self, cx: &amp;mut EventContext, event: &amp;mut Event) {
+//!         event.map(|app_event, _| match app_event {
+//!             AppEvent::Increment =&gt; {
+//!                 self.count += 1;
+//!             }
+//!
+//!             AppEvent::Decrement =&gt; {
+//!                 self.count -= 1;
+//!             }
+//!         });
+//!     }
+//! }
+//! ```
+//! This trait also allows data to be built into the application [Tree](crate::prelude::Tree):
+//! ```no_run
+//! # use vizia_core::prelude::*;
+//! # use vizia_derive::*;
+//! # use vizia_winit::application::Application;
+//! # #[derive(Lens)]
+//! # struct AppData {
+//! #     count: i32,
+//! # }
+//! # impl Model for AppData {}
+//! fn main() {
+//!     Application::new(|cx|{
+//!         AppData {
+//!             count: 0,
+//!         }.build(cx);
+//!     }).run();  
+//! }
+//! ```
+//! A [`Binding`] view is one way in which data can be used by widgets. A [`Lens`] is used to determine what data the binding should react to:
+//! ```no_run
+//! # use vizia_core::prelude::*;
+//! # use vizia_derive::*;
+//! # use vizia_winit::application::Application;
+//! # #[derive(Lens)]
+//! # struct AppData {
+//! #     count: i32,
+//! # }
+//! # impl Model for AppData {}
+//! fn main() {
+//!     Application::new(|cx|{
+//!         AppData {
+//!             count: 0,
+//!         }.build(cx);
+//!
+//!         Binding::new(cx, AppData::count, |cx, count|{
+//!             Label::new(cx, &amp;count.get(cx).to_string());
+//!         });
+//!     }).run();
+//! }
+//! ```
+//! The second parameter to the [Binding] view is a [Lens], allowing us to bind to some field of the application data.
+//! The third parameter is a closure which provides the context and the lens, which can be used to retrieve the bound data using the `.get()`
+//! method, which takes the [Context](crate::prelude::Context) as an argument.
+//!
+//! Now when the data is modified by another widget, the label will update, for example:
+//! ```no_run
+//! # use vizia_core::prelude::*;
+//! # use vizia_derive::*;
+//! # use vizia_winit::application::Application;
+//! # #[derive(Lens)]
+//! # struct AppData {
+//! #     count: i32,
+//! # }
+//! # impl Model for AppData {}
+//! # enum AppEvent {
+//! #     Increment,
+//! #     Decrement,
+//! # }
+//! fn main() {
+//!     Application::new(|cx|{
+//!         AppData {
+//!             count: 0,
+//!         }.build(cx);
+//!
+//!         Binding::new(cx, AppData::count, |cx, count|{
+//!             Label::new(cx, &amp;count.get(cx).to_string());
+//!         });
+//!
+//!         Button::new(cx, |cx| cx.emit(AppEvent::Increment), |cx|{
+//!             Label::new(cx, &quot;Increment&quot;)
+//!         });
+//!
+//!         Button::new(cx, |cx| cx.emit(AppEvent::Increment), |cx|{
+//!             Label::new(cx, &quot;Decrement&quot;)
+//!         });
+//!     }).run();
+//! }
+//! ```
+//! Note, the checkbox does not need to be bound to the data to send an event to it. By default events will propagate up the tree.
+//!
+</span><span class="kw">mod </span>lens;
+<span class="kw">pub use </span>lens::<span class="kw-2">*</span>;
 
-<span class="kw">mod</span> <span class="ident">model</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">model</span>::<span class="kw-2">*</span>;
+<span class="kw">mod </span>model;
+<span class="kw">pub use </span>model::<span class="kw-2">*</span>;
 
-<span class="kw">mod</span> <span class="ident">store</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use</span> <span class="ident">store</span>::<span class="kw-2">*</span>;
+<span class="kw">mod </span>store;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>store::<span class="kw-2">*</span>;
 
-<span class="kw">mod</span> <span class="ident">data</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">data</span>::<span class="kw-2">*</span>;
+<span class="kw">mod </span>data;
+<span class="kw">pub use </span>data::<span class="kw-2">*</span>;
 
-<span class="kw">mod</span> <span class="ident">binding</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">binding</span>::<span class="kw-2">*</span>;
+<span class="kw">mod </span>binding;
+<span class="kw">pub use </span>binding::<span class="kw-2">*</span>;
 
-<span class="kw">mod</span> <span class="ident">res</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">res</span>::<span class="kw-2">*</span>;
+<span class="kw">mod </span>res;
+<span class="kw">pub use </span>res::<span class="kw-2">*</span>;
 
-<span class="kw">mod</span> <span class="ident">ray</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ray</span>::<span class="kw-2">*</span>;
+<span class="kw">mod </span>ray;
+<span class="kw">pub use </span>ray::<span class="kw-2">*</span>;
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

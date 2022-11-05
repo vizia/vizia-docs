@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/proxy.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>proxy.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/proxy.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>proxy.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -105,112 +105,112 @@
 <span id="105">105</span>
 <span id="106">106</span>
 <span id="107">107</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::any::Any</span>;
-<span class="kw">use</span> <span class="ident">std::fmt::Formatter</span>;
-<span class="kw">use</span> <span class="ident">std::sync::Mutex</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::any::Any;
+<span class="kw">use </span>std::fmt::Formatter;
+<span class="kw">use </span>std::sync::Mutex;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::InternalEvent</span>;
+<span class="kw">use </span><span class="kw">super</span>::InternalEvent;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::resource::ImageRetentionPolicy</span>;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::resource::ImageRetentionPolicy;
 
-<span class="doccomment">/// A bundle of data representing a snapshot of the context when a thread was spawned.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// It supports a small subset of context operations. You will get one of these passed to you when</span>
-<span class="doccomment">/// you create a new thread with `cx.spawn()`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This type is part of the prelude.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ContextProxy</span> {
-    <span class="kw">pub</span> <span class="ident">current</span>: <span class="ident">Entity</span>,
-    <span class="kw">pub</span> <span class="ident">event_proxy</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">EventProxy</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A bundle of data representing a snapshot of the context when a thread was spawned.
+///
+/// It supports a small subset of context operations. You will get one of these passed to you when
+/// you create a new thread with `cx.spawn()`.
+///
+/// This type is part of the prelude.
+</span><span class="kw">pub struct </span>ContextProxy {
+    <span class="kw">pub </span>current: Entity,
+    <span class="kw">pub </span>event_proxy: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>EventProxy&gt;&gt;,
 }
 
-<span class="doccomment">/// Errors that might come up when emitting an event via a ContextProxy.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This type is part of the prelude.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ProxyEmitError</span> {
-    <span class="doccomment">/// The current runtime does not support proxying events</span>
-    <span class="ident">Unsupported</span>,
-    <span class="doccomment">/// The event loop has been closed; the application is exiting</span>
-    <span class="ident">EventLoopClosed</span>,
+<span class="doccomment">/// Errors that might come up when emitting an event via a ContextProxy.
+///
+/// This type is part of the prelude.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub enum </span>ProxyEmitError {
+    <span class="doccomment">/// The current runtime does not support proxying events
+    </span>Unsupported,
+    <span class="doccomment">/// The event loop has been closed; the application is exiting
+    </span>EventLoopClosed,
 }
 
-<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">ProxyEmitError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">ProxyEmitError::Unsupported</span> =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;The current runtime does not support proxying events&quot;</span>)
+<span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>ProxyEmitError {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="kw">match </span><span class="self">self </span>{
+            ProxyEmitError::Unsupported =&gt; {
+                f.write_str(<span class="string">&quot;The current runtime does not support proxying events&quot;</span>)
             }
-            <span class="ident">ProxyEmitError::EventLoopClosed</span> =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Sending an event to an event loop which has been closed&quot;</span>)
+            ProxyEmitError::EventLoopClosed =&gt; {
+                f.write_str(<span class="string">&quot;Sending an event to an event loop which has been closed&quot;</span>)
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::error::Error</span> <span class="kw">for</span> <span class="ident">ProxyEmitError</span> {}
+<span class="kw">impl </span>std::error::Error <span class="kw">for </span>ProxyEmitError {}
 
-<span class="kw">impl</span> <span class="ident">ContextProxy</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">emit</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">message</span>: <span class="ident">M</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ProxyEmitError</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">proxy</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">event_proxy</span> {
-            <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">Event::new</span>(<span class="ident">message</span>)
-                .<span class="ident">target</span>(<span class="self">self</span>.<span class="ident">current</span>)
-                .<span class="ident">origin</span>(<span class="self">self</span>.<span class="ident">current</span>)
-                .<span class="ident">propagate</span>(<span class="ident">Propagation::Up</span>);
+<span class="kw">impl </span>ContextProxy {
+    <span class="kw">pub fn </span>emit&lt;M: Any + Send&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProxyEmitError&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(proxy) = <span class="kw-2">&amp;</span><span class="self">self</span>.event_proxy {
+            <span class="kw">let </span>event = Event::new(message)
+                .target(<span class="self">self</span>.current)
+                .origin(<span class="self">self</span>.current)
+                .propagate(Propagation::Up);
 
-            <span class="ident">proxy</span>.<span class="ident">send</span>(<span class="ident">event</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">ProxyEmitError::EventLoopClosed</span>)
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">ProxyEmitError::Unsupported</span>)
+            proxy.send(event).map_err(|<span class="kw">_</span>| ProxyEmitError::EventLoopClosed)
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(ProxyEmitError::Unsupported)
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">emit_to</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">target</span>: <span class="ident">Entity</span>,
-        <span class="ident">message</span>: <span class="ident">M</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ProxyEmitError</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">proxy</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">event_proxy</span> {
-            <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">Event::new</span>(<span class="ident">message</span>)
-                .<span class="ident">target</span>(<span class="ident">target</span>)
-                .<span class="ident">origin</span>(<span class="self">self</span>.<span class="ident">current</span>)
-                .<span class="ident">propagate</span>(<span class="ident">Propagation::Direct</span>);
+    <span class="kw">pub fn </span>emit_to&lt;M: Any + Send&gt;(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        target: Entity,
+        message: M,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProxyEmitError&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(proxy) = <span class="kw-2">&amp;</span><span class="self">self</span>.event_proxy {
+            <span class="kw">let </span>event = Event::new(message)
+                .target(target)
+                .origin(<span class="self">self</span>.current)
+                .propagate(Propagation::Direct);
 
-            <span class="ident">proxy</span>.<span class="ident">send</span>(<span class="ident">event</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">ProxyEmitError::EventLoopClosed</span>)
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">ProxyEmitError::Unsupported</span>)
+            proxy.send(event).map_err(|<span class="kw">_</span>| ProxyEmitError::EventLoopClosed)
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(ProxyEmitError::Unsupported)
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">redraw</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ProxyEmitError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">emit</span>(<span class="ident">InternalEvent::Redraw</span>)
+    <span class="kw">pub fn </span>redraw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProxyEmitError&gt; {
+        <span class="self">self</span>.emit(InternalEvent::Redraw)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">load_image</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">path</span>: <span class="ident">String</span>,
-        <span class="ident">image</span>: <span class="ident">image::DynamicImage</span>,
-        <span class="ident">policy</span>: <span class="ident">ImageRetentionPolicy</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ProxyEmitError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">emit</span>(<span class="ident">InternalEvent::LoadImage</span> { <span class="ident">path</span>, <span class="ident">image</span>: <span class="ident">Mutex::new</span>(<span class="prelude-val">Some</span>(<span class="ident">image</span>)), <span class="ident">policy</span> })
+    <span class="kw">pub fn </span>load_image(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        path: String,
+        image: image::DynamicImage,
+        policy: ImageRetentionPolicy,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProxyEmitError&gt; {
+        <span class="self">self</span>.emit(InternalEvent::LoadImage { path, image: Mutex::new(<span class="prelude-val">Some</span>(image)), policy })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">spawn</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="ident">F</span>)
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">ContextProxy</span>),
+    <span class="kw">pub fn </span>spawn&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, target: F)
+    <span class="kw">where
+        </span>F: <span class="lifetime">&#39;static </span>+ Send + FnOnce(<span class="kw-2">&amp;mut </span>ContextProxy),
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cxp</span> <span class="op">=</span> <span class="ident">ContextProxy</span> {
-            <span class="ident">current</span>: <span class="self">self</span>.<span class="ident">current</span>,
-            <span class="ident">event_proxy</span>: <span class="self">self</span>.<span class="ident">event_proxy</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">make_clone</span>()),
+        <span class="kw">let </span><span class="kw-2">mut </span>cxp = ContextProxy {
+            current: <span class="self">self</span>.current,
+            event_proxy: <span class="self">self</span>.event_proxy.as_ref().map(|p| p.make_clone()),
         };
 
-        <span class="ident">std::thread::spawn</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> <span class="ident">target</span>(<span class="kw-2">&amp;mut</span> <span class="ident">cxp</span>));
+        std::thread::spawn(<span class="kw">move </span>|| target(<span class="kw-2">&amp;mut </span>cxp));
     }
 }
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">EventProxy</span>: <span class="ident">Send</span> {
-    <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">event</span>: <span class="ident">Event</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span>;
-    <span class="kw">fn</span> <span class="ident">make_clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">EventProxy</span><span class="op">&gt;</span>;
+<span class="kw">pub trait </span>EventProxy: Send {
+    <span class="kw">fn </span>send(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Event) -&gt; <span class="prelude-ty">Result</span>&lt;(), ()&gt;;
+    <span class="kw">fn </span>make_clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Box&lt;<span class="kw">dyn </span>EventProxy&gt;;
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

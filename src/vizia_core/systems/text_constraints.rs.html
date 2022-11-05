@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/text_constraints.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>text_constraints.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/text_constraints.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>text_constraints.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -165,172 +165,172 @@
 <span id="165">165</span>
 <span id="166">166</span>
 <span id="167">167</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::text</span>::{<span class="ident">measure_text_lines</span>, <span class="ident">text_layout</span>, <span class="ident">text_paint_general</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::vg</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">vizia_id::GenerationalId</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::text::{measure_text_lines, text_layout, text_paint_general};
+<span class="kw">use </span><span class="kw">crate</span>::vg::<span class="kw-2">*</span>;
+<span class="kw">use </span>vizia_id::GenerationalId;
 
-<span class="comment">// Apply this before layout</span>
-<span class="comment">// THE GOAL OF THIS FUNCTION: set content-width and content-height</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_constraints_system</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>) {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">draw_tree</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>();
-    <span class="ident">draw_tree</span>.<span class="ident">sort_by_cached_key</span>(<span class="op">|</span><span class="ident">entity</span><span class="op">|</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_z_index</span>(<span class="kw-2">*</span><span class="ident">entity</span>));
+<span class="comment">// Apply this before layout
+// THE GOAL OF THIS FUNCTION: set content-width and content-height
+</span><span class="kw">pub fn </span>text_constraints_system(cx: <span class="kw-2">&amp;mut </span>Context, tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;) {
+    <span class="kw">let </span><span class="kw-2">mut </span>draw_tree: Vec&lt;Entity&gt; = tree.into_iter().collect();
+    draw_tree.sort_by_cached_key(|entity| cx.cache.get_z_index(<span class="kw-2">*</span>entity));
 
-    <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">draw_tree</span>.<span class="ident">into_iter</span>() {
-        <span class="kw">if</span> <span class="ident">entity</span> <span class="op">==</span> <span class="ident">Entity::root</span>() {
+    <span class="kw">for </span>entity <span class="kw">in </span>draw_tree.into_iter() {
+        <span class="kw">if </span>entity == Entity::root() {
             <span class="kw">continue</span>;
         }
 
-        <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">display</span>.<span class="ident">get</span>(<span class="ident">entity</span>) <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">Display::None</span>) {
+        <span class="kw">if </span>cx.cache.display.get(entity) == <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>Display::None) {
             <span class="kw">continue</span>;
         }
 
-        <span class="kw">if</span> <span class="ident">tree</span>.<span class="ident">is_ignored</span>(<span class="ident">entity</span>) {
+        <span class="kw">if </span>tree.is_ignored(entity) {
             <span class="kw">continue</span>;
         }
 
-        <span class="comment">// content-size is only used if any dimension is auto</span>
-        <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">min_width</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">copied</span>().<span class="ident">unwrap_or_default</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">Units::Auto</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">min_height</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">copied</span>().<span class="ident">unwrap_or_default</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">Units::Auto</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">width</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">copied</span>().<span class="ident">unwrap_or_default</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">Units::Auto</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">height</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">copied</span>().<span class="ident">unwrap_or_default</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">Units::Auto</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">max_width</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">w</span><span class="op">|</span> <span class="ident">w</span> <span class="op">!</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">Units::Auto</span>)
-            <span class="op">&amp;&amp;</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">max_height</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">h</span><span class="op">|</span> <span class="ident">h</span> <span class="op">!</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">Units::Auto</span>)
+        <span class="comment">// content-size is only used if any dimension is auto
+        </span><span class="kw">if </span>cx.style.min_width.get(entity).copied().unwrap_or_default() != Units::Auto
+            &amp;&amp; cx.style.min_height.get(entity).copied().unwrap_or_default() != Units::Auto
+            &amp;&amp; cx.style.width.get(entity).copied().unwrap_or_default() != Units::Auto
+            &amp;&amp; cx.style.height.get(entity).copied().unwrap_or_default() != Units::Auto
+            &amp;&amp; cx.style.max_width.get(entity).map_or(<span class="bool-val">true</span>, |w| w != <span class="kw-2">&amp;</span>Units::Auto)
+            &amp;&amp; cx.style.max_height.get(entity).map_or(<span class="bool-val">true</span>, |h| h != <span class="kw-2">&amp;</span>Units::Auto)
         {
             <span class="kw">continue</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">desired_width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">width</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
-        <span class="kw">let</span> <span class="ident">desired_height</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">height</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
-        <span class="kw">let</span> <span class="ident">style</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">style</span>;
-        <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">style</span>.<span class="ident">text</span>.<span class="ident">get</span>(<span class="ident">entity</span>);
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> <span class="ident">style</span>.<span class="ident">image</span>.<span class="ident">get</span>(<span class="ident">entity</span>);
+        <span class="kw">let </span>desired_width = cx.style.width.get(entity).cloned().unwrap_or_default();
+        <span class="kw">let </span>desired_height = cx.style.height.get(entity).cloned().unwrap_or_default();
+        <span class="kw">let </span>style = <span class="kw-2">&amp;</span>cx.style;
+        <span class="kw">let </span>text = style.text.get(entity);
+        <span class="kw">let </span>image = style.image.get(entity);
 
-        <span class="kw">if</span> (<span class="ident">text</span>.<span class="ident">is_some</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">image</span>.<span class="ident">is_some</span>())
-            <span class="op">&amp;&amp;</span> (<span class="ident">desired_width</span> <span class="op">==</span> <span class="ident">Units::Auto</span> <span class="op">|</span><span class="op">|</span> <span class="ident">desired_height</span> <span class="op">==</span> <span class="ident">Units::Auto</span>)
+        <span class="kw">if </span>(text.is_some() || image.is_some())
+            &amp;&amp; (desired_width == Units::Auto || desired_height == Units::Auto)
         {
-            <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">tree</span>.<span class="ident">get_layout_parent</span>(<span class="ident">entity</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to find parent somehow&quot;</span>);
-            <span class="kw">let</span> <span class="ident">parent_width</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">parent</span>);
+            <span class="kw">let </span>parent = cx.tree.get_layout_parent(entity).expect(<span class="string">&quot;Failed to find parent somehow&quot;</span>);
+            <span class="kw">let </span>parent_width = cx.cache.get_width(parent);
 
-            <span class="kw">let</span> <span class="ident">border_width</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">border_width</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>()
+            <span class="kw">let </span>border_width = <span class="kw">match </span>cx.style.border_width.get(entity).cloned().unwrap_or_default()
             {
-                <span class="ident">Units::Pixels</span>(<span class="ident">val</span>) =&gt; <span class="ident">val</span> <span class="op">*</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>,
-                <span class="ident">Units::Percentage</span>(<span class="ident">val</span>) =&gt; <span class="ident">parent_width</span> <span class="op">*</span> <span class="ident">val</span>,
-                <span class="kw">_</span> =&gt; <span class="number">0.0</span>,
+                Units::Pixels(val) =&gt; val * cx.style.dpi_factor <span class="kw">as </span>f32,
+                Units::Percentage(val) =&gt; parent_width * val,
+                <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
             };
 
-            <span class="kw">let</span> <span class="ident">child_left</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_left</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
-            <span class="kw">let</span> <span class="ident">child_right</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_right</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
-            <span class="kw">let</span> <span class="ident">child_top</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_top</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
-            <span class="kw">let</span> <span class="ident">child_bottom</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_bottom</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
+            <span class="kw">let </span>child_left = cx.style.child_left.get(entity).cloned().unwrap_or_default();
+            <span class="kw">let </span>child_right = cx.style.child_right.get(entity).cloned().unwrap_or_default();
+            <span class="kw">let </span>child_top = cx.style.child_top.get(entity).cloned().unwrap_or_default();
+            <span class="kw">let </span>child_bottom = cx.style.child_bottom.get(entity).cloned().unwrap_or_default();
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posx</span>(<span class="ident">entity</span>);
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">y</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_posy</span>(<span class="ident">entity</span>);
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">w</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_width</span>(<span class="ident">entity</span>) <span class="op">-</span> <span class="ident">border_width</span> <span class="op">*</span> <span class="number">2.0</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">h</span> <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_height</span>(<span class="ident">entity</span>) <span class="op">-</span> <span class="ident">border_width</span> <span class="op">*</span> <span class="number">2.0</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">child_space_x</span> <span class="op">=</span> <span class="number">0.0</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">child_space_y</span> <span class="op">=</span> <span class="number">0.0</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>x = cx.cache.get_posx(entity);
+            <span class="kw">let </span><span class="kw-2">mut </span>y = cx.cache.get_posy(entity);
+            <span class="kw">let </span><span class="kw-2">mut </span>w = cx.cache.get_width(entity) - border_width * <span class="number">2.0</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>h = cx.cache.get_height(entity) - border_width * <span class="number">2.0</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>child_space_x = <span class="number">0.0</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>child_space_y = <span class="number">0.0</span>;
 
-            <span class="comment">// shrink the bounding box based on pixel values</span>
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Units::Pixels</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">child_left</span> {
-                <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">val</span> <span class="op">*</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
-                <span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">val</span>;
-                <span class="ident">w</span> <span class="op">-</span><span class="op">=</span> <span class="ident">val</span>;
-                <span class="ident">child_space_x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">val</span>;
+            <span class="comment">// shrink the bounding box based on pixel values
+            </span><span class="kw">if let </span>Units::Pixels(val) = child_left {
+                <span class="kw">let </span>val = val * cx.style.dpi_factor <span class="kw">as </span>f32;
+                x += val;
+                w -= val;
+                child_space_x += val;
             }
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Units::Pixels</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">child_right</span> {
-                <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">val</span> <span class="op">*</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
-                <span class="ident">w</span> <span class="op">-</span><span class="op">=</span> <span class="ident">val</span>;
-                <span class="ident">child_space_x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">val</span>;
+            <span class="kw">if let </span>Units::Pixels(val) = child_right {
+                <span class="kw">let </span>val = val * cx.style.dpi_factor <span class="kw">as </span>f32;
+                w -= val;
+                child_space_x += val;
             }
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Units::Pixels</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">child_top</span> {
-                <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">val</span> <span class="op">*</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
-                <span class="ident">y</span> <span class="op">+</span><span class="op">=</span> <span class="ident">val</span>;
-                <span class="ident">h</span> <span class="op">-</span><span class="op">=</span> <span class="ident">val</span>;
-                <span class="ident">child_space_y</span> <span class="op">+</span><span class="op">=</span> <span class="ident">val</span>;
+            <span class="kw">if let </span>Units::Pixels(val) = child_top {
+                <span class="kw">let </span>val = val * cx.style.dpi_factor <span class="kw">as </span>f32;
+                y += val;
+                h -= val;
+                child_space_y += val;
             }
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Units::Pixels</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">child_bottom</span> {
-                <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">val</span> <span class="op">*</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>;
-                <span class="ident">h</span> <span class="op">-</span><span class="op">=</span> <span class="ident">val</span>;
-                <span class="ident">child_space_y</span> <span class="op">+</span><span class="op">=</span> <span class="ident">val</span>;
+            <span class="kw">if let </span>Units::Pixels(val) = child_bottom {
+                <span class="kw">let </span>val = val * cx.style.dpi_factor <span class="kw">as </span>f32;
+                h -= val;
+                child_space_y += val;
             }
 
-            <span class="comment">// set align/baseline and move the start coordinate to the appropriate place in the box</span>
-            <span class="kw">let</span> <span class="ident">align</span> <span class="op">=</span> <span class="kw">match</span> (<span class="ident">child_left</span>, <span class="ident">child_right</span>) {
-                (<span class="ident">Units::Stretch</span>(<span class="kw">_</span>), <span class="ident">Units::Stretch</span>(<span class="kw">_</span>)) =&gt; {
-                    <span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">w</span> <span class="op">/</span> <span class="number">2.0</span>;
-                    <span class="ident">Align::Center</span>
+            <span class="comment">// set align/baseline and move the start coordinate to the appropriate place in the box
+            </span><span class="kw">let </span>align = <span class="kw">match </span>(child_left, child_right) {
+                (Units::Stretch(<span class="kw">_</span>), Units::Stretch(<span class="kw">_</span>)) =&gt; {
+                    x += w / <span class="number">2.0</span>;
+                    Align::Center
                 }
-                (<span class="ident">Units::Stretch</span>(<span class="kw">_</span>), <span class="kw">_</span>) =&gt; {
-                    <span class="ident">x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">w</span>;
-                    <span class="ident">Align::Right</span>
+                (Units::Stretch(<span class="kw">_</span>), <span class="kw">_</span>) =&gt; {
+                    x += w;
+                    Align::Right
                 }
-                <span class="kw">_</span> =&gt; <span class="ident">Align::Left</span>,
+                <span class="kw">_ </span>=&gt; Align::Left,
             };
-            <span class="kw">let</span> <span class="ident">baseline</span> <span class="op">=</span> <span class="kw">match</span> (<span class="ident">child_top</span>, <span class="ident">child_bottom</span>) {
-                (<span class="ident">Units::Stretch</span>(<span class="kw">_</span>), <span class="ident">Units::Stretch</span>(<span class="kw">_</span>)) =&gt; {
-                    <span class="ident">y</span> <span class="op">+</span><span class="op">=</span> <span class="ident">h</span> <span class="op">/</span> <span class="number">2.0</span>;
-                    <span class="ident">Baseline::Middle</span>
+            <span class="kw">let </span>baseline = <span class="kw">match </span>(child_top, child_bottom) {
+                (Units::Stretch(<span class="kw">_</span>), Units::Stretch(<span class="kw">_</span>)) =&gt; {
+                    y += h / <span class="number">2.0</span>;
+                    Baseline::Middle
                 }
-                (<span class="ident">Units::Stretch</span>(<span class="kw">_</span>), <span class="kw">_</span>) =&gt; {
-                    <span class="ident">y</span> <span class="op">+</span><span class="op">=</span> <span class="ident">h</span>;
-                    <span class="ident">Baseline::Bottom</span>
+                (Units::Stretch(<span class="kw">_</span>), <span class="kw">_</span>) =&gt; {
+                    y += h;
+                    Baseline::Bottom
                 }
-                <span class="kw">_</span> =&gt; <span class="ident">Baseline::Top</span>,
+                <span class="kw">_ </span>=&gt; Baseline::Top,
             };
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">content_width</span> <span class="op">=</span> <span class="number">0.0</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">content_height</span> <span class="op">=</span> <span class="number">0.0</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>content_width = <span class="number">0.0</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>content_height = <span class="number">0.0</span>;
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">text</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">text</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>() {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">paint</span> <span class="op">=</span> <span class="ident">text_paint_general</span>(<span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">style</span>, <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">resource_manager</span>, <span class="ident">entity</span>);
-                <span class="ident">paint</span>.<span class="ident">set_text_align</span>(<span class="ident">align</span>);
-                <span class="ident">paint</span>.<span class="ident">set_text_baseline</span>(<span class="ident">baseline</span>);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get(entity).cloned() {
+                <span class="kw">let </span><span class="kw-2">mut </span>paint = text_paint_general(<span class="kw-2">&amp;</span>cx.style, <span class="kw-2">&amp;</span>cx.resource_manager, entity);
+                paint.set_text_align(align);
+                paint.set_text_baseline(baseline);
 
-                <span class="kw">let</span> <span class="ident">font_metrics</span> <span class="op">=</span>
-                    <span class="ident">cx</span>.<span class="ident">text_context</span>.<span class="ident">measure_font</span>(<span class="kw-2">&amp;</span><span class="ident">paint</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to read font metrics&quot;</span>);
+                <span class="kw">let </span>font_metrics =
+                    cx.text_context.measure_font(<span class="kw-2">&amp;</span>paint).expect(<span class="string">&quot;Failed to read font metrics&quot;</span>);
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">lines</span>) <span class="op">=</span> <span class="ident">text_layout</span>(<span class="ident">f32::MAX</span>, <span class="kw-2">&amp;</span><span class="ident">text</span>, <span class="kw-2">&amp;</span><span class="ident">paint</span>, <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">text_context</span>) {
-                    <span class="kw">let</span> <span class="ident">metrics</span> <span class="op">=</span> <span class="ident">measure_text_lines</span>(<span class="kw-2">&amp;</span><span class="ident">text</span>, <span class="kw-2">&amp;</span><span class="ident">paint</span>, <span class="kw-2">&amp;</span><span class="ident">lines</span>, <span class="ident">x</span>, <span class="ident">y</span>, <span class="kw-2">&amp;</span><span class="ident">cx</span>.<span class="ident">text_context</span>);
-                    <span class="kw">let</span> <span class="ident">text_width</span> <span class="op">=</span> <span class="ident">metrics</span>
-                        .<span class="ident">iter</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">m</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">width</span>())
-                        .<span class="ident">reduce</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">max</span>(<span class="ident">b</span>))
-                        .<span class="ident">unwrap_or_default</span>();
-                    <span class="kw">let</span> <span class="ident">text_height</span> <span class="op">=</span> <span class="ident">font_metrics</span>.<span class="ident">height</span>().<span class="ident">round</span>() <span class="op">*</span> <span class="ident">metrics</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f32</span>;
+                <span class="kw">if let </span><span class="prelude-val">Ok</span>(lines) = text_layout(f32::MAX, <span class="kw-2">&amp;</span>text, <span class="kw-2">&amp;</span>paint, <span class="kw-2">&amp;</span>cx.text_context) {
+                    <span class="kw">let </span>metrics = measure_text_lines(<span class="kw-2">&amp;</span>text, <span class="kw-2">&amp;</span>paint, <span class="kw-2">&amp;</span>lines, x, y, <span class="kw-2">&amp;</span>cx.text_context);
+                    <span class="kw">let </span>text_width = metrics
+                        .iter()
+                        .map(|m| m.width())
+                        .reduce(|a, b| a.max(b))
+                        .unwrap_or_default();
+                    <span class="kw">let </span>text_height = font_metrics.height().round() * metrics.len() <span class="kw">as </span>f32;
 
-                    <span class="comment">// Add an extra pixel to account for AA</span>
-                    <span class="kw">let</span> <span class="ident">text_width</span> <span class="op">=</span> <span class="ident">text_width</span>.<span class="ident">round</span>() <span class="op">+</span> <span class="number">1.0</span> <span class="op">+</span> <span class="ident">child_space_x</span>;
-                    <span class="kw">let</span> <span class="ident">text_height</span> <span class="op">=</span> <span class="ident">text_height</span>.<span class="ident">round</span>() <span class="op">+</span> <span class="number">1.0</span> <span class="op">+</span> <span class="ident">child_space_y</span>;
+                    <span class="comment">// Add an extra pixel to account for AA
+                    </span><span class="kw">let </span>text_width = text_width.round() + <span class="number">1.0 </span>+ child_space_x;
+                    <span class="kw">let </span>text_height = text_height.round() + <span class="number">1.0 </span>+ child_space_y;
 
-                    <span class="kw">if</span> <span class="ident">content_width</span> <span class="op">&lt;</span> <span class="ident">text_width</span> {
-                        <span class="ident">content_width</span> <span class="op">=</span> <span class="ident">text_width</span>;
+                    <span class="kw">if </span>content_width &lt; text_width {
+                        content_width = text_width;
                     }
-                    <span class="kw">if</span> <span class="ident">content_height</span> <span class="op">&lt;</span> <span class="ident">text_height</span> {
-                        <span class="ident">content_height</span> <span class="op">=</span> <span class="ident">text_height</span>;
-                    }
-                }
-            }
-
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">image_name</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">image</span>.<span class="ident">get</span>(<span class="ident">entity</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">img</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">resource_manager</span>.<span class="ident">images</span>.<span class="ident">get</span>(<span class="ident">image_name</span>) {
-                    <span class="kw">let</span> (<span class="ident">image_width</span>, <span class="ident">image_height</span>) <span class="op">=</span> <span class="ident">img</span>.<span class="ident">image</span>.<span class="ident">dimensions</span>();
-                    <span class="kw">let</span> <span class="ident">image_width</span> <span class="op">=</span> <span class="ident">image_width</span> <span class="kw">as</span> <span class="ident">f32</span>;
-                    <span class="kw">let</span> <span class="ident">image_height</span> <span class="op">=</span> <span class="ident">image_height</span> <span class="kw">as</span> <span class="ident">f32</span>;
-
-                    <span class="kw">if</span> <span class="ident">content_width</span> <span class="op">&lt;</span> <span class="ident">image_width</span> {
-                        <span class="ident">content_width</span> <span class="op">=</span> <span class="ident">image_width</span>;
-                    }
-                    <span class="kw">if</span> <span class="ident">content_height</span> <span class="op">&lt;</span> <span class="ident">image_height</span> {
-                        <span class="ident">content_height</span> <span class="op">=</span> <span class="ident">image_height</span>;
+                    <span class="kw">if </span>content_height &lt; text_height {
+                        content_height = text_height;
                     }
                 }
             }
 
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">content_width</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">content_width</span> <span class="op">/</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">content_height</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">content_height</span> <span class="op">/</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">dpi_factor</span> <span class="kw">as</span> <span class="ident">f32</span>);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(image_name) = cx.style.image.get(entity) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(img) = cx.resource_manager.images.get(image_name) {
+                    <span class="kw">let </span>(image_width, image_height) = img.image.dimensions();
+                    <span class="kw">let </span>image_width = image_width <span class="kw">as </span>f32;
+                    <span class="kw">let </span>image_height = image_height <span class="kw">as </span>f32;
+
+                    <span class="kw">if </span>content_width &lt; image_width {
+                        content_width = image_width;
+                    }
+                    <span class="kw">if </span>content_height &lt; image_height {
+                        content_height = image_height;
+                    }
+                }
+            }
+
+            cx.style.content_width.insert(entity, content_width / cx.style.dpi_factor <span class="kw">as </span>f32);
+            cx.style.content_height.insert(entity, content_height / cx.style.dpi_factor <span class="kw">as </span>f32);
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

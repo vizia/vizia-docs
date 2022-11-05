@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/style.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>style.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/style.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>style.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -540,547 +540,547 @@
 <span id="540">540</span>
 <span id="541">541</span>
 <span id="542">542</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::style</span>::{<span class="ident">Rule</span>, <span class="ident">Selector</span>, <span class="ident">SelectorRelation</span>, <span class="ident">StyleRule</span>};
-<span class="kw">use</span> <span class="ident">vizia_id::GenerationalId</span>;
-<span class="kw">use</span> <span class="ident">vizia_storage</span>::{<span class="ident">LayoutTreeIterator</span>, <span class="ident">TreeExt</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::style::{Rule, Selector, SelectorRelation, StyleRule};
+<span class="kw">use </span>vizia_id::GenerationalId;
+<span class="kw">use </span>vizia_storage::{LayoutTreeIterator, TreeExt};
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inline_inheritance_system</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>) {
-    <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">tree</span>.<span class="ident">into_iter</span>() {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">get_layout_parent</span>(<span class="ident">entity</span>) {
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">disabled</span>.<span class="ident">inherit_inline</span>(<span class="ident">entity</span>, <span class="ident">parent</span>);
+<span class="kw">pub fn </span>inline_inheritance_system(cx: <span class="kw-2">&amp;mut </span>Context, tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;) {
+    <span class="kw">for </span>entity <span class="kw">in </span>tree.into_iter() {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(parent) = tree.get_layout_parent(entity) {
+            cx.style.disabled.inherit_inline(entity, parent);
 
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">font_color</span>.<span class="ident">inherit_inline</span>(<span class="ident">entity</span>, <span class="ident">parent</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">font_size</span>.<span class="ident">inherit_inline</span>(<span class="ident">entity</span>, <span class="ident">parent</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">font</span>.<span class="ident">inherit_inline</span>(<span class="ident">entity</span>, <span class="ident">parent</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">caret_color</span>.<span class="ident">inherit_inline</span>(<span class="ident">entity</span>, <span class="ident">parent</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">selection_color</span>.<span class="ident">inherit_inline</span>(<span class="ident">entity</span>, <span class="ident">parent</span>);
+            cx.style.font_color.inherit_inline(entity, parent);
+            cx.style.font_size.inherit_inline(entity, parent);
+            cx.style.font.inherit_inline(entity, parent);
+            cx.style.caret_color.inherit_inline(entity, parent);
+            cx.style.selection_color.inherit_inline(entity, parent);
         }
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shared_inheritance_system</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>) {
-    <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">tree</span>.<span class="ident">into_iter</span>() {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">get_layout_parent</span>(<span class="ident">entity</span>) {
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">font_color</span>.<span class="ident">inherit_shared</span>(<span class="ident">entity</span>, <span class="ident">parent</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">font_size</span>.<span class="ident">inherit_shared</span>(<span class="ident">entity</span>, <span class="ident">parent</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">font</span>.<span class="ident">inherit_shared</span>(<span class="ident">entity</span>, <span class="ident">parent</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">caret_color</span>.<span class="ident">inherit_shared</span>(<span class="ident">entity</span>, <span class="ident">parent</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">selection_color</span>.<span class="ident">inherit_shared</span>(<span class="ident">entity</span>, <span class="ident">parent</span>);
+<span class="kw">pub fn </span>shared_inheritance_system(cx: <span class="kw-2">&amp;mut </span>Context, tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;) {
+    <span class="kw">for </span>entity <span class="kw">in </span>tree.into_iter() {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(parent) = tree.get_layout_parent(entity) {
+            cx.style.font_color.inherit_shared(entity, parent);
+            cx.style.font_size.inherit_shared(entity, parent);
+            cx.style.font.inherit_shared(entity, parent);
+            cx.style.caret_color.inherit_shared(entity, parent);
+            cx.style.selection_color.inherit_shared(entity, parent);
         }
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hoverability_system</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>) {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">draw_tree</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>();
-    <span class="ident">draw_tree</span>.<span class="ident">sort_by_cached_key</span>(<span class="op">|</span><span class="ident">entity</span><span class="op">|</span> <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_z_index</span>(<span class="kw-2">*</span><span class="ident">entity</span>));
+<span class="kw">pub fn </span>hoverability_system(cx: <span class="kw-2">&amp;mut </span>Context, tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;) {
+    <span class="kw">let </span><span class="kw-2">mut </span>draw_tree: Vec&lt;Entity&gt; = tree.into_iter().collect();
+    draw_tree.sort_by_cached_key(|entity| cx.cache.get_z_index(<span class="kw-2">*</span>entity));
 
-    <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">draw_tree</span>.<span class="ident">into_iter</span>() {
-        <span class="kw">if</span> <span class="ident">entity</span> <span class="op">==</span> <span class="ident">Entity::root</span>() {
+    <span class="kw">for </span>entity <span class="kw">in </span>draw_tree.into_iter() {
+        <span class="kw">if </span>entity == Entity::root() {
             <span class="kw">continue</span>;
         }
 
-        <span class="kw">if</span> <span class="ident">tree</span>.<span class="ident">is_ignored</span>(<span class="ident">entity</span>) {
+        <span class="kw">if </span>tree.is_ignored(entity) {
             <span class="kw">continue</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">get_layout_parent</span>(<span class="ident">entity</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span>parent = tree.get_layout_parent(entity).unwrap();
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">get_hoverability</span>(<span class="ident">parent</span>) {
-            <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">set_hoverability</span>(<span class="ident">entity</span>, <span class="bool-val">false</span>);
-        } <span class="kw">else</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">abilities</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">abilities</span>.<span class="ident">get</span>(<span class="ident">entity</span>) {
-                <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">set_hoverability</span>(<span class="ident">entity</span>, <span class="ident">abilities</span>.<span class="ident">contains</span>(<span class="ident">Abilities::HOVERABLE</span>));
-            } <span class="kw">else</span> {
-                <span class="ident">cx</span>.<span class="ident">cache</span>.<span class="ident">set_hoverability</span>(<span class="ident">entity</span>, <span class="bool-val">false</span>);
+        <span class="kw">if </span>!cx.cache.get_hoverability(parent) {
+            cx.cache.set_hoverability(entity, <span class="bool-val">false</span>);
+        } <span class="kw">else </span>{
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(abilities) = cx.style.abilities.get(entity) {
+                cx.cache.set_hoverability(entity, abilities.contains(Abilities::HOVERABLE));
+            } <span class="kw">else </span>{
+                cx.cache.set_hoverability(entity, <span class="bool-val">false</span>);
             }
         }
     }
 }
 
-<span class="comment">// Returns the selector of an entity</span>
-<span class="kw">fn</span> <span class="ident">entity_selector</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>) -&gt; <span class="ident">Selector</span> {
-    <span class="ident">Selector</span> {
-        <span class="ident">asterisk</span>: <span class="bool-val">false</span>,
-        <span class="ident">id</span>: <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">ids</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>(),
-        <span class="ident">element</span>: <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">elements</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>(),
-        <span class="ident">classes</span>: <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">classes</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>(),
-        <span class="ident">pseudo_classes</span>: {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pseudo_classes</span> <span class="op">=</span>
-                <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_default</span>();
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">disabled</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">disabled</span>.<span class="ident">get</span>(<span class="ident">entity</span>) {
-                <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::DISABLED</span>, <span class="kw-2">*</span><span class="ident">disabled</span>);
+<span class="comment">// Returns the selector of an entity
+</span><span class="kw">fn </span>entity_selector(cx: <span class="kw-2">&amp;</span>Context, entity: Entity) -&gt; Selector {
+    Selector {
+        asterisk: <span class="bool-val">false</span>,
+        id: cx.style.ids.get(entity).cloned(),
+        element: cx.style.elements.get(entity).cloned(),
+        classes: cx.style.classes.get(entity).cloned().unwrap_or_default(),
+        pseudo_classes: {
+            <span class="kw">let </span><span class="kw-2">mut </span>pseudo_classes =
+                cx.style.pseudo_classes.get(entity).cloned().unwrap_or_default();
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(disabled) = cx.style.disabled.get(entity) {
+                pseudo_classes.set(PseudoClass::DISABLED, <span class="kw-2">*</span>disabled);
             }
-            <span class="ident">pseudo_classes</span>
+            pseudo_classes
         },
-        <span class="ident">relation</span>: <span class="ident">SelectorRelation::None</span>,
+        relation: SelectorRelation::None,
     }
 }
 
-<span class="comment">// Returns true if the widget matches the selector</span>
-<span class="kw">fn</span> <span class="ident">check_match</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">selector</span>: <span class="kw-2">&amp;</span><span class="ident">Selector</span>) -&gt; <span class="ident">bool</span> {
-    <span class="comment">// Universal selector always matches</span>
-    <span class="kw">if</span> <span class="ident">selector</span>.<span class="ident">asterisk</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">pseudo_classes</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>() {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">disabled</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">disabled</span>.<span class="ident">get</span>(<span class="ident">entity</span>) {
-                <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::DISABLED</span>, <span class="kw-2">*</span><span class="ident">disabled</span>);
+<span class="comment">// Returns true if the widget matches the selector
+</span><span class="kw">fn </span>check_match(cx: <span class="kw-2">&amp;</span>Context, entity: Entity, selector: <span class="kw-2">&amp;</span>Selector) -&gt; bool {
+    <span class="comment">// Universal selector always matches
+    </span><span class="kw">if </span>selector.asterisk {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>pseudo_classes) = cx.style.pseudo_classes.get(entity).cloned() {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(disabled) = cx.style.disabled.get(entity) {
+                pseudo_classes.set(PseudoClass::DISABLED, <span class="kw-2">*</span>disabled);
             }
-            <span class="kw">let</span> <span class="ident">selector_pseudo_classes</span> <span class="op">=</span> <span class="ident">selector</span>.<span class="ident">pseudo_classes</span>;
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">pseudo_classes</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">pseudo_classes</span>.<span class="ident">contains</span>(<span class="ident">selector_pseudo_classes</span>) {
-                <span class="kw">return</span> <span class="bool-val">false</span>;
-            } <span class="kw">else</span> {
-                <span class="kw">return</span> <span class="bool-val">true</span>;
+            <span class="kw">let </span>selector_pseudo_classes = selector.pseudo_classes;
+            <span class="kw">if </span>!pseudo_classes.is_empty() &amp;&amp; !pseudo_classes.contains(selector_pseudo_classes) {
+                <span class="kw">return </span><span class="bool-val">false</span>;
+            } <span class="kw">else </span>{
+                <span class="kw">return </span><span class="bool-val">true</span>;
             }
-        } <span class="kw">else</span> {
-            <span class="kw">return</span> <span class="bool-val">true</span>;
+        } <span class="kw">else </span>{
+            <span class="kw">return </span><span class="bool-val">true</span>;
         }
     }
 
-    <span class="comment">// If there&#39;s an id in the selector, it must match the entity&#39;s id</span>
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">selector</span>.<span class="ident">id</span> {
-        <span class="kw">if</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>) <span class="op">!</span><span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">ids</span>.<span class="ident">get</span>(<span class="ident">entity</span>) {
-            <span class="kw">return</span> <span class="bool-val">false</span>;
+    <span class="comment">// If there&#39;s an id in the selector, it must match the entity&#39;s id
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(id) = <span class="kw-2">&amp;</span>selector.id {
+        <span class="kw">if </span><span class="prelude-val">Some</span>(id) != cx.style.ids.get(entity) {
+            <span class="kw">return </span><span class="bool-val">false</span>;
         }
     }
 
-    <span class="comment">// Check for element name match</span>
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">selector_element</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">selector</span>.<span class="ident">element</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">element</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">views</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">entity</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">view</span><span class="op">|</span> <span class="ident">view</span>.<span class="ident">element</span>()) {
-            <span class="kw">if</span> <span class="ident">selector_element</span> <span class="op">!</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">element</span> {
-                <span class="kw">return</span> <span class="bool-val">false</span>;
+    <span class="comment">// Check for element name match
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(selector_element) = <span class="kw-2">&amp;</span>selector.element {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(element) = cx.views.get(<span class="kw-2">&amp;</span>entity).and_then(|view| view.element()) {
+            <span class="kw">if </span>selector_element != <span class="kw-2">&amp;</span>element {
+                <span class="kw">return </span><span class="bool-val">false</span>;
             }
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">entity</span> <span class="op">==</span> <span class="ident">Entity::root</span>() {
-            <span class="kw">if</span> <span class="ident">selector_element</span> <span class="op">!</span><span class="op">=</span> <span class="string">&quot;root&quot;</span> {
-                <span class="kw">return</span> <span class="bool-val">false</span>;
+        } <span class="kw">else if </span>entity == Entity::root() {
+            <span class="kw">if </span>selector_element != <span class="string">&quot;root&quot; </span>{
+                <span class="kw">return </span><span class="bool-val">false</span>;
             }
-        } <span class="kw">else</span> {
-            <span class="kw">return</span> <span class="bool-val">false</span>;
+        } <span class="kw">else </span>{
+            <span class="kw">return </span><span class="bool-val">false</span>;
         }
     }
 
-    <span class="comment">// Check for classes match</span>
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">classes</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">classes</span>.<span class="ident">get</span>(<span class="ident">entity</span>) {
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">selector</span>.<span class="ident">classes</span>.<span class="ident">is_subset</span>(<span class="ident">classes</span>) {
-            <span class="kw">return</span> <span class="bool-val">false</span>;
+    <span class="comment">// Check for classes match
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(classes) = cx.style.classes.get(entity) {
+        <span class="kw">if </span>!selector.classes.is_subset(classes) {
+            <span class="kw">return </span><span class="bool-val">false</span>;
         }
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">selector</span>.<span class="ident">classes</span>.<span class="ident">is_empty</span>() {
-        <span class="kw">return</span> <span class="bool-val">false</span>;
+    } <span class="kw">else if </span>!selector.classes.is_empty() {
+        <span class="kw">return </span><span class="bool-val">false</span>;
     }
 
-    <span class="comment">// Check for pseudo-class match</span>
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">pseudo_classes</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">pseudo_classes</span>.<span class="ident">get</span>(<span class="ident">entity</span>).<span class="ident">cloned</span>() {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">disabled</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">disabled</span>.<span class="ident">get</span>(<span class="ident">entity</span>) {
-            <span class="ident">pseudo_classes</span>.<span class="ident">set</span>(<span class="ident">PseudoClass::DISABLED</span>, <span class="kw-2">*</span><span class="ident">disabled</span>);
+    <span class="comment">// Check for pseudo-class match
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>pseudo_classes) = cx.style.pseudo_classes.get(entity).cloned() {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(disabled) = cx.style.disabled.get(entity) {
+            pseudo_classes.set(PseudoClass::DISABLED, <span class="kw-2">*</span>disabled);
         }
-        <span class="kw">let</span> <span class="ident">selector_pseudo_classes</span> <span class="op">=</span> <span class="ident">selector</span>.<span class="ident">pseudo_classes</span>;
+        <span class="kw">let </span>selector_pseudo_classes = selector.pseudo_classes;
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">selector_pseudo_classes</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">pseudo_classes</span>.<span class="ident">contains</span>(<span class="ident">selector_pseudo_classes</span>)
+        <span class="kw">if </span>!selector_pseudo_classes.is_empty() &amp;&amp; !pseudo_classes.contains(selector_pseudo_classes)
         {
-            <span class="kw">return</span> <span class="bool-val">false</span>;
+            <span class="kw">return </span><span class="bool-val">false</span>;
         }
     }
 
-    <span class="kw">return</span> <span class="bool-val">true</span>;
+    <span class="kw">return </span><span class="bool-val">true</span>;
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">compute_matched_rules</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-    <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Context</span>,
-    <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>,
-    <span class="ident">entity</span>: <span class="ident">Entity</span>,
-    <span class="ident">matched_rules</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">StyleRule</span><span class="op">&gt;</span>,
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>compute_matched_rules&lt;<span class="lifetime">&#39;a</span>&gt;(
+    cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Context,
+    tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;,
+    entity: Entity,
+    matched_rules: <span class="kw-2">&amp;mut </span>Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>StyleRule&gt;,
 ) {
-    <span class="comment">// Loop through all of the style rules</span>
-    <span class="lifetime">&#39;rule_loop</span>: <span class="kw">for</span> <span class="ident">rule</span> <span class="kw">in</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">rules</span>.<span class="ident">iter</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">relation_entity</span> <span class="op">=</span> <span class="ident">entity</span>;
-        <span class="comment">// Loop through selectors (Should be from right to left)</span>
-        <span class="comment">// All the selectors need to match for the rule to apply</span>
-        <span class="lifetime">&#39;selector_loop</span>: <span class="kw">for</span> <span class="ident">rule_selector</span> <span class="kw">in</span> <span class="ident">rule</span>.<span class="ident">selectors</span>.<span class="ident">iter</span>().<span class="ident">rev</span>() {
-            <span class="comment">// Get the relation of the selector</span>
-            <span class="kw">match</span> <span class="ident">rule_selector</span>.<span class="ident">relation</span> {
-                <span class="ident">SelectorRelation::None</span> =&gt; {
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">check_match</span>(<span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">rule_selector</span>) {
-                        <span class="kw">continue</span> <span class="lifetime">&#39;rule_loop</span>;
+    <span class="comment">// Loop through all of the style rules
+    </span><span class="lifetime">&#39;rule_loop</span>: <span class="kw">for </span>rule <span class="kw">in </span>cx.style.rules.iter() {
+        <span class="kw">let </span><span class="kw-2">mut </span>relation_entity = entity;
+        <span class="comment">// Loop through selectors (Should be from right to left)
+        // All the selectors need to match for the rule to apply
+        </span><span class="lifetime">&#39;selector_loop</span>: <span class="kw">for </span>rule_selector <span class="kw">in </span>rule.selectors.iter().rev() {
+            <span class="comment">// Get the relation of the selector
+            </span><span class="kw">match </span>rule_selector.relation {
+                SelectorRelation::None =&gt; {
+                    <span class="kw">if </span>!check_match(cx, entity, rule_selector) {
+                        <span class="kw">continue </span><span class="lifetime">&#39;rule_loop</span>;
                     }
                 }
 
-                <span class="ident">SelectorRelation::Parent</span> =&gt; {
-                    <span class="comment">// Get the parent</span>
-                    <span class="comment">// Contrust the selector for the parent</span>
-                    <span class="comment">// Check if the parent selector matches the rule_seletor</span>
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">get_layout_parent</span>(<span class="ident">relation_entity</span>) {
-                        <span class="kw">if</span> <span class="op">!</span><span class="ident">check_match</span>(<span class="ident">cx</span>, <span class="ident">parent</span>, <span class="ident">rule_selector</span>) {
-                            <span class="kw">continue</span> <span class="lifetime">&#39;rule_loop</span>;
+                SelectorRelation::Parent =&gt; {
+                    <span class="comment">// Get the parent
+                    // Contrust the selector for the parent
+                    // Check if the parent selector matches the rule_seletor
+                    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(parent) = tree.get_layout_parent(relation_entity) {
+                        <span class="kw">if </span>!check_match(cx, parent, rule_selector) {
+                            <span class="kw">continue </span><span class="lifetime">&#39;rule_loop</span>;
                         }
 
-                        <span class="ident">relation_entity</span> <span class="op">=</span> <span class="ident">parent</span>;
-                    } <span class="kw">else</span> {
-                        <span class="kw">continue</span> <span class="lifetime">&#39;rule_loop</span>;
+                        relation_entity = parent;
+                    } <span class="kw">else </span>{
+                        <span class="kw">continue </span><span class="lifetime">&#39;rule_loop</span>;
                     }
                 }
 
-                <span class="ident">SelectorRelation::Ancestor</span> =&gt; {
-                    <span class="comment">// Walk up the tree</span>
-                    <span class="comment">// Check if each entity matches the selector</span>
-                    <span class="comment">// If any of them match, move on to the next selector</span>
-                    <span class="comment">// If none of them do, move on to the next rule</span>
-                    <span class="kw">for</span> <span class="ident">ancestor</span> <span class="kw">in</span> <span class="ident">relation_entity</span>.<span class="ident">parent_iter</span>(<span class="ident">tree</span>) {
-                        <span class="kw">if</span> <span class="ident">ancestor</span> <span class="op">==</span> <span class="ident">relation_entity</span> {
+                SelectorRelation::Ancestor =&gt; {
+                    <span class="comment">// Walk up the tree
+                    // Check if each entity matches the selector
+                    // If any of them match, move on to the next selector
+                    // If none of them do, move on to the next rule
+                    </span><span class="kw">for </span>ancestor <span class="kw">in </span>relation_entity.parent_iter(tree) {
+                        <span class="kw">if </span>ancestor == relation_entity {
                             <span class="kw">continue</span>;
                         }
-                        <span class="kw">if</span> <span class="ident">tree</span>.<span class="ident">is_ignored</span>(<span class="ident">ancestor</span>) {
+                        <span class="kw">if </span>tree.is_ignored(ancestor) {
                             <span class="kw">continue</span>;
                         }
 
-                        <span class="kw">if</span> <span class="ident">check_match</span>(<span class="ident">cx</span>, <span class="ident">ancestor</span>, <span class="ident">rule_selector</span>) {
-                            <span class="ident">relation_entity</span> <span class="op">=</span> <span class="ident">ancestor</span>;
+                        <span class="kw">if </span>check_match(cx, ancestor, rule_selector) {
+                            relation_entity = ancestor;
 
-                            <span class="kw">continue</span> <span class="lifetime">&#39;selector_loop</span>;
+                            <span class="kw">continue </span><span class="lifetime">&#39;selector_loop</span>;
                         }
                     }
 
-                    <span class="kw">continue</span> <span class="lifetime">&#39;rule_loop</span>;
+                    <span class="kw">continue </span><span class="lifetime">&#39;rule_loop</span>;
                 }
             }
         }
 
-        <span class="comment">// If all the selectors match then add the rule to the matched rules list</span>
-        <span class="ident">matched_rules</span>.<span class="ident">push</span>(<span class="ident">rule</span>);
+        <span class="comment">// If all the selectors match then add the rule to the matched rules list
+        </span>matched_rules.push(rule);
     }
 }
 
-<span class="kw">fn</span> <span class="ident">link_style_data</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">entity</span>: <span class="ident">Entity</span>, <span class="ident">matched_rules</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">false</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">false</span>;
+<span class="kw">fn </span>link_style_data(cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, matched_rules: <span class="kw-2">&amp;</span>Vec&lt;Rule&gt;) {
+    <span class="kw">let </span><span class="kw-2">mut </span>should_relayout = <span class="bool-val">false</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>should_redraw = <span class="bool-val">false</span>;
 
-    <span class="comment">// Display</span>
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">display</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;1&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="comment">// Display
+    </span><span class="kw">if </span>cx.style.display.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;1&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">visibility</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;2&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.visibility.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;2&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">z_order</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;3&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.z_order.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;3&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">overflow</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.overflow.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="comment">// Opacity</span>
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">opacity</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;4&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="comment">// Opacity
+    </span><span class="kw">if </span>cx.style.opacity.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;4&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">left</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;6&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.left.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;6&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">right</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;7&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.right.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;7&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">top</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;8&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.top.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;8&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">bottom</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;9&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.bottom.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;9&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="comment">// Size</span>
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">width</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;10&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="comment">// Size
+    </span><span class="kw">if </span>cx.style.width.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;10&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">height</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;11&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.height.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;11&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="comment">// Size Constraints</span>
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">max_width</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;12&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="comment">// Size Constraints
+    </span><span class="kw">if </span>cx.style.max_width.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;12&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">min_width</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;13&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.min_width.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;13&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">max_height</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;14&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.max_height.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;14&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">min_height</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;15&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.min_height.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;15&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="comment">// Border</span>
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">border_width</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;24&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="comment">// Border
+    </span><span class="kw">if </span>cx.style.border_width.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;24&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">border_color</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;25&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.border_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;25&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">border_shape_top_left</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.border_shape_top_left.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">border_shape_top_right</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.border_shape_top_right.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">border_shape_bottom_left</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.border_shape_bottom_left.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">border_shape_bottom_right</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.border_shape_bottom_right.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">border_radius_top_left</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;26&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.border_radius_top_left.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;26&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">border_radius_top_right</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;27&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.border_radius_top_right.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;27&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">border_radius_bottom_left</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;28&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.border_radius_bottom_left.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;28&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">border_radius_bottom_right</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;29&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.border_radius_bottom_right.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;29&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">outline_width</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.outline_width.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">outline_color</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.outline_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">outline_offset</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.outline_offset.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">layout_type</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;30&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.layout_type.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;30&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">position_type</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;30&quot;);</span>
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.position_type.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;30&quot;);
+        </span>should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="comment">// Background</span>
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">background_color</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;41&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="comment">// Background
+    </span><span class="kw">if </span>cx.style.background_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;41&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">background_image</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;42&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.background_image.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;42&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="comment">// Font</span>
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">font_color</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;43&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="comment">// Font
+    </span><span class="kw">if </span>cx.style.font_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;43&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">font_size</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;44&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.font_size.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;44&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
+        should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">font</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;44&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.font.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;44&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">text_wrap</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.text_wrap.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
+        should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">selection_color</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.selection_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">caret_color</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.caret_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="comment">// Outer Shadow</span>
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">outer_shadow_h_offset</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;45&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="comment">// Outer Shadow
+    </span><span class="kw">if </span>cx.style.outer_shadow_h_offset.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;45&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">outer_shadow_v_offset</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;46&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.outer_shadow_v_offset.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;46&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">outer_shadow_blur</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;47&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.outer_shadow_blur.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;47&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">outer_shadow_color</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;48&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.outer_shadow_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;48&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="comment">// Inner Shadow</span>
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">inner_shadow_h_offset</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;45&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="comment">// Inner Shadow
+    </span><span class="kw">if </span>cx.style.inner_shadow_h_offset.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;45&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">inner_shadow_v_offset</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;46&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.inner_shadow_v_offset.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;46&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">inner_shadow_blur</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;47&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.inner_shadow_blur.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;47&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">inner_shadow_color</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="comment">//println!(&quot;48&quot;);</span>
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.inner_shadow_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        <span class="comment">//println!(&quot;48&quot;);
+        </span>should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_left</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.child_left.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_right</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.child_right.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_top</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.child_top.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_bottom</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.child_bottom.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">row_between</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.row_between.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">col_between</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.col_between.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_relayout = <span class="bool-val">true</span>;
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">cursor</span>.<span class="ident">link</span>(<span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rules</span>) {
-        <span class="ident">should_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>cx.style.cursor.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">should_relayout</span> {
-        <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">needs_relayout</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>should_relayout {
+        cx.style.needs_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if</span> <span class="ident">should_redraw</span> {
-        <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">needs_redraw</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">if </span>should_redraw {
+        cx.style.needs_redraw = <span class="bool-val">true</span>;
     }
 }
 
-<span class="comment">// Iterate tree and determine the matched style rules for each entity. Link the entity to the style data.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">style_system</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">Tree</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span>) {
-    <span class="kw">if</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">needs_restyle</span> {
-        <span class="ident">hoverability_system</span>(<span class="ident">cx</span>, <span class="ident">tree</span>);
+<span class="comment">// Iterate tree and determine the matched style rules for each entity. Link the entity to the style data.
+</span><span class="kw">pub fn </span>style_system(cx: <span class="kw-2">&amp;mut </span>Context, tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;) {
+    <span class="kw">if </span>cx.style.needs_restyle {
+        hoverability_system(cx, tree);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev_entity</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>prev_entity = <span class="prelude-val">None</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">matched_rule_ids</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="number">100</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev_matched_rule_ids</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="number">100</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>matched_rule_ids = Vec::with_capacity(<span class="number">100</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>prev_matched_rule_ids = Vec::with_capacity(<span class="number">100</span>);
 
-        <span class="kw">let</span> <span class="ident">iterator</span> <span class="op">=</span> <span class="ident">LayoutTreeIterator::full</span>(<span class="ident">tree</span>);
+        <span class="kw">let </span>iterator = LayoutTreeIterator::full(tree);
 
-        <span class="comment">// Loop through all entities</span>
-        <span class="lifetime">&#39;ent</span>: <span class="kw">for</span> <span class="ident">entity</span> <span class="kw">in</span> <span class="ident">iterator</span> {
-            <span class="comment">// If the entity and the previous entity have the same parent and selectors then they share the same rules</span>
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">prev</span>) <span class="op">=</span> <span class="ident">prev_entity</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">get_layout_parent</span>(<span class="ident">entity</span>) {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">prev_parent</span>) <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">get_layout_parent</span>(<span class="ident">prev</span>) {
-                        <span class="kw">if</span> <span class="ident">parent</span> <span class="op">==</span> <span class="ident">prev_parent</span> {
-                            <span class="kw">if</span> <span class="ident">entity_selector</span>(<span class="ident">cx</span>, <span class="ident">entity</span>).<span class="ident">same</span>(<span class="kw-2">&amp;</span><span class="ident">entity_selector</span>(<span class="ident">cx</span>, <span class="ident">prev</span>)) {
-                                <span class="ident">prev_entity</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">entity</span>);
-                                <span class="ident">link_style_data</span>(<span class="ident">cx</span>, <span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">prev_matched_rule_ids</span>);
-                                <span class="kw">continue</span> <span class="lifetime">&#39;ent</span>;
+        <span class="comment">// Loop through all entities
+        </span><span class="lifetime">&#39;ent</span>: <span class="kw">for </span>entity <span class="kw">in </span>iterator {
+            <span class="comment">// If the entity and the previous entity have the same parent and selectors then they share the same rules
+            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(prev) = prev_entity {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(parent) = tree.get_layout_parent(entity) {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(prev_parent) = tree.get_layout_parent(prev) {
+                        <span class="kw">if </span>parent == prev_parent {
+                            <span class="kw">if </span>entity_selector(cx, entity).same(<span class="kw-2">&amp;</span>entity_selector(cx, prev)) {
+                                prev_entity = <span class="prelude-val">Some</span>(entity);
+                                link_style_data(cx, entity, <span class="kw-2">&amp;</span>prev_matched_rule_ids);
+                                <span class="kw">continue </span><span class="lifetime">&#39;ent</span>;
                             }
                         }
                     }
                 }
             }
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">matched_rules</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="number">100</span>);
-            <span class="ident">compute_matched_rules</span>(<span class="ident">cx</span>, <span class="ident">tree</span>, <span class="ident">entity</span>, <span class="kw-2">&amp;mut</span> <span class="ident">matched_rules</span>);
-            <span class="ident">matched_rule_ids</span>.<span class="ident">extend</span>(<span class="ident">matched_rules</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span>.<span class="ident">id</span>));
-            <span class="ident">link_style_data</span>(<span class="ident">cx</span>, <span class="ident">entity</span>, <span class="kw-2">&amp;</span><span class="ident">matched_rule_ids</span>);
+            <span class="kw">let </span><span class="kw-2">mut </span>matched_rules = Vec::with_capacity(<span class="number">100</span>);
+            compute_matched_rules(cx, tree, entity, <span class="kw-2">&amp;mut </span>matched_rules);
+            matched_rule_ids.extend(matched_rules.into_iter().map(|r| r.id));
+            link_style_data(cx, entity, <span class="kw-2">&amp;</span>matched_rule_ids);
 
-            <span class="ident">prev_entity</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">entity</span>);
-            <span class="ident">prev_matched_rule_ids</span>.<span class="ident">clear</span>();
-            <span class="ident">prev_matched_rule_ids</span>.<span class="ident">append</span>(<span class="kw-2">&amp;mut</span> <span class="ident">matched_rule_ids</span>);
+            prev_entity = <span class="prelude-val">Some</span>(entity);
+            prev_matched_rule_ids.clear();
+            prev_matched_rule_ids.append(<span class="kw-2">&amp;mut </span>matched_rule_ids);
         }
 
-        <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">needs_restyle</span> <span class="op">=</span> <span class="bool-val">false</span>;
+        cx.style.needs_restyle = <span class="bool-val">false</span>;
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

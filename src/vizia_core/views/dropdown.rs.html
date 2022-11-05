@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/dropdown.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>dropdown.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/dropdown.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>dropdown.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -169,176 +169,176 @@
 <span id="169">169</span>
 <span id="170">170</span>
 <span id="171">171</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::views::popup::PopupData</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::views::popup::PopupData;
 
-<span class="doccomment">/// A dropdown is used to display some state with the ability to open a popup with options to change that state.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Usually a dropdown is used in the context of a &quot;combo box&quot; or &quot;list picker&quot; to allow the user to select</span>
-<span class="doccomment">/// from one of several discrete options. The dropdown takes two closures, one which shows the current state</span>
-<span class="doccomment">/// regardless of whether the dropdown is open or closed, and one which shows the contents while it is open.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Basic dropdown</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// A basic dropdown displaying five options that the user can choose from.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use vizia_core::prelude::*;</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # #[derive(Lens)]</span>
-<span class="doccomment">/// # struct AppData {</span>
-<span class="doccomment">/// #     value: u8,</span>
-<span class="doccomment">/// # }</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # impl Model for AppData {}</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # enum AppEvent {</span>
-<span class="doccomment">/// #     SetValue(u8),</span>
-<span class="doccomment">/// # }</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # let cx = &amp;mut Context::new();</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # AppData { value: 0 }.build(cx);</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// Dropdown::new(</span>
-<span class="doccomment">///     cx,</span>
-<span class="doccomment">///     |cx| Label::new(cx, AppData::value),</span>
-<span class="doccomment">///     |cx| {</span>
-<span class="doccomment">///         for i in 0..5 {</span>
-<span class="doccomment">///             Label::new(cx, i)</span>
-<span class="doccomment">///                 .on_press(move |cx| {</span>
-<span class="doccomment">///                     cx.emit(AppEvent::SetValue(i));</span>
-<span class="doccomment">///                     cx.emit(PopupEvent::Close); // close the popup</span>
-<span class="doccomment">///                 })</span>
-<span class="doccomment">///                 .width(Stretch(1.0));</span>
-<span class="doccomment">///         }</span>
-<span class="doccomment">///     },</span>
-<span class="doccomment">/// )</span>
-<span class="doccomment">/// .width(Pixels(100.0));</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The line marked &quot;close the popup&quot; is not required for anything other than closing the popup -</span>
-<span class="doccomment">/// if you leave it out, the popup will simply not close until the user clicks out of the dropdown.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Custom Dropdown</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The dropdown doesn&#39;t have to be the current state and then a set of options - it can contain any</span>
-<span class="doccomment">/// set of views in either location. Here&#39;s an example where you can use a textbox to filter a list</span>
-<span class="doccomment">/// of checkboxes which pop up when you click the textbox:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use vizia_core::prelude::*;</span>
-<span class="doccomment">/// # let cx = &amp;mut Context::new();</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # cx.add_theme(r#&quot;</span>
-<span class="doccomment">/// #     dropdown popup {</span>
-<span class="doccomment">/// #         background-color: white;</span>
-<span class="doccomment">/// #     }</span>
-<span class="doccomment">/// # &quot;#);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// #[derive(Lens, Clone, PartialEq, Eq)]</span>
-<span class="doccomment">/// struct AppData {</span>
-<span class="doccomment">///     values: [bool; 6],</span>
-<span class="doccomment">///     filter: String,</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # impl Data for AppData {</span>
-<span class="doccomment">/// #     fn same(&amp;self, other: &amp;Self) -&gt; bool {</span>
-<span class="doccomment">/// #         self == other</span>
-<span class="doccomment">/// #     }</span>
-<span class="doccomment">/// # }</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # #[derive(Debug)]</span>
-<span class="doccomment">/// # enum AppEvent {</span>
-<span class="doccomment">/// #     SetFilter(String),</span>
-<span class="doccomment">/// #     SetValue(usize, bool),</span>
-<span class="doccomment">/// # }</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # impl Model for AppData {</span>
-<span class="doccomment">/// #     fn event(&amp;mut self, _cx: &amp;mut EventContext, event: &amp;mut Event) {</span>
-<span class="doccomment">/// #         event.map(|msg, _| {</span>
-<span class="doccomment">/// #             match msg {</span>
-<span class="doccomment">/// #                 AppEvent::SetFilter(s) =&gt; self.filter = s.clone(),</span>
-<span class="doccomment">/// #                 AppEvent::SetValue(i, b) =&gt; self.values[*i] = *b,</span>
-<span class="doccomment">/// #             }</span>
-<span class="doccomment">/// #         });</span>
-<span class="doccomment">/// #     }</span>
-<span class="doccomment">/// # }</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # const LABELS: [&amp;str; 6] = [&quot;Bees&quot;, &quot;Butterflies&quot;, &quot;Dragonflies&quot;, &quot;Crickets&quot;, &quot;Moths&quot;, &quot;Ladybugs&quot;];</span>
-<span class="doccomment">/// #</span>
-<span class="doccomment">/// # AppData {</span>
-<span class="doccomment">/// #     values: [true, false, true, false, true, false],</span>
-<span class="doccomment">/// #     filter: &quot;&quot;.to_owned(),</span>
-<span class="doccomment">/// # }.build(cx);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Dropdown::new(cx, |cx| {</span>
-<span class="doccomment">///     Textbox::new(cx, AppData::filter).on_edit(|cx, text| {</span>
-<span class="doccomment">///         cx.emit(AppEvent::SetFilter(text));</span>
-<span class="doccomment">///     })</span>
-<span class="doccomment">///     .width(Pixels(100.0))</span>
-<span class="doccomment">///     .height(Pixels(30.0))</span>
-<span class="doccomment">/// }, |cx| {</span>
-<span class="doccomment">///     Binding::new(cx, AppData::root, |cx, lens| {</span>
-<span class="doccomment">///         let current = lens.get(cx);</span>
-<span class="doccomment">///         for i in 0..6 {</span>
-<span class="doccomment">///             if LABELS[i].to_lowercase().contains(&amp;current.filter.to_lowercase()) {</span>
-<span class="doccomment">///                 HStack::new(cx, move |cx| {</span>
-<span class="doccomment">///                     Checkbox::new(cx, AppData::values.map(move |x| x[i]))</span>
-<span class="doccomment">///                         .on_toggle(move |cx| {</span>
-<span class="doccomment">///                             cx.emit(AppEvent::SetValue(i, !current.values[i]));</span>
-<span class="doccomment">///                         });</span>
-<span class="doccomment">///                     Label::new(cx, LABELS[i]);</span>
-<span class="doccomment">///                 });</span>
-<span class="doccomment">///             }</span>
-<span class="doccomment">///         }</span>
-<span class="doccomment">///     });</span>
-<span class="doccomment">/// }).width(Pixels(100.0));</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Dropdown</span>;
+<span class="doccomment">/// A dropdown is used to display some state with the ability to open a popup with options to change that state.
+///
+/// Usually a dropdown is used in the context of a &quot;combo box&quot; or &quot;list picker&quot; to allow the user to select
+/// from one of several discrete options. The dropdown takes two closures, one which shows the current state
+/// regardless of whether the dropdown is open or closed, and one which shows the contents while it is open.
+///
+/// ## Basic dropdown
+///
+/// A basic dropdown displaying five options that the user can choose from.
+///
+/// ```
+/// # use vizia_core::prelude::*;
+/// #
+/// # #[derive(Lens)]
+/// # struct AppData {
+/// #     value: u8,
+/// # }
+/// #
+/// # impl Model for AppData {}
+/// #
+/// # enum AppEvent {
+/// #     SetValue(u8),
+/// # }
+/// #
+/// # let cx = &amp;mut Context::new();
+/// #
+/// # AppData { value: 0 }.build(cx);
+/// #
+/// Dropdown::new(
+///     cx,
+///     |cx| Label::new(cx, AppData::value),
+///     |cx| {
+///         for i in 0..5 {
+///             Label::new(cx, i)
+///                 .on_press(move |cx| {
+///                     cx.emit(AppEvent::SetValue(i));
+///                     cx.emit(PopupEvent::Close); // close the popup
+///                 })
+///                 .width(Stretch(1.0));
+///         }
+///     },
+/// )
+/// .width(Pixels(100.0));
+/// ```
+///
+/// The line marked &quot;close the popup&quot; is not required for anything other than closing the popup -
+/// if you leave it out, the popup will simply not close until the user clicks out of the dropdown.
+///
+/// ## Custom Dropdown
+///
+/// The dropdown doesn&#39;t have to be the current state and then a set of options - it can contain any
+/// set of views in either location. Here&#39;s an example where you can use a textbox to filter a list
+/// of checkboxes which pop up when you click the textbox:
+///
+/// ```
+/// # use vizia_core::prelude::*;
+/// # let cx = &amp;mut Context::new();
+/// #
+/// # cx.add_theme(r#&quot;
+/// #     dropdown popup {
+/// #         background-color: white;
+/// #     }
+/// # &quot;#);
+///
+/// #[derive(Lens, Clone, PartialEq, Eq)]
+/// struct AppData {
+///     values: [bool; 6],
+///     filter: String,
+/// }
+///
+/// # impl Data for AppData {
+/// #     fn same(&amp;self, other: &amp;Self) -&gt; bool {
+/// #         self == other
+/// #     }
+/// # }
+/// #
+/// # #[derive(Debug)]
+/// # enum AppEvent {
+/// #     SetFilter(String),
+/// #     SetValue(usize, bool),
+/// # }
+/// #
+/// # impl Model for AppData {
+/// #     fn event(&amp;mut self, _cx: &amp;mut EventContext, event: &amp;mut Event) {
+/// #         event.map(|msg, _| {
+/// #             match msg {
+/// #                 AppEvent::SetFilter(s) =&gt; self.filter = s.clone(),
+/// #                 AppEvent::SetValue(i, b) =&gt; self.values[*i] = *b,
+/// #             }
+/// #         });
+/// #     }
+/// # }
+/// #
+/// # const LABELS: [&amp;str; 6] = [&quot;Bees&quot;, &quot;Butterflies&quot;, &quot;Dragonflies&quot;, &quot;Crickets&quot;, &quot;Moths&quot;, &quot;Ladybugs&quot;];
+/// #
+/// # AppData {
+/// #     values: [true, false, true, false, true, false],
+/// #     filter: &quot;&quot;.to_owned(),
+/// # }.build(cx);
+///
+/// Dropdown::new(cx, |cx| {
+///     Textbox::new(cx, AppData::filter).on_edit(|cx, text| {
+///         cx.emit(AppEvent::SetFilter(text));
+///     })
+///     .width(Pixels(100.0))
+///     .height(Pixels(30.0))
+/// }, |cx| {
+///     Binding::new(cx, AppData::root, |cx, lens| {
+///         let current = lens.get(cx);
+///         for i in 0..6 {
+///             if LABELS[i].to_lowercase().contains(&amp;current.filter.to_lowercase()) {
+///                 HStack::new(cx, move |cx| {
+///                     Checkbox::new(cx, AppData::values.map(move |x| x[i]))
+///                         .on_toggle(move |cx| {
+///                             cx.emit(AppEvent::SetValue(i, !current.values[i]));
+///                         });
+///                     Label::new(cx, LABELS[i]);
+///                 });
+///             }
+///         }
+///     });
+/// }).width(Pixels(100.0));
+/// ```
+</span><span class="kw">pub struct </span>Dropdown;
 
-<span class="kw">impl</span> <span class="ident">Dropdown</span> {
-    <span class="doccomment">/// Creates a new dropdown.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use vizia_core::prelude::*;</span>
-    <span class="doccomment">/// #</span>
-    <span class="doccomment">/// # let cx = &amp;mut Context::new();</span>
-    <span class="doccomment">/// #</span>
-    <span class="doccomment">/// Dropdown::new(cx, |cx| Label::new(cx, &quot;Text&quot;), |_| {});</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">L</span>, <span class="ident">V</span><span class="op">&gt;</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>, <span class="ident">label</span>: <span class="ident">L</span>, <span class="ident">content</span>: <span class="ident">F</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">L</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>,
-        <span class="ident">F</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Context</span>),
-        <span class="ident">V</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">View</span>,
+<span class="kw">impl </span>Dropdown {
+    <span class="doccomment">/// Creates a new dropdown.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use vizia_core::prelude::*;
+    /// #
+    /// # let cx = &amp;mut Context::new();
+    /// #
+    /// Dropdown::new(cx, |cx| Label::new(cx, &quot;Text&quot;), |_| {});
+    /// ```
+    </span><span class="kw">pub fn </span>new&lt;F, L, V&gt;(cx: <span class="kw-2">&amp;mut </span>Context, label: L, content: F) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>L: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;V&gt;,
+        F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context),
+        V: <span class="lifetime">&#39;static </span>+ View,
     {
-        <span class="self">Self</span> {}
-            .<span class="ident">build</span>(<span class="ident">cx</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-                <span class="ident">PopupData::default</span>().<span class="ident">build</span>(<span class="ident">cx</span>);
+        <span class="self">Self </span>{}
+            .build(cx, <span class="kw">move </span>|cx| {
+                PopupData::default().build(cx);
 
-                (<span class="ident">label</span>)(<span class="ident">cx</span>)
-                    .<span class="ident">class</span>(<span class="string">&quot;title&quot;</span>)
-                    .<span class="ident">width</span>(<span class="ident">Stretch</span>(<span class="number">1.0</span>))
-                    .<span class="ident">on_press</span>(<span class="op">|</span><span class="ident">cx</span><span class="op">|</span> <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">PopupEvent::Switch</span>));
+                (label)(cx)
+                    .class(<span class="string">&quot;title&quot;</span>)
+                    .width(Stretch(<span class="number">1.0</span>))
+                    .on_press(|cx| cx.emit(PopupEvent::Switch));
 
-                <span class="ident">Popup::new</span>(<span class="ident">cx</span>, <span class="ident">PopupData::is_open</span>, <span class="bool-val">false</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-                    (<span class="ident">content</span>)(<span class="ident">cx</span>);
+                Popup::new(cx, PopupData::is_open, <span class="bool-val">false</span>, <span class="kw">move </span>|cx| {
+                    (content)(cx);
                 })
-                .<span class="ident">on_blur</span>(<span class="op">|</span><span class="ident">cx</span><span class="op">|</span> <span class="ident">cx</span>.<span class="ident">emit</span>(<span class="ident">PopupEvent::Close</span>))
-                .<span class="ident">top</span>(<span class="ident">Percentage</span>(<span class="number">100.0</span>))
-                .<span class="ident">height</span>(<span class="ident">Auto</span>);
+                .on_blur(|cx| cx.emit(PopupEvent::Close))
+                .top(Percentage(<span class="number">100.0</span>))
+                .height(Auto);
             })
-            .<span class="ident">size</span>(<span class="ident">Auto</span>)
+            .size(Auto)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">Dropdown</span> {
-    <span class="kw">fn</span> <span class="ident">element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+<span class="kw">impl </span>View <span class="kw">for </span>Dropdown {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">&quot;dropdown&quot;</span>)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

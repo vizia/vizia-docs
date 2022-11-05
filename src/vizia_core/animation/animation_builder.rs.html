@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/animation/animation_builder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>animation_builder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/animation/animation_builder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>animation_builder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -413,420 +413,420 @@
 <span id="413">413</span>
 <span id="414">414</span>
 <span id="415">415</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::animation::AnimationState</span>;
-<span class="kw">use</span> <span class="ident">morphorm::Units</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::animation::AnimationState;
+<span class="kw">use </span>morphorm::Units;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">AnimationDescription</span> {
-    <span class="ident">duration</span>: <span class="ident">instant::Duration</span>,
-    <span class="ident">delay</span>: <span class="ident">instant::Duration</span>,
-    <span class="ident">persistent</span>: <span class="ident">bool</span>,
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>AnimationDescription {
+    duration: instant::Duration,
+    delay: instant::Duration,
+    persistent: bool,
 }
 
-<span class="doccomment">/// A builder for constructing animations.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returned from `cx.add_animation(duration)`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Example</span>
-<span class="doccomment">/// ```ignore</span>
-<span class="doccomment">/// let animation_id = cx.create_animation(std::time::Duration::from_secs(1))</span>
-<span class="doccomment">///     .add_keyframe(0.0, |keyframe|</span>
-<span class="doccomment">///         keyframe</span>
-<span class="doccomment">///             .set_background_color(Color::red())</span>
-<span class="doccomment">///             .set_border_color(Color::blue())</span>
-<span class="doccomment">///     )</span>
-<span class="doccomment">///     .add_keyframe(1.0, |keyframe|</span>
-<span class="doccomment">///         keyframe</span>
-<span class="doccomment">///             .set_background_color(Color::blue()))</span>
-<span class="doccomment">///             .set_border_color(Color::red())</span>
-<span class="doccomment">///     .build();</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This type is part of the prelude.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AnimationBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">id</span>: <span class="ident">Animation</span>,
-    <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Context</span>,
-    <span class="ident">animation_description</span>: <span class="ident">AnimationDescription</span>,
+<span class="doccomment">/// A builder for constructing animations.
+///
+/// Returned from `cx.add_animation(duration)`.
+///
+/// # Example
+/// ```ignore
+/// let animation_id = cx.create_animation(std::time::Duration::from_secs(1))
+///     .add_keyframe(0.0, |keyframe|
+///         keyframe
+///             .set_background_color(Color::red())
+///             .set_border_color(Color::blue())
+///     )
+///     .add_keyframe(1.0, |keyframe|
+///         keyframe
+///             .set_background_color(Color::blue()))
+///             .set_border_color(Color::red())
+///     .build();
+/// ```
+///
+/// This type is part of the prelude.
+</span><span class="kw">pub struct </span>AnimationBuilder&lt;<span class="lifetime">&#39;a</span>&gt; {
+    id: Animation,
+    cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context,
+    animation_description: AnimationDescription,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">AnimationBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Creates a new animation builder with the specified duration.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">id</span>: <span class="ident">Animation</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Context</span>, <span class="ident">duration</span>: <span class="ident">std::time::Duration</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">id</span>,
-            <span class="ident">cx</span>,
-            <span class="ident">animation_description</span>: <span class="ident">AnimationDescription</span> {
-                <span class="ident">duration</span>,
-                <span class="ident">delay</span>: <span class="ident">instant::Duration::from_secs</span>(<span class="number">0</span>),
-                <span class="ident">persistent</span>: <span class="bool-val">false</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; AnimationBuilder&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="doccomment">/// Creates a new animation builder with the specified duration.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(id: Animation, cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context, duration: std::time::Duration) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            id,
+            cx,
+            animation_description: AnimationDescription {
+                duration,
+                delay: instant::Duration::from_secs(<span class="number">0</span>),
+                persistent: <span class="bool-val">false</span>,
             },
         }
     }
 
-    <span class="doccomment">/// Sets the delay before the animation will play.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_delay</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">delay</span>: <span class="ident">instant::Duration</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span> <span class="op">=</span> <span class="ident">delay</span>;
+    <span class="doccomment">/// Sets the delay before the animation will play.
+    ///
+    ///
+    </span><span class="kw">pub fn </span>with_delay(<span class="kw-2">mut </span><span class="self">self</span>, delay: instant::Duration) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.animation_description.delay = delay;
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Sets the animation to persist after completion.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Normally, after an animation is finished, the animated property will return to the the previous value</span>
-    <span class="doccomment">/// before the animation was played. Setting an animation to persistent causes the property to be set to the last</span>
-    <span class="doccomment">/// value of the animation.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">persistent</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">persistent</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="doccomment">/// Sets the animation to persist after completion.
+    ///
+    /// Normally, after an animation is finished, the animated property will return to the the previous value
+    /// before the animation was played. Setting an animation to persistent causes the property to be set to the last
+    /// value of the animation.
+    </span><span class="kw">pub fn </span>persistent(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.animation_description.persistent = <span class="bool-val">true</span>;
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Adds a keyframe to the animation.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_keyframe</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">time</span>: <span class="ident">f32</span>, <span class="ident">keyframe</span>: <span class="ident">F</span>) -&gt; <span class="ident">KeyframeBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">KeyframeBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="ident">KeyframeBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Adds a keyframe to the animation.
+    ///
+    ///
+    </span><span class="kw">pub fn </span>add_keyframe&lt;F&gt;(<span class="self">self</span>, time: f32, keyframe: F) -&gt; KeyframeBuilder&lt;<span class="lifetime">&#39;a</span>&gt;
+    <span class="kw">where
+        </span>F: FnOnce(KeyframeBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; KeyframeBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
     {
-        (<span class="ident">keyframe</span>)(<span class="ident">KeyframeBuilder::new</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="self">self</span>.<span class="ident">cx</span>, <span class="ident">time</span>, <span class="self">self</span>.<span class="ident">animation_description</span>))
+        (keyframe)(KeyframeBuilder::new(<span class="self">self</span>.id, <span class="self">self</span>.cx, time, <span class="self">self</span>.animation_description))
     }
 }
 
-<span class="doccomment">/// A builder for constructing keyframes.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Example</span>
-<span class="doccomment">/// ```ignore</span>
-<span class="doccomment">/// let animation_id = cx.create_animation(std::time::Duration::from_secs(1))</span>
-<span class="doccomment">///     .add_keyframe(0.0, |keyframe|</span>
-<span class="doccomment">///         keyframe</span>
-<span class="doccomment">///             .set_background_color(Color::red())</span>
-<span class="doccomment">///             .set_border_color(Color::blue())</span>
-<span class="doccomment">///     )</span>
-<span class="doccomment">///     .add_keyframe(1.0, |keyframe|</span>
-<span class="doccomment">///         keyframe</span>
-<span class="doccomment">///             .set_background_color(Color::blue()))</span>
-<span class="doccomment">///             .set_border_color(Color::red())</span>
-<span class="doccomment">///     .build();</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">KeyframeBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">id</span>: <span class="ident">Animation</span>,
-    <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Context</span>,
-    <span class="ident">time</span>: <span class="ident">f32</span>,
-    <span class="ident">animation_description</span>: <span class="ident">AnimationDescription</span>,
+<span class="doccomment">/// A builder for constructing keyframes.
+///
+/// # Example
+/// ```ignore
+/// let animation_id = cx.create_animation(std::time::Duration::from_secs(1))
+///     .add_keyframe(0.0, |keyframe|
+///         keyframe
+///             .set_background_color(Color::red())
+///             .set_border_color(Color::blue())
+///     )
+///     .add_keyframe(1.0, |keyframe|
+///         keyframe
+///             .set_background_color(Color::blue()))
+///             .set_border_color(Color::red())
+///     .build();
+/// ```
+</span><span class="kw">pub struct </span>KeyframeBuilder&lt;<span class="lifetime">&#39;a</span>&gt; {
+    id: Animation,
+    cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context,
+    time: f32,
+    animation_description: AnimationDescription,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">KeyframeBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">id</span>: <span class="ident">Animation</span>,
-        <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Context</span>,
-        <span class="ident">time</span>: <span class="ident">f32</span>,
-        <span class="ident">animation_description</span>: <span class="ident">AnimationDescription</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">id</span>, <span class="ident">cx</span>, <span class="ident">time</span>, <span class="ident">animation_description</span> }
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; KeyframeBuilder&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(
+        id: Animation,
+        cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context,
+        time: f32,
+        animation_description: AnimationDescription,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ id, cx, time, animation_description }
     }
 
-    <span class="doccomment">/// Finish building the animation, returning an [Animation] id.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) -&gt; <span class="ident">Animation</span> {
-        <span class="self">self</span>.<span class="ident">id</span>
+    <span class="doccomment">/// Finish building the animation, returning an [Animation] id.
+    </span><span class="kw">pub fn </span>build(<span class="self">self</span>) -&gt; Animation {
+        <span class="self">self</span>.id
     }
 
-    <span class="doccomment">/// Sets the delay before the animation will play.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_delay</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">delay</span>: <span class="ident">instant::Duration</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span> <span class="op">=</span> <span class="ident">delay</span>;
+    <span class="doccomment">/// Sets the delay before the animation will play.
+    </span><span class="kw">pub fn </span>with_delay(<span class="kw-2">mut </span><span class="self">self</span>, delay: instant::Duration) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.animation_description.delay = delay;
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Add another keyframe to the animation.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_keyframe</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">time</span>: <span class="ident">f32</span>, <span class="ident">keyframe</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">KeyframeBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="ident">KeyframeBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Add another keyframe to the animation.
+    </span><span class="kw">pub fn </span>add_keyframe&lt;F&gt;(<span class="self">self</span>, time: f32, keyframe: F) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>F: FnOnce(KeyframeBuilder&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; KeyframeBuilder&lt;<span class="lifetime">&#39;a</span>&gt;,
     {
-        (<span class="ident">keyframe</span>)(<span class="ident">KeyframeBuilder::new</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="self">self</span>.<span class="ident">cx</span>, <span class="ident">time</span>, <span class="self">self</span>.<span class="ident">animation_description</span>))
+        (keyframe)(KeyframeBuilder::new(<span class="self">self</span>.id, <span class="self">self</span>.cx, time, <span class="self">self</span>.animation_description))
     }
 
-    <span class="doccomment">/// Adds a background-color property to the keyframe.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// .add_keyframe(0.0, |keyframe| keyframe.set_background_color(Color::red()))</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_background_color</span>(<span class="self">self</span>, <span class="ident">color</span>: <span class="ident">Color</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">anim_cx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">background_color</span>.<span class="ident">get_animation_mut</span>(<span class="self">self</span>.<span class="ident">id</span>) {
-            <span class="ident">anim_cx</span>.<span class="ident">keyframes</span>.<span class="ident">push</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">color</span>));
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">anim_cx</span> <span class="op">=</span> <span class="ident">AnimationState::new</span>(<span class="self">self</span>.<span class="ident">id</span>)
-                .<span class="ident">with_duration</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">duration</span>)
-                .<span class="ident">with_delay</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span>)
-                .<span class="ident">set_persistent</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">persistent</span>)
-                .<span class="ident">with_keyframe</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">color</span>));
+    <span class="doccomment">/// Adds a background-color property to the keyframe.
+    ///
+    /// # Example
+    /// ```ignore
+    /// .add_keyframe(0.0, |keyframe| keyframe.set_background_color(Color::red()))
+    /// ```
+    </span><span class="kw">pub fn </span>set_background_color(<span class="self">self</span>, color: Color) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(anim_cx) = <span class="self">self</span>.cx.style.background_color.get_animation_mut(<span class="self">self</span>.id) {
+            anim_cx.keyframes.push((<span class="self">self</span>.time, color));
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>anim_cx = AnimationState::new(<span class="self">self</span>.id)
+                .with_duration(<span class="self">self</span>.animation_description.duration)
+                .with_delay(<span class="self">self</span>.animation_description.delay)
+                .set_persistent(<span class="self">self</span>.animation_description.persistent)
+                .with_keyframe((<span class="self">self</span>.time, color));
 
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">background_color</span>.<span class="ident">insert_animation</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="ident">anim_cx</span>);
+            <span class="self">self</span>.cx.style.background_color.insert_animation(<span class="self">self</span>.id, anim_cx);
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Adds a left property to the keyframe.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// .add_keyframe(0.0, |keyframe| keyframe.set_left(Pixels(50.0)))</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_left</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="ident">Units</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">anim_cx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">left</span>.<span class="ident">get_animation_mut</span>(<span class="self">self</span>.<span class="ident">id</span>) {
-            <span class="ident">anim_cx</span>.<span class="ident">keyframes</span>.<span class="ident">push</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">anim_cx</span> <span class="op">=</span> <span class="ident">AnimationState::new</span>(<span class="self">self</span>.<span class="ident">id</span>)
-                .<span class="ident">with_duration</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">duration</span>)
-                .<span class="ident">with_delay</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span>)
-                .<span class="ident">set_persistent</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">persistent</span>)
-                .<span class="ident">with_keyframe</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
+    <span class="doccomment">/// Adds a left property to the keyframe.
+    ///
+    /// # Example
+    /// ```ignore
+    /// .add_keyframe(0.0, |keyframe| keyframe.set_left(Pixels(50.0)))
+    /// ```
+    </span><span class="kw">pub fn </span>set_left(<span class="self">self</span>, value: Units) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(anim_cx) = <span class="self">self</span>.cx.style.left.get_animation_mut(<span class="self">self</span>.id) {
+            anim_cx.keyframes.push((<span class="self">self</span>.time, value));
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>anim_cx = AnimationState::new(<span class="self">self</span>.id)
+                .with_duration(<span class="self">self</span>.animation_description.duration)
+                .with_delay(<span class="self">self</span>.animation_description.delay)
+                .set_persistent(<span class="self">self</span>.animation_description.persistent)
+                .with_keyframe((<span class="self">self</span>.time, value));
 
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">left</span>.<span class="ident">insert_animation</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="ident">anim_cx</span>);
+            <span class="self">self</span>.cx.style.left.insert_animation(<span class="self">self</span>.id, anim_cx);
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Adds a right property to the keyframe.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// .add_keyframe(0.0, |keyframe| keyframe.set_right(Pixels(50.0)))</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_right</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="ident">Units</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">anim_cx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">right</span>.<span class="ident">get_animation_mut</span>(<span class="self">self</span>.<span class="ident">id</span>) {
-            <span class="ident">anim_cx</span>.<span class="ident">keyframes</span>.<span class="ident">push</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">anim_cx</span> <span class="op">=</span> <span class="ident">AnimationState::new</span>(<span class="self">self</span>.<span class="ident">id</span>)
-                .<span class="ident">with_duration</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">duration</span>)
-                .<span class="ident">with_delay</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span>)
-                .<span class="ident">set_persistent</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">persistent</span>)
-                .<span class="ident">with_keyframe</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
+    <span class="doccomment">/// Adds a right property to the keyframe.
+    ///
+    /// # Example
+    /// ```ignore
+    /// .add_keyframe(0.0, |keyframe| keyframe.set_right(Pixels(50.0)))
+    /// ```
+    </span><span class="kw">pub fn </span>set_right(<span class="self">self</span>, value: Units) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(anim_cx) = <span class="self">self</span>.cx.style.right.get_animation_mut(<span class="self">self</span>.id) {
+            anim_cx.keyframes.push((<span class="self">self</span>.time, value));
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>anim_cx = AnimationState::new(<span class="self">self</span>.id)
+                .with_duration(<span class="self">self</span>.animation_description.duration)
+                .with_delay(<span class="self">self</span>.animation_description.delay)
+                .set_persistent(<span class="self">self</span>.animation_description.persistent)
+                .with_keyframe((<span class="self">self</span>.time, value));
 
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">right</span>.<span class="ident">insert_animation</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="ident">anim_cx</span>);
+            <span class="self">self</span>.cx.style.right.insert_animation(<span class="self">self</span>.id, anim_cx);
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Adds a top property to the keyframe.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// .add_keyframe(0.0, |keyframe| keyframe.set_top(Pixels(50.0)))</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_top</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="ident">Units</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">anim_cx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">top</span>.<span class="ident">get_animation_mut</span>(<span class="self">self</span>.<span class="ident">id</span>) {
-            <span class="ident">anim_cx</span>.<span class="ident">keyframes</span>.<span class="ident">push</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">anim_cx</span> <span class="op">=</span> <span class="ident">AnimationState::new</span>(<span class="self">self</span>.<span class="ident">id</span>)
-                .<span class="ident">with_duration</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">duration</span>)
-                .<span class="ident">with_delay</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span>)
-                .<span class="ident">set_persistent</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">persistent</span>)
-                .<span class="ident">with_keyframe</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
+    <span class="doccomment">/// Adds a top property to the keyframe.
+    ///
+    /// # Example
+    /// ```ignore
+    /// .add_keyframe(0.0, |keyframe| keyframe.set_top(Pixels(50.0)))
+    /// ```
+    </span><span class="kw">pub fn </span>set_top(<span class="self">self</span>, value: Units) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(anim_cx) = <span class="self">self</span>.cx.style.top.get_animation_mut(<span class="self">self</span>.id) {
+            anim_cx.keyframes.push((<span class="self">self</span>.time, value));
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>anim_cx = AnimationState::new(<span class="self">self</span>.id)
+                .with_duration(<span class="self">self</span>.animation_description.duration)
+                .with_delay(<span class="self">self</span>.animation_description.delay)
+                .set_persistent(<span class="self">self</span>.animation_description.persistent)
+                .with_keyframe((<span class="self">self</span>.time, value));
 
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">top</span>.<span class="ident">insert_animation</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="ident">anim_cx</span>);
+            <span class="self">self</span>.cx.style.top.insert_animation(<span class="self">self</span>.id, anim_cx);
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Adds a bottom property to the keyframe.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// .add_keyframe(0.0, |keyframe| keyframe.set_bottom(Pixels(50.0)))</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_bottom</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="ident">Units</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">anim_cx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">bottom</span>.<span class="ident">get_animation_mut</span>(<span class="self">self</span>.<span class="ident">id</span>) {
-            <span class="ident">anim_cx</span>.<span class="ident">keyframes</span>.<span class="ident">push</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">anim_cx</span> <span class="op">=</span> <span class="ident">AnimationState::new</span>(<span class="self">self</span>.<span class="ident">id</span>)
-                .<span class="ident">with_duration</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">duration</span>)
-                .<span class="ident">with_delay</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span>)
-                .<span class="ident">set_persistent</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">persistent</span>)
-                .<span class="ident">with_keyframe</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
+    <span class="doccomment">/// Adds a bottom property to the keyframe.
+    ///
+    /// # Example
+    /// ```ignore
+    /// .add_keyframe(0.0, |keyframe| keyframe.set_bottom(Pixels(50.0)))
+    /// ```
+    </span><span class="kw">pub fn </span>set_bottom(<span class="self">self</span>, value: Units) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(anim_cx) = <span class="self">self</span>.cx.style.bottom.get_animation_mut(<span class="self">self</span>.id) {
+            anim_cx.keyframes.push((<span class="self">self</span>.time, value));
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>anim_cx = AnimationState::new(<span class="self">self</span>.id)
+                .with_duration(<span class="self">self</span>.animation_description.duration)
+                .with_delay(<span class="self">self</span>.animation_description.delay)
+                .set_persistent(<span class="self">self</span>.animation_description.persistent)
+                .with_keyframe((<span class="self">self</span>.time, value));
 
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">bottom</span>.<span class="ident">insert_animation</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="ident">anim_cx</span>);
+            <span class="self">self</span>.cx.style.bottom.insert_animation(<span class="self">self</span>.id, anim_cx);
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Adds a width property to the keyframe.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// .add_keyframe(0.0, |keyframe| keyframe.set_width(Pixels(50.0)))</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_width</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="ident">Units</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">anim_cx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">width</span>.<span class="ident">get_animation_mut</span>(<span class="self">self</span>.<span class="ident">id</span>) {
-            <span class="ident">anim_cx</span>.<span class="ident">keyframes</span>.<span class="ident">push</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">anim_cx</span> <span class="op">=</span> <span class="ident">AnimationState::new</span>(<span class="self">self</span>.<span class="ident">id</span>)
-                .<span class="ident">with_duration</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">duration</span>)
-                .<span class="ident">with_delay</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span>)
-                .<span class="ident">set_persistent</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">persistent</span>)
-                .<span class="ident">with_keyframe</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
+    <span class="doccomment">/// Adds a width property to the keyframe.
+    ///
+    /// # Example
+    /// ```ignore
+    /// .add_keyframe(0.0, |keyframe| keyframe.set_width(Pixels(50.0)))
+    /// ```
+    </span><span class="kw">pub fn </span>set_width(<span class="self">self</span>, value: Units) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(anim_cx) = <span class="self">self</span>.cx.style.width.get_animation_mut(<span class="self">self</span>.id) {
+            anim_cx.keyframes.push((<span class="self">self</span>.time, value));
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>anim_cx = AnimationState::new(<span class="self">self</span>.id)
+                .with_duration(<span class="self">self</span>.animation_description.duration)
+                .with_delay(<span class="self">self</span>.animation_description.delay)
+                .set_persistent(<span class="self">self</span>.animation_description.persistent)
+                .with_keyframe((<span class="self">self</span>.time, value));
 
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">width</span>.<span class="ident">insert_animation</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="ident">anim_cx</span>);
+            <span class="self">self</span>.cx.style.width.insert_animation(<span class="self">self</span>.id, anim_cx);
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Adds a height property to the keyframe.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// .add_keyframe(0.0, |keyframe| keyframe.set_height(Pixels(50.0)))</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_height</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="ident">Units</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">anim_cx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">height</span>.<span class="ident">get_animation_mut</span>(<span class="self">self</span>.<span class="ident">id</span>) {
-            <span class="ident">anim_cx</span>.<span class="ident">keyframes</span>.<span class="ident">push</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">anim_cx</span> <span class="op">=</span> <span class="ident">AnimationState::new</span>(<span class="self">self</span>.<span class="ident">id</span>)
-                .<span class="ident">with_duration</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">duration</span>)
-                .<span class="ident">with_delay</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span>)
-                .<span class="ident">set_persistent</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">persistent</span>)
-                .<span class="ident">with_keyframe</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
+    <span class="doccomment">/// Adds a height property to the keyframe.
+    ///
+    /// # Example
+    /// ```ignore
+    /// .add_keyframe(0.0, |keyframe| keyframe.set_height(Pixels(50.0)))
+    /// ```
+    </span><span class="kw">pub fn </span>set_height(<span class="self">self</span>, value: Units) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(anim_cx) = <span class="self">self</span>.cx.style.height.get_animation_mut(<span class="self">self</span>.id) {
+            anim_cx.keyframes.push((<span class="self">self</span>.time, value));
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>anim_cx = AnimationState::new(<span class="self">self</span>.id)
+                .with_duration(<span class="self">self</span>.animation_description.duration)
+                .with_delay(<span class="self">self</span>.animation_description.delay)
+                .set_persistent(<span class="self">self</span>.animation_description.persistent)
+                .with_keyframe((<span class="self">self</span>.time, value));
 
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">height</span>.<span class="ident">insert_animation</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="ident">anim_cx</span>);
+            <span class="self">self</span>.cx.style.height.insert_animation(<span class="self">self</span>.id, anim_cx);
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Adds a child-left property to the keyframe.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// .add_keyframe(0.0, |keyframe| keyframe.set_child_left(Pixels(50.0)))</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_child_left</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="ident">Units</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">anim_cx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_left</span>.<span class="ident">get_animation_mut</span>(<span class="self">self</span>.<span class="ident">id</span>) {
-            <span class="ident">anim_cx</span>.<span class="ident">keyframes</span>.<span class="ident">push</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">anim_cx</span> <span class="op">=</span> <span class="ident">AnimationState::new</span>(<span class="self">self</span>.<span class="ident">id</span>)
-                .<span class="ident">with_duration</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">duration</span>)
-                .<span class="ident">with_delay</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span>)
-                .<span class="ident">set_persistent</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">persistent</span>)
-                .<span class="ident">with_keyframe</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
+    <span class="doccomment">/// Adds a child-left property to the keyframe.
+    ///
+    /// # Example
+    /// ```ignore
+    /// .add_keyframe(0.0, |keyframe| keyframe.set_child_left(Pixels(50.0)))
+    /// ```
+    </span><span class="kw">pub fn </span>set_child_left(<span class="self">self</span>, value: Units) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(anim_cx) = <span class="self">self</span>.cx.style.child_left.get_animation_mut(<span class="self">self</span>.id) {
+            anim_cx.keyframes.push((<span class="self">self</span>.time, value));
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>anim_cx = AnimationState::new(<span class="self">self</span>.id)
+                .with_duration(<span class="self">self</span>.animation_description.duration)
+                .with_delay(<span class="self">self</span>.animation_description.delay)
+                .set_persistent(<span class="self">self</span>.animation_description.persistent)
+                .with_keyframe((<span class="self">self</span>.time, value));
 
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_left</span>.<span class="ident">insert_animation</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="ident">anim_cx</span>);
+            <span class="self">self</span>.cx.style.child_left.insert_animation(<span class="self">self</span>.id, anim_cx);
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Adds a child-right property to the keyframe.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// .add_keyframe(0.0, |keyframe| keyframe.set_child_right(Pixels(50.0)))</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_child_right</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="ident">Units</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">anim_cx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_right</span>.<span class="ident">get_animation_mut</span>(<span class="self">self</span>.<span class="ident">id</span>) {
-            <span class="ident">anim_cx</span>.<span class="ident">keyframes</span>.<span class="ident">push</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">anim_cx</span> <span class="op">=</span> <span class="ident">AnimationState::new</span>(<span class="self">self</span>.<span class="ident">id</span>)
-                .<span class="ident">with_duration</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">duration</span>)
-                .<span class="ident">with_delay</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span>)
-                .<span class="ident">set_persistent</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">persistent</span>)
-                .<span class="ident">with_keyframe</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
+    <span class="doccomment">/// Adds a child-right property to the keyframe.
+    ///
+    /// # Example
+    /// ```ignore
+    /// .add_keyframe(0.0, |keyframe| keyframe.set_child_right(Pixels(50.0)))
+    /// ```
+    </span><span class="kw">pub fn </span>set_child_right(<span class="self">self</span>, value: Units) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(anim_cx) = <span class="self">self</span>.cx.style.child_right.get_animation_mut(<span class="self">self</span>.id) {
+            anim_cx.keyframes.push((<span class="self">self</span>.time, value));
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>anim_cx = AnimationState::new(<span class="self">self</span>.id)
+                .with_duration(<span class="self">self</span>.animation_description.duration)
+                .with_delay(<span class="self">self</span>.animation_description.delay)
+                .set_persistent(<span class="self">self</span>.animation_description.persistent)
+                .with_keyframe((<span class="self">self</span>.time, value));
 
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_right</span>.<span class="ident">insert_animation</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="ident">anim_cx</span>);
+            <span class="self">self</span>.cx.style.child_right.insert_animation(<span class="self">self</span>.id, anim_cx);
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Adds a child-top property to the keyframe.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// .add_keyframe(0.0, |keyframe| keyframe.set_child_top(Pixels(50.0)))</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_child_top</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="ident">Units</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">anim_cx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_top</span>.<span class="ident">get_animation_mut</span>(<span class="self">self</span>.<span class="ident">id</span>) {
-            <span class="ident">anim_cx</span>.<span class="ident">keyframes</span>.<span class="ident">push</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">anim_cx</span> <span class="op">=</span> <span class="ident">AnimationState::new</span>(<span class="self">self</span>.<span class="ident">id</span>)
-                .<span class="ident">with_duration</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">duration</span>)
-                .<span class="ident">with_delay</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span>)
-                .<span class="ident">set_persistent</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">persistent</span>)
-                .<span class="ident">with_keyframe</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
+    <span class="doccomment">/// Adds a child-top property to the keyframe.
+    ///
+    /// # Example
+    /// ```ignore
+    /// .add_keyframe(0.0, |keyframe| keyframe.set_child_top(Pixels(50.0)))
+    /// ```
+    </span><span class="kw">pub fn </span>set_child_top(<span class="self">self</span>, value: Units) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(anim_cx) = <span class="self">self</span>.cx.style.child_top.get_animation_mut(<span class="self">self</span>.id) {
+            anim_cx.keyframes.push((<span class="self">self</span>.time, value));
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>anim_cx = AnimationState::new(<span class="self">self</span>.id)
+                .with_duration(<span class="self">self</span>.animation_description.duration)
+                .with_delay(<span class="self">self</span>.animation_description.delay)
+                .set_persistent(<span class="self">self</span>.animation_description.persistent)
+                .with_keyframe((<span class="self">self</span>.time, value));
 
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_top</span>.<span class="ident">insert_animation</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="ident">anim_cx</span>);
+            <span class="self">self</span>.cx.style.child_top.insert_animation(<span class="self">self</span>.id, anim_cx);
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Adds a child-bottom property to the keyframe.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// .add_keyframe(0.0, |keyframe| keyframe.set_child_bottom(Pixels(50.0)))</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_child_bottom</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="ident">Units</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">anim_cx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_bottom</span>.<span class="ident">get_animation_mut</span>(<span class="self">self</span>.<span class="ident">id</span>) {
-            <span class="ident">anim_cx</span>.<span class="ident">keyframes</span>.<span class="ident">push</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">anim_cx</span> <span class="op">=</span> <span class="ident">AnimationState::new</span>(<span class="self">self</span>.<span class="ident">id</span>)
-                .<span class="ident">with_duration</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">duration</span>)
-                .<span class="ident">with_delay</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span>)
-                .<span class="ident">set_persistent</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">persistent</span>)
-                .<span class="ident">with_keyframe</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
+    <span class="doccomment">/// Adds a child-bottom property to the keyframe.
+    ///
+    /// # Example
+    /// ```ignore
+    /// .add_keyframe(0.0, |keyframe| keyframe.set_child_bottom(Pixels(50.0)))
+    /// ```
+    </span><span class="kw">pub fn </span>set_child_bottom(<span class="self">self</span>, value: Units) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(anim_cx) = <span class="self">self</span>.cx.style.child_bottom.get_animation_mut(<span class="self">self</span>.id) {
+            anim_cx.keyframes.push((<span class="self">self</span>.time, value));
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>anim_cx = AnimationState::new(<span class="self">self</span>.id)
+                .with_duration(<span class="self">self</span>.animation_description.duration)
+                .with_delay(<span class="self">self</span>.animation_description.delay)
+                .set_persistent(<span class="self">self</span>.animation_description.persistent)
+                .with_keyframe((<span class="self">self</span>.time, value));
 
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_bottom</span>.<span class="ident">insert_animation</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="ident">anim_cx</span>);
+            <span class="self">self</span>.cx.style.child_bottom.insert_animation(<span class="self">self</span>.id, anim_cx);
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Adds a rotate transform property to the keyframe.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// .add_keyframe(0.0, |keyframe| keyframe.set_rotate(Pixels(50.0)))</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_rotate</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="ident">f32</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">anim_cx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">rotate</span>.<span class="ident">get_animation_mut</span>(<span class="self">self</span>.<span class="ident">id</span>) {
-            <span class="ident">anim_cx</span>.<span class="ident">keyframes</span>.<span class="ident">push</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">anim_cx</span> <span class="op">=</span> <span class="ident">AnimationState::new</span>(<span class="self">self</span>.<span class="ident">id</span>)
-                .<span class="ident">with_duration</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">duration</span>)
-                .<span class="ident">with_delay</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span>)
-                .<span class="ident">set_persistent</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">persistent</span>)
-                .<span class="ident">with_keyframe</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">value</span>));
+    <span class="doccomment">/// Adds a rotate transform property to the keyframe.
+    ///
+    /// # Example
+    /// ```ignore
+    /// .add_keyframe(0.0, |keyframe| keyframe.set_rotate(Pixels(50.0)))
+    /// ```
+    </span><span class="kw">pub fn </span>set_rotate(<span class="self">self</span>, value: f32) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(anim_cx) = <span class="self">self</span>.cx.style.rotate.get_animation_mut(<span class="self">self</span>.id) {
+            anim_cx.keyframes.push((<span class="self">self</span>.time, value));
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>anim_cx = AnimationState::new(<span class="self">self</span>.id)
+                .with_duration(<span class="self">self</span>.animation_description.duration)
+                .with_delay(<span class="self">self</span>.animation_description.delay)
+                .set_persistent(<span class="self">self</span>.animation_description.persistent)
+                .with_keyframe((<span class="self">self</span>.time, value));
 
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">rotate</span>.<span class="ident">insert_animation</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="ident">anim_cx</span>);
+            <span class="self">self</span>.cx.style.rotate.insert_animation(<span class="self">self</span>.id, anim_cx);
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_opacity</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="ident">f32</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">anim_cx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">opacity</span>.<span class="ident">get_animation_mut</span>(<span class="self">self</span>.<span class="ident">id</span>) {
-            <span class="ident">anim_cx</span>.<span class="ident">keyframes</span>.<span class="ident">push</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">Opacity</span>(<span class="ident">value</span>)));
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">anim_cx</span> <span class="op">=</span> <span class="ident">AnimationState::new</span>(<span class="self">self</span>.<span class="ident">id</span>)
-                .<span class="ident">with_duration</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">duration</span>)
-                .<span class="ident">with_delay</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">delay</span>)
-                .<span class="ident">set_persistent</span>(<span class="self">self</span>.<span class="ident">animation_description</span>.<span class="ident">persistent</span>)
-                .<span class="ident">with_keyframe</span>((<span class="self">self</span>.<span class="ident">time</span>, <span class="ident">Opacity</span>(<span class="ident">value</span>)));
+    <span class="kw">pub fn </span>set_opacity(<span class="self">self</span>, value: f32) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(anim_cx) = <span class="self">self</span>.cx.style.opacity.get_animation_mut(<span class="self">self</span>.id) {
+            anim_cx.keyframes.push((<span class="self">self</span>.time, Opacity(value)));
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>anim_cx = AnimationState::new(<span class="self">self</span>.id)
+                .with_duration(<span class="self">self</span>.animation_description.duration)
+                .with_delay(<span class="self">self</span>.animation_description.delay)
+                .set_persistent(<span class="self">self</span>.animation_description.persistent)
+                .with_keyframe((<span class="self">self</span>.time, Opacity(value)));
 
-            <span class="self">self</span>.<span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">opacity</span>.<span class="ident">insert_animation</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="ident">anim_cx</span>);
+            <span class="self">self</span>.cx.style.opacity.insert_animation(<span class="self">self</span>.id, anim_cx);
         }
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

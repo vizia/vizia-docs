@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/modifiers/layout.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>layout.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/modifiers/layout.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>layout.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -424,431 +424,431 @@
 <span id="424">424</span>
 <span id="425">425</span>
 <span id="426">426</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::internal</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::internal;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="doccomment">/// Modifiers for changing the layout properties of a view.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">LayoutModifiers</span>: <span class="ident">internal::Modifiable</span> {
+<span class="doccomment">/// Modifiers for changing the layout properties of a view.
+</span><span class="kw">pub trait </span>LayoutModifiers: internal::Modifiable {
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the layout type of the view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// The layout type controls how a parent will position any children which have `PositionType::ParentDirected`.</span>
-        <span class="doccomment">/// Accepts any value, or lens to a target, with a type which can be converted into `LayoutType`.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// There are three variants:</span>
-        <span class="doccomment">/// - `LayoutType::Row` - Parent will stack its children horizontally.</span>
-        <span class="doccomment">/// - `LayoutType::Column` - (default) Parent will stack its children vertically.</span>
-        <span class="doccomment">/// - `LayoutType::Grid` - The position of children is determine by the grid properties.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// # Example</span>
-        <span class="doccomment">/// ```</span>
-        <span class="doccomment">/// # use vizia_core::prelude::*;</span>
-        <span class="doccomment">/// # let cx = &amp;mut Context::new();</span>
-        <span class="doccomment">/// #[derive(Lens, Model, Setter)]</span>
-        <span class="doccomment">/// pub struct AppData {</span>
-        <span class="doccomment">///     layout_type: LayoutType,</span>
-        <span class="doccomment">/// }</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// # AppData {</span>
-        <span class="doccomment">/// #   layout_type: LayoutType::Row,</span>
-        <span class="doccomment">/// # }.build(cx);</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Element::new(cx).layout_type(LayoutType::Row);  // Value of type `LayoutType`.</span>
-        <span class="doccomment">/// Element::new(cx).layout_type(AppData::layout_type); // Lens to target of type `LayoutType`.</span>
-        <span class="doccomment">/// ```</span>
-        <span class="ident">layout_type</span>,
-        <span class="ident">LayoutType</span>
+        <span class="doccomment">/// Sets the layout type of the view.
+        ///
+        /// The layout type controls how a parent will position any children which have `PositionType::ParentDirected`.
+        /// Accepts any value, or lens to a target, with a type which can be converted into `LayoutType`.
+        ///
+        /// There are three variants:
+        /// - `LayoutType::Row` - Parent will stack its children horizontally.
+        /// - `LayoutType::Column` - (default) Parent will stack its children vertically.
+        /// - `LayoutType::Grid` - The position of children is determine by the grid properties.
+        ///
+        /// # Example
+        /// ```
+        /// # use vizia_core::prelude::*;
+        /// # let cx = &amp;mut Context::new();
+        /// #[derive(Lens, Model, Setter)]
+        /// pub struct AppData {
+        ///     layout_type: LayoutType,
+        /// }
+        ///
+        /// # AppData {
+        /// #   layout_type: LayoutType::Row,
+        /// # }.build(cx);
+        ///
+        /// Element::new(cx).layout_type(LayoutType::Row);  // Value of type `LayoutType`.
+        /// Element::new(cx).layout_type(AppData::layout_type); // Lens to target of type `LayoutType`.
+        /// ```
+        </span>layout_type,
+        LayoutType
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the position type of the view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// The position type determines how a child will be positioned within a parent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// - `PositionType::ParentDirected` - The child will be positioned relative to its siblings in a stack</span>
-        <span class="doccomment">/// (if parent layout type is `Row` or `Column`), or relative to its grid position (if parent layout type is `Grid`).</span>
-        <span class="doccomment">/// - `PositionType::SelfDirected` - The child will be positioned relative to the top-left corner of its parents bounding box</span>
-        <span class="doccomment">/// and will ignore its siblings or grid position. This is approximately equivalent to absolute positioning.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// # Example</span>
-        <span class="doccomment">/// ```</span>
-        <span class="doccomment">/// # use vizia_core::prelude::*;</span>
-        <span class="doccomment">/// # let cx = &amp;mut Context::new();</span>
-        <span class="doccomment">/// Element::new(cx).position_type(PositionType::SelfDirected);</span>
-        <span class="doccomment">/// ```</span>
-        <span class="ident">position_type</span>,
-        <span class="ident">PositionType</span>
+        <span class="doccomment">/// Sets the position type of the view.
+        ///
+        /// The position type determines how a child will be positioned within a parent.
+        ///
+        /// - `PositionType::ParentDirected` - The child will be positioned relative to its siblings in a stack
+        /// (if parent layout type is `Row` or `Column`), or relative to its grid position (if parent layout type is `Grid`).
+        /// - `PositionType::SelfDirected` - The child will be positioned relative to the top-left corner of its parents bounding box
+        /// and will ignore its siblings or grid position. This is approximately equivalent to absolute positioning.
+        ///
+        /// # Example
+        /// ```
+        /// # use vizia_core::prelude::*;
+        /// # let cx = &amp;mut Context::new();
+        /// Element::new(cx).position_type(PositionType::SelfDirected);
+        /// ```
+        </span>position_type,
+        PositionType
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the space on the left side of the view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// The left space, along with the right space, determines the horizontal position of a view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// - `Units::Pixels(...)` - The left space will be a fixed number of points. This will scale with the DPI of the target display.</span>
-        <span class="doccomment">/// - `Units::Percentage(...)` - The left space will be a proportion of the parent width.</span>
-        <span class="doccomment">/// - `Units::Stretch(...)` - The left space will be a ratio of the remaining free space, see [`Units`](crate::prelude::Units).</span>
-        <span class="doccomment">/// - `Units::Auto` - The left space will be determined by the parent `child-left`, see [`child_left`](crate::prelude::LayoutModifiers::left).</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// # Example</span>
-        <span class="doccomment">/// ```</span>
-        <span class="doccomment">/// # use vizia_core::prelude::*;</span>
-        <span class="doccomment">/// # let cx = &amp;mut Context::new();</span>
-        <span class="doccomment">/// Element::new(cx).left(Units::Pixels(100.0));</span>
-        <span class="doccomment">/// ```</span>
-        <span class="ident">left</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the space on the left side of the view.
+        ///
+        /// The left space, along with the right space, determines the horizontal position of a view.
+        ///
+        /// - `Units::Pixels(...)` - The left space will be a fixed number of points. This will scale with the DPI of the target display.
+        /// - `Units::Percentage(...)` - The left space will be a proportion of the parent width.
+        /// - `Units::Stretch(...)` - The left space will be a ratio of the remaining free space, see [`Units`](crate::prelude::Units).
+        /// - `Units::Auto` - The left space will be determined by the parent `child-left`, see [`child_left`](crate::prelude::LayoutModifiers::left).
+        ///
+        /// # Example
+        /// ```
+        /// # use vizia_core::prelude::*;
+        /// # let cx = &amp;mut Context::new();
+        /// Element::new(cx).left(Units::Pixels(100.0));
+        /// ```
+        </span>left,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the space on the right side of the view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// The right space, along with the left space, determines the horizontal position of a view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// - `Units::Pixels(...)` - The right space will be a fixed number of points. This will scale with the DPI of the target display.</span>
-        <span class="doccomment">/// - `Units::Percentage(...)` - The right space will be a proportion of the parent width.</span>
-        <span class="doccomment">/// - `Units::Stretch(...)` - The right space will be a ratio of the remaining free space, see [`Units`](crate::prelude::Units).</span>
-        <span class="doccomment">/// - `Units::Auto` - The right space will be determined by the parent `child-left`, see [`child_left`](crate::prelude::LayoutModifiers::left).</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// # Example</span>
-        <span class="doccomment">/// ```</span>
-        <span class="doccomment">/// # use vizia_core::prelude::*;</span>
-        <span class="doccomment">/// # let cx = &amp;mut Context::new();</span>
-        <span class="doccomment">/// Element::new(cx).right(Units::Pixels(100.0));</span>
-        <span class="doccomment">/// ```</span>
-        <span class="ident">right</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the space on the right side of the view.
+        ///
+        /// The right space, along with the left space, determines the horizontal position of a view.
+        ///
+        /// - `Units::Pixels(...)` - The right space will be a fixed number of points. This will scale with the DPI of the target display.
+        /// - `Units::Percentage(...)` - The right space will be a proportion of the parent width.
+        /// - `Units::Stretch(...)` - The right space will be a ratio of the remaining free space, see [`Units`](crate::prelude::Units).
+        /// - `Units::Auto` - The right space will be determined by the parent `child-left`, see [`child_left`](crate::prelude::LayoutModifiers::left).
+        ///
+        /// # Example
+        /// ```
+        /// # use vizia_core::prelude::*;
+        /// # let cx = &amp;mut Context::new();
+        /// Element::new(cx).right(Units::Pixels(100.0));
+        /// ```
+        </span>right,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the space on the top side of the view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// The top space, along with the bottom space, determines the vertical position of a view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// - `Units::Pixels(...)` - The top space will be a fixed number of points. This will scale with the DPI of the target display.</span>
-        <span class="doccomment">/// - `Units::Percentage(...)` - The top space will be a proportion of the parent width.</span>
-        <span class="doccomment">/// - `Units::Stretch(...)` - The top space will be a ratio of the remaining free space, see [`Units`](crate::prelude::Units).</span>
-        <span class="doccomment">/// - `Units::Auto` - The top space will be determined by the parent `child-left`, see [`child_left`](crate::prelude::LayoutModifiers::left).</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// # Example</span>
-        <span class="doccomment">/// ```</span>
-        <span class="doccomment">/// # use vizia_core::prelude::*;</span>
-        <span class="doccomment">/// # let cx = &amp;mut Context::new();</span>
-        <span class="doccomment">/// Element::new(cx).top(Units::Pixels(100.0));</span>
-        <span class="doccomment">/// ```</span>
-        <span class="ident">top</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the space on the top side of the view.
+        ///
+        /// The top space, along with the bottom space, determines the vertical position of a view.
+        ///
+        /// - `Units::Pixels(...)` - The top space will be a fixed number of points. This will scale with the DPI of the target display.
+        /// - `Units::Percentage(...)` - The top space will be a proportion of the parent width.
+        /// - `Units::Stretch(...)` - The top space will be a ratio of the remaining free space, see [`Units`](crate::prelude::Units).
+        /// - `Units::Auto` - The top space will be determined by the parent `child-left`, see [`child_left`](crate::prelude::LayoutModifiers::left).
+        ///
+        /// # Example
+        /// ```
+        /// # use vizia_core::prelude::*;
+        /// # let cx = &amp;mut Context::new();
+        /// Element::new(cx).top(Units::Pixels(100.0));
+        /// ```
+        </span>top,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the space on the bottom side of the view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// The bottom space, along with the top space, determines the vertical position of a view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// - `Units::Pixels(...)` - The bottom space will be a fixed number of points. This will scale with the DPI of the target display.</span>
-        <span class="doccomment">/// - `Units::Percentage(...)` - The bottom space will be a proportion of the parent width.</span>
-        <span class="doccomment">/// - `Units::Stretch(...)` - The bottom space will be a ratio of the remaining free space, see [`Units`](crate::prelude::Units).</span>
-        <span class="doccomment">/// - `Units::Auto` - The bottom space will be determined by the parent `child-left`, see [`child_left`](crate::prelude::LayoutModifiers::left).</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// # Example</span>
-        <span class="doccomment">/// ```</span>
-        <span class="doccomment">/// # use vizia_core::prelude::*;</span>
-        <span class="doccomment">/// # let cx = &amp;mut Context::new();</span>
-        <span class="doccomment">/// Element::new(cx).bottom(Units::Pixels(100.0));</span>
-        <span class="doccomment">/// ```</span>
-        <span class="ident">bottom</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the space on the bottom side of the view.
+        ///
+        /// The bottom space, along with the top space, determines the vertical position of a view.
+        ///
+        /// - `Units::Pixels(...)` - The bottom space will be a fixed number of points. This will scale with the DPI of the target display.
+        /// - `Units::Percentage(...)` - The bottom space will be a proportion of the parent width.
+        /// - `Units::Stretch(...)` - The bottom space will be a ratio of the remaining free space, see [`Units`](crate::prelude::Units).
+        /// - `Units::Auto` - The bottom space will be determined by the parent `child-left`, see [`child_left`](crate::prelude::LayoutModifiers::left).
+        ///
+        /// # Example
+        /// ```
+        /// # use vizia_core::prelude::*;
+        /// # let cx = &amp;mut Context::new();
+        /// Element::new(cx).bottom(Units::Pixels(100.0));
+        /// ```
+        </span>bottom,
+        Units
     );
 
-    <span class="doccomment">/// Sets the space for all sides of the view.</span>
-    <span class="kw">fn</span> <span class="ident">space</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entity</span>();
-        <span class="ident">value</span>.<span class="ident">set_or_bind</span>(<span class="self">self</span>.<span class="ident">context</span>(), <span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">v</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">into</span>();
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">left</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">right</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">top</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">bottom</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
+    <span class="doccomment">/// Sets the space for all sides of the view.
+    </span><span class="kw">fn </span>space&lt;U: Into&lt;Units&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+            <span class="kw">let </span>value = v.into();
+            cx.style.left.insert(entity, value);
+            cx.style.right.insert(entity, value);
+            cx.style.top.insert(entity, value);
+            cx.style.bottom.insert(entity, value);
 
-            <span class="ident">cx</span>.<span class="ident">need_relayout</span>();
-            <span class="ident">cx</span>.<span class="ident">need_redraw</span>();
+            cx.need_relayout();
+            cx.need_redraw();
         });
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the width of the view.</span>
-        <span class="ident">width</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the width of the view.
+        </span>width,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the height of the view.</span>
-        <span class="ident">height</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the height of the view.
+        </span>height,
+        Units
     );
 
-    <span class="doccomment">/// Sets the width and height of the view.</span>
-    <span class="kw">fn</span> <span class="ident">size</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entity</span>();
-        <span class="ident">value</span>.<span class="ident">set_or_bind</span>(<span class="self">self</span>.<span class="ident">context</span>(), <span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">v</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">into</span>();
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">width</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">height</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
+    <span class="doccomment">/// Sets the width and height of the view.
+    </span><span class="kw">fn </span>size&lt;U: Into&lt;Units&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+            <span class="kw">let </span>value = v.into();
+            cx.style.width.insert(entity, value);
+            cx.style.height.insert(entity, value);
 
-            <span class="ident">cx</span>.<span class="ident">need_relayout</span>();
-            <span class="ident">cx</span>.<span class="ident">need_redraw</span>();
+            cx.need_relayout();
+            cx.need_redraw();
         });
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the space between the left side of the view and the left side of its children.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Applies only to child views which have a `left` property set to `Auto`.</span>
-        <span class="ident">child_left</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the space between the left side of the view and the left side of its children.
+        ///
+        /// Applies only to child views which have a `left` property set to `Auto`.
+        </span>child_left,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the space between the right side of the view and the right side of its children.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Applies only to child views which have a `right` property set to `Auto`.</span>
-        <span class="ident">child_right</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the space between the right side of the view and the right side of its children.
+        ///
+        /// Applies only to child views which have a `right` property set to `Auto`.
+        </span>child_right,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the space between the top side of the view and the top side of its children.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Applies only to child views which have a `top` property set to `Auto`.</span>
-        <span class="ident">child_top</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the space between the top side of the view and the top side of its children.
+        ///
+        /// Applies only to child views which have a `top` property set to `Auto`.
+        </span>child_top,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the space between the bottom side of the view and the bottom side of its children.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Applies only to child views which have a `bottom` property set to `Auto`.</span>
-        <span class="ident">child_bottom</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the space between the bottom side of the view and the bottom side of its children.
+        ///
+        /// Applies only to child views which have a `bottom` property set to `Auto`.
+        </span>child_bottom,
+        Units
     );
 
-    <span class="doccomment">/// Sets the space between the vew and its children.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The child_space works by overriding the `Auto` space properties of its children.</span>
-    <span class="kw">fn</span> <span class="ident">child_space</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entity</span>();
-        <span class="ident">value</span>.<span class="ident">set_or_bind</span>(<span class="self">self</span>.<span class="ident">context</span>(), <span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">v</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">into</span>();
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_left</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_right</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_top</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">child_bottom</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
+    <span class="doccomment">/// Sets the space between the vew and its children.
+    ///
+    /// The child_space works by overriding the `Auto` space properties of its children.
+    </span><span class="kw">fn </span>child_space&lt;U: Into&lt;Units&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+            <span class="kw">let </span>value = v.into();
+            cx.style.child_left.insert(entity, value);
+            cx.style.child_right.insert(entity, value);
+            cx.style.child_top.insert(entity, value);
+            cx.style.child_bottom.insert(entity, value);
 
-            <span class="ident">cx</span>.<span class="ident">need_relayout</span>();
-            <span class="ident">cx</span>.<span class="ident">need_redraw</span>();
+            cx.need_relayout();
+            cx.need_redraw();
         });
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the space between the views children in a vertical stack.</span>
-        <span class="ident">row_between</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the space between the views children in a vertical stack.
+        </span>row_between,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the space between the views children in a horizontal stack.</span>
-        <span class="ident">col_between</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the space between the views children in a horizontal stack.
+        </span>col_between,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the minimum width of the view.</span>
-        <span class="ident">min_width</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the minimum width of the view.
+        </span>min_width,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the minimum height of the view.</span>
-        <span class="ident">min_height</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the minimum height of the view.
+        </span>min_height,
+        Units
     );
 
-    <span class="doccomment">/// Sets the minimum width and minimum height of the view.</span>
-    <span class="kw">fn</span> <span class="ident">min_size</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entity</span>();
-        <span class="ident">value</span>.<span class="ident">set_or_bind</span>(<span class="self">self</span>.<span class="ident">context</span>(), <span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">v</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">into</span>();
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">min_width</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">min_height</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
+    <span class="doccomment">/// Sets the minimum width and minimum height of the view.
+    </span><span class="kw">fn </span>min_size&lt;U: Into&lt;Units&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+            <span class="kw">let </span>value = v.into();
+            cx.style.min_width.insert(entity, value);
+            cx.style.min_height.insert(entity, value);
 
-            <span class="ident">cx</span>.<span class="ident">need_relayout</span>();
-            <span class="ident">cx</span>.<span class="ident">need_redraw</span>();
+            cx.need_relayout();
+            cx.need_redraw();
         });
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the maximum width of the view.</span>
-        <span class="ident">max_width</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the maximum width of the view.
+        </span>max_width,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the maximum height of the view.</span>
-        <span class="ident">max_height</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the maximum height of the view.
+        </span>max_height,
+        Units
     );
 
-    <span class="doccomment">/// Sets the maximum width and maximum height of the view.</span>
-    <span class="kw">fn</span> <span class="ident">max_size</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entity</span>();
-        <span class="ident">value</span>.<span class="ident">set_or_bind</span>(<span class="self">self</span>.<span class="ident">context</span>(), <span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">v</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">into</span>();
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">max_width</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">max_height</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
+    <span class="doccomment">/// Sets the maximum width and maximum height of the view.
+    </span><span class="kw">fn </span>max_size&lt;U: Into&lt;Units&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+            <span class="kw">let </span>value = v.into();
+            cx.style.max_width.insert(entity, value);
+            cx.style.max_height.insert(entity, value);
 
-            <span class="ident">cx</span>.<span class="ident">need_relayout</span>();
-            <span class="ident">cx</span>.<span class="ident">need_redraw</span>();
+            cx.need_relayout();
+            cx.need_redraw();
         });
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the minimum left space of the view.</span>
-        <span class="ident">min_left</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the minimum left space of the view.
+        </span>min_left,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the minimum right space of the view.</span>
-        <span class="ident">min_right</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the minimum right space of the view.
+        </span>min_right,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the minimum top space of the view.</span>
-        <span class="ident">min_top</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the minimum top space of the view.
+        </span>min_top,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the minimum bottom space of the view.</span>
-        <span class="ident">min_bottom</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the minimum bottom space of the view.
+        </span>min_bottom,
+        Units
     );
 
-    <span class="doccomment">/// Sets the minimum space for all sides of the view.</span>
-    <span class="kw">fn</span> <span class="ident">min_space</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entity</span>();
-        <span class="ident">value</span>.<span class="ident">set_or_bind</span>(<span class="self">self</span>.<span class="ident">context</span>(), <span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">v</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">into</span>();
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">min_left</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">min_right</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">min_top</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">min_bottom</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
+    <span class="doccomment">/// Sets the minimum space for all sides of the view.
+    </span><span class="kw">fn </span>min_space&lt;U: Into&lt;Units&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+            <span class="kw">let </span>value = v.into();
+            cx.style.min_left.insert(entity, value);
+            cx.style.min_right.insert(entity, value);
+            cx.style.min_top.insert(entity, value);
+            cx.style.min_bottom.insert(entity, value);
 
-            <span class="ident">cx</span>.<span class="ident">need_relayout</span>();
-            <span class="ident">cx</span>.<span class="ident">need_redraw</span>();
+            cx.need_relayout();
+            cx.need_redraw();
         });
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the maximum left space of the view.</span>
-        <span class="ident">max_left</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the maximum left space of the view.
+        </span>max_left,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the maximum right space of the view.</span>
-        <span class="ident">max_right</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the maximum right space of the view.
+        </span>max_right,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the maximum top space of the view.</span>
-        <span class="ident">max_top</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the maximum top space of the view.
+        </span>max_top,
+        Units
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the maximum bottom space of the view.</span>
-        <span class="ident">max_bottom</span>,
-        <span class="ident">Units</span>
+        <span class="doccomment">/// Sets the maximum bottom space of the view.
+        </span>max_bottom,
+        Units
     );
 
-    <span class="doccomment">/// Sets the maximum space for all sides of the view.</span>
-    <span class="kw">fn</span> <span class="ident">max_space</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entity</span>();
-        <span class="ident">value</span>.<span class="ident">set_or_bind</span>(<span class="self">self</span>.<span class="ident">context</span>(), <span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">v</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">into</span>();
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">max_left</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">max_right</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">max_top</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">max_bottom</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">value</span>);
+    <span class="doccomment">/// Sets the maximum space for all sides of the view.
+    </span><span class="kw">fn </span>max_space&lt;U: Into&lt;Units&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+            <span class="kw">let </span>value = v.into();
+            cx.style.max_left.insert(entity, value);
+            cx.style.max_right.insert(entity, value);
+            cx.style.max_top.insert(entity, value);
+            cx.style.max_bottom.insert(entity, value);
 
-            <span class="ident">cx</span>.<span class="ident">need_relayout</span>();
-            <span class="ident">cx</span>.<span class="ident">need_redraw</span>();
+            cx.need_relayout();
+            cx.need_redraw();
         });
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Sets the grid rows of the view.</span>
-    <span class="kw">fn</span> <span class="ident">grid_rows</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">rows</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entity</span>();
-        <span class="self">self</span>.<span class="ident">context</span>().<span class="ident">style</span>.<span class="ident">grid_rows</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">rows</span>);
-        <span class="self">self</span>.<span class="ident">context</span>().<span class="ident">need_relayout</span>();
-        <span class="self">self</span>
-    }
+    <span class="doccomment">/// Sets the grid rows of the view.
+    </span><span class="kw">fn </span>grid_rows(<span class="kw-2">mut </span><span class="self">self</span>, rows: Vec&lt;Units&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="self">self</span>.context().style.grid_rows.insert(entity, rows);
+        <span class="self">self</span>.context().need_relayout();
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Sets the grid columns of the view.</span>
-    <span class="kw">fn</span> <span class="ident">grid_cols</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cols</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Units</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entity</span>();
-        <span class="self">self</span>.<span class="ident">context</span>().<span class="ident">style</span>.<span class="ident">grid_cols</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">cols</span>);
-        <span class="self">self</span>.<span class="ident">context</span>().<span class="ident">need_relayout</span>();
-        <span class="self">self</span>
-    }
+    <span class="doccomment">/// Sets the grid columns of the view.
+    </span><span class="kw">fn </span>grid_cols(<span class="kw-2">mut </span><span class="self">self</span>, cols: Vec&lt;Units&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="self">self</span>.context().style.grid_cols.insert(entity, cols);
+        <span class="self">self</span>.context().need_relayout();
+        <span class="self">self
+    </span>}
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the grid row index of the view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// This index relates to the grid rows of the parent view when the parent layout type is set to `Grid`.</span>
-        <span class="ident">row_index</span>,
-        <span class="ident">usize</span>
+        <span class="doccomment">/// Sets the grid row index of the view.
+        ///
+        /// This index relates to the grid rows of the parent view when the parent layout type is set to `Grid`.
+        </span>row_index,
+        usize
     );
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the grid row span of the view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// This relates to the range of occupied grid rows of the parent view when the parent layout type is set to `Grid`.</span>
-        <span class="ident">row_span</span>,
-        <span class="ident">usize</span>
+        <span class="doccomment">/// Sets the grid row span of the view.
+        ///
+        /// This relates to the range of occupied grid rows of the parent view when the parent layout type is set to `Grid`.
+        </span>row_span,
+        usize
     );
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the grid column index of the view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// This index relates to the grid columns of the parent view when the parent layout type is set to `Grid`.</span>
-        <span class="ident">col_index</span>,
-        <span class="ident">usize</span>
+        <span class="doccomment">/// Sets the grid column index of the view.
+        ///
+        /// This index relates to the grid columns of the parent view when the parent layout type is set to `Grid`.
+        </span>col_index,
+        usize
     );
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the grid column span of the view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// This relates to the range of occupied grid columns of the parent view when the parent layout type is set to `Grid`.</span>
-        <span class="ident">col_span</span>,
-        <span class="ident">usize</span>
+        <span class="doccomment">/// Sets the grid column span of the view.
+        ///
+        /// This relates to the range of occupied grid columns of the parent view when the parent layout type is set to `Grid`.
+        </span>col_span,
+        usize
     );
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">V</span>: <span class="ident">View</span><span class="op">&gt;</span> <span class="ident">LayoutModifiers</span> <span class="kw">for</span> <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">V</span><span class="op">&gt;</span> {}
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, V: View&gt; LayoutModifiers <span class="kw">for </span>Handle&lt;<span class="lifetime">&#39;a</span>, V&gt; {}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

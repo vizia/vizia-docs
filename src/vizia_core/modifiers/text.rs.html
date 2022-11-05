@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/modifiers/text.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>text.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/modifiers/text.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>text.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -77,84 +77,84 @@
 <span id="77">77</span>
 <span id="78">78</span>
 <span id="79">79</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::internal</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">prelude</span>::<span class="kw-2">*</span>, <span class="ident">text::Selection</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::internal;
+<span class="kw">use crate</span>::{prelude::<span class="kw-2">*</span>, text::Selection};
 
-<span class="doccomment">/// Modifiers for changing the text properties of a view.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TextModifiers</span>: <span class="ident">internal::Modifiable</span> {
-    <span class="doccomment">/// Sets the text content of the view.</span>
-    <span class="kw">fn</span> <span class="ident">text</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">ToString</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entity</span>();
-        <span class="ident">value</span>.<span class="ident">set_or_bind</span>(<span class="self">self</span>.<span class="ident">context</span>(), <span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">val</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">prev_data</span>) <span class="op">=</span> <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">text</span>.<span class="ident">get</span>(<span class="ident">entity</span>) {
-                <span class="kw">if</span> <span class="ident">prev_data</span> <span class="op">!</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">val</span>.<span class="ident">to_string</span>() {
-                    <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">text</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">val</span>.<span class="ident">to_string</span>());
+<span class="doccomment">/// Modifiers for changing the text properties of a view.
+</span><span class="kw">pub trait </span>TextModifiers: internal::Modifiable {
+    <span class="doccomment">/// Sets the text content of the view.
+    </span><span class="kw">fn </span>text&lt;U: ToString&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, val| {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(prev_data) = cx.style.text.get(entity) {
+                <span class="kw">if </span>prev_data != <span class="kw-2">&amp;</span>val.to_string() {
+                    cx.style.text.insert(entity, val.to_string());
 
-                    <span class="ident">cx</span>.<span class="ident">need_relayout</span>();
-                    <span class="ident">cx</span>.<span class="ident">need_redraw</span>();
+                    cx.need_relayout();
+                    cx.need_redraw();
                 }
-            } <span class="kw">else</span> {
-                <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">text</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">val</span>.<span class="ident">to_string</span>());
+            } <span class="kw">else </span>{
+                cx.style.text.insert(entity, val.to_string());
 
-                <span class="ident">cx</span>.<span class="ident">need_relayout</span>();
-                <span class="ident">cx</span>.<span class="ident">need_redraw</span>();
+                cx.need_relayout();
+                cx.need_redraw();
             }
         });
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the font that should be used by the view.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// The font name refers to the name assigned when the font is added to context.</span>
-        <span class="ident">font</span>,
-        <span class="ident">String</span>
+        <span class="doccomment">/// Sets the font that should be used by the view.
+        ///
+        /// The font name refers to the name assigned when the font is added to context.
+        </span>font,
+        String
     );
 
-    <span class="doccomment">/// Sets the text color of the view.</span>
-    <span class="kw">fn</span> <span class="ident">color</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Color</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entity</span>();
-        <span class="ident">value</span>.<span class="ident">set_or_bind</span>(<span class="self">self</span>.<span class="ident">context</span>(), <span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">v</span><span class="op">|</span> {
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">font_color</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">v</span>.<span class="ident">into</span>());
+    <span class="doccomment">/// Sets the text color of the view.
+    </span><span class="kw">fn </span>color&lt;U: Into&lt;Color&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+            cx.style.font_color.insert(entity, v.into());
         });
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Sets the font size of the view.</span>
-    <span class="kw">fn</span> <span class="ident">font_size</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Res</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entity</span>();
-        <span class="ident">value</span>.<span class="ident">set_or_bind</span>(<span class="self">self</span>.<span class="ident">context</span>(), <span class="ident">entity</span>, <span class="op">|</span><span class="ident">cx</span>, <span class="ident">entity</span>, <span class="ident">v</span><span class="op">|</span> {
-            <span class="ident">cx</span>.<span class="ident">style</span>.<span class="ident">font_size</span>.<span class="ident">insert</span>(<span class="ident">entity</span>, <span class="ident">v</span>.<span class="ident">into</span>());
+    <span class="doccomment">/// Sets the font size of the view.
+    </span><span class="kw">fn </span>font_size(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;f32&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+            cx.style.font_size.insert(entity, v.into());
         });
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the text selection of the view.</span>
-        <span class="ident">text_selection</span>,
-        <span class="ident">Selection</span>
+        <span class="doccomment">/// Sets the text selection of the view.
+        </span>text_selection,
+        Selection
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the ext caret color of the view.</span>
-        <span class="ident">caret_color</span>,
-        <span class="ident">Color</span>
+        <span class="doccomment">/// Sets the ext caret color of the view.
+        </span>caret_color,
+        Color
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the color used to highlight selected text within the view.</span>
-        <span class="ident">selection_color</span>,
-        <span class="ident">Color</span>
+        <span class="doccomment">/// Sets the color used to highlight selected text within the view.
+        </span>selection_color,
+        Color
     );
 
     <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets whether the text of the view should be allowed to wrap.</span>
-        <span class="ident">text_wrap</span>,
-        <span class="ident">bool</span>
+        <span class="doccomment">/// Sets whether the text of the view should be allowed to wrap.
+        </span>text_wrap,
+        bool
     );
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">V</span><span class="op">&gt;</span> <span class="ident">TextModifiers</span> <span class="kw">for</span> <span class="ident">Handle</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">V</span><span class="op">&gt;</span> {}
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, V&gt; TextModifiers <span class="kw">for </span>Handle&lt;<span class="lifetime">&#39;a</span>, V&gt; {}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

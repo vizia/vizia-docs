@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/style/rule.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>rule.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/style/rule.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>rule.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../vizia_core/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -260,267 +260,267 @@
 <span id="260">260</span>
 <span id="261">261</span>
 <span id="262">262</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">vizia_id</span>::{
-    <span class="ident">impl_generational_id</span>, <span class="ident">GenerationalId</span>, <span class="ident">GENERATIONAL_ID_GENERATION_MASK</span>,
-    <span class="ident">GENERATIONAL_ID_INDEX_BITS</span>, <span class="ident">GENERATIONAL_ID_INDEX_MASK</span>,
+</pre><pre class="rust"><code><span class="kw">use </span>vizia_id::{
+    impl_generational_id, GenerationalId, GENERATIONAL_ID_GENERATION_MASK,
+    GENERATIONAL_ID_INDEX_BITS, GENERATIONAL_ID_INDEX_MASK,
 };
 
-<span class="doccomment">/// A rule is an id used to get/set shared style properties in State.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Rather than having widgets own their data, all state is stored in a single database and</span>
-<span class="doccomment">/// is stored and loaded using entities.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Rule</span>(<span class="ident">u32</span>);
+<span class="doccomment">/// A rule is an id used to get/set shared style properties in State.
+///
+/// Rather than having widgets own their data, all state is stored in a single database and
+/// is stored and loaded using entities.
+</span><span class="attribute">#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+</span><span class="kw">pub struct </span>Rule(u32);
 
-<span class="macro">impl_generational_id!</span>(<span class="ident">Rule</span>);
+<span class="macro">impl_generational_id!</span>(Rule);
 
-<span class="comment">// impl PropSet2 for Rule {</span>
+<span class="comment">// impl PropSet2 for Rule {
 
-<span class="comment">//     // BACKGOUND</span>
+//     // BACKGOUND
 
-<span class="comment">//     /// Set the background-color property for the shared style rule.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// Note: background-color is overridden by background-gradient, which is overridden by background-image.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// # Example</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// rule.set_background_color(state, Color::red());</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// # CSS</span>
-<span class="comment">//     /// The background color property can be set with a color name, like &#39;red&#39;, or a hex value, like &#39;#FF0000&#39;.</span>
-<span class="comment">//     /// ```css</span>
-<span class="comment">//     /// background-color: color_name | #hex_value</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     fn set_background_color(self, state: &amp;mut State, color: Color) {</span>
-<span class="comment">//         state.style.background_color.insert_rule(self, color);</span>
-<span class="comment">//     }</span>
+//     /// Set the background-color property for the shared style rule.
+//     ///
+//     /// Note: background-color is overridden by background-gradient, which is overridden by background-image.
+//     ///
+//     /// # Example
+//     /// ```
+//     /// rule.set_background_color(state, Color::red());
+//     /// ```
+//     /// # CSS
+//     /// The background color property can be set with a color name, like &#39;red&#39;, or a hex value, like &#39;#FF0000&#39;.
+//     /// ```css
+//     /// background-color: color_name | #hex_value
+//     /// ```
+//     fn set_background_color(self, state: &amp;mut State, color: Color) {
+//         state.style.background_color.insert_rule(self, color);
+//     }
 
-<span class="comment">//     // SPACE</span>
+//     // SPACE
 
-<span class="comment">//     /// Set the space for the shared style rule. This is equivalent to setting the left, right, top, and bottom properties.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// The space determines how much space the layout system will place on all sides of an entity.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// # Examples</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// rule.set_space(state, Units(Pixels(10.0)));</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// # CSS</span>
-<span class="comment">//     /// The child-space property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// child-space: {} | {}px | {}% | {}s | auto</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     fn set_space(self, state: &amp;mut State, value: Units) {</span>
-<span class="comment">//         state.style.left.insert_rule(self, value);</span>
-<span class="comment">//         state.style.right.insert_rule(self, value);</span>
-<span class="comment">//         state.style.top.insert_rule(self, value);</span>
-<span class="comment">//         state.style.bottom.insert_rule(self, value);</span>
-<span class="comment">//     }</span>
+//     /// Set the space for the shared style rule. This is equivalent to setting the left, right, top, and bottom properties.
+//     ///
+//     /// The space determines how much space the layout system will place on all sides of an entity.
+//     ///
+//     /// # Examples
+//     /// ```
+//     /// rule.set_space(state, Units(Pixels(10.0)));
+//     /// ```
+//     /// # CSS
+//     /// The child-space property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.
+//     /// ```
+//     /// child-space: {} | {}px | {}% | {}s | auto
+//     /// ```
+//     fn set_space(self, state: &amp;mut State, value: Units) {
+//         state.style.left.insert_rule(self, value);
+//         state.style.right.insert_rule(self, value);
+//         state.style.top.insert_rule(self, value);
+//         state.style.bottom.insert_rule(self, value);
+//     }
 
-<span class="comment">//     /// Set the left property for the shared style rule.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// The left property determines how much space the layout system will place to the left of an entity.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// # Examples</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// rule.set_left(state, Pixels(10.0));</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// # CSS</span>
-<span class="comment">//     /// The left property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.</span>
-<span class="comment">//     /// ```css</span>
-<span class="comment">//     /// left: {} | {}px | {}% | {}s | auto</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     fn set_left(self, state: &amp;mut State, value: Units) {</span>
-<span class="comment">//         state.style.left.insert_rule(self, value);</span>
-<span class="comment">//     }</span>
+//     /// Set the left property for the shared style rule.
+//     ///
+//     /// The left property determines how much space the layout system will place to the left of an entity.
+//     ///
+//     /// # Examples
+//     /// ```
+//     /// rule.set_left(state, Pixels(10.0));
+//     /// ```
+//     /// # CSS
+//     /// The left property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.
+//     /// ```css
+//     /// left: {} | {}px | {}% | {}s | auto
+//     /// ```
+//     fn set_left(self, state: &amp;mut State, value: Units) {
+//         state.style.left.insert_rule(self, value);
+//     }
 
-<span class="comment">//     /// Set the right property for the shared style rule.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// The right property determines how much space the layout system will place to the right of an entity.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// # Examples</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// rule.set_right(state, Pixels(10.0));</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// # CSS</span>
-<span class="comment">//     /// The right property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.</span>
-<span class="comment">//     /// ```css</span>
-<span class="comment">//     /// right: {} | {}px | {}% | {}s | auto</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     fn set_right(self, state: &amp;mut State, value: Units) {</span>
-<span class="comment">//         state.style.right.insert_rule(self, value);</span>
-<span class="comment">//     }</span>
+//     /// Set the right property for the shared style rule.
+//     ///
+//     /// The right property determines how much space the layout system will place to the right of an entity.
+//     ///
+//     /// # Examples
+//     /// ```
+//     /// rule.set_right(state, Pixels(10.0));
+//     /// ```
+//     /// # CSS
+//     /// The right property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.
+//     /// ```css
+//     /// right: {} | {}px | {}% | {}s | auto
+//     /// ```
+//     fn set_right(self, state: &amp;mut State, value: Units) {
+//         state.style.right.insert_rule(self, value);
+//     }
 
-<span class="comment">//     /// Set the top property for the shared style rule.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// The top property determines how much space the layout system will place above an entity.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// # Examples</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// rule.set_top(state, Pixels(10.0));</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// # CSS</span>
-<span class="comment">//     /// The top property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.</span>
-<span class="comment">//     /// ```css</span>
-<span class="comment">//     /// top: {} | {}px | {}% | {}s | auto</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     fn set_top(self, state: &amp;mut State, value: Units) {</span>
-<span class="comment">//         state.style.top.insert_rule(self, value);</span>
-<span class="comment">//     }</span>
+//     /// Set the top property for the shared style rule.
+//     ///
+//     /// The top property determines how much space the layout system will place above an entity.
+//     ///
+//     /// # Examples
+//     /// ```
+//     /// rule.set_top(state, Pixels(10.0));
+//     /// ```
+//     /// # CSS
+//     /// The top property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.
+//     /// ```css
+//     /// top: {} | {}px | {}% | {}s | auto
+//     /// ```
+//     fn set_top(self, state: &amp;mut State, value: Units) {
+//         state.style.top.insert_rule(self, value);
+//     }
 
-<span class="comment">//     /// Set the bottom property for the shared style rule.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// The bottom property determines how much space the layout system will place below an entity.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// # Examples</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// rule.set_bottom(state, Pixels(10.0));</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// # CSS</span>
-<span class="comment">//     /// The bottom property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.</span>
-<span class="comment">//     /// ```css</span>
-<span class="comment">//     /// bottom: {} | {}px | {}% | {}s | auto</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     fn set_bottom(self, state: &amp;mut State, value: Units) {</span>
-<span class="comment">//         state.style.bottom.insert_rule(self, value);</span>
-<span class="comment">//     }</span>
+//     /// Set the bottom property for the shared style rule.
+//     ///
+//     /// The bottom property determines how much space the layout system will place below an entity.
+//     ///
+//     /// # Examples
+//     /// ```
+//     /// rule.set_bottom(state, Pixels(10.0));
+//     /// ```
+//     /// # CSS
+//     /// The bottom property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.
+//     /// ```css
+//     /// bottom: {} | {}px | {}% | {}s | auto
+//     /// ```
+//     fn set_bottom(self, state: &amp;mut State, value: Units) {
+//         state.style.bottom.insert_rule(self, value);
+//     }
 
-<span class="comment">//     // CHILD-SPACE</span>
+//     // CHILD-SPACE
 
-<span class="comment">//     /// Set the child-space for the shared style rule. This is equivalent to setting the child-left, child-right, child-top, and child-bottom properties.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// The child-space determines how much space the layout system will place around the children of an entity,</span>
-<span class="comment">//     /// provided that the individual left, rigth, top, and bottom properties of the child are set to auto.</span>
-<span class="comment">//     /// This does not place any space between child entities.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// # Examples</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// rule.set_child_space(state, Units(Pixels(10.0)));</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// # CSS</span>
-<span class="comment">//     /// The child-space property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.</span>
-<span class="comment">//     /// ```css</span>
-<span class="comment">//     /// child-space: {} | {}px | {}% | {}s | auto</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     fn set_child_space(self, state: &amp;mut State, value: Units) {</span>
-<span class="comment">//         state.style.child_left.insert_rule(self, value);</span>
-<span class="comment">//         state.style.child_right.insert_rule(self, value);</span>
-<span class="comment">//         state.style.child_top.insert_rule(self, value);</span>
-<span class="comment">//         state.style.child_bottom.insert_rule(self, value);</span>
-<span class="comment">//     }</span>
+//     /// Set the child-space for the shared style rule. This is equivalent to setting the child-left, child-right, child-top, and child-bottom properties.
+//     ///
+//     /// The child-space determines how much space the layout system will place around the children of an entity,
+//     /// provided that the individual left, rigth, top, and bottom properties of the child are set to auto.
+//     /// This does not place any space between child entities.
+//     ///
+//     /// # Examples
+//     /// ```
+//     /// rule.set_child_space(state, Units(Pixels(10.0)));
+//     /// ```
+//     /// # CSS
+//     /// The child-space property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.
+//     /// ```css
+//     /// child-space: {} | {}px | {}% | {}s | auto
+//     /// ```
+//     fn set_child_space(self, state: &amp;mut State, value: Units) {
+//         state.style.child_left.insert_rule(self, value);
+//         state.style.child_right.insert_rule(self, value);
+//         state.style.child_top.insert_rule(self, value);
+//         state.style.child_bottom.insert_rule(self, value);
+//     }
 
-<span class="comment">//     /// Set the horizontal spacing between children for the shared style rule.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// The col-between determines how much space the layout system will place between the children of an entity horizontally,</span>
-<span class="comment">//     /// provided that the individual left and right properties of the child are set to auto.</span>
-<span class="comment">//     /// This applies to both horizontal stacks and grids with more than one column.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// # Examples</span>
-<span class="comment">//     /// Adds a shared col-between property to a rule:</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// rule.set_col_between(state, Units(Pixels(10.0)));</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// # CSS</span>
-<span class="comment">//     /// The col-between property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.</span>
-<span class="comment">//     /// ```css</span>
-<span class="comment">//     /// col-between: {} | {}px | {}% | {}s | auto</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     fn set_col_between(self, state: &amp;mut State, value: Units) {</span>
-<span class="comment">//         state.style.col_between.insert_rule(self, value);</span>
-<span class="comment">//     }</span>
+//     /// Set the horizontal spacing between children for the shared style rule.
+//     ///
+//     /// The col-between determines how much space the layout system will place between the children of an entity horizontally,
+//     /// provided that the individual left and right properties of the child are set to auto.
+//     /// This applies to both horizontal stacks and grids with more than one column.
+//     ///
+//     /// # Examples
+//     /// Adds a shared col-between property to a rule:
+//     /// ```
+//     /// rule.set_col_between(state, Units(Pixels(10.0)));
+//     /// ```
+//     /// # CSS
+//     /// The col-between property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.
+//     /// ```css
+//     /// col-between: {} | {}px | {}% | {}s | auto
+//     /// ```
+//     fn set_col_between(self, state: &amp;mut State, value: Units) {
+//         state.style.col_between.insert_rule(self, value);
+//     }
 
-<span class="comment">//     /// Set the vertical spacing between children for the shared style rule.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// The row-between determines how much space the layout system will place between the children of an entity vertically,</span>
-<span class="comment">//     /// provided that the individual top and bottom properties of the child are set to auto.</span>
-<span class="comment">//     /// This applies to both vertical stacks and grids with more than one row.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// # Examples</span>
-<span class="comment">//     /// Adds a shared row-between property to a rule:</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// rule.set_row_between(state, Units(Pixels(10.0)));</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// # CSS</span>
-<span class="comment">//     /// The row-between property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.</span>
-<span class="comment">//     /// ```css</span>
-<span class="comment">//     /// row-between: {} | {}px | {}% | {}s | auto</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     fn set_row_between(self, state: &amp;mut State, value: Units) {</span>
-<span class="comment">//         state.style.row_between.insert_rule(self, value);</span>
-<span class="comment">//     }</span>
+//     /// Set the vertical spacing between children for the shared style rule.
+//     ///
+//     /// The row-between determines how much space the layout system will place between the children of an entity vertically,
+//     /// provided that the individual top and bottom properties of the child are set to auto.
+//     /// This applies to both vertical stacks and grids with more than one row.
+//     ///
+//     /// # Examples
+//     /// Adds a shared row-between property to a rule:
+//     /// ```
+//     /// rule.set_row_between(state, Units(Pixels(10.0)));
+//     /// ```
+//     /// # CSS
+//     /// The row-between property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.
+//     /// ```css
+//     /// row-between: {} | {}px | {}% | {}s | auto
+//     /// ```
+//     fn set_row_between(self, state: &amp;mut State, value: Units) {
+//         state.style.row_between.insert_rule(self, value);
+//     }
 
-<span class="comment">//     /// Set the child-left property for the shared style rule.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// The child-left property determines how much space the layout system will place to the left of all of the children of an entity,</span>
-<span class="comment">//     /// provided that the left property of the child is set to auto.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// # Examples</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// rule.set_child_left(state, Pixels(10.0));</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// # CSS</span>
-<span class="comment">//     /// The child-left property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.</span>
-<span class="comment">//     /// ```css</span>
-<span class="comment">//     /// child-left: {} | {}px | {}% | {}s | auto</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     fn set_child_left(self, state: &amp;mut State, value: Units) {</span>
-<span class="comment">//         state.style.child_left.insert_rule(self, value);</span>
-<span class="comment">//     }</span>
+//     /// Set the child-left property for the shared style rule.
+//     ///
+//     /// The child-left property determines how much space the layout system will place to the left of all of the children of an entity,
+//     /// provided that the left property of the child is set to auto.
+//     ///
+//     /// # Examples
+//     /// ```
+//     /// rule.set_child_left(state, Pixels(10.0));
+//     /// ```
+//     /// # CSS
+//     /// The child-left property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.
+//     /// ```css
+//     /// child-left: {} | {}px | {}% | {}s | auto
+//     /// ```
+//     fn set_child_left(self, state: &amp;mut State, value: Units) {
+//         state.style.child_left.insert_rule(self, value);
+//     }
 
-<span class="comment">//     /// Set the child-right property for the shared style rule.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// The child-right property determines how much space the layout system will place to the right of all of the children of an entity,</span>
-<span class="comment">//     /// provided that the right property of the child is set to auto.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// # Examples</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// rule.set_child_right(state, Pixels(10.0));</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// # CSS</span>
-<span class="comment">//     /// The child-right property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.</span>
-<span class="comment">//     /// ```css</span>
-<span class="comment">//     /// child-right: {} | {}px | {}% | {}s | auto</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     fn set_child_right(self, state: &amp;mut State, value: Units) {</span>
-<span class="comment">//         state.style.child_right.insert_rule(self, value);</span>
-<span class="comment">//     }</span>
+//     /// Set the child-right property for the shared style rule.
+//     ///
+//     /// The child-right property determines how much space the layout system will place to the right of all of the children of an entity,
+//     /// provided that the right property of the child is set to auto.
+//     ///
+//     /// # Examples
+//     /// ```
+//     /// rule.set_child_right(state, Pixels(10.0));
+//     /// ```
+//     /// # CSS
+//     /// The child-right property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.
+//     /// ```css
+//     /// child-right: {} | {}px | {}% | {}s | auto
+//     /// ```
+//     fn set_child_right(self, state: &amp;mut State, value: Units) {
+//         state.style.child_right.insert_rule(self, value);
+//     }
 
-<span class="comment">//     /// Set the child-top property for the shared style rule.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// The child-top property determines how much space the layout system will place above all of the children of an entity,</span>
-<span class="comment">//     /// provided that the top property of the child is set to auto.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// # Examples</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// rule.set_child_top(state, Pixels(10.0));</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// # CSS</span>
-<span class="comment">//     /// The child-top property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.</span>
-<span class="comment">//     /// ```css</span>
-<span class="comment">//     /// child-top: {} | {}px | {}% | {}s | auto</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     fn set_child_top(self, state: &amp;mut State, value: Units) {</span>
-<span class="comment">//         state.style.child_top.insert_rule(self, value);</span>
-<span class="comment">//     }</span>
+//     /// Set the child-top property for the shared style rule.
+//     ///
+//     /// The child-top property determines how much space the layout system will place above all of the children of an entity,
+//     /// provided that the top property of the child is set to auto.
+//     ///
+//     /// # Examples
+//     /// ```
+//     /// rule.set_child_top(state, Pixels(10.0));
+//     /// ```
+//     /// # CSS
+//     /// The child-top property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.
+//     /// ```css
+//     /// child-top: {} | {}px | {}% | {}s | auto
+//     /// ```
+//     fn set_child_top(self, state: &amp;mut State, value: Units) {
+//         state.style.child_top.insert_rule(self, value);
+//     }
 
-<span class="comment">//     /// Set the child-bottom property for the shared style rule.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// The child-bottom property determines how much space the layout system will place below all of the children of an entity,</span>
-<span class="comment">//     /// provided that the bottom property of the child is set to auto.</span>
-<span class="comment">//     ///</span>
-<span class="comment">//     /// # Examples</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// rule.set_child_bottom(state, Pixels(10.0));</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     /// # CSS</span>
-<span class="comment">//     /// The child-bottom property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.</span>
-<span class="comment">//     /// ```css</span>
-<span class="comment">//     /// child-bottom: {} | {}px | {}% | {}s | auto</span>
-<span class="comment">//     /// ```</span>
-<span class="comment">//     fn set_child_bottom(self, state: &amp;mut State, value: Units) {</span>
-<span class="comment">//         state.style.child_bottom.insert_rule(self, value);</span>
-<span class="comment">//     }</span>
+//     /// Set the child-bottom property for the shared style rule.
+//     ///
+//     /// The child-bottom property determines how much space the layout system will place below all of the children of an entity,
+//     /// provided that the bottom property of the child is set to auto.
+//     ///
+//     /// # Examples
+//     /// ```
+//     /// rule.set_child_bottom(state, Pixels(10.0));
+//     /// ```
+//     /// # CSS
+//     /// The child-bottom property can be set with a number (in pixels), a number with px units, a percentage, a stretch value, or auto.
+//     /// ```css
+//     /// child-bottom: {} | {}px | {}% | {}s | auto
+//     /// ```
+//     fn set_child_bottom(self, state: &amp;mut State, value: Units) {
+//         state.style.child_bottom.insert_rule(self, value);
+//     }
 
-<span class="comment">// }</span>
-</code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0 (a55dd71d5 2022-09-19)" ></div></body></html>
+// }
+</span></code></pre></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -549,26 +549,183 @@
 <span id="549">549</span>
 <span id="550">550</span>
 <span id="551">551</span>
-</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span>std::any::TypeId;
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{cache::CachedData, prelude::<span class="kw-2">*</span>};
+<span class="kw">use </span>std::{
+    any::{Any, TypeId},
+    marker::PhantomData,
+};
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ActionsModel {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_press: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_press_down: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_hover: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_hover_out: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_over: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_over_out: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_mouse_move: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, f32, f32) + Send + Sync&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_mouse_down: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, MouseButton) + Send + Sync&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_mouse_up: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, MouseButton) + Send + Sync&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_focus_in: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_focus_out: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_geo_changed:
-        <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, GeometryChanged) + Send + Sync&gt;&gt;,
+<span class="kw">pub struct </span>EventHandle&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, V&gt; {
+    cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>EventContext&lt;<span class="lifetime">&#39;b</span>&gt;,
+    entity: Entity,
+    p: PhantomData&lt;V&gt;,
 }
 
-<span class="kw">impl </span>ActionsModel {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, V&gt; EventHandle&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, V&gt; {
+    <span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>EventContext&lt;<span class="lifetime">&#39;b</span>&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = cx.current();
+        <span class="self">Self </span>{ cx, entity, p: PhantomData::default() }
+    }
+
+    <span class="kw">pub fn </span>current(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
+        <span class="self">self</span>.entity
+    }
+
+    <span class="kw">pub fn </span>cache(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>CachedData {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.cx.cache
+    }
+
+    <span class="doccomment">/// Sets application focus to the current entity using the previous focus visibility.
+    </span><span class="kw">pub fn </span>focus(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.cx.focus()
+    }
+
+    <span class="kw">pub fn </span>play_animation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, animation: Animation) {
+        <span class="self">self</span>.cx.play_animation(animation);
+    }
+
+    <span class="doccomment">/// Send an event containing a message up the tree from the current entity.
+    </span><span class="kw">pub fn </span>emit&lt;M: Any + Send&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M) {
+        <span class="self">self</span>.cx.emit(message);
+    }
+
+    <span class="kw">pub fn </span>modify&lt;F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, f: F)
+    <span class="kw">where
+        </span>F: FnOnce(<span class="kw-2">&amp;mut </span>V),
+        V: <span class="lifetime">&#39;static</span>,
+    {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(view) = <span class="self">self
+            </span>.cx
+            .views
+            .get_mut(<span class="kw-2">&amp;</span><span class="self">self</span>.entity)
+            .and_then(|view_handler| view_handler.downcast_mut::&lt;V&gt;())
+        {
+            (f)(view);
+        }
+    }
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, V&gt; DataContext <span class="kw">for </span>EventHandle&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, V&gt; {
+    <span class="kw">fn </span>data&lt;T: <span class="lifetime">&#39;static</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
+        <span class="comment">// Return data for the static model.
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(t) = &lt;<span class="kw">dyn </span>Any&gt;::downcast_ref::&lt;T&gt;(<span class="kw-2">&amp;</span>()) {
+            <span class="kw">return </span><span class="prelude-val">Some</span>(t);
+        }
+
+        <span class="kw">for </span>entity <span class="kw">in </span><span class="self">self</span>.entity.parent_iter(<span class="kw-2">&amp;</span><span class="self">self</span>.cx.tree) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = <span class="self">self</span>.cx.data.get(entity) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(model) = model_data_store.models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;T&gt;()) {
+                    <span class="kw">return </span>model.downcast_ref::&lt;T&gt;();
+                }
+            }
+
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = <span class="self">self</span>.cx.views.get(<span class="kw-2">&amp;</span>entity) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(data) = view_handler.downcast_ref::&lt;T&gt;() {
+                    <span class="kw">return </span><span class="prelude-val">Some</span>(data);
+                }
+            }
+        }
+
+        <span class="prelude-val">None
+    </span>}
+}
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ActionsModel&lt;V&gt; {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_press: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_press_down: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_hover: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_hover_out: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_over: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_over_out: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_mouse_move: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, f32, f32) + Send + Sync&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_mouse_down: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, MouseButton) + Send + Sync&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_mouse_up: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, MouseButton) + Send + Sync&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_focus_in: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_focus_out: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_geo_changed:
+        <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, GeometryChanged) + Send + Sync&gt;&gt;,
+}
+
+<span class="kw">impl</span>&lt;V&gt; ActionsModel&lt;V&gt; {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             on_press: <span class="prelude-val">None</span>,
@@ -587,7 +744,7 @@
     }
 }
 
-<span class="kw">impl </span>Model <span class="kw">for </span>ActionsModel {
+<span class="kw">impl</span>&lt;V: <span class="lifetime">&#39;static</span>&gt; Model <span class="kw">for </span>ActionsModel&lt;V&gt; {
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
         event.take().map(|actions_event| <span class="kw">match </span>actions_event {
             ActionsEvent::OnPress(on_press) =&gt; {
@@ -645,8 +802,9 @@
                 <span class="kw">if </span>cx.current() != over &amp;&amp; !over.is_descendant_of(cx.tree, cx.current()) {
                     <span class="kw">return</span>;
                 }
+
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_press {
-                    (action)(cx);
+                    (action)(<span class="kw-2">&amp;mut </span>EventHandle::&lt;V&gt;::new(cx));
                 }
             }
 
@@ -656,14 +814,14 @@
                     <span class="kw">return</span>;
                 }
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_press_down {
-                    (action)(cx);
+                    (action)(<span class="kw-2">&amp;mut </span>EventHandle::&lt;V&gt;::new(cx));
                 }
             }
 
             WindowEvent::MouseEnter =&gt; {
                 <span class="kw">if </span>meta.target == cx.current() {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_hover {
-                        (action)(cx);
+                        (action)(<span class="kw-2">&amp;mut </span>EventHandle::&lt;V&gt;::new(cx));
                     }
                 }
             }
@@ -671,59 +829,59 @@
             WindowEvent::MouseLeave =&gt; {
                 <span class="kw">if </span>meta.target == cx.current() {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_hover_out {
-                        (action)(cx);
+                        (action)(<span class="kw-2">&amp;mut </span>EventHandle::&lt;V&gt;::new(cx));
                     }
                 }
             }
 
             WindowEvent::MouseOver =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_over {
-                    (action)(cx);
+                    (action)(<span class="kw-2">&amp;mut </span>EventHandle::&lt;V&gt;::new(cx));
                 }
             }
 
             WindowEvent::MouseOut =&gt; {
                 <span class="kw">if </span>meta.target == cx.current() {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_over_out {
-                        (action)(cx);
+                        (action)(<span class="kw-2">&amp;mut </span>EventHandle::&lt;V&gt;::new(cx));
                     }
                 }
             }
 
             WindowEvent::MouseMove(x, y) =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_mouse_move {
-                    (action)(cx, <span class="kw-2">*</span>x, <span class="kw-2">*</span>y);
+                    (action)(<span class="kw-2">&amp;mut </span>EventHandle::&lt;V&gt;::new(cx), <span class="kw-2">*</span>x, <span class="kw-2">*</span>y);
                 }
             }
 
             WindowEvent::MouseDown(mouse_button) =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_mouse_down {
-                    (action)(cx, <span class="kw-2">*</span>mouse_button);
+                    (action)(<span class="kw-2">&amp;mut </span>EventHandle::&lt;V&gt;::new(cx), <span class="kw-2">*</span>mouse_button);
                 }
             }
 
             WindowEvent::MouseUp(mouse_button) =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_mouse_up {
-                    (action)(cx, <span class="kw-2">*</span>mouse_button);
+                    (action)(<span class="kw-2">&amp;mut </span>EventHandle::&lt;V&gt;::new(cx), <span class="kw-2">*</span>mouse_button);
                 }
             }
 
             WindowEvent::FocusIn =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_focus_in {
-                    (action)(cx);
+                    (action)(<span class="kw-2">&amp;mut </span>EventHandle::&lt;V&gt;::new(cx));
                 }
             }
 
             WindowEvent::FocusOut =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_focus_out {
-                    (action)(cx);
+                    (action)(<span class="kw-2">&amp;mut </span>EventHandle::&lt;V&gt;::new(cx));
                 }
             }
 
             WindowEvent::GeometryChanged(geo) =&gt; {
                 <span class="kw">if </span>meta.target == cx.current() {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_geo_changed {
-                        (action)(cx, <span class="kw-2">*</span>geo);
+                        (action)(<span class="kw-2">&amp;mut </span>EventHandle::&lt;V&gt;::new(cx), <span class="kw-2">*</span>geo);
                     }
                 }
             }
@@ -733,23 +891,23 @@
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>ActionsEvent {
-    OnPress(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;),
-    OnPressDown(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;),
-    OnHover(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;),
-    OnHoverOut(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;),
-    OnOver(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;),
-    OnOverOut(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;),
-    OnMouseMove(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, f32, f32) + Send + Sync&gt;),
-    OnMouseDown(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, MouseButton) + Send + Sync&gt;),
-    OnMouseUp(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, MouseButton) + Send + Sync&gt;),
-    OnFocusIn(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;),
-    OnFocusOut(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;),
-    OnGeoChanged(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, GeometryChanged) + Send + Sync&gt;),
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>ActionsEvent&lt;V&gt; {
+    OnPress(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;),
+    OnPressDown(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;),
+    OnHover(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;),
+    OnHoverOut(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;),
+    OnOver(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;),
+    OnOverOut(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;),
+    OnMouseMove(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, f32, f32) + Send + Sync&gt;),
+    OnMouseDown(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, MouseButton) + Send + Sync&gt;),
+    OnMouseUp(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, MouseButton) + Send + Sync&gt;),
+    OnFocusIn(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;),
+    OnFocusOut(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync&gt;),
+    OnGeoChanged(Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, GeometryChanged) + Send + Sync&gt;),
 }
 
 <span class="doccomment">/// Modifiers which add an action callback to a view.
-</span><span class="kw">pub trait </span>ActionModifiers {
+</span><span class="kw">pub trait </span>ActionModifiers&lt;V&gt; {
     <span class="doccomment">/// Adds a callback which is performed when the the view receives the [`Press`](crate::prelude::WindowEvent::Press) event.
     /// By default a view receives the [`Press`](crate::prelude::WindowEvent::Press) event when the left mouse button is pressed and then released on the view,
     /// or when the space or enter keys are pressed and then released while the view is focused.
@@ -762,7 +920,7 @@
     /// ```
     </span><span class="kw">fn </span>on_press&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync;
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync;
 
     <span class="doccomment">/// Adds a callback which is performed when the the view receives the [`PressDown`](crate::prelude::WindowEvent::PressDown) event.
     </span><span class="comment">// By default a view receives the [`PressDown`](crate::prelude::WindowEvent::PressDown) event when the left mouse button is pressed on the view,
@@ -776,7 +934,7 @@
     /// ```
     </span><span class="kw">fn </span>on_press_down&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync;
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync;
 
     <span class="doccomment">/// Adds a callback which is performed when the mouse pointer moves over a view.
     /// This callback is not triggered when the mouse pointer moves over an overlapping child of the view.
@@ -789,7 +947,7 @@
     /// ```
     </span><span class="kw">fn </span>on_hover&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync;
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync;
 
     <span class="doccomment">/// Adds a callback which is performed when the mouse pointer moves away from a view.
     /// This callback is not triggered when the mouse pointer moves away from an overlapping child of the view.
@@ -802,7 +960,7 @@
     /// ```
     </span><span class="kw">fn </span>on_hover_out&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync;
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync;
 
     <span class="doccomment">/// Adds a callback which is performed when the mouse pointer moves over the bounds of a view,
     /// including any overlapping children.
@@ -815,7 +973,7 @@
     /// ```
     </span><span class="kw">fn </span>on_over&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync;
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync;
 
     <span class="doccomment">/// Adds a callback which is performed when the mouse pointer moves away from the bounds of a view,
     /// including any overlapping children.
@@ -828,7 +986,7 @@
     /// ```
     </span><span class="kw">fn </span>on_over_out&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync;
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync;
 
     <span class="doccomment">/// Adds a callback which is performed when the mouse pointer moves within the bounds of a view.
     ///
@@ -840,7 +998,7 @@
     /// ```
     </span><span class="kw">fn </span>on_mouse_move&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, f32, f32) + Send + Sync;
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, f32, f32) + Send + Sync;
 
     <span class="doccomment">/// Adds a callback which is performed when a mouse button is pressed on the view.
     /// Unlike the `on_press` callback, this callback is triggered for all mouse buttons and not for any keyboard keys.
@@ -853,7 +1011,7 @@
     /// ```
     </span><span class="kw">fn </span>on_mouse_down&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, MouseButton) + Send + Sync;
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, MouseButton) + Send + Sync;
 
     <span class="doccomment">/// Adds a callback which is performed when a mouse button is released on the view.
     /// Unlike the `on_release` callback, this callback is triggered for all mouse buttons and not for any keyboard keys.
@@ -866,7 +1024,7 @@
     /// ```
     </span><span class="kw">fn </span>on_mouse_up&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, MouseButton) + Send + Sync;
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, MouseButton) + Send + Sync;
 
     <span class="doccomment">/// Adds a callback which is performed when the view gains keyboard focus.
     ///
@@ -878,7 +1036,7 @@
     /// ```
     </span><span class="kw">fn </span>on_focus_in&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync;
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync;
 
     <span class="doccomment">/// Adds a callback which is performed when the view loses keyboard focus.
     ///
@@ -890,7 +1048,7 @@
     /// ```
     </span><span class="kw">fn </span>on_focus_out&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync;
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync;
 
     <span class="doccomment">/// Adds a callback which is performed when the the view changes size or position after layout.
     ///
@@ -902,29 +1060,29 @@
     /// ```
     </span><span class="kw">fn </span>on_geo_changed&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, GeometryChanged) + Send + Sync;
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, GeometryChanged) + Send + Sync;
 }
 
 <span class="comment">// If the entity doesn&#39;t have an `ActionsModel` then add one to the entity
-</span><span class="kw">fn </span>build_action_model(cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity) {
+</span><span class="kw">fn </span>build_action_model&lt;V: <span class="lifetime">&#39;static</span>&gt;(cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity) {
     <span class="kw">if </span>cx
         .data
         .get(entity)
-        .and_then(|model_data_store| model_data_store.models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;ActionsModel&gt;()))
+        .and_then(|model_data_store| model_data_store.models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;ActionsModel&lt;V&gt;&gt;()))
         .is_none()
     {
         cx.with_current(entity, |cx| {
-            ActionsModel::new().build(cx);
+            ActionsModel::&lt;V&gt;::new().build(cx);
         });
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, V: View&gt; ActionModifiers <span class="kw">for </span>Handle&lt;<span class="lifetime">&#39;a</span>, V&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, V: View&gt; ActionModifiers&lt;V&gt; <span class="kw">for </span>Handle&lt;<span class="lifetime">&#39;a</span>, V&gt; {
     <span class="kw">fn </span>on_press&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync,
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync,
     {
-        build_action_model(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
+        build_action_model::&lt;V&gt;(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
 
         <span class="self">self</span>.cx.emit_custom(
             Event::new(ActionsEvent::OnPress(Box::new(action)))
@@ -937,9 +1095,9 @@
 
     <span class="kw">fn </span>on_press_down&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync,
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync,
     {
-        build_action_model(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
+        build_action_model::&lt;V&gt;(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
 
         <span class="self">self</span>.cx.emit_custom(
             Event::new(ActionsEvent::OnPressDown(Box::new(action)))
@@ -952,9 +1110,9 @@
 
     <span class="kw">fn </span>on_hover&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync,
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync,
     {
-        build_action_model(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
+        build_action_model::&lt;V&gt;(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
 
         <span class="self">self</span>.cx.emit_custom(
             Event::new(ActionsEvent::OnHover(Box::new(action)))
@@ -967,9 +1125,9 @@
 
     <span class="kw">fn </span>on_hover_out&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync,
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync,
     {
-        build_action_model(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
+        build_action_model::&lt;V&gt;(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
 
         <span class="self">self</span>.cx.emit_custom(
             Event::new(ActionsEvent::OnHoverOut(Box::new(action)))
@@ -982,9 +1140,9 @@
 
     <span class="kw">fn </span>on_over&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync,
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync,
     {
-        build_action_model(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
+        build_action_model::&lt;V&gt;(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
 
         <span class="self">self</span>.cx.emit_custom(
             Event::new(ActionsEvent::OnOver(Box::new(action)))
@@ -997,9 +1155,9 @@
 
     <span class="kw">fn </span>on_over_out&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync,
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync,
     {
-        build_action_model(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
+        build_action_model::&lt;V&gt;(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
 
         <span class="self">self</span>.cx.emit_custom(
             Event::new(ActionsEvent::OnOverOut(Box::new(action)))
@@ -1012,9 +1170,9 @@
 
     <span class="kw">fn </span>on_mouse_move&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, f32, f32) + Send + Sync,
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, f32, f32) + Send + Sync,
     {
-        build_action_model(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
+        build_action_model::&lt;V&gt;(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
 
         <span class="self">self</span>.cx.emit_custom(
             Event::new(ActionsEvent::OnMouseMove(Box::new(action)))
@@ -1027,9 +1185,9 @@
 
     <span class="kw">fn </span>on_mouse_down&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, MouseButton) + Send + Sync,
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, MouseButton) + Send + Sync,
     {
-        build_action_model(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
+        build_action_model::&lt;V&gt;(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
 
         <span class="self">self</span>.cx.emit_custom(
             Event::new(ActionsEvent::OnMouseDown(Box::new(action)))
@@ -1042,9 +1200,9 @@
 
     <span class="kw">fn </span>on_mouse_up&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, MouseButton) + Send + Sync,
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, MouseButton) + Send + Sync,
     {
-        build_action_model(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
+        build_action_model::&lt;V&gt;(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
 
         <span class="self">self</span>.cx.emit_custom(
             Event::new(ActionsEvent::OnMouseUp(Box::new(action)))
@@ -1057,9 +1215,9 @@
 
     <span class="kw">fn </span>on_focus_in&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync,
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync,
     {
-        build_action_model(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
+        build_action_model::&lt;V&gt;(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
 
         <span class="self">self</span>.cx.emit_custom(
             Event::new(ActionsEvent::OnFocusIn(Box::new(action)))
@@ -1072,9 +1230,9 @@
 
     <span class="kw">fn </span>on_focus_out&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync,
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;) + Send + Sync,
     {
-        build_action_model(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
+        build_action_model::&lt;V&gt;(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
 
         <span class="self">self</span>.cx.emit_custom(
             Event::new(ActionsEvent::OnFocusOut(Box::new(action)))
@@ -1087,9 +1245,9 @@
 
     <span class="kw">fn </span>on_geo_changed&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, GeometryChanged) + Send + Sync,
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventHandle&lt;V&gt;, GeometryChanged) + Send + Sync,
     {
-        build_action_model(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
+        build_action_model::&lt;V&gt;(<span class="self">self</span>.cx, <span class="self">self</span>.entity);
 
         <span class="self">self</span>.cx.emit_custom(
             Event::new(ActionsEvent::OnGeoChanged(Box::new(action)))

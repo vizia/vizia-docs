@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"derive":[["Data",""],["Lens",""],["Model",""],["Setter",""]]};
+window.SIDEBAR_ITEMS = {"derive":[["Lens",""],["Model",""],["Setter",""]]};

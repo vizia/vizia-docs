@@ -116,7 +116,7 @@
 <span class="kw">impl</span>&lt;L: Lens, T&gt; Store <span class="kw">for </span>BasicStore&lt;L, T&gt;
 <span class="kw">where
     </span>L: Lens&lt;Target = T&gt;,
-    &lt;L <span class="kw">as </span>Lens&gt;::Target: Data,
+    &lt;L <span class="kw">as </span>Lens&gt;::Target: Clone + PartialEq,
 {
     <span class="kw">fn </span>entity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
         <span class="self">self</span>.entity
@@ -125,7 +125,7 @@
     <span class="kw">fn </span>update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, model: ModelOrView) -&gt; bool {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(data) = model.downcast_ref::&lt;L::Source&gt;() {
             <span class="kw">let </span>result = <span class="self">self</span>.lens.view(data, |t| <span class="kw">match </span>(<span class="kw-2">&amp;</span><span class="self">self</span>.old, t) {
-                (<span class="prelude-val">Some</span>(a), <span class="prelude-val">Some</span>(b)) <span class="kw">if </span>a.same(b) =&gt; <span class="prelude-val">None</span>,
+                (<span class="prelude-val">Some</span>(a), <span class="prelude-val">Some</span>(b)) <span class="kw">if </span>a.eq(b) =&gt; <span class="prelude-val">None</span>,
                 (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">None</span>,
                 <span class="kw">_ </span>=&gt; <span class="prelude-val">Some</span>(t.cloned()),
             });

@@ -180,6 +180,7 @@
 <span id="180">180</span>
 <span id="181">181</span>
 <span id="182">182</span>
+<span id="183">183</span>
 </pre><pre class="rust"><code><span class="kw">use </span>std::any::TypeId;
 <span class="kw">use </span>std::collections::{HashMap, HashSet};
 
@@ -202,7 +203,7 @@
 <span class="kw">where
     </span>L: <span class="lifetime">&#39;static </span>+ Lens,
     &lt;L <span class="kw">as </span>Lens&gt;::Source: <span class="lifetime">&#39;static</span>,
-    &lt;L <span class="kw">as </span>Lens&gt;::Target: Data,
+    &lt;L <span class="kw">as </span>Lens&gt;::Target: PartialEq,
 {
     <span class="doccomment">/// Creates a new binding view.
     ///
@@ -219,6 +220,7 @@
     </span><span class="kw">pub fn </span>new&lt;F&gt;(cx: <span class="kw-2">&amp;mut </span>Context, lens: L, builder: F)
     <span class="kw">where
         </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, L),
+        L::Target: Clone,
     {
         <span class="kw">let </span>id = cx.entity_manager.create();
         <span class="kw">let </span>current = cx.current();
@@ -238,7 +240,7 @@
             lens: L,
             id: Entity,
         ) <span class="kw">where
-            </span>L::Target: Data,
+            </span>L::Target: Clone + PartialEq,
         {
             <span class="kw">let </span>key = lens.cache_key();
 

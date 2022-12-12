@@ -300,14 +300,14 @@
 /// This type is part of the prelude.
 </span><span class="kw">pub struct </span>Keymap&lt;T&gt;
 <span class="kw">where
-    </span>T: <span class="lifetime">&#39;static </span>+ Clone + PartialEq + Send + Sync,
+    </span>T: Data + Send + Sync,
 {
     entries: HashMap&lt;KeyChord, Vec&lt;KeymapEntry&lt;T&gt;&gt;&gt;,
 }
 
 <span class="kw">impl</span>&lt;T&gt; Keymap&lt;T&gt;
 <span class="kw">where
-    </span>T: <span class="lifetime">&#39;static </span>+ Clone + PartialEq + Send + Sync,
+    </span>T: Data + Send + Sync,
 {
     <span class="doccomment">/// Creates a new keymap.
     ///
@@ -425,7 +425,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; Model <span class="kw">for </span>Keymap&lt;T&gt;
 <span class="kw">where
-    </span>T: <span class="lifetime">&#39;static </span>+ Clone + PartialEq + Send + Sync,
+    </span>T: Data + Send + Sync,
 {
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
         event.map(|keymap_event, <span class="kw">_</span>| <span class="kw">match </span>keymap_event {
@@ -447,7 +447,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; From&lt;Vec&lt;(KeyChord, KeymapEntry&lt;T&gt;)&gt;&gt; <span class="kw">for </span>Keymap&lt;T&gt;
 <span class="kw">where
-    </span>T: <span class="lifetime">&#39;static </span>+ Clone + PartialEq + Send + Sync,
+    </span>T: Data + Send + Sync,
 {
     <span class="kw">fn </span>from(vec: Vec&lt;(KeyChord, KeymapEntry&lt;T&gt;)&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span><span class="kw-2">mut </span>keymap = <span class="self">Self</span>::new();
@@ -463,7 +463,7 @@
 /// This type is part of the prelude.
 </span><span class="kw">pub enum </span>KeymapEvent&lt;T&gt;
 <span class="kw">where
-    </span>T: <span class="lifetime">&#39;static </span>+ Clone + PartialEq + Send + Sync,
+    </span>T: Data + Send + Sync,
 {
     <span class="doccomment">/// Inserts an entry into the [`Keymap`].
     ///

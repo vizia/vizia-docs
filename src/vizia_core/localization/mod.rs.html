@@ -195,7 +195,7 @@
 <span class="kw">impl</span>&lt;L&gt; FluentStore <span class="kw">for </span>LensState&lt;L&gt;
 <span class="kw">where
     </span>L: Lens,
-    &lt;L <span class="kw">as </span>Lens&gt;::Target: Into&lt;FluentValue&lt;<span class="lifetime">&#39;static</span>&gt;&gt; + Data,
+    &lt;L <span class="kw">as </span>Lens&gt;::Target: Into&lt;FluentValue&lt;<span class="lifetime">&#39;static</span>&gt;&gt; + Clone + PartialEq,
 {
     <span class="kw">fn </span>get_val(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>Context) -&gt; FluentValue&lt;<span class="lifetime">&#39;static</span>&gt; {
         <span class="self">self</span>.lens.view(
@@ -271,7 +271,7 @@
     <span class="kw">pub fn </span>arg&lt;L&gt;(<span class="kw-2">mut </span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str, lens: L) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>L: Lens,
-        &lt;L <span class="kw">as </span>Lens&gt;::Target: Into&lt;FluentValue&lt;<span class="lifetime">&#39;static</span>&gt;&gt; + Data,
+        &lt;L <span class="kw">as </span>Lens&gt;::Target: Into&lt;FluentValue&lt;<span class="lifetime">&#39;static</span>&gt;&gt; + Clone + PartialEq,
     {
         <span class="self">self</span>.args.insert(key.to_owned(), Box::new(LensState { lens }));
         <span class="self">self

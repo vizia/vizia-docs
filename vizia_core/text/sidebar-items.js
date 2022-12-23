@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["Direction",""],["Movement",""],["VerticalMovement",""]],"mod":[["layout",""]],"struct":[["Selection",""]],"trait":[["EditableText",""]]};
+window.SIDEBAR_ITEMS = {"enum":[["Direction",""],["Movement",""],["VerticalMovement",""]],"mod":[["layout",""],["scrolling",""]],"struct":[["Selection",""]],"trait":[["EditableText",""]]};

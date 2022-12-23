@@ -105,6 +105,11 @@
 <span id="105">105</span>
 <span id="106">106</span>
 <span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
 </pre><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::fmt::Formatter;
 <span class="kw">use </span>std::sync::Mutex;
@@ -199,12 +204,17 @@
     <span class="kw">where
         </span>F: <span class="lifetime">&#39;static </span>+ Send + FnOnce(<span class="kw-2">&amp;mut </span>ContextProxy),
     {
-        <span class="kw">let </span><span class="kw-2">mut </span>cxp = ContextProxy {
+        <span class="kw">let </span><span class="kw-2">mut </span>cxp = <span class="self">self</span>.clone();
+        std::thread::spawn(<span class="kw">move </span>|| target(<span class="kw-2">&amp;mut </span>cxp));
+    }
+}
+
+<span class="kw">impl </span>Clone <span class="kw">for </span>ContextProxy {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
             current: <span class="self">self</span>.current,
             event_proxy: <span class="self">self</span>.event_proxy.as_ref().map(|p| p.make_clone()),
-        };
-
-        std::thread::spawn(<span class="kw">move </span>|| target(<span class="kw-2">&amp;mut </span>cxp));
+        }
     }
 }
 

@@ -835,12 +835,57 @@
 <span id="835">835</span>
 <span id="836">836</span>
 <span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::cache::BoundingBox;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::text::{
-    idx_to_pos, measure_text_lines, pos_to_idx, text_layout, text_paint_general, Direction,
-    EditableText, Movement, Selection,
+    enforce_text_bounds, ensure_visible, idx_to_pos, measure_text_lines, pos_to_idx, text_layout,
+    text_paint_general, Direction, EditableText, Movement, Selection,
 };
+<span class="kw">use </span><span class="kw">crate</span>::views::scrollview::SCROLL_SENSITIVITY;
 <span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>vizia_id::GenerationalId;
 <span class="kw">use </span>vizia_input::Code;
@@ -912,58 +957,21 @@
             <span class="self">self</span>.re_sel_x = <span class="bool-val">false</span>;
             <span class="self">self</span>.sel_x = x;
         }
+        <span class="kw">let </span>caret_box = BoundingBox {
+            x: x.round(),
+            y: bounds.y + line <span class="kw">as </span>f32 * line_height,
+            w: <span class="number">1.0</span>,
+            h: line_height,
+        };
 
         <span class="comment">// do the computation
         </span><span class="kw">let </span>(<span class="kw-2">mut </span>tx, <span class="kw-2">mut </span>ty) = <span class="self">self</span>.transform;
         tx <span class="kw-2">*</span>= scale;
         ty <span class="kw-2">*</span>= scale;
-        <span class="kw">let </span>text_box = BoundingBox { x: bounds.x + tx, y: bounds.y + ty, w: bounds.w, h: bounds.h };
-        <span class="kw">if </span>text_box.x &lt; parent_bounds.x
-            &amp;&amp; text_box.x + text_box.w &lt; parent_bounds.x + parent_bounds.w
-        {
-            tx += parent_bounds.x - text_box.x;
-        }
-        <span class="kw">if </span>text_box.x &gt; parent_bounds.x
-            &amp;&amp; text_box.x + text_box.w &gt; parent_bounds.x + parent_bounds.w
-        {
-            tx -= (text_box.x + text_box.w) - (parent_bounds.x + parent_bounds.w);
-        }
-        <span class="kw">if </span>text_box.w &lt; parent_bounds.w {
-            tx = <span class="number">0.0</span>;
-        }
-        <span class="kw">if </span>text_box.y &lt; parent_bounds.y
-            &amp;&amp; text_box.y + text_box.h &lt; parent_bounds.y + parent_bounds.h
-        {
-            ty += parent_bounds.y - text_box.y;
-        }
-        <span class="kw">if </span>text_box.y &gt; parent_bounds.y
-            &amp;&amp; text_box.y + text_box.h &gt; parent_bounds.y + parent_bounds.h
-        {
-            ty -= (text_box.y + text_box.h) - (parent_bounds.y + parent_bounds.h);
-        }
-        <span class="kw">if </span>text_box.h &lt; parent_bounds.h {
-            ty = <span class="number">0.0</span>;
-        }
-        <span class="kw">let </span>caret_box = BoundingBox {
-            x: x.round() + tx,
-            y: bounds.y + line <span class="kw">as </span>f32 * line_height + ty,
-            w: <span class="number">1.0</span>,
-            h: line_height,
-        };
+        (tx, ty) = enforce_text_bounds(<span class="kw-2">&amp;</span>bounds, <span class="kw-2">&amp;</span>parent_bounds, (tx, ty));
         parent_bounds.x -= <span class="number">1.0</span>;
         parent_bounds.w += <span class="number">2.0</span>;
-        <span class="kw">if </span>caret_box.x &lt; parent_bounds.x {
-            tx += parent_bounds.x - caret_box.x;
-        }
-        <span class="kw">if </span>caret_box.x + caret_box.w &gt;= parent_bounds.x + parent_bounds.w {
-            tx -= caret_box.x + caret_box.w - (parent_bounds.x + parent_bounds.w);
-        }
-        <span class="kw">if </span>caret_box.y &lt; parent_bounds.y {
-            ty += parent_bounds.y - caret_box.y;
-        }
-        <span class="kw">if </span>caret_box.y + caret_box.h &gt;= parent_bounds.y + parent_bounds.h {
-            ty -= caret_box.y + caret_box.h - (parent_bounds.y + parent_bounds.h);
-        }
+        (tx, ty) = ensure_visible(<span class="kw-2">&amp;</span>caret_box, <span class="kw-2">&amp;</span>parent_bounds, (tx, ty));
         <span class="self">self</span>.transform = (tx.round() / scale, ty.round() / scale);
     }
 
@@ -1087,7 +1095,57 @@
                 }
             }
 
-            Movement::ParagraphStart =&gt; {
+            Movement::LineStart =&gt; {
+                <span class="self">self</span>.re_sel_x = <span class="bool-val">true</span>;
+                <span class="kw">let </span>entity = <span class="self">self</span>.content_entity;
+                <span class="kw">let </span>default = <span class="macro">vec!</span>[];
+                <span class="kw">let </span>lines = cx.draw_cache.text_lines.get(entity).unwrap_or(<span class="kw-2">&amp;</span>default);
+                <span class="kw">if </span>!lines.is_empty() {
+                    <span class="kw">let </span>(line, <span class="kw">_</span>) = idx_to_pos(<span class="self">self</span>.selection.active, lines.iter());
+                    <span class="self">self</span>.selection.active = lines[line].<span class="number">0</span>.start;
+                }
+            }
+
+            Movement::LineEnd =&gt; {
+                <span class="self">self</span>.re_sel_x = <span class="bool-val">true</span>;
+                <span class="kw">let </span>entity = <span class="self">self</span>.content_entity;
+                <span class="kw">let </span>default = <span class="macro">vec!</span>[];
+                <span class="kw">let </span>lines = cx.draw_cache.text_lines.get(entity).unwrap_or(<span class="kw-2">&amp;</span>default);
+                <span class="kw">if </span>!lines.is_empty() {
+                    <span class="kw">let </span>(line, <span class="kw">_</span>) = idx_to_pos(<span class="self">self</span>.selection.active, lines.iter());
+                    <span class="self">self</span>.selection.active = lines[line].<span class="number">0</span>.end;
+                }
+            }
+
+            Movement::Page(dir) =&gt; {
+                <span class="kw">let </span>entity = <span class="self">self</span>.content_entity;
+                <span class="kw">let </span>parent = entity.parent(cx.tree).unwrap();
+                <span class="kw">let </span>default = <span class="macro">vec!</span>[];
+                <span class="kw">let </span>lines = cx.draw_cache.text_lines.get(entity).unwrap_or(<span class="kw-2">&amp;</span>default);
+                <span class="kw">let </span>(line, (<span class="kw">_</span>, y)) = idx_to_pos(<span class="self">self</span>.selection.active, lines.iter());
+                <span class="kw">let </span>parent_bounds = cx.cache.bounds.get(parent).unwrap().clone();
+
+                <span class="kw">if </span>line == <span class="number">0 </span>&amp;&amp; <span class="macro">matches!</span>(dir, Direction::Upstream) {
+                    <span class="self">self</span>.selection.active = <span class="number">0</span>;
+                } <span class="kw">else </span>{
+                    <span class="kw">let </span>new_y = y + parent_bounds.h
+                        * <span class="kw">match </span>dir {
+                            Direction::Upstream =&gt; -<span class="number">1.0</span>,
+                            Direction::Downstream =&gt; <span class="number">1.0</span>,
+                            Direction::Left =&gt; <span class="number">0.0</span>,
+                            Direction::Right =&gt; <span class="number">0.0</span>,
+                        };
+
+                    <span class="self">self</span>.selection.active = pos_to_idx(
+                        <span class="self">self</span>.sel_x,
+                        new_y,
+                        lines.iter(),
+                        <span class="self">self</span>.kind == TextboxKind::SingleLine,
+                    );
+                }
+            }
+
+            Movement::Body(Direction::Upstream) =&gt; {
                 <span class="kw">if </span>selection {
                     <span class="self">self</span>.selection.active = <span class="number">0</span>;
                 } <span class="kw">else </span>{
@@ -1096,7 +1154,7 @@
                 }
             }
 
-            Movement::ParagraphEnd =&gt; {
+            Movement::Body(Direction::Downstream) =&gt; {
                 <span class="kw">if </span>selection {
                     <span class="self">self</span>.selection.active = <span class="self">self</span>.text.len();
                 } <span class="kw">else </span>{
@@ -1134,6 +1192,7 @@
     Submit(bool),
     Hit(f32, f32),
     Drag(f32, f32),
+    Scroll(f32, f32),
     Copy,
     Paste,
 
@@ -1251,6 +1310,21 @@
                 <span class="self">self</span>.selection = Selection::new(<span class="self">self</span>.selection.anchor, idx);
                 <span class="self">self</span>.sel_x = posx;
                 <span class="self">self</span>.set_caret(cx);
+            }
+
+            TextEvent::Scroll(x, y) =&gt; {
+                <span class="kw">let </span>entity = <span class="self">self</span>.content_entity;
+                <span class="kw">let </span>parent = cx.tree.get_parent(entity).unwrap();
+                <span class="kw">let </span>bounds = cx.cache.bounds.get(entity).unwrap().clone();
+                <span class="kw">let </span>parent_bounds = cx.cache.bounds.get(parent).unwrap().clone();
+                <span class="kw">let </span>(<span class="kw-2">mut </span>tx, <span class="kw-2">mut </span>ty) = <span class="self">self</span>.transform;
+                <span class="kw">let </span>scale = cx.style.dpi_factor <span class="kw">as </span>f32;
+                tx <span class="kw-2">*</span>= scale;
+                ty <span class="kw-2">*</span>= scale;
+                tx += <span class="kw-2">*</span>x * SCROLL_SENSITIVITY;
+                ty += <span class="kw-2">*</span>y * SCROLL_SENSITIVITY;
+                (tx, ty) = enforce_text_bounds(<span class="kw-2">&amp;</span>bounds, <span class="kw-2">&amp;</span>parent_bounds, (tx, ty));
+                <span class="self">self</span>.transform = (tx / scale, ty / scale);
             }
 
             TextEvent::Copy =&gt;
@@ -1491,6 +1565,10 @@
                 }
             }
 
+            WindowEvent::MouseScroll(x, y) =&gt; {
+                cx.emit(TextEvent::Scroll(<span class="kw-2">*</span>x, <span class="kw-2">*</span>y));
+            }
+
             WindowEvent::CharInput(c) =&gt; {
                 <span class="kw">if </span><span class="kw-2">*</span>c != <span class="string">&#39;\u{1b}&#39; </span>&amp;&amp; <span class="comment">// Escape
                             </span><span class="kw-2">*</span>c != <span class="string">&#39;\u{8}&#39; </span>&amp;&amp; <span class="comment">// Backspace
@@ -1617,23 +1695,33 @@
 
                 Code::Home =&gt; {
                     cx.emit(TextEvent::MoveCursor(
-                        Movement::ParagraphStart,
+                        Movement::LineStart,
                         cx.modifiers.contains(Modifiers::SHIFT),
                     ));
                 }
 
                 Code::End =&gt; {
                     cx.emit(TextEvent::MoveCursor(
-                        Movement::ParagraphEnd,
+                        Movement::LineEnd,
                         cx.modifiers.contains(Modifiers::SHIFT),
                     ));
                 }
 
-                <span class="comment">// TODO
-                </span>Code::PageUp =&gt; {}
-
-                <span class="comment">// TODO
-                </span>Code::PageDown =&gt; {}
+                Code::PageUp | Code::PageDown =&gt; {
+                    <span class="kw">let </span>direction = <span class="kw">if </span><span class="kw-2">*</span>code == Code::PageUp {
+                        Direction::Upstream
+                    } <span class="kw">else </span>{
+                        Direction::Downstream
+                    };
+                    cx.emit(TextEvent::MoveCursor(
+                        <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
+                            Movement::Body(direction)
+                        } <span class="kw">else </span>{
+                            Movement::Page(direction)
+                        },
+                        cx.modifiers.contains(Modifiers::SHIFT),
+                    ));
+                }
 
                 Code::KeyA =&gt; {
                     <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {

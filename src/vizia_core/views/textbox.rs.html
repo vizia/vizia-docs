@@ -871,14 +871,6 @@
 <span id="871">871</span>
 <span id="872">872</span>
 <span id="873">873</span>
-<span id="874">874</span>
-<span id="875">875</span>
-<span id="876">876</span>
-<span id="877">877</span>
-<span id="878">878</span>
-<span id="879">879</span>
-<span id="880">880</span>
-<span id="881">881</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::cache::BoundingBox;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::text::{
@@ -908,10 +900,9 @@
 
 <span class="kw">impl </span>TextboxData {
     <span class="kw">pub fn </span>new(text: String) -&gt; <span class="self">Self </span>{
-        <span class="kw">let </span>text_length = text.as_str().len();
         <span class="self">Self </span>{
             text: text.clone(),
-            selection: Selection::new(<span class="number">0</span>, text_length),
+            selection: Selection::new(<span class="number">0</span>, <span class="number">0</span>),
             sel_x: -<span class="number">1.0</span>,
             re_sel_x: <span class="bool-val">false</span>,
             edit: <span class="bool-val">false</span>,
@@ -1182,6 +1173,7 @@
 
 <span class="kw">pub enum </span>TextEvent {
     InsertText(String),
+    ResetText(String),
     DeleteText(Movement),
     MoveCursor(Movement, bool),
     SelectAll,
@@ -1203,6 +1195,10 @@
     GeometryChanged,
 }
 
+<span class="kw">enum </span>TextEventInternal {
+    Reset,
+}
+
 <span class="kw">impl </span>Model <span class="kw">for </span>TextboxData {
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
         event.map(|text_event, <span class="kw">_</span>| <span class="kw">match </span>text_event {
@@ -1217,6 +1213,10 @@
                         <span class="self">self</span>.on_edit = <span class="prelude-val">Some</span>(callback);
                     }
                 }
+            }
+
+            TextEvent::ResetText(text) =&gt; {
+                <span class="self">self</span>.text = text.clone();
             }
 
             TextEvent::DeleteText(movement) =&gt; {
@@ -1246,9 +1246,6 @@
                         cx.focus_with_visibility(<span class="bool-val">false</span>);
                         cx.capture();
                         cx.set_checked(<span class="bool-val">true</span>);
-                        <span class="kw">if </span><span class="self">self</span>.selection.active == <span class="self">self</span>.selection.anchor {
-                            cx.emit(TextEvent::SelectAll);
-                        }
                     }
                 }
             }
@@ -1258,6 +1255,7 @@
                 <span class="self">self</span>.edit = <span class="bool-val">false</span>;
                 cx.set_checked(<span class="bool-val">false</span>);
                 cx.release();
+                cx.emit(TextEventInternal::Reset);
             }
 
             TextEvent::Submit(reason) =&gt; {
@@ -1507,20 +1505,6 @@
                     cx.emit(TextEvent::Hit(cx.mouse.cursorx, cx.mouse.cursory));
                 } <span class="kw">else </span>{
                     cx.emit(TextEvent::Submit(<span class="bool-val">false</span>));
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(source) = cx.data::&lt;L::Source&gt;() {
-                        <span class="kw">let </span>text = <span class="self">self</span>.lens.view(source, |t| {
-                            <span class="kw">if let </span><span class="prelude-val">Some</span>(t) = t {
-                                t.to_string()
-                            } <span class="kw">else </span>{
-                                <span class="string">&quot;&quot;</span>.to_owned()
-                            }
-                        });
-
-                        cx.emit(TextEvent::SelectAll);
-                        cx.emit(TextEvent::InsertText(text));
-                    };
-                    cx.release();
-                    cx.set_checked(<span class="bool-val">false</span>);
 
                     <span class="comment">// Forward event to hovered
                     </span>cx.event_queue.push_back(
@@ -1590,21 +1574,6 @@
 
                     </span><span class="kw">if </span><span class="macro">matches!</span>(<span class="self">self</span>.kind, TextboxKind::SingleLine) {
                         cx.emit(TextEvent::Submit(<span class="bool-val">true</span>));
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>(source) = cx.data::&lt;L::Source&gt;() {
-                            <span class="kw">let </span>text = <span class="self">self</span>.lens.view(source, |t| {
-                                <span class="kw">if let </span><span class="prelude-val">Some</span>(t) = t {
-                                    t.to_string()
-                                } <span class="kw">else </span>{
-                                    <span class="string">&quot;&quot;</span>.to_owned()
-                                }
-                            });
-
-                            cx.emit(TextEvent::SelectAll);
-                            cx.emit(TextEvent::InsertText(text));
-                        };
-
-                        cx.set_checked(<span class="bool-val">false</span>);
-                        cx.release();
                     } <span class="kw">else </span>{
                         cx.emit(TextEvent::InsertText(<span class="string">&quot;\n&quot;</span>.to_owned()));
                     }
@@ -1742,6 +1711,21 @@
 
             <span class="kw">_ </span>=&gt; {}
         });
+
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(msg) = event.take::&lt;TextEventInternal&gt;() {
+            <span class="kw">let </span>TextEventInternal::Reset = msg;
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(source) = cx.data::&lt;L::Source&gt;() {
+                <span class="kw">let </span>text = <span class="self">self</span>.lens.view(source, |t| {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(t) = t {
+                        t.to_string()
+                    } <span class="kw">else </span>{
+                        <span class="string">&quot;&quot;</span>.to_owned()
+                    }
+                });
+
+                cx.emit(TextEvent::ResetText(text));
+            };
+        }
     }
 }
 

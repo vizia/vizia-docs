@@ -536,39 +536,6 @@
 <span id="536">536</span>
 <span id="537">537</span>
 <span id="538">538</span>
-<span id="539">539</span>
-<span id="540">540</span>
-<span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
-<span id="544">544</span>
-<span id="545">545</span>
-<span id="546">546</span>
-<span id="547">547</span>
-<span id="548">548</span>
-<span id="549">549</span>
-<span id="550">550</span>
-<span id="551">551</span>
-<span id="552">552</span>
-<span id="553">553</span>
-<span id="554">554</span>
-<span id="555">555</span>
-<span id="556">556</span>
-<span id="557">557</span>
-<span id="558">558</span>
-<span id="559">559</span>
-<span id="560">560</span>
-<span id="561">561</span>
-<span id="562">562</span>
-<span id="563">563</span>
-<span id="564">564</span>
-<span id="565">565</span>
-<span id="566">566</span>
-<span id="567">567</span>
-<span id="568">568</span>
-<span id="569">569</span>
-<span id="570">570</span>
-<span id="571">571</span>
 </pre><pre class="rust"><code><span class="kw">pub mod </span>backend;
 <span class="kw">mod </span>draw;
 <span class="kw">mod </span>event;
@@ -944,7 +911,7 @@
     <span class="kw">pub fn </span>add_theme(<span class="kw-2">&amp;mut </span><span class="self">self</span>, theme: <span class="kw-2">&amp;</span>str) {
         <span class="self">self</span>.resource_manager.themes.push(theme.to_owned());
 
-        <span class="self">self</span>.reload_styles().expect(<span class="string">&quot;Failed to reload styles&quot;</span>);
+        EventContext::new(<span class="self">self</span>).reload_styles().expect(<span class="string">&quot;Failed to reload styles&quot;</span>);
     }
 
     <span class="kw">pub fn </span>remove_user_themes(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
@@ -978,39 +945,6 @@
     </span><span class="kw">pub fn </span>add_animation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, duration: std::time::Duration) -&gt; AnimationBuilder {
         <span class="kw">let </span>id = <span class="self">self</span>.style.animation_manager.create();
         AnimationBuilder::new(id, <span class="self">self</span>, duration)
-    }
-
-    <span class="kw">pub fn </span>reload_styles(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), std::io::Error&gt; {
-        <span class="kw">if </span><span class="self">self</span>.resource_manager.themes.is_empty() &amp;&amp; <span class="self">self</span>.resource_manager.stylesheets.is_empty() {
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(());
-        }
-
-        <span class="self">self</span>.style.remove_rules();
-
-        <span class="self">self</span>.style.rules.clear();
-
-        <span class="self">self</span>.style.clear_style_rules();
-
-        <span class="kw">let </span><span class="kw-2">mut </span>overall_theme = String::new();
-
-        <span class="comment">// Reload the stored themes
-        </span><span class="kw">for </span>theme <span class="kw">in </span><span class="self">self</span>.resource_manager.themes.iter() {
-            overall_theme += theme;
-        }
-
-        <span class="comment">// Reload the stored stylesheets
-        </span><span class="kw">for </span>stylesheet <span class="kw">in </span><span class="self">self</span>.resource_manager.stylesheets.iter() {
-            <span class="kw">let </span>theme = std::fs::read_to_string(stylesheet)<span class="question-mark">?</span>;
-            overall_theme += <span class="kw-2">&amp;</span>theme;
-        }
-
-        <span class="self">self</span>.style.parse_theme(<span class="kw-2">&amp;</span>overall_theme);
-
-        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
-        <span class="self">self</span>.style.needs_relayout = <span class="bool-val">true</span>;
-        <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
-
-        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">pub fn </span>set_image_loader&lt;F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, <span class="kw-2">&amp;</span>str)&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, loader: F) {

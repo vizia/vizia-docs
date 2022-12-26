@@ -262,6 +262,10 @@
 <span id="262">262</span>
 <span id="263">263</span>
 <span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::convert::cursor_icon_to_cursor_icon;
 <span class="kw">use </span>femtovg::{renderer::OpenGl, Canvas, Color};
 <span class="attribute">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
@@ -408,7 +412,7 @@
 }
 
 <span class="kw">impl </span>View <span class="kw">for </span>Window {
-    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
+    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
         event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
             WindowEvent::GrabCursor(flag) =&gt; {
                 <span class="kw">let </span>grab_mode = <span class="kw">if </span><span class="kw-2">*</span>flag { CursorGrabMode::Locked } <span class="kw">else </span>{ CursorGrabMode::None };
@@ -476,6 +480,10 @@
 
             WindowEvent::SetAlwaysOnTop(flag) =&gt; {
                 <span class="self">self</span>.window().set_always_on_top(<span class="kw-2">*</span>flag);
+            }
+
+            WindowEvent::ReloadStyles =&gt; {
+                cx.reload_styles().unwrap();
             }
 
             <span class="kw">_ </span>=&gt; {}

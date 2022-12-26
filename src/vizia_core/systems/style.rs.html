@@ -540,6 +540,10 @@
 <span id="540">540</span>
 <span id="541">541</span>
 <span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::style::{Rule, Selector, SelectorRelation, StyleRule};
 <span class="kw">use </span>vizia_id::GenerationalId;
@@ -603,7 +607,11 @@
     Selector {
         asterisk: <span class="bool-val">false</span>,
         id: cx.style.ids.get(entity).cloned(),
-        element: cx.style.elements.get(entity).cloned(),
+        element: cx
+            .views
+            .get(<span class="kw-2">&amp;</span>entity)
+            .and_then(|view| view.element())
+            .map(|element| element.to_owned()),
         classes: cx.style.classes.get(entity).cloned().unwrap_or_default(),
         pseudo_classes: {
             <span class="kw">let </span><span class="kw-2">mut </span>pseudo_classes =

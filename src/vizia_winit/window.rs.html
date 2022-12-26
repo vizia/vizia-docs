@@ -266,6 +266,12 @@
 <span id="266">266</span>
 <span id="267">267</span>
 <span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::convert::cursor_icon_to_cursor_icon;
 <span class="kw">use </span>femtovg::{renderer::OpenGl, Canvas, Color};
 <span class="attribute">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
@@ -281,6 +287,7 @@
     </span>handle: glutin::WindowedContext&lt;glutin::PossiblyCurrent&gt;,
     <span class="attribute">#[cfg(target_arch = <span class="string">&quot;wasm32&quot;</span>)]
     </span>handle: winit::window::Window,
+    <span class="kw">pub </span>should_close: bool,
 }
 
 <span class="attribute">#[cfg(target_arch = <span class="string">&quot;wasm32&quot;</span>)]
@@ -327,6 +334,7 @@
         </span><span class="kw">let </span>window = Window {
             id: handle.id(),
             handle,
+            should_close: <span class="bool-val">false</span>,
             <span class="comment">//canvas: Canvas::new(renderer).expect(&quot;Cannot create canvas&quot;),
         </span>};
 
@@ -393,7 +401,7 @@
         <span class="comment">//cx.canvases.insert(Entity::root(), canvas);
 
         // Build our window
-        </span><span class="kw">let </span>window = Window { id: handle.window().id(), handle };
+        </span><span class="kw">let </span>window = Window { id: handle.window().id(), handle, should_close: <span class="bool-val">false </span>};
 
         (window, canvas)
     }
@@ -484,6 +492,10 @@
 
             WindowEvent::ReloadStyles =&gt; {
                 cx.reload_styles().unwrap();
+            }
+
+            WindowEvent::WindowClose =&gt; {
+                <span class="self">self</span>.should_close = <span class="bool-val">true</span>;
             }
 
             <span class="kw">_ </span>=&gt; {}

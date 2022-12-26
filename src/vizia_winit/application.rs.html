@@ -580,6 +580,16 @@
 <span id="580">580</span>
 <span id="581">581</span>
 <span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
 </pre><pre class="rust"><code><span class="kw">use crate</span>::{
     convert::{scan_code_to_code, virtual_key_code_to_code, virtual_key_code_to_key},
     window::Window,
@@ -831,6 +841,16 @@
                         <span class="kw-2">*</span>stored_control_flow.borrow_mut() = ControlFlow::Poll;
                         event_loop_proxy.send_event(Event::new(())).expect(<span class="string">&quot;Failed to send event&quot;</span>);
                     }
+
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(window_event_handler) = cx.views().remove(<span class="kw-2">&amp;</span>Entity::root()) {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(window) = window_event_handler.downcast_ref::&lt;Window&gt;() {
+                            <span class="kw">if </span>window.should_close {
+                                <span class="kw-2">*</span>stored_control_flow.borrow_mut() = ControlFlow::Exit;
+                            }
+                        }
+
+                        cx.views().insert(Entity::root(), window_event_handler);
+                    }
                 }
 
                 winit::event::Event::RedrawRequested(<span class="kw">_</span>) =&gt; {
@@ -841,7 +861,7 @@
                 winit::event::Event::WindowEvent { window_id: <span class="kw">_</span>, event } =&gt; {
                     <span class="kw">match </span>event {
                         winit::event::WindowEvent::CloseRequested =&gt; {
-                            <span class="kw-2">*</span>stored_control_flow.borrow_mut() = ControlFlow::Exit;
+                            cx.<span class="number">0</span>.emit(WindowEvent::WindowClose);
                         }
 
                         winit::event::WindowEvent::ScaleFactorChanged {

@@ -108,12 +108,12 @@
 </span><span class="kw">pub struct </span>Table&lt;L, T: <span class="lifetime">&#39;static</span>&gt;
 <span class="kw">where
     </span>L: Lens&lt;Target = Vec&lt;T&gt;&gt;,
-    T: PartialEq,
+    T: Data,
 {
     p: PhantomData&lt;L&gt;,
 }
 
-<span class="kw">impl</span>&lt;L: <span class="lifetime">&#39;static </span>+ Lens&lt;Target = Vec&lt;T&gt;&gt;, T: PartialEq&gt; Table&lt;L, T&gt; {
+<span class="kw">impl</span>&lt;L: <span class="lifetime">&#39;static </span>+ Lens&lt;Target = Vec&lt;T&gt;&gt;, T: Data&gt; Table&lt;L, T&gt; {
     <span class="kw">pub fn </span>new&lt;<span class="lifetime">&#39;a</span>, F&gt;(cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context, lens: L, list_builder: F) -&gt; Handle&lt;<span class="lifetime">&#39;a</span>, <span class="self">Self</span>&gt;
     <span class="kw">where
         </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, L),
@@ -127,7 +127,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;L: <span class="lifetime">&#39;static </span>+ Lens&lt;Target = Vec&lt;T&gt;&gt;, T: PartialEq&gt; View <span class="kw">for </span>Table&lt;L, T&gt;
+<span class="kw">impl</span>&lt;L: <span class="lifetime">&#39;static </span>+ Lens&lt;Target = Vec&lt;T&gt;&gt;, T: Data&gt; View <span class="kw">for </span>Table&lt;L, T&gt;
 <span class="kw">where
     </span>L: <span class="lifetime">&#39;static </span>+ Lens&lt;Target = Vec&lt;T&gt;&gt;,
 {
@@ -140,8 +140,8 @@
 <span class="kw">where
     </span>R: Lens&lt;Target = Vec&lt;T&gt;&gt;,
     L: Lens&lt;Source = T, Target = U&gt;,
-    T: PartialEq,
-    U: PartialEq,
+    T: Data,
+    U: Data,
 {
     p1: PhantomData&lt;R&gt;,
     p2: PhantomData&lt;L&gt;,
@@ -187,7 +187,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;R, L, T: <span class="lifetime">&#39;static </span>+ PartialEq, U: <span class="lifetime">&#39;static </span>+ PartialEq&gt; View <span class="kw">for </span>TableColumn&lt;R, L, T, U&gt;
+<span class="kw">impl</span>&lt;R, L, T: Data, U: Data&gt; View <span class="kw">for </span>TableColumn&lt;R, L, T, U&gt;
 <span class="kw">where
     </span>R: Lens&lt;Target = Vec&lt;T&gt;&gt;,
     L: Lens&lt;Source = T, Target = U&gt;,

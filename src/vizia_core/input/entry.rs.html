@@ -65,7 +65,7 @@
 <span id="65">65</span>
 <span id="66">66</span>
 <span id="67">67</span>
-</pre><pre class="rust"><code><span class="kw">use crate</span>::{context::EventContext, state::Data};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::EventContext;
 
 <span class="doccomment">/// An entry inside of a [`Keymap`](crate::prelude::Keymap).
 ///
@@ -76,7 +76,7 @@
 </span><span class="attribute">#[derive(Copy, Clone)]
 </span><span class="kw">pub struct </span>KeymapEntry&lt;T&gt;
 <span class="kw">where
-    </span>T: Data + Send + Sync,
+    </span>T: <span class="lifetime">&#39;static </span>+ Clone + PartialEq + Send + Sync,
 {
     action: T,
     on_action: <span class="kw">fn</span>(<span class="kw-2">&amp;mut </span>EventContext),
@@ -84,7 +84,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; KeymapEntry&lt;T&gt;
 <span class="kw">where
-    </span>T: Data + Send + Sync,
+    </span>T: <span class="lifetime">&#39;static </span>+ Clone + PartialEq + Send + Sync,
 {
     <span class="doccomment">/// Creates a new keymap entry.
     ///
@@ -117,7 +117,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; PartialEq <span class="kw">for </span>KeymapEntry&lt;T&gt;
 <span class="kw">where
-    </span>T: Data + Send + Sync,
+    </span>T: <span class="lifetime">&#39;static </span>+ Clone + PartialEq + Send + Sync,
 {
     <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
         <span class="self">self</span>.action == other.action
@@ -126,7 +126,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; PartialEq&lt;T&gt; <span class="kw">for </span>KeymapEntry&lt;T&gt;
 <span class="kw">where
-    </span>T: Data + Send + Sync,
+    </span>T: <span class="lifetime">&#39;static </span>+ Clone + PartialEq + Send + Sync,
 {
     <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>T) -&gt; bool {
         <span class="self">self</span>.action == <span class="kw-2">*</span>other

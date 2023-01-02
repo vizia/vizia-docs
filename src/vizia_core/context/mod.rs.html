@@ -536,6 +536,41 @@
 <span id="536">536</span>
 <span id="537">537</span>
 <span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
 </pre><pre class="rust"><code><span class="kw">pub mod </span>backend;
 <span class="kw">mod </span>draw;
 <span class="kw">mod </span>event;
@@ -545,6 +580,7 @@
 <span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::collections::hash_map::Entry;
 <span class="kw">use </span>std::collections::{HashMap, HashSet, VecDeque};
+<span class="kw">use </span>std::iter::once;
 <span class="kw">use </span>std::path::Path;
 <span class="kw">use </span>std::sync::Mutex;
 
@@ -552,8 +588,9 @@
 </span><span class="kw">use </span>copypasta::ClipboardContext;
 <span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
 </span><span class="kw">use </span>copypasta::{nop_clipboard::NopClipboardContext, ClipboardProvider};
-<span class="kw">use </span>femtovg::TextContext;
+<span class="kw">use </span>cosmic_text::{fontdb::Database, Attrs, AttrsList, BufferLine, FamilyOwned};
 <span class="kw">use </span>fnv::FnvHashMap;
+<span class="kw">use </span>replace_with::replace_with_or_abort;
 <span class="kw">use </span>unic_langid::LanguageIdentifier;
 
 <span class="kw">pub use </span>draw::<span class="kw-2">*</span>;
@@ -563,10 +600,12 @@
 <span class="kw">use </span><span class="kw">crate</span>::cache::CachedData;
 <span class="kw">use </span><span class="kw">crate</span>::environment::Environment;
 <span class="kw">use </span><span class="kw">crate</span>::events::ViewHandler;
+<span class="kw">use </span><span class="kw">crate</span>::fonts;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::resource::{FontOrId, ImageOrId, ImageRetentionPolicy, ResourceManager, StoredImage};
+<span class="kw">use </span><span class="kw">crate</span>::resource::{ImageOrId, ImageRetentionPolicy, ResourceManager, StoredImage};
 <span class="kw">use </span><span class="kw">crate</span>::state::{BindingHandler, ModelDataStore};
 <span class="kw">use </span><span class="kw">crate</span>::style::Style;
+<span class="kw">use </span><span class="kw">crate</span>::text::TextContext;
 <span class="kw">use </span>vizia_id::{GenerationalId, IdManager};
 <span class="kw">use </span>vizia_input::{Modifiers, MouseState};
 <span class="kw">use </span>vizia_storage::SparseSet;
@@ -628,6 +667,17 @@
         <span class="kw">let </span><span class="kw-2">mut </span>cache = CachedData::default();
         cache.add(Entity::root()).expect(<span class="string">&quot;Failed to add entity to cache&quot;</span>);
 
+        <span class="comment">// Add default fonts
+        </span><span class="kw">let </span><span class="kw-2">mut </span>db = Database::new();
+        db.load_system_fonts();
+        db.load_font_data(Vec::from(fonts::ROBOTO_REGULAR));
+        db.load_font_data(Vec::from(fonts::ROBOTO_BOLD));
+        db.load_font_data(Vec::from(fonts::ROBOTO_ITALIC));
+        db.load_font_data(Vec::from(fonts::ENTYPO));
+        db.load_font_data(Vec::from(fonts::OPEN_SANS_EMOJI));
+        db.load_font_data(Vec::from(fonts::AMIRI_REGULAR));
+        db.load_font_data(Vec::from(fonts::MATERIAL_ICONS_REGULAR));
+
         <span class="kw">let </span><span class="kw-2">mut </span>result = <span class="self">Self </span>{
             entity_manager: IdManager::new(),
             entity_identifiers: HashMap::new(),
@@ -653,7 +703,10 @@
             focus_stack: Vec::new(),
             cursor_icon_locked: <span class="bool-val">false</span>,
             resource_manager: ResourceManager::new(),
-            text_context: TextContext::default(),
+            text_context: TextContext::new_from_locale_and_db(
+                sys_locale::get_locale().unwrap_or_else(|| <span class="string">&quot;en-US&quot;</span>.to_owned()),
+                db,
+            ),
 
             event_proxy: <span class="prelude-val">None</span>,
 
@@ -678,6 +731,7 @@
         Environment::new().build(<span class="kw-2">&amp;mut </span>result);
 
         result.entity_manager.create();
+        result.set_default_font(<span class="kw-2">&amp;</span>[<span class="string">&quot;Roboto&quot;</span>]);
 
         result
     }
@@ -848,6 +902,7 @@
             <span class="self">self</span>.data.remove(<span class="kw-2">*</span>entity);
             <span class="self">self</span>.views.remove(entity);
             <span class="self">self</span>.entity_manager.destroy(<span class="kw-2">*</span>entity);
+            <span class="self">self</span>.text_context.clear_buffer(<span class="kw-2">*</span>entity);
 
             <span class="kw">if </span><span class="self">self</span>.captured == <span class="kw-2">*</span>entity {
                 <span class="self">self</span>.captured = Entity::null();
@@ -893,19 +948,34 @@
     }
 
     <span class="doccomment">/// Add a font from memory to the application.
-    </span><span class="kw">pub fn </span>add_font_mem(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str, data: <span class="kw-2">&amp;</span>[u8]) {
-        <span class="comment">// TODO - return error
-        </span><span class="kw">if </span><span class="self">self</span>.resource_manager.fonts.contains_key(name) {
-            <span class="macro">println!</span>(<span class="string">&quot;Font already exists&quot;</span>);
-            <span class="kw">return</span>;
-        }
-
-        <span class="self">self</span>.resource_manager.fonts.insert(name.to_owned(), FontOrId::Font(data.to_vec()));
+    </span><span class="kw">pub fn </span>add_fonts_mem(<span class="kw-2">&amp;mut </span><span class="self">self</span>, data: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[u8]]) {
+        <span class="self">self</span>.text_context.take_buffers();
+        replace_with_or_abort(<span class="kw-2">&amp;mut </span><span class="self">self</span>.text_context, |<span class="kw-2">mut </span>ccx| {
+            <span class="kw">let </span>buffers = ccx.take_buffers();
+            <span class="kw">let </span>(locale, <span class="kw-2">mut </span>db) = ccx.into_font_system().into_locale_and_db();
+            <span class="kw">for </span>font_data <span class="kw">in </span>data {
+                db.load_font_data(Vec::from(<span class="kw-2">*</span>font_data));
+            }
+            <span class="kw">let </span><span class="kw-2">mut </span>new_ccx = TextContext::new_from_locale_and_db(locale, db);
+            <span class="kw">for </span>(entity, lines) <span class="kw">in </span>buffers {
+                new_ccx.with_buffer(entity, <span class="kw">move </span>|buf| {
+                    buf.lines = lines
+                        .into_iter()
+                        .map(|line| BufferLine::new(line, AttrsList::new(Attrs::new())))
+                        .collect();
+                });
+            }
+            new_ccx
+        });
     }
 
     <span class="doccomment">/// Sets the global default font for the application.
-    </span><span class="kw">pub fn </span>set_default_font(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) {
-        <span class="self">self</span>.style.default_font = name.to_string();
+    </span><span class="kw">pub fn </span>set_default_font(<span class="kw-2">&amp;mut </span><span class="self">self</span>, names: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str]) {
+        <span class="self">self</span>.style.default_font = names
+            .iter()
+            .map(|x| FamilyOwned::Name(x.to_string()))
+            .chain(once(FamilyOwned::SansSerif))
+            .collect();
     }
 
     <span class="kw">pub fn </span>add_theme(<span class="kw-2">&amp;mut </span><span class="self">self</span>, theme: <span class="kw-2">&amp;</span>str) {

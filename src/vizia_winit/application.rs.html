@@ -567,29 +567,6 @@
 <span id="567">567</span>
 <span id="568">568</span>
 <span id="569">569</span>
-<span id="570">570</span>
-<span id="571">571</span>
-<span id="572">572</span>
-<span id="573">573</span>
-<span id="574">574</span>
-<span id="575">575</span>
-<span id="576">576</span>
-<span id="577">577</span>
-<span id="578">578</span>
-<span id="579">579</span>
-<span id="580">580</span>
-<span id="581">581</span>
-<span id="582">582</span>
-<span id="583">583</span>
-<span id="584">584</span>
-<span id="585">585</span>
-<span id="586">586</span>
-<span id="587">587</span>
-<span id="588">588</span>
-<span id="589">589</span>
-<span id="590">590</span>
-<span id="591">591</span>
-<span id="592">592</span>
 </pre><pre class="rust"><code><span class="kw">use crate</span>::{
     convert::{scan_code_to_code, virtual_key_code_to_code, virtual_key_code_to_key},
     window::Window,
@@ -776,9 +753,6 @@
         <span class="kw">let </span>default_should_poll = <span class="self">self</span>.should_poll;
         <span class="kw">let </span>stored_control_flow = RefCell::new(ControlFlow::Poll);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(<span class="kw-2">&amp;mut </span>context);
-        cx.synchronize_fonts();
-
         event_loop.run(<span class="kw">move </span>|event, <span class="kw">_</span>, control_flow| {
             <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(<span class="kw-2">&amp;mut </span>context);
 
@@ -791,15 +765,7 @@
                     <span class="kw-2">*</span>stored_control_flow.borrow_mut() =
                         <span class="kw">if </span>default_should_poll { ControlFlow::Poll } <span class="kw">else </span>{ ControlFlow::Wait };
 
-                    <span class="comment">//if let Some(mut window_view) = context.views.remove(&amp;Entity::root()) {
-                    //    if let Some(_) = window_view.downcast_mut::&lt;Window&gt;() {
-                    </span>cx.synchronize_fonts();
-                    <span class="comment">//    }
-
-                    //    context.views.insert(Entity::root(), window_view);
-                    //}
-
-                    // Events
+                    <span class="comment">// Events
                     </span><span class="kw">while </span>event_manager.flush_events(cx.<span class="number">0</span>) {}
 
                     cx.process_data_updates();
@@ -1020,18 +986,6 @@
             <span class="kw-2">*</span>control_flow = <span class="kw-2">*</span>stored_control_flow.borrow();
         });
     }
-
-    <span class="doccomment">/// Resize the cache used for rendering text lines
-    </span><span class="kw">pub fn </span>text_shaping_run_cache(<span class="kw-2">mut </span><span class="self">self</span>, size: usize) -&gt; <span class="self">Self </span>{
-        BackendContext::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.context).text_context().resize_shaping_run_cache(size);
-        <span class="self">self
-    </span>}
-
-    <span class="doccomment">/// Resize the cache used for rendering words
-    </span><span class="kw">pub fn </span>text_shaped_words_cache(<span class="kw-2">mut </span><span class="self">self</span>, size: usize) -&gt; <span class="self">Self </span>{
-        BackendContext::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.context).text_context().resize_shaped_words_cache(size);
-        <span class="self">self
-    </span>}
 }
 
 <span class="kw">impl </span>WindowModifiers <span class="kw">for </span>Application {

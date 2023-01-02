@@ -273,287 +273,279 @@
 <span id="273">273</span>
 <span id="274">274</span>
 <span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-<span id="278">278</span>
-<span id="279">279</span>
-</pre><pre class="rust"><code><span class="kw">use </span>femtovg::TextContext;
-<span class="kw">use </span>morphorm::{Node, Units};
+</pre><pre class="rust"><code><span class="kw">use </span>morphorm::{Node, Units};
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::resource::ResourceManager;
 <span class="kw">use </span><span class="kw">crate</span>::style::Style;
-<span class="kw">use </span><span class="kw">crate</span>::text::{text_layout, text_paint_layout};
+<span class="kw">use </span><span class="kw">crate</span>::text::TextContext;
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;w</span>&gt; Node&lt;<span class="lifetime">&#39;w</span>&gt; <span class="kw">for </span>Entity {
-    <span class="kw">type </span>Data = (Style, TextContext, ResourceManager);
+    <span class="kw">type </span>Data = Style;
+    <span class="kw">type </span>Sublayout = TextContext;
 
     <span class="kw">fn </span>layout_type(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::LayoutType&gt; {
-        store.<span class="number">0</span>.layout_type.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
+        store.layout_type.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
     }
 
     <span class="kw">fn </span>position_type(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::PositionType&gt; {
-        store.<span class="number">0</span>.position_type.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
+        store.position_type.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
     }
 
     <span class="kw">fn </span>left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|l| <span class="kw">match </span>l {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|l| <span class="kw">match </span>l {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>min_left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.min_left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|l| <span class="kw">match </span>l {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.min_left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|l| <span class="kw">match </span>l {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>max_left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.max_left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|l| <span class="kw">match </span>l {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.max_left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|l| <span class="kw">match </span>l {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|r| <span class="kw">match </span>r {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|r| <span class="kw">match </span>r {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>min_right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.min_right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|r| <span class="kw">match </span>r {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.min_right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|r| <span class="kw">match </span>r {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>max_right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.max_right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|r| <span class="kw">match </span>r {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.max_right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|r| <span class="kw">match </span>r {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.top.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|t| <span class="kw">match </span>t {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.top.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|t| <span class="kw">match </span>t {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>min_top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.min_top.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|t| <span class="kw">match </span>t {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.min_top.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|t| <span class="kw">match </span>t {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>max_top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.max_top.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|t| <span class="kw">match </span>t {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.max_top.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|t| <span class="kw">match </span>t {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.bottom.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|b| <span class="kw">match </span>b {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.bottom.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|b| <span class="kw">match </span>b {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>min_bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.min_bottom.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|b| <span class="kw">match </span>b {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.min_bottom.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|b| <span class="kw">match </span>b {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>max_bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.max_bottom.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|b| <span class="kw">match </span>b {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.max_bottom.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|b| <span class="kw">match </span>b {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>width(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|w| <span class="kw">match </span>w {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|w| <span class="kw">match </span>w {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>min_width(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.min_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|w| <span class="kw">match </span>w {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.min_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|w| <span class="kw">match </span>w {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>max_width(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.max_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|w| <span class="kw">match </span>w {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.max_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|w| <span class="kw">match </span>w {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>content_width(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;f32&gt; {
-        store.<span class="number">0</span>.content_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|x| x * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32)
+        store.content_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|x| x * store.dpi_factor <span class="kw">as </span>f32)
     }
 
     <span class="kw">fn </span>content_height(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;f32&gt; {
-        store.<span class="number">0</span>.content_height.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|x| x * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32)
+        store.content_height.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|x| x * store.dpi_factor <span class="kw">as </span>f32)
     }
 
-    <span class="kw">fn </span>content_width_secondary(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data, _height: f32) -&gt; <span class="prelude-ty">Option</span>&lt;f32&gt; {
-        store.<span class="number">0</span>.content_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|x| x * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32)
+    <span class="kw">fn </span>content_width_secondary(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        store: <span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span><span class="self">Self</span>::Data,
+        _sublayout: <span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span><span class="kw-2">mut </span><span class="self">Self</span>::Sublayout,
+        _height: f32,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;f32&gt; {
+        store.content_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|x| x * store.dpi_factor <span class="kw">as </span>f32)
     }
 
-    <span class="kw">fn </span>content_height_secondary(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data, width: f32) -&gt; <span class="prelude-ty">Option</span>&lt;f32&gt; {
-        <span class="kw">if </span>!store.<span class="number">0</span>.text_wrap.get(<span class="kw-2">*</span><span class="self">self</span>).copied().unwrap_or(<span class="bool-val">true</span>) {
+    <span class="kw">fn </span>content_height_secondary(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data,
+        sublayout: <span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span><span class="kw-2">mut </span><span class="self">Self</span>::Sublayout,
+        width: f32,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;f32&gt; {
+        <span class="kw">if </span>!store.text_wrap.get(<span class="kw-2">*</span><span class="self">self</span>).copied().unwrap_or(<span class="bool-val">true</span>) {
             <span class="kw">return </span><span class="prelude-val">None</span>;
         }
 
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = store.<span class="number">0</span>.text.get(<span class="kw-2">*</span><span class="self">self</span>) {
-            <span class="kw">let </span>paint = text_paint_layout(<span class="kw-2">&amp;</span>store.<span class="number">0</span>, <span class="kw-2">&amp;</span>store.<span class="number">2</span>, <span class="kw-2">*</span><span class="self">self</span>);
-
-            <span class="kw">let </span>font_metrics = store.<span class="number">1</span>.measure_font(<span class="kw-2">&amp;</span>paint).expect(<span class="string">&quot;Failed to read font metrics&quot;</span>);
-            <span class="kw">let </span><span class="kw-2">mut </span>child_space_x = <span class="number">0.0</span>;
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(Units::Pixels(val)) = store.<span class="number">0</span>.child_left.get(<span class="kw-2">*</span><span class="self">self</span>) {
-                child_space_x += <span class="kw-2">*</span>val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32;
-            }
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(Units::Pixels(val)) = store.<span class="number">0</span>.child_right.get(<span class="kw-2">*</span><span class="self">self</span>) {
-                child_space_x += <span class="kw-2">*</span>val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32;
-            }
-            <span class="kw">let </span>child_width = (width - child_space_x).max(<span class="number">0.0</span>);
-
-            <span class="kw">if let </span><span class="prelude-val">Ok</span>(lines) = text_layout(child_width, text, <span class="kw-2">&amp;</span>paint, <span class="kw-2">&amp;</span>store.<span class="number">1</span>) {
-                <span class="prelude-val">Some</span>(font_metrics.height() * lines.len() <span class="kw">as </span>f32)
-            } <span class="kw">else </span>{
-                <span class="prelude-val">None
-            </span>}
+        <span class="kw">if </span>sublayout.has_buffer(<span class="kw-2">*</span><span class="self">self</span>) {
+            <span class="prelude-val">Some</span>(sublayout.with_buffer(<span class="kw-2">*</span><span class="self">self</span>, |buf| {
+                buf.set_size(width <span class="kw">as </span>i32, i32::MAX);
+                buf.layout_runs().count() <span class="kw">as </span>f32 * buf.metrics().line_height <span class="kw">as </span>f32
+            }))
         } <span class="kw">else </span>{
             <span class="prelude-val">None
         </span>}
     }
 
     <span class="kw">fn </span>height(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.height.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|h| <span class="kw">match </span>h {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.height.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|h| <span class="kw">match </span>h {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>min_height(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.min_height.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|h| <span class="kw">match </span>h {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.min_height.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|h| <span class="kw">match </span>h {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>max_height(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.max_height.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|h| <span class="kw">match </span>h {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.max_height.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|h| <span class="kw">match </span>h {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>child_left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.child_left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|l| <span class="kw">match </span>l {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.child_left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|l| <span class="kw">match </span>l {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>child_right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.child_right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|r| <span class="kw">match </span>r {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.child_right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|r| <span class="kw">match </span>r {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>child_top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.child_top.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|t| <span class="kw">match </span>t {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.child_top.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|t| <span class="kw">match </span>t {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>child_bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.child_bottom.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|b| <span class="kw">match </span>b {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.child_bottom.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|b| <span class="kw">match </span>b {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>grid_cols(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;morphorm::Units&gt;&gt; {
-        store.<span class="number">0</span>.grid_cols.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
+        store.grid_cols.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
     }
 
     <span class="kw">fn </span>grid_rows(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;morphorm::Units&gt;&gt; {
-        store.<span class="number">0</span>.grid_rows.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
+        store.grid_rows.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
     }
 
     <span class="kw">fn </span>row_between(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.row_between.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.row_between.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>col_between(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.col_between.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.col_between.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>border_left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>border_right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>border_top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>border_bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.<span class="number">0</span>.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
-            Units::Pixels(val) =&gt; Units::Pixels(val * store.<span class="number">0</span>.dpi_factor <span class="kw">as </span>f32),
+        store.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
+            Units::Pixels(val) =&gt; Units::Pixels(val * store.dpi_factor <span class="kw">as </span>f32),
             t =&gt; t,
         })
     }
 
     <span class="kw">fn </span>row_index(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
-        store.<span class="number">0</span>.row_index.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
+        store.row_index.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
     }
 
     <span class="kw">fn </span>row_span(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
-        store.<span class="number">0</span>.row_span.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
+        store.row_span.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
     }
 
     <span class="kw">fn </span>col_index(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
-        store.<span class="number">0</span>.col_index.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
+        store.col_index.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
     }
 
     <span class="kw">fn </span>col_span(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
-        store.<span class="number">0</span>.col_span.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
+        store.col_span.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
     }
 }
 </code></pre></div>

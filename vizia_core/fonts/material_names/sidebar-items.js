@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"constant":[["DOWN",""],["LEFT",""],["RIGHT",""],["UP",""]]};
+window.SIDEBAR_ITEMS = {"constant":[["DOWN",""],["LEFT",""],["PENCIL",""],["RIGHT",""],["UP",""]]};

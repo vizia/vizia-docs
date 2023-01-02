@@ -263,57 +263,10 @@
 <span id="263">263</span>
 <span id="264">264</span>
 <span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-<span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-<span id="278">278</span>
-<span id="279">279</span>
-<span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
-<span id="297">297</span>
-<span id="298">298</span>
-<span id="299">299</span>
-<span id="300">300</span>
-<span id="301">301</span>
-<span id="302">302</span>
-<span id="303">303</span>
-<span id="304">304</span>
-<span id="305">305</span>
-<span id="306">306</span>
-<span id="307">307</span>
-<span id="308">308</span>
-<span id="309">309</span>
-<span id="310">310</span>
-<span id="311">311</span>
-<span id="312">312</span>
 </pre><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::collections::HashSet;
 
-<span class="kw">use </span>femtovg::{renderer::OpenGl, Canvas, TextContext};
+<span class="kw">use </span>femtovg::{renderer::OpenGl, Canvas};
 <span class="kw">use </span>fnv::FnvHashMap;
 
 <span class="kw">use </span><span class="kw">super</span>::EventProxy;
@@ -321,10 +274,8 @@
     cache::{BoundingBox, CachedData},
     environment::Environment,
     events::ViewHandler,
-    fonts,
     layout::geometry_changed,
     prelude::<span class="kw-2">*</span>,
-    resource::FontOrId,
     state::ModelOrView,
     style::Style,
     systems::<span class="kw-2">*</span>,
@@ -365,23 +316,6 @@
         <span class="kw-2">mut </span>canvas: Canvas&lt;OpenGl&gt;,
         scale_factor: f32,
     ) {
-        <span class="comment">// Add default fonts
-        </span><span class="kw">let </span>regular_font = fonts::ROBOTO_REGULAR;
-        <span class="kw">let </span>bold_font = fonts::ROBOTO_BOLD;
-        <span class="kw">let </span>icon_font = fonts::ENTYPO;
-        <span class="kw">let </span>emoji_font = fonts::OPEN_SANS_EMOJI;
-        <span class="kw">let </span>arabic_font = fonts::AMIRI_REGULAR;
-        <span class="kw">let </span>material_font = fonts::MATERIAL_ICONS_REGULAR;
-
-        <span class="self">self</span>.<span class="number">0</span>.add_font_mem(<span class="string">&quot;roboto&quot;</span>, regular_font);
-        <span class="self">self</span>.<span class="number">0</span>.add_font_mem(<span class="string">&quot;roboto-bold&quot;</span>, bold_font);
-        <span class="self">self</span>.<span class="number">0</span>.add_font_mem(<span class="string">&quot;icons&quot;</span>, icon_font);
-        <span class="self">self</span>.<span class="number">0</span>.add_font_mem(<span class="string">&quot;emoji&quot;</span>, emoji_font);
-        <span class="self">self</span>.<span class="number">0</span>.add_font_mem(<span class="string">&quot;arabic&quot;</span>, arabic_font);
-        <span class="self">self</span>.<span class="number">0</span>.add_font_mem(<span class="string">&quot;material&quot;</span>, material_font);
-
-        <span class="self">self</span>.<span class="number">0</span>.style.default_font = String::from(<span class="string">&quot;roboto&quot;</span>);
-
         <span class="kw">let </span>physical_width = window_description.inner_size.width <span class="kw">as </span>f32 * scale_factor;
         <span class="kw">let </span>physical_height = window_description.inner_size.height <span class="kw">as </span>f32 * scale_factor;
 
@@ -480,34 +414,6 @@
     <span class="doccomment">/// Check whether there are any events in the queue waiting for the next event dispatch cycle.
     </span><span class="kw">pub fn </span>has_queued_events(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         !<span class="self">self</span>.<span class="number">0</span>.event_queue.is_empty()
-    }
-
-    <span class="doccomment">/// Ensure all FontOrId entires are loaded into the contexts and become Ids.
-    </span><span class="kw">pub fn </span>synchronize_fonts(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(canvas) = <span class="self">self</span>.<span class="number">0</span>.canvases.get_mut(<span class="kw-2">&amp;</span>Entity::root()) {
-            <span class="kw">for </span>(name, font) <span class="kw">in </span><span class="self">self</span>.<span class="number">0</span>.resource_manager.fonts.iter_mut() {
-                <span class="kw">match </span>font {
-                    FontOrId::Font(data) =&gt; {
-                        <span class="kw">let </span>id1 = canvas
-                            .add_font_mem(<span class="kw-2">&amp;</span>data.clone())
-                            .expect(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;Failed to load font file for: {}&quot;</span>, name));
-                        <span class="kw">let </span>id2 = <span class="self">self</span>.<span class="number">0</span>.text_context.add_font_mem(<span class="kw-2">&amp;</span>data.clone()).expect(<span class="string">&quot;failed&quot;</span>);
-                        <span class="kw">if </span>id1 != id2 {
-                            <span class="macro">panic!</span>(
-                                <span class="string">&quot;Fonts in canvas must have the same id as fonts in the text context&quot;
-                            </span>);
-                        }
-                        <span class="kw-2">*</span>font = FontOrId::Id(id1);
-                    }
-
-                    <span class="kw">_ </span>=&gt; {}
-                }
-            }
-        }
-    }
-
-    <span class="kw">pub fn </span>text_context(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>TextContext {
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.text_context
     }
 
     <span class="doccomment">/// For each binding or data observer, check if its data has changed, and if so, rerun its

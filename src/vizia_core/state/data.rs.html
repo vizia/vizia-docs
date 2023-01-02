@@ -296,6 +296,16 @@
 <span id="296">296</span>
 <span id="297">297</span>
 <span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
 </pre><pre class="rust"><code><span class="kw">use </span>std::{ptr, rc::Rc, sync::Arc};
 
 <span class="kw">use </span>unic_langid::LanguageIdentifier;
@@ -567,7 +577,17 @@
             <span class="kw">return </span><span class="bool-val">false</span>;
         }
 
-        <span class="kw-2">*</span><span class="self">self </span>== <span class="kw-2">*</span>other
+        <span class="self">self</span>.iter().zip(other.iter()).all(|(a, b)| a.same(b))
+    }
+}
+
+<span class="kw">impl</span>&lt;T: std::hash::Hash + Eq + Data, V: Data&gt; Data <span class="kw">for </span>std::collections::HashMap&lt;T, V&gt; {
+    <span class="kw">fn </span>same(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+        <span class="kw">if </span><span class="self">self</span>.len() != other.len() {
+            <span class="kw">return </span><span class="bool-val">false</span>;
+        }
+
+        <span class="self">self</span>.iter().zip(other.iter()).all(|(a, b)| a.<span class="number">0</span>.same(<span class="kw-2">&amp;</span>b.<span class="number">0</span>) &amp;&amp; a.<span class="number">1</span>.same(<span class="kw-2">&amp;</span>b.<span class="number">1</span>))
     }
 }
 

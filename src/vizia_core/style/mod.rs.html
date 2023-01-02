@@ -1194,6 +1194,14 @@
 <span id="1194">1194</span>
 <span id="1195">1195</span>
 <span id="1196">1196</span>
+<span id="1197">1197</span>
+<span id="1198">1198</span>
+<span id="1199">1199</span>
+<span id="1200">1200</span>
+<span id="1201">1201</span>
+<span id="1202">1202</span>
+<span id="1203">1203</span>
+<span id="1204">1204</span>
 </pre><pre class="rust"><code><span class="kw">use </span>morphorm::{LayoutType, PositionType, Units};
 <span class="kw">use </span>std::collections::{HashMap, HashSet};
 <span class="kw">use </span>vizia_id::GenerationalId;
@@ -1244,8 +1252,8 @@
 </span><span class="kw">use </span><span class="kw">crate</span>::animation::{AnimationState, Interpolator, Transition};
 <span class="kw">use </span><span class="kw">crate</span>::storage::animatable_set::AnimatableSet;
 <span class="kw">use </span><span class="kw">crate</span>::storage::style_set::StyleSet;
-<span class="kw">use </span><span class="kw">crate</span>::text::Selection;
 <span class="kw">use </span>bitflags::bitflags;
+<span class="kw">use </span>cosmic_text::{FamilyOwned, Weight};
 <span class="kw">use </span>vizia_id::IdManager;
 <span class="kw">use </span>vizia_storage::SparseSet;
 
@@ -1282,7 +1290,7 @@
 
     <span class="kw">pub </span>transitions: HashMap&lt;Rule, Animation&gt;,
 
-    <span class="kw">pub </span>default_font: String,
+    <span class="kw">pub </span>default_font: Vec&lt;FamilyOwned&gt;,
 
     <span class="kw">pub </span>elements: SparseSet&lt;String&gt;,
     <span class="kw">pub </span>ids: SparseSet&lt;String&gt;,
@@ -1356,12 +1364,12 @@
     <span class="kw">pub </span>inner_shadow_color: AnimatableSet&lt;Color&gt;,
 
     <span class="comment">// Text &amp; Font
-    </span><span class="kw">pub </span>text: StyleSet&lt;String&gt;,
-    <span class="kw">pub </span>text_wrap: StyleSet&lt;bool&gt;,
-    <span class="kw">pub </span>font: StyleSet&lt;String&gt;,
+    </span><span class="kw">pub </span>text_wrap: StyleSet&lt;bool&gt;,
+    <span class="kw">pub </span>font_family: StyleSet&lt;Vec&lt;FamilyOwned&gt;&gt;,
     <span class="kw">pub </span>font_color: AnimatableSet&lt;Color&gt;,
     <span class="kw">pub </span>font_size: AnimatableSet&lt;f32&gt;,
-    <span class="kw">pub </span>text_selection: StyleSet&lt;Selection&gt;,
+    <span class="kw">pub </span>font_weight: StyleSet&lt;Weight&gt;,
+    <span class="kw">pub </span>font_style: StyleSet&lt;FontStyle&gt;,
     <span class="kw">pub </span>caret_color: AnimatableSet&lt;Color&gt;,
     <span class="kw">pub </span>selection_color: AnimatableSet&lt;Color&gt;,
 
@@ -1685,8 +1693,16 @@
                         <span class="self">self</span>.font_color.insert_rule(rule_id, value);
                     }
 
-                    Property::Font(value) =&gt; {
-                        <span class="self">self</span>.font.insert_rule(rule_id, value);
+                    Property::FontFamily(value) =&gt; {
+                        <span class="self">self</span>.font_family.insert_rule(rule_id, value);
+                    }
+
+                    Property::FontWeight(value) =&gt; {
+                        <span class="self">self</span>.font_weight.insert_rule(rule_id, value);
+                    }
+
+                    Property::FontStyle(value) =&gt; {
+                        <span class="self">self</span>.font_style.insert_rule(rule_id, value);
                     }
 
                     Property::TextWrap(value) =&gt; {
@@ -2256,12 +2272,12 @@
         <span class="self">self</span>.row_span.remove(entity);
 
         <span class="comment">// Text and Font
-        </span><span class="self">self</span>.text.remove(entity);
-        <span class="self">self</span>.text_wrap.remove(entity);
-        <span class="self">self</span>.font.remove(entity);
+        </span><span class="self">self</span>.text_wrap.remove(entity);
+        <span class="self">self</span>.font_family.remove(entity);
+        <span class="self">self</span>.font_weight.remove(entity);
+        <span class="self">self</span>.font_style.remove(entity);
         <span class="self">self</span>.font_color.remove(entity);
         <span class="self">self</span>.font_size.remove(entity);
-        <span class="self">self</span>.text_selection.remove(entity);
         <span class="self">self</span>.selection_color.remove(entity);
         <span class="self">self</span>.caret_color.remove(entity);
 
@@ -2374,12 +2390,12 @@
         <span class="self">self</span>.row_span.clear_rules();
 
         <span class="comment">// Text and Font
-        </span><span class="self">self</span>.text.clear_rules();
-        <span class="self">self</span>.text_wrap.clear_rules();
-        <span class="self">self</span>.font.clear_rules();
+        </span><span class="self">self</span>.text_wrap.clear_rules();
+        <span class="self">self</span>.font_family.clear_rules();
+        <span class="self">self</span>.font_weight.clear_rules();
+        <span class="self">self</span>.font_style.clear_rules();
         <span class="self">self</span>.font_color.clear_rules();
         <span class="self">self</span>.font_size.clear_rules();
-        <span class="self">self</span>.text_selection.clear_rules();
         <span class="self">self</span>.selection_color.clear_rules();
         <span class="self">self</span>.caret_color.clear_rules();
 

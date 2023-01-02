@@ -567,6 +567,24 @@
 <span id="567">567</span>
 <span id="568">568</span>
 <span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::InternalEvent;
 <span class="kw">use </span><span class="kw">crate</span>::events::EventMeta;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -989,6 +1007,24 @@
                 );
                 <span class="kw">for </span>rule <span class="kw">in </span>result.into_iter() {
                     <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, rule);
+                }
+            }
+
+            <span class="attribute">#[cfg(debug_assertions)]
+            </span><span class="kw">if </span><span class="kw-2">*</span>code == Code::KeyT
+                &amp;&amp; context.modifiers == Modifiers::CTRL | Modifiers::SHIFT | Modifiers::ALT
+            {
+                <span class="macro">println!</span>(<span class="string">&quot;Loaded font face info:&quot;</span>);
+                <span class="kw">for </span>face <span class="kw">in </span>context.text_context.font_system().db().faces().iter() {
+                    <span class="macro">println!</span>(
+                        <span class="string">&quot;family: {:?}\npost_script_name: {:?}\nstyle: {:?}\nweight: {:?}\nstretch: {:?}\nmonospaced: {:?}\n&quot;</span>,
+                        face.family,
+                        face.post_script_name,
+                        face.style,
+                        face.weight,
+                        face.stretch,
+                        face.monospaced,
+                    );
                 }
             }
 

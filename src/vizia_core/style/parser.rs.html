@@ -1188,6 +1188,74 @@
 <span id="1188">1188</span>
 <span id="1189">1189</span>
 <span id="1190">1190</span>
+<span id="1191">1191</span>
+<span id="1192">1192</span>
+<span id="1193">1193</span>
+<span id="1194">1194</span>
+<span id="1195">1195</span>
+<span id="1196">1196</span>
+<span id="1197">1197</span>
+<span id="1198">1198</span>
+<span id="1199">1199</span>
+<span id="1200">1200</span>
+<span id="1201">1201</span>
+<span id="1202">1202</span>
+<span id="1203">1203</span>
+<span id="1204">1204</span>
+<span id="1205">1205</span>
+<span id="1206">1206</span>
+<span id="1207">1207</span>
+<span id="1208">1208</span>
+<span id="1209">1209</span>
+<span id="1210">1210</span>
+<span id="1211">1211</span>
+<span id="1212">1212</span>
+<span id="1213">1213</span>
+<span id="1214">1214</span>
+<span id="1215">1215</span>
+<span id="1216">1216</span>
+<span id="1217">1217</span>
+<span id="1218">1218</span>
+<span id="1219">1219</span>
+<span id="1220">1220</span>
+<span id="1221">1221</span>
+<span id="1222">1222</span>
+<span id="1223">1223</span>
+<span id="1224">1224</span>
+<span id="1225">1225</span>
+<span id="1226">1226</span>
+<span id="1227">1227</span>
+<span id="1228">1228</span>
+<span id="1229">1229</span>
+<span id="1230">1230</span>
+<span id="1231">1231</span>
+<span id="1232">1232</span>
+<span id="1233">1233</span>
+<span id="1234">1234</span>
+<span id="1235">1235</span>
+<span id="1236">1236</span>
+<span id="1237">1237</span>
+<span id="1238">1238</span>
+<span id="1239">1239</span>
+<span id="1240">1240</span>
+<span id="1241">1241</span>
+<span id="1242">1242</span>
+<span id="1243">1243</span>
+<span id="1244">1244</span>
+<span id="1245">1245</span>
+<span id="1246">1246</span>
+<span id="1247">1247</span>
+<span id="1248">1248</span>
+<span id="1249">1249</span>
+<span id="1250">1250</span>
+<span id="1251">1251</span>
+<span id="1252">1252</span>
+<span id="1253">1253</span>
+<span id="1254">1254</span>
+<span id="1255">1255</span>
+<span id="1256">1256</span>
+<span id="1257">1257</span>
+<span id="1258">1258</span>
 </pre><pre class="rust"><code><span class="kw">use </span>std::fmt::Debug;
 
 <span class="kw">use </span>cssparser::{
@@ -1593,7 +1661,9 @@
             <span class="string">&quot;row-between&quot; </span>=&gt; Property::RowBetween(parse_units(input)<span class="question-mark">?</span>),
             <span class="string">&quot;col-between&quot; </span>=&gt; Property::ColBetween(parse_units(input)<span class="question-mark">?</span>),
             <span class="string">&quot;font-size&quot; </span>=&gt; Property::FontSize(parse_font_size(input)<span class="question-mark">?</span>),
-            <span class="string">&quot;font&quot; </span>=&gt; Property::Font(parse_string(input)<span class="question-mark">?</span>),
+            <span class="string">&quot;font-family&quot; </span>=&gt; Property::FontFamily(input.parse_comma_separated(parse_font_family)<span class="question-mark">?</span>),
+            <span class="string">&quot;font-weight&quot; </span>=&gt; Property::FontWeight(parse_font_weight(input)<span class="question-mark">?</span>),
+            <span class="string">&quot;font-style&quot; </span>=&gt; Property::FontStyle(parse_font_style(input)<span class="question-mark">?</span>),
             <span class="string">&quot;text-wrap&quot; </span>=&gt; Property::TextWrap(parse_bool(input)<span class="question-mark">?</span>),
             <span class="string">&quot;selection-color&quot; </span>=&gt; Property::SelectionColor(parse_color(input)<span class="question-mark">?</span>),
             <span class="string">&quot;caret-color&quot; </span>=&gt; Property::CaretColor(parse_color(input)<span class="question-mark">?</span>),
@@ -2327,6 +2397,72 @@
             };
             <span class="kw">return </span><span class="prelude-val">Err</span>(basic_error.into());
         }
+    }
+}
+
+<span class="kw">fn </span>parse_font_weight&lt;<span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>&gt;(
+    input: <span class="kw-2">&amp;mut </span>Parser&lt;<span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;Weight, ParseError&lt;<span class="lifetime">&#39;i</span>, CustomParseError&gt;&gt; {
+    <span class="kw">let </span>location = input.current_source_location();
+    <span class="prelude-val">Ok</span>(<span class="kw">match </span>input.next()<span class="question-mark">? </span>{
+        Token::Number { value, has_sign: <span class="bool-val">false</span>, .. } =&gt; {
+            <span class="kw">if </span><span class="kw-2">*</span>value &lt;= <span class="number">0.0 </span>|| <span class="kw-2">*</span>value &gt; <span class="number">1000.0 </span>{
+                <span class="kw">return </span><span class="prelude-val">Err</span>(BasicParseError {
+                    kind: BasicParseErrorKind::QualifiedRuleInvalid,
+                    location,
+                }
+                .into());
+            }
+            Weight(value.trunc() <span class="kw">as </span>u16)
+        }
+        Token::Ident(name) <span class="kw">if </span>name.as_ref() == <span class="string">&quot;normal&quot; </span>=&gt; Weight::NORMAL,
+        Token::Ident(name) <span class="kw">if </span>name.as_ref() == <span class="string">&quot;bold&quot; </span>=&gt; Weight::BOLD,
+        t =&gt; {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(BasicParseError {
+                kind: BasicParseErrorKind::UnexpectedToken(t.to_owned()),
+                location,
+            }
+            .into())
+        }
+    })
+}
+
+<span class="kw">fn </span>parse_font_style&lt;<span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>&gt;(
+    input: <span class="kw-2">&amp;mut </span>Parser&lt;<span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;FontStyle, ParseError&lt;<span class="lifetime">&#39;i</span>, CustomParseError&gt;&gt; {
+    <span class="kw">let </span>location = input.current_source_location();
+    <span class="prelude-val">Ok</span>(<span class="kw">match </span>input.next()<span class="question-mark">? </span>{
+        Token::Ident(name) <span class="kw">if </span>name.as_ref() == <span class="string">&quot;normal&quot; </span>=&gt; FontStyle::Normal,
+        Token::Ident(name) <span class="kw">if </span>name.as_ref() == <span class="string">&quot;italic&quot; </span>=&gt; FontStyle::Italic,
+        Token::Ident(name) <span class="kw">if </span>name.as_ref() == <span class="string">&quot;oblique&quot; </span>=&gt; FontStyle::Oblique,
+        t =&gt; {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(BasicParseError {
+                kind: BasicParseErrorKind::UnexpectedToken(t.to_owned()),
+                location,
+            }
+            .into())
+        }
+    })
+}
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_font_family&lt;<span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>&gt;(
+    input: <span class="kw-2">&amp;mut </span>Parser&lt;<span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;FamilyOwned, ParseError&lt;<span class="lifetime">&#39;i</span>, CustomParseError&gt;&gt; {
+    <span class="kw">let </span>location = input.current_source_location();
+    <span class="kw">match </span>input.next()<span class="question-mark">? </span>{
+        Token::Ident(name) | Token::QuotedString(name) =&gt; <span class="prelude-val">Ok</span>(<span class="kw">match </span>name.as_ref() {
+            <span class="string">&quot;serif&quot; </span>=&gt; FamilyOwned::Serif,
+            <span class="string">&quot;sans-serif&quot; </span>=&gt; FamilyOwned::SansSerif,
+            <span class="string">&quot;monospace&quot; </span>=&gt; FamilyOwned::Monospace,
+            <span class="string">&quot;cursive&quot; </span>=&gt; FamilyOwned::Cursive,
+            <span class="string">&quot;fantasy&quot; </span>=&gt; FamilyOwned::Fantasy,
+            name =&gt; FamilyOwned::Name(name.to_owned()),
+        }),
+        t =&gt; <span class="prelude-val">Err</span>(BasicParseError {
+            kind: BasicParseErrorKind::UnexpectedToken(t.to_owned()),
+            location,
+        }
+        .into()),
     }
 }
 

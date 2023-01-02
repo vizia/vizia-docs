@@ -76,9 +76,9 @@
 <span id="76">76</span>
 <span id="77">77</span>
 <span id="78">78</span>
-<span id="79">79</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::internal;
-<span class="kw">use crate</span>::{prelude::<span class="kw-2">*</span>, text::Selection};
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>cosmic_text::{FamilyOwned, Weight};
 
 <span class="doccomment">/// Modifiers for changing the text properties of a view.
 </span><span class="kw">pub trait </span>TextModifiers: internal::Modifiable {
@@ -86,19 +86,11 @@
     </span><span class="kw">fn </span>text&lt;U: ToString&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
         value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, val| {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(prev_data) = cx.style.text.get(entity) {
-                <span class="kw">if </span>prev_data != <span class="kw-2">&amp;</span>val.to_string() {
-                    cx.style.text.insert(entity, val.to_string());
+            <span class="kw">let </span>text_data = val.to_string();
+            cx.text_context.set_text(entity, <span class="kw-2">&amp;</span>text_data);
 
-                    cx.need_relayout();
-                    cx.need_redraw();
-                }
-            } <span class="kw">else </span>{
-                cx.style.text.insert(entity, val.to_string());
-
-                cx.need_relayout();
-                cx.need_redraw();
-            }
+            cx.need_relayout();
+            cx.need_redraw();
         });
 
         <span class="self">self
@@ -108,8 +100,20 @@
         <span class="doccomment">/// Sets the font that should be used by the view.
         ///
         /// The font name refers to the name assigned when the font is added to context.
-        </span>font,
-        String
+        </span>font_family,
+        Vec&lt;FamilyOwned&gt;
+    );
+
+    <span class="macro">modifier!</span>(
+        <span class="doccomment">/// Sets the font weight that should be used by the view.
+        </span>font_weight,
+        Weight
+    );
+
+    <span class="macro">modifier!</span>(
+        <span class="doccomment">/// Sets the font style that should be used by the view.
+        </span>font_style,
+        FontStyle
     );
 
     <span class="doccomment">/// Sets the text color of the view.
@@ -129,12 +133,6 @@
         });
         <span class="self">self
     </span>}
-
-    <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the text selection of the view.
-        </span>text_selection,
-        Selection
-    );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the ext caret color of the view.

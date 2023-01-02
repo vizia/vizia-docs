@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"constant":[["AMIRI_REGULAR",""],["ENTYPO",""],["MATERIAL_ICONS_REGULAR",""],["OPEN_SANS_EMOJI",""],["ROBOTO_BOLD",""],["ROBOTO_REGULAR",""]],"mod":[["icons_names",""],["material_names",""],["unicode_names",""]]};
+window.SIDEBAR_ITEMS = {"constant":[["AMIRI_REGULAR",""],["ENTYPO",""],["MATERIAL_ICONS_REGULAR",""],["OPEN_SANS_EMOJI",""],["ROBOTO_BOLD",""],["ROBOTO_ITALIC",""],["ROBOTO_REGULAR",""]],"mod":[["icons_names",""],["material_names",""],["unicode_names",""]]};

@@ -186,10 +186,24 @@
 <span id="186">186</span>
 <span id="187">187</span>
 <span id="188">188</span>
-</pre><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+</pre><pre class="rust"><code><span class="kw">use </span>cosmic_text::{FamilyOwned, Weight};
+<span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::ops::Range;
 
-<span class="kw">use </span>femtovg::{ImageId, TextContext};
+<span class="kw">use </span>femtovg::{ImageId, Paint};
 <span class="kw">use </span>fnv::FnvHashMap;
 <span class="kw">use </span>morphorm::Units;
 
@@ -199,7 +213,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::resource::ResourceManager;
 <span class="kw">use </span><span class="kw">crate</span>::state::ModelDataStore;
 <span class="kw">use </span><span class="kw">crate</span>::style::{LinearGradient, Style};
-<span class="kw">use </span><span class="kw">crate</span>::text::Selection;
+<span class="kw">use </span><span class="kw">crate</span>::text::TextContext;
 <span class="kw">use </span>vizia_input::{Modifiers, MouseState};
 <span class="kw">use </span>vizia_storage::SparseSet;
 
@@ -233,7 +247,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>SparseSet&lt;ModelDataStore&gt;,
     <span class="kw">pub </span>views: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
     <span class="kw">pub </span>resource_manager: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ResourceManager,
-    <span class="kw">pub </span>text_context: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>TextContext,
+    <span class="kw">pub </span>text_context: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>TextContext,
     <span class="kw">pub </span>modifiers: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Modifiers,
     <span class="kw">pub </span>mouse: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>MouseState&lt;Entity&gt;,
 }
@@ -274,7 +288,7 @@
             data: <span class="kw-2">&amp;</span>cx.data,
             views: <span class="kw-2">&amp;</span>cx.views,
             resource_manager: <span class="kw-2">&amp;</span>cx.resource_manager,
-            text_context: <span class="kw-2">&amp;</span>cx.text_context,
+            text_context: <span class="kw-2">&amp;mut </span>cx.text_context,
             modifiers: <span class="kw-2">&amp;</span>cx.modifiers,
             mouse: <span class="kw-2">&amp;</span>cx.mouse,
         }
@@ -288,8 +302,8 @@
         <span class="self">self</span>.cache.get_clip_region(<span class="self">self</span>.current)
     }
 
-    <span class="doccomment">/// Returns the name of the default font.
-    </span><span class="kw">pub fn </span>default_font(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+    <span class="doccomment">/// Returns the lookup pattern to pick the default font.
+    </span><span class="kw">pub fn </span>default_font(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[FamilyOwned] {
         <span class="kw-2">&amp;</span><span class="self">self</span>.style.default_font
     }
 
@@ -339,14 +353,26 @@
     <span class="macro">style_getter_untranslated!</span>(BorderCornerShape, border_shape_bottom_right);
     <span class="macro">style_getter_untranslated!</span>(BorderCornerShape, border_shape_bottom_left);
     <span class="macro">style_getter_untranslated!</span>(String, background_image);
-    <span class="macro">style_getter_untranslated!</span>(String, text);
     <span class="macro">style_getter_untranslated!</span>(String, image);
-    <span class="macro">style_getter_untranslated!</span>(String, font);
+    <span class="macro">style_getter_untranslated!</span>(Vec&lt;FamilyOwned&gt;, font_family);
+    <span class="macro">style_getter_untranslated!</span>(Weight, font_weight);
+    <span class="macro">style_getter_untranslated!</span>(FontStyle, font_style);
     <span class="macro">style_getter_untranslated!</span>(bool, text_wrap);
-    <span class="macro">style_getter_untranslated!</span>(Selection, text_selection);
 
     <span class="kw">pub fn </span>opacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
         <span class="self">self</span>.cache.get_opacity(<span class="self">self</span>.current)
+    }
+
+    <span class="kw">pub fn </span>draw_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas, origin: (f32, f32), justify: (f32, f32)) {
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(draw_commands) =
+            <span class="self">self</span>.text_context.fill_to_cmds(canvas, <span class="self">self</span>.current, origin, justify)
+        {
+            <span class="kw">for </span>(color, cmds) <span class="kw">in </span>draw_commands.into_iter() {
+                <span class="kw">let </span>temp_paint =
+                    Paint::color(femtovg::Color::rgba(color.r(), color.g(), color.b(), color.a()));
+                canvas.draw_glyph_cmds(cmds, <span class="kw-2">&amp;</span>temp_paint);
+            }
+        }
     }
 }
 

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["FontOrId",""],["ImageOrId",""],["ImageRetentionPolicy",""]],"struct":[["ResourceManager",""]]};
+window.SIDEBAR_ITEMS = {"enum":[["ImageOrId",""],["ImageRetentionPolicy",""]],"struct":[["ResourceManager",""]]};

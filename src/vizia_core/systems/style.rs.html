@@ -544,6 +544,20 @@
 <span id="544">544</span>
 <span id="545">545</span>
 <span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::style::{Rule, Selector, SelectorRelation, StyleRule};
 <span class="kw">use </span>vizia_id::GenerationalId;
@@ -556,7 +570,9 @@
 
             cx.style.font_color.inherit_inline(entity, parent);
             cx.style.font_size.inherit_inline(entity, parent);
-            cx.style.font.inherit_inline(entity, parent);
+            cx.style.font_family.inherit_inline(entity, parent);
+            cx.style.font_weight.inherit_inline(entity, parent);
+            cx.style.font_style.inherit_inline(entity, parent);
             cx.style.caret_color.inherit_inline(entity, parent);
             cx.style.selection_color.inherit_inline(entity, parent);
         }
@@ -568,7 +584,9 @@
         <span class="kw">if let </span><span class="prelude-val">Some</span>(parent) = tree.get_layout_parent(entity) {
             cx.style.font_color.inherit_shared(entity, parent);
             cx.style.font_size.inherit_shared(entity, parent);
-            cx.style.font.inherit_shared(entity, parent);
+            cx.style.font_family.inherit_shared(entity, parent);
+            cx.style.font_weight.inherit_shared(entity, parent);
+            cx.style.font_style.inherit_shared(entity, parent);
             cx.style.caret_color.inherit_shared(entity, parent);
             cx.style.selection_color.inherit_shared(entity, parent);
         }
@@ -603,6 +621,8 @@
 }
 
 <span class="comment">// Returns the selector of an entity
+</span><span class="attribute">#[allow(unused)] </span><span class="comment">// can be used for a potential optimization where styling is cached between
+                 // similar siblings. needs some work.
 </span><span class="kw">fn </span>entity_selector(cx: <span class="kw-2">&amp;</span>Context, entity: Entity) -&gt; Selector {
     Selector {
         asterisk: <span class="bool-val">false</span>,
@@ -945,9 +965,20 @@
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>cx.style.font.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>cx.style.font_family.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
         <span class="comment">//println!(&quot;44&quot;);
         </span>should_redraw = <span class="bool-val">true</span>;
+        should_relayout = <span class="bool-val">true</span>;
+    }
+
+    <span class="kw">if </span>cx.style.font_weight.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
+        should_relayout = <span class="bool-val">true</span>;
+    }
+
+    <span class="kw">if </span>cx.style.font_style.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
+        should_relayout = <span class="bool-val">true</span>;
     }
 
     <span class="kw">if </span>cx.style.text_wrap.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
@@ -1053,36 +1084,33 @@
     <span class="kw">if </span>cx.style.needs_restyle {
         hoverability_system(cx, tree);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>prev_entity = <span class="prelude-val">None</span>;
-
         <span class="kw">let </span><span class="kw-2">mut </span>matched_rule_ids = Vec::with_capacity(<span class="number">100</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>prev_matched_rule_ids = Vec::with_capacity(<span class="number">100</span>);
 
         <span class="kw">let </span>iterator = LayoutTreeIterator::full(tree);
 
         <span class="comment">// Loop through all entities
-        </span><span class="lifetime">&#39;ent</span>: <span class="kw">for </span>entity <span class="kw">in </span>iterator {
+        </span><span class="kw">for </span>entity <span class="kw">in </span>iterator {
             <span class="comment">// If the entity and the previous entity have the same parent and selectors then they share the same rules
-            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(prev) = prev_entity {
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(parent) = tree.get_layout_parent(entity) {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(prev_parent) = tree.get_layout_parent(prev) {
-                        <span class="kw">if </span>parent == prev_parent {
-                            <span class="kw">if </span>entity_selector(cx, entity).same(<span class="kw-2">&amp;</span>entity_selector(cx, prev)) {
-                                prev_entity = <span class="prelude-val">Some</span>(entity);
-                                link_style_data(cx, entity, <span class="kw-2">&amp;</span>prev_matched_rule_ids);
-                                <span class="kw">continue </span><span class="lifetime">&#39;ent</span>;
-                            }
-                        }
-                    }
-                }
-            }
+            //if let Some(prev) = prev_entity {
+            //    if let Some(parent) = tree.get_layout_parent(entity) {
+            //        if let Some(prev_parent) = tree.get_layout_parent(prev) {
+            //            if parent == prev_parent {
+            //                if entity_selector(cx, entity).same(&amp;entity_selector(cx, prev)) {
+            //                    prev_entity = Some(entity);
+            //                    link_style_data(cx, entity, &amp;prev_matched_rule_ids);
+            //                    continue &#39;ent;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
 
-            <span class="kw">let </span><span class="kw-2">mut </span>matched_rules = Vec::with_capacity(<span class="number">100</span>);
+            </span><span class="kw">let </span><span class="kw-2">mut </span>matched_rules = Vec::with_capacity(<span class="number">100</span>);
             compute_matched_rules(cx, tree, entity, <span class="kw-2">&amp;mut </span>matched_rules);
             matched_rule_ids.extend(matched_rules.into_iter().map(|r| r.id));
             link_style_data(cx, entity, <span class="kw-2">&amp;</span>matched_rule_ids);
 
-            prev_entity = <span class="prelude-val">Some</span>(entity);
             prev_matched_rule_ids.clear();
             prev_matched_rule_ids.append(<span class="kw-2">&amp;mut </span>matched_rule_ids);
         }

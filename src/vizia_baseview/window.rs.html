@@ -237,21 +237,6 @@
 <span id="237">237</span>
 <span id="238">238</span>
 <span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
-<span id="246">246</span>
-<span id="247">247</span>
-<span id="248">248</span>
-<span id="249">249</span>
-<span id="250">250</span>
-<span id="251">251</span>
-<span id="252">252</span>
-<span id="253">253</span>
-<span id="254">254</span>
 </pre><pre class="rust"><code><span class="kw">use crate</span>::{application::ApplicationRunner, Renderer};
 <span class="kw">use </span>baseview::gl::GlConfig;
 <span class="kw">use </span>baseview::{
@@ -297,9 +282,6 @@
         <span class="kw">if let </span><span class="prelude-val">Some</span>(builder) = builder {
             (builder)(<span class="kw-2">&amp;mut </span>cx);
         }
-
-        <span class="kw">let </span><span class="kw-2">mut </span>backend_cx = BackendContext::new(<span class="kw-2">&amp;mut </span>cx);
-        backend_cx.synchronize_fonts();
 
         <span class="kw">let </span>application = ApplicationRunner::new(cx, scale_policy);
         <span class="kw">unsafe </span>{ context.make_not_current() };
@@ -414,8 +396,6 @@
         app: F,
         on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
         ignore_default_theme: bool,
-        text_shaping_run_cache_size: <span class="prelude-ty">Option</span>&lt;usize&gt;,
-        text_shaped_words_cache_size: <span class="prelude-ty">Option</span>&lt;usize&gt;,
     ) <span class="kw">where
         </span>F: Fn(<span class="kw-2">&amp;mut </span>Context),
         F: <span class="lifetime">&#39;static </span>+ Send,
@@ -434,14 +414,6 @@
             window_settings,
             <span class="kw">move </span>|window: <span class="kw-2">&amp;mut </span>baseview::Window&lt;<span class="lifetime">&#39;_</span>&gt;| -&gt; ViziaWindow {
                 <span class="kw">let </span><span class="kw-2">mut </span>context = Context::new();
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(size) = text_shaped_words_cache_size {
-                    BackendContext::new(<span class="kw-2">&amp;mut </span>context)
-                        .text_context()
-                        .resize_shaped_words_cache(size);
-                }
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(size) = text_shaping_run_cache_size {
-                    BackendContext::new(<span class="kw-2">&amp;mut </span>context).text_context().resize_shaping_run_cache(size);
-                }
 
                 context.ignore_default_theme = ignore_default_theme;
                 context.remove_user_themes();
@@ -480,9 +452,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>should_quit = <span class="bool-val">false</span>;
         <span class="self">self</span>.application.handle_event(event, <span class="kw-2">&amp;mut </span>should_quit);
 
-        <span class="comment">//self.application.update_data();
-
-        </span><span class="self">self</span>.application.handle_idle(<span class="kw-2">&amp;</span><span class="self">self</span>.on_idle);
+        <span class="self">self</span>.application.handle_idle(<span class="kw-2">&amp;</span><span class="self">self</span>.on_idle);
 
         <span class="kw">if </span>should_quit {
             <span class="comment">// TODO: Request close.

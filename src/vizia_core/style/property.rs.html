@@ -275,7 +275,37 @@
 <span id="275">275</span>
 <span id="276">276</span>
 <span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>cosmic_text::{FamilyOwned, Style, Weight};
 
 <span class="kw">use </span><span class="kw">crate</span>::animation::Transition;
 <span class="kw">use </span><span class="kw">crate</span>::style::shadow::BoxShadow;
@@ -368,7 +398,9 @@
     // Font
     </span>FontSize(f32),
     FontColor(Color),
-    Font(String),
+    FontFamily(Vec&lt;FamilyOwned&gt;),
+    FontWeight(Weight),
+    FontStyle(FontStyle),
     SelectionColor(Color),
     CaretColor(Color),
     TextWrap(bool),
@@ -399,10 +431,10 @@
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>fmt_units(val: <span class="kw-2">&amp;</span>Units) -&gt; String {
     <span class="kw">match </span>val {
-        Units::Pixels(px) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}px&quot;</span>, px),
-        Units::Percentage(p) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}%&quot;</span>, p),
-        Units::Stretch(s) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}s&quot;</span>, s),
-        Units::Auto =&gt; <span class="macro">format!</span>(<span class="string">&quot;auto&quot;</span>),
+        Pixels(px) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}px&quot;</span>, px),
+        Percentage(p) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}%&quot;</span>, p),
+        Stretch(s) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}s&quot;</span>, s),
+        Auto =&gt; <span class="macro">format!</span>(<span class="string">&quot;auto&quot;</span>),
     }
 }
 
@@ -519,7 +551,13 @@
             <span class="comment">// Text
             </span>Property::FontSize(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;font-size: {};&quot;</span>, val),
             Property::FontColor(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;color: {};&quot;</span>, val),
-            Property::Font(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;font: {}&quot;</span>, val),
+            Property::FontFamily(val) =&gt; <span class="macro">write!</span>(
+                f,
+                <span class="string">&quot;font-family: {};&quot;</span>,
+                val.iter().map(fmt_font_family).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;().join(<span class="string">&quot;, &quot;</span>)
+            ),
+            Property::FontWeight(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;font-weight: {}&quot;</span>, val.<span class="number">0</span>),
+            Property::FontStyle(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;font-style: {}&quot;</span>, fmt_font_style(val)),
             Property::SelectionColor(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;selection-color: {}&quot;</span>, val),
             Property::CaretColor(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;caret-color: {}&quot;</span>, val),
             Property::TextWrap(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;text-wrap: {}&quot;</span>, val),
@@ -550,6 +588,26 @@
 
             Property::Cursor(val) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;cursor: {};&quot;</span>, val),
         }
+    }
+}
+
+<span class="kw">fn </span>fmt_font_style(val: <span class="kw-2">&amp;</span>Style) -&gt; String {
+    <span class="kw">match </span>val {
+        Style::Normal =&gt; <span class="string">&quot;normal&quot;</span>,
+        Style::Italic =&gt; <span class="string">&quot;italic&quot;</span>,
+        Style::Oblique =&gt; <span class="string">&quot;oblique&quot;</span>,
+    }
+    .to_owned()
+}
+
+<span class="kw">fn </span>fmt_font_family(val: <span class="kw-2">&amp;</span>FamilyOwned) -&gt; String {
+    <span class="kw">match </span>val {
+        FamilyOwned::Name(name) =&gt; <span class="macro">format!</span>(<span class="string">&quot;\&quot;{}\&quot;&quot;</span>, name),
+        FamilyOwned::Serif =&gt; <span class="string">&quot;serif&quot;</span>.to_owned(),
+        FamilyOwned::SansSerif =&gt; <span class="string">&quot;sans-serif&quot;</span>.to_owned(),
+        FamilyOwned::Cursive =&gt; <span class="string">&quot;cursive&quot;</span>.to_owned(),
+        FamilyOwned::Fantasy =&gt; <span class="string">&quot;fantasy&quot;</span>.to_owned(),
+        FamilyOwned::Monospace =&gt; <span class="string">&quot;monospace&quot;</span>.to_owned(),
     }
 }
 </code></pre></div>

@@ -409,12 +409,16 @@
 <span id="409">409</span>
 <span id="410">410</span>
 <span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
 </pre><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::collections::{HashMap, HashSet, VecDeque};
 <span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
 </span><span class="kw">use </span>std::error::Error;
 
-<span class="kw">use </span>femtovg::TextContext;
 <span class="kw">use </span>fnv::FnvHashMap;
 
 <span class="kw">use </span><span class="kw">crate</span>::cache::CachedData;
@@ -428,6 +432,7 @@
 <span class="kw">use </span>vizia_storage::SparseSet;
 
 <span class="kw">use </span><span class="kw">crate</span>::context::EmitContext;
+<span class="kw">use </span><span class="kw">crate</span>::text::TextContext;
 <span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
 </span><span class="kw">use </span>copypasta::ClipboardProvider;
 
@@ -448,7 +453,7 @@
     listeners:
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>ViewHandler, <span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event)&gt;&gt;,
     <span class="kw">pub </span>resource_manager: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ResourceManager,
-    <span class="kw">pub </span>text_context: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>TextContext,
+    <span class="kw">pub </span>text_context: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>TextContext,
     <span class="kw">pub </span>modifiers: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Modifiers,
     <span class="kw">pub </span>mouse: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>MouseState&lt;Entity&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) event_queue: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>VecDeque&lt;Event&gt;,
@@ -474,7 +479,7 @@
             views: <span class="kw-2">&amp;mut </span>cx.views,
             listeners: <span class="kw-2">&amp;mut </span>cx.listeners,
             resource_manager: <span class="kw-2">&amp;</span>cx.resource_manager,
-            text_context: <span class="kw-2">&amp;</span>cx.text_context,
+            text_context: <span class="kw-2">&amp;mut </span>cx.text_context,
             modifiers: <span class="kw-2">&amp;</span>cx.modifiers,
             mouse: <span class="kw-2">&amp;</span>cx.mouse,
             event_queue: <span class="kw-2">&amp;mut </span>cx.event_queue,
@@ -722,6 +727,11 @@
     }
 
     <span class="kw">pub fn </span>needs_redraw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
+    }
+
+    <span class="kw">pub fn </span>needs_relayout(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.style.needs_relayout = <span class="bool-val">true</span>;
         <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
     }
 

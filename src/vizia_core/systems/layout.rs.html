@@ -13,6 +13,15 @@
 <span id="13">13</span>
 <span id="14">14</span>
 <span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
 </pre><pre class="rust"><code><span class="kw">use </span>morphorm::layout;
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -26,6 +35,15 @@
         layout(<span class="kw-2">&amp;mut </span>cx.cache, <span class="kw-2">&amp;</span>cx.tree, <span class="kw-2">&amp;</span>cx.style, <span class="kw-2">&amp;mut </span>cx.text_context);
 
         cx.style.needs_relayout = <span class="bool-val">false</span>;
+
+        <span class="kw">for </span>entity <span class="kw">in </span>cx.tree.into_iter() {
+            <span class="kw">if </span>cx.text_context.has_buffer(entity) {
+                <span class="kw">let </span>w = cx.cache.bounds.get(entity).unwrap().w;
+                cx.text_context.with_buffer(entity, |buf| {
+                    buf.set_size(w <span class="kw">as </span>i32, i32::MAX);
+                });
+            }
+        }
     }
 }
 </code></pre></div>

@@ -581,54 +581,7 @@
 <span id="581">581</span>
 <span id="582">582</span>
 <span id="583">583</span>
-<span id="584">584</span>
-<span id="585">585</span>
-<span id="586">586</span>
-<span id="587">587</span>
-<span id="588">588</span>
-<span id="589">589</span>
-<span id="590">590</span>
-<span id="591">591</span>
-<span id="592">592</span>
-<span id="593">593</span>
-<span id="594">594</span>
-<span id="595">595</span>
-<span id="596">596</span>
-<span id="597">597</span>
-<span id="598">598</span>
-<span id="599">599</span>
-<span id="600">600</span>
-<span id="601">601</span>
-<span id="602">602</span>
-<span id="603">603</span>
-<span id="604">604</span>
-<span id="605">605</span>
-<span id="606">606</span>
-<span id="607">607</span>
-<span id="608">608</span>
-<span id="609">609</span>
-<span id="610">610</span>
-<span id="611">611</span>
-<span id="612">612</span>
-<span id="613">613</span>
-<span id="614">614</span>
-<span id="615">615</span>
-<span id="616">616</span>
-<span id="617">617</span>
-<span id="618">618</span>
-<span id="619">619</span>
-<span id="620">620</span>
-<span id="621">621</span>
-<span id="622">622</span>
-<span id="623">623</span>
-<span id="624">624</span>
-<span id="625">625</span>
-<span id="626">626</span>
-<span id="627">627</span>
-<span id="628">628</span>
-<span id="629">629</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span>cosmic_text::Edit;
 <span class="kw">use </span>std::{any::Any, collections::HashMap};
 
 <span class="kw">use </span><span class="kw">crate</span>::events::ViewHandler;
@@ -1205,53 +1158,8 @@
 
             cx.text_context.sync_styles(cx.current, <span class="kw-2">&amp;</span>cx.style);
 
-            <span class="kw">let </span>selection_color =
-                cx.style.selection_color.get(cx.current).copied().unwrap_or_default();
-            <span class="kw">let </span>caret_color = cx.style.caret_color.get(cx.current).copied().unwrap_or_default();
-            <span class="kw">if </span>selection_color.a() != <span class="number">0 </span>|| caret_color.a() != <span class="number">0 </span>{
-                <span class="kw">let </span>cursor_width = cx.logical_to_physical(<span class="number">1.0</span>) <span class="kw">as </span>u32;
-                <span class="kw">let </span>select_offset = cx.logical_to_physical(<span class="number">0.5</span>) <span class="kw">as </span>u32;
-                cx.text_context.with_editor(cx.current, |buf| {
-                    <span class="kw">if </span>selection_color.a() != <span class="number">0 </span>{
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>(cursor_end) = buf.select_opt() {
-                            <span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
-                            <span class="kw">let </span>(cursor_start, cursor_end) = <span class="kw">if </span>buf.cursor() &lt; cursor_end {
-                                (buf.cursor(), cursor_end)
-                            } <span class="kw">else </span>{
-                                (cursor_end, buf.cursor())
-                            };
-                            <span class="kw">for </span>(sel_x, sel_y, sel_w, sel_h) <span class="kw">in
-                                </span>buf.buffer().highlight_blocks(cursor_start, cursor_end)
-                            {
-                                <span class="kw">let </span>sel_w = <span class="kw">if </span>sel_w == <span class="number">0 </span>{ cursor_width } <span class="kw">else </span>{ sel_w };
-                                path.rect(
-                                    sel_x <span class="kw">as </span>f32 + box_x - select_offset <span class="kw">as </span>f32,
-                                    sel_y <span class="kw">as </span>f32 + box_y,
-                                    sel_w <span class="kw">as </span>f32,
-                                    sel_h <span class="kw">as </span>f32,
-                                );
-                            }
-                            canvas.fill_path(<span class="kw-2">&amp;mut </span>path, <span class="kw-2">&amp;</span>Paint::color(selection_color.into()));
-                        }
-                    }
-                    <span class="kw">if </span>caret_color.a() != <span class="number">0 </span>{
-                        <span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
-                        <span class="kw">for </span>(sel_x, sel_y, sel_w, sel_h) <span class="kw">in
-                            </span>buf.buffer().highlight_blocks(buf.cursor(), buf.cursor())
-                        {
-                            <span class="kw">let </span>sel_w = <span class="kw">if </span>sel_w == <span class="number">0 </span>{ cursor_width } <span class="kw">else </span>{ sel_w };
-                            path.rect(
-                                sel_x <span class="kw">as </span>f32 + box_x - select_offset <span class="kw">as </span>f32,
-                                sel_y <span class="kw">as </span>f32 + box_y,
-                                sel_w <span class="kw">as </span>f32,
-                                sel_h <span class="kw">as </span>f32,
-                            );
-                        }
-                        canvas.fill_path(<span class="kw-2">&amp;mut </span>path, <span class="kw-2">&amp;</span>Paint::color(caret_color.into()));
-                    }
-                });
-            }
-
+            cx.draw_highlights(canvas, (origin_x, origin_y), (justify_x, justify_y));
+            cx.draw_caret(canvas, (origin_x, origin_y), (justify_x, justify_y), <span class="number">1.0</span>);
             cx.draw_text(canvas, (origin_x, origin_y), (justify_x, justify_y));
         }
     }

@@ -113,8 +113,6 @@
 <span id="113">113</span>
 <span id="114">114</span>
 <span id="115">115</span>
-<span id="116">116</span>
-<span id="117">117</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>vizia_id::GenerationalId;
 
@@ -188,7 +186,7 @@
             <span class="kw">if </span>cx.text_context.has_buffer(entity) {
                 cx.text_context.sync_styles(entity, <span class="kw-2">&amp;</span>cx.style);
                 <span class="kw">let </span>(text_width, text_height) = cx.text_context.with_buffer(entity, |buf| {
-                    buf.set_size(i32::MAX, i32::MAX);
+                    buf.set_size(<span class="number">999999</span>, i32::MAX);
                     <span class="kw">let </span>w = buf
                         .layout_runs()
                         .filter_map(|r| (!r.line_w.is_nan()).then_some(r.line_w))
@@ -227,8 +225,6 @@
 
             cx.style.content_width.insert(entity, content_width / cx.style.dpi_factor <span class="kw">as </span>f32);
             cx.style.content_height.insert(entity, content_height / cx.style.dpi_factor <span class="kw">as </span>f32);
-        } <span class="kw">else if </span>cx.text_context.has_buffer(entity) {
-            cx.text_context.with_buffer(entity, |buf| buf.set_size(i32::MAX, i32::MAX));
         }
     }
 }

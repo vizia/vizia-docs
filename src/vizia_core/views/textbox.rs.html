@@ -776,31 +776,11 @@
 <span id="776">776</span>
 <span id="777">777</span>
 <span id="778">778</span>
-<span id="779">779</span>
-<span id="780">780</span>
-<span id="781">781</span>
-<span id="782">782</span>
-<span id="783">783</span>
-<span id="784">784</span>
-<span id="785">785</span>
-<span id="786">786</span>
-<span id="787">787</span>
-<span id="788">788</span>
-<span id="789">789</span>
-<span id="790">790</span>
-<span id="791">791</span>
-<span id="792">792</span>
-<span id="793">793</span>
-<span id="794">794</span>
-<span id="795">795</span>
-<span id="796">796</span>
-<span id="797">797</span>
-<span id="798">798</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::cache::BoundingBox;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::text::{enforce_text_bounds, ensure_visible, Direction, Movement};
 <span class="kw">use </span><span class="kw">crate</span>::views::scrollview::SCROLL_SENSITIVITY;
-<span class="kw">use </span>cosmic_text::{Action, Attrs, Edit, LayoutGlyph};
+<span class="kw">use </span>cosmic_text::{Action, Attrs, Edit};
 <span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>vizia_id::GenerationalId;
 <span class="kw">use </span>vizia_input::Code;
@@ -843,53 +823,29 @@
         </span><span class="kw">let </span>bounds = cx.cache.bounds.get(entity).unwrap().clone();
         <span class="kw">let </span><span class="kw-2">mut </span>parent_bounds = cx.cache.bounds.get(parent).unwrap().clone();
 
-        <span class="kw">let </span>render_width = <span class="kw">match </span><span class="self">self</span>.kind {
-            TextboxKind::MultiLineWrapped =&gt; parent_bounds.w,
-            <span class="kw">_ </span>=&gt; f32::MAX,
-        };
-
         cx.text_context.sync_styles(entity, <span class="kw-2">&amp;</span>cx.style);
 
-        cx.text_context.with_editor(entity, |buf| {
-            buf.buffer_mut().set_size(render_width <span class="kw">as </span>i32, i32::MAX);
-            <span class="kw">let </span>layout = buf.buffer().layout_cursor(<span class="kw-2">&amp;</span>buf.cursor());
-            <span class="kw">let </span>glyphs: <span class="kw-2">&amp;</span>Vec&lt;LayoutGlyph&gt; = <span class="kw-2">&amp;</span>buf
-                .buffer_mut()
-                .line_layout(layout.line)
-                .unwrap()
-                .get(layout.layout)
-                .unwrap()
-                .glyphs;
-            <span class="kw">let </span>xpos = <span class="kw">if let </span><span class="prelude-val">Some</span>(glyph) = glyphs.get(layout.glyph) {
-                glyph.x
-            } <span class="kw">else if let </span><span class="prelude-val">Some</span>(glyph) = glyphs.last() {
-                glyph.x + glyph.w <span class="comment">// TODO rtl?
-            </span>} <span class="kw">else </span>{
-                <span class="number">0.0
-            </span>};
+        <span class="comment">// do the computation
+        </span><span class="kw">let </span>(<span class="kw-2">mut </span>tx, <span class="kw-2">mut </span>ty) = <span class="self">self</span>.transform;
+        tx <span class="kw-2">*</span>= scale;
+        ty <span class="kw-2">*</span>= scale;
+        (tx, ty) = enforce_text_bounds(<span class="kw-2">&amp;</span>bounds, <span class="kw-2">&amp;</span>parent_bounds, (tx, ty));
 
-            <span class="kw">let </span>line = (<span class="number">0</span>..layout.line)
-                .map(|text_line| buf.buffer_mut().line_layout(text_line).unwrap().len())
-                .sum::&lt;usize&gt;() <span class="kw">as </span>i32;
+        <span class="comment">// TODO justify????
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>((x, y, w, h)) = cx.text_context.layout_caret(
+            <span class="self">self</span>.content_entity,
+            (bounds.x, bounds.y),
+            (<span class="number">0.</span>, <span class="number">0.</span>),
+            <span class="number">1.0 </span>* scale,
+        ) {
+            <span class="kw">let </span>caret_box = BoundingBox { x, y, w, h };
 
-            <span class="kw">let </span>line_height = buf.buffer().metrics().line_height;
-            <span class="kw">let </span>caret_box = BoundingBox {
-                x: bounds.x + xpos.round(),
-                y: bounds.y + (line * line_height) <span class="kw">as </span>f32,
-                w: <span class="number">1.0</span>,
-                h: line_height <span class="kw">as </span>f32,
-            };
-
-            <span class="comment">// do the computation
-            </span><span class="kw">let </span>(<span class="kw-2">mut </span>tx, <span class="kw-2">mut </span>ty) = <span class="self">self</span>.transform;
-            tx <span class="kw-2">*</span>= scale;
-            ty <span class="kw-2">*</span>= scale;
-            (tx, ty) = enforce_text_bounds(<span class="kw-2">&amp;</span>bounds, <span class="kw-2">&amp;</span>parent_bounds, (tx, ty));
             parent_bounds.x -= <span class="number">1.0</span>;
             parent_bounds.w += <span class="number">2.0</span>;
             (tx, ty) = ensure_visible(<span class="kw-2">&amp;</span>caret_box, <span class="kw-2">&amp;</span>parent_bounds, (tx, ty));
-            <span class="self">self</span>.transform = (tx.round() / scale, ty.round() / scale);
-        });
+        }
+
+        <span class="self">self</span>.transform = (tx.round() / scale, ty.round() / scale);
     }
 
     <span class="kw">pub fn </span>insert_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, text: <span class="kw-2">&amp;</span>str) {
@@ -929,8 +885,12 @@
             buf.action(<span class="kw">match </span>movement {
                 Movement::Grapheme(Direction::Upstream) =&gt; Action::Previous,
                 Movement::Grapheme(Direction::Downstream) =&gt; Action::Next,
+                Movement::Grapheme(Direction::Left) =&gt; Action::Left,
+                Movement::Grapheme(Direction::Right) =&gt; Action::Right,
                 Movement::Word(Direction::Upstream) =&gt; Action::PreviousWord,
                 Movement::Word(Direction::Downstream) =&gt; Action::NextWord,
+                Movement::Word(Direction::Left) =&gt; Action::LeftWord,
+                Movement::Word(Direction::Right) =&gt; Action::RightWord,
                 Movement::Line(Direction::Upstream) =&gt; Action::Up,
                 Movement::Line(Direction::Downstream) =&gt; Action::Down,
                 Movement::LineStart =&gt; Action::Home,
@@ -1464,9 +1424,9 @@
 
                 Code::ArrowLeft =&gt; {
                     <span class="kw">let </span>movement = <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
-                        Movement::Word(Direction::Upstream)
+                        Movement::Word(Direction::Left)
                     } <span class="kw">else </span>{
-                        Movement::Grapheme(Direction::Upstream)
+                        Movement::Grapheme(Direction::Left)
                     };
 
                     cx.emit(TextEvent::MoveCursor(
@@ -1477,9 +1437,9 @@
 
                 Code::ArrowRight =&gt; {
                     <span class="kw">let </span>movement = <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
-                        Movement::Word(Direction::Downstream)
+                        Movement::Word(Direction::Right)
                     } <span class="kw">else </span>{
-                        Movement::Grapheme(Direction::Downstream)
+                        Movement::Grapheme(Direction::Right)
                     };
 
                     cx.emit(TextEvent::MoveCursor(

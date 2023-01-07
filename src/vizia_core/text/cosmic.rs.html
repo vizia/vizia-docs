@@ -325,6 +325,55 @@
 <span id="325">325</span>
 <span id="326">326</span>
 <span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::entity::Entity;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::Color;
 <span class="kw">use </span><span class="kw">crate</span>::style::Style;
@@ -432,15 +481,12 @@
             } <span class="kw">else </span>{
                 Wrap::None
             };
+            buf.set_wrap(wrap);
             <span class="kw">for </span>line <span class="kw">in </span>buf.lines.iter_mut() {
                 <span class="comment">// TODO spans
                 </span>line.set_attrs_list(AttrsList::new(attrs));
-                line.set_wrap(wrap);
             }
-            <span class="comment">//if let Some(size) = cache.size.get(entity) {
-            //    buf.set_size(size.width as i32, size.height as i32);
-            //}
-            </span><span class="kw">let </span>font_size =
+            <span class="kw">let </span>font_size =
                 style.font_size.get(entity).copied().unwrap_or(<span class="number">16.0</span>) * style.dpi_factor <span class="kw">as </span>f32;
             <span class="comment">// TODO configurable line spacing
             </span>buf.set_metrics(Metrics::new(font_size <span class="kw">as </span>i32, (font_size * <span class="number">1.25</span>) <span class="kw">as </span>i32));
@@ -595,6 +641,58 @@
                 color_glyphs: color_cmd_map.drain().map(|(<span class="kw">_</span>, cmd)| cmd).collect(),
             })).collect())
         })
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>layout_selection(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        entity: Entity,
+        position: (f32, f32),
+        justify: (f32, f32),
+    ) -&gt; Vec&lt;(f32, f32, f32, f32)&gt; {
+        <span class="self">self</span>.with_editor(entity, |buf| {
+            <span class="kw">let </span><span class="kw-2">mut </span>result = <span class="macro">vec!</span>[];
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(cursor_end) = buf.select_opt() {
+                <span class="kw">let </span>(cursor_start, cursor_end) = <span class="kw">if </span>buf.cursor() &lt; cursor_end {
+                    (buf.cursor(), cursor_end)
+                } <span class="kw">else </span>{
+                    (cursor_end, buf.cursor())
+                };
+                <span class="kw">let </span>buffer = buf.buffer();
+                <span class="kw">let </span>total_height = buffer.layout_runs().len() <span class="kw">as </span>i32 * buffer.metrics().line_height;
+                <span class="kw">for </span>run <span class="kw">in </span>buffer.layout_runs() {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>((x, w)) = run.highlight(cursor_start, cursor_end) {
+                        <span class="kw">let </span>y = run.line_y <span class="kw">as </span>f32 - buffer.metrics().font_size <span class="kw">as </span>f32;
+                        <span class="kw">let </span>x = x + position.<span class="number">0 </span>- run.line_w * justify.<span class="number">0</span>;
+                        <span class="kw">let </span>y = y + position.<span class="number">1 </span>- total_height <span class="kw">as </span>f32 * justify.<span class="number">1</span>;
+                        result.push((x, y, w, buffer.metrics().line_height <span class="kw">as </span>f32));
+                    }
+                }
+            }
+            result
+        })
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>layout_caret(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        entity: Entity,
+        position: (f32, f32),
+        justify: (f32, f32),
+        width: f32,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;(f32, f32, f32, f32)&gt; {
+        <span class="self">self</span>.with_editor(entity, |buf| {
+            <span class="kw">let </span>(cursor_start, cursor_end) = (buf.cursor(), buf.cursor());
+            <span class="kw">let </span>buffer = buf.buffer();
+            <span class="kw">let </span>total_height = buffer.layout_runs().len() <span class="kw">as </span>i32 * buffer.metrics().line_height;
+            <span class="kw">for </span>run <span class="kw">in </span>buffer.layout_runs() {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>((x, <span class="kw">_</span>)) = run.highlight(cursor_start, cursor_end) {
+                    <span class="kw">let </span>y = run.line_y <span class="kw">as </span>f32 - buffer.metrics().font_size <span class="kw">as </span>f32;
+                    <span class="kw">let </span>x = x + position.<span class="number">0 </span>- run.line_w * justify.<span class="number">0</span>;
+                    <span class="kw">let </span>y = y + position.<span class="number">1 </span>- total_height <span class="kw">as </span>f32 * justify.<span class="number">1</span>;
+                    <span class="kw">return </span><span class="prelude-val">Some</span>((x - width / <span class="number">2.0</span>, y, width, buffer.metrics().line_height <span class="kw">as </span>f32));
+                }
+            }
+            <span class="prelude-val">None
+        </span>})
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>take_buffers(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; HashMap&lt;Entity, Vec&lt;String&gt;&gt; {

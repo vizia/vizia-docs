@@ -571,6 +571,43 @@
 <span id="571">571</span>
 <span id="572">572</span>
 <span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
 </pre><pre class="rust"><code><span class="kw">pub mod </span>backend;
 <span class="kw">mod </span>draw;
 <span class="kw">mod </span>event;
@@ -652,6 +689,17 @@
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) event_proxy: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>EventProxy&gt;&gt;,
 
+    <span class="doccomment">/// The window&#39;s size in logical pixels, before `user_scale_factor` gets applied to it. If this
+    /// value changed during a frame then the window will be resized and a
+    /// [`WindowEvent::GeometryChanged`] will be emitted.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) window_size: WindowSize,
+    <span class="doccomment">/// A scale factor used for uniformly scaling the window independently of any HiDPI scaling.
+    /// `window_size` gets multplied with this factor to get the actual logical window size. If this
+    /// changes during a frame, then the window will be resized at the end of the frame and a
+    /// [`WindowEvent::GeometryChanged`] will be emitted. This can be initialized using
+    /// [`WindowDescription::user_scale_factor`][crate::WindowDescription::user_scale_factor].
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) user_scale_factor: f64,
+
     <span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) clipboard: Box&lt;<span class="kw">dyn </span>ClipboardProvider&gt;,
 
@@ -662,8 +710,14 @@
     <span class="kw">pub </span>ignore_default_theme: bool,
 }
 
+<span class="kw">impl </span>Default <span class="kw">for </span>Context {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        Context::new(WindowSize::new(<span class="number">800</span>, <span class="number">600</span>), <span class="number">1.0</span>)
+    }
+}
+
 <span class="kw">impl </span>Context {
-    <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>new(window_size: WindowSize, user_scale_factor: f64) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span><span class="kw-2">mut </span>cache = CachedData::default();
         cache.add(Entity::root()).expect(<span class="string">&quot;Failed to add entity to cache&quot;</span>);
 
@@ -709,6 +763,9 @@
             ),
 
             event_proxy: <span class="prelude-val">None</span>,
+
+            window_size,
+            user_scale_factor,
 
             <span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
             </span>clipboard: {
@@ -759,6 +816,23 @@
 
     <span class="kw">pub fn </span>environment(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Environment {
         <span class="self">self</span>.data::&lt;Environment&gt;().unwrap()
+    }
+
+    <span class="doccomment">/// The window&#39;s size in logical pixels, before
+    /// [`user_scale_factor()`][Self::user_scale_factor()] gets applied to it. If this value changed
+    /// during a frame then the window will be resized and a [`WindowEvent::GeometryChanged`] will be
+    /// emitted.
+    </span><span class="kw">pub fn </span>window_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WindowSize {
+        <span class="self">self</span>.window_size
+    }
+
+    <span class="doccomment">/// A scale factor used for uniformly scaling the window independently of any HiDPI scaling.
+    /// `window_size` gets multplied with this factor to get the actual logical window size. If this
+    /// changes during a frame, then the window will be resized at the end of the frame and a
+    /// [`WindowEvent::GeometryChanged`] will be emitted. This can be initialized using
+    /// [`WindowDescription::user_scale_factor`][crate::WindowDescription::user_scale_factor].
+    </span><span class="kw">pub fn </span>user_scale_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f64 {
+        <span class="self">self</span>.user_scale_factor
     }
 
     <span class="doccomment">/// Mark the application as needing to rerun the draw method

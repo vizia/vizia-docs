@@ -237,6 +237,14 @@
 <span id="237">237</span>
 <span id="238">238</span>
 <span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
 </pre><pre class="rust"><code><span class="kw">use crate</span>::{application::ApplicationRunner, Renderer};
 <span class="kw">use </span>baseview::gl::GlConfig;
 <span class="kw">use </span>baseview::{
@@ -258,7 +266,7 @@
     <span class="kw">fn </span>new(
         <span class="kw-2">mut </span>cx: Context,
         win_desc: WindowDescription,
-        scale_policy: WindowScalePolicy,
+        window_scale_policy: WindowScalePolicy,
         window: <span class="kw-2">&amp;mut </span>baseview::Window,
         builder: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnOnce(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
         on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
@@ -271,19 +279,26 @@
         <span class="kw">let </span>canvas = Canvas::new(renderer).expect(<span class="string">&quot;Cannot create canvas&quot;</span>);
 
         <span class="comment">// Assume scale for now until there is an event with a new one.
-        </span><span class="kw">let </span>scale_factor = <span class="kw">match </span>scale_policy {
-            WindowScalePolicy::ScaleFactor(scale) =&gt; scale,
-            WindowScalePolicy::SystemScaleFactor =&gt; <span class="number">1.0</span>,
+        // Assume scale for now until there is an event with a new one.
+        // Scaling is a combination of the window&#39;s scale factor (which is usually determined by the
+        // operating system, or explicitly overridden by a hosting application) and a custom user
+        // scale factor.
+        </span><span class="kw">let </span>(use_system_scaling, window_scale_factor) = <span class="kw">match </span>window_scale_policy {
+            WindowScalePolicy::ScaleFactor(scale) =&gt; (<span class="bool-val">false</span>, scale),
+            <span class="comment">// NOTE: This is not correct, but we should get a `Resized` event to correct this
+            //       immediately after the window is created
+            </span>WindowScalePolicy::SystemScaleFactor =&gt; (<span class="bool-val">true</span>, <span class="number">1.0</span>),
         };
+        <span class="kw">let </span>dpi_factor = window_scale_factor * win_desc.user_scale_factor;
 
-        BackendContext::new(<span class="kw-2">&amp;mut </span>cx).add_main_window(<span class="kw-2">&amp;</span>win_desc, canvas, scale_factor <span class="kw">as </span>f32);
+        BackendContext::new(<span class="kw-2">&amp;mut </span>cx).add_main_window(<span class="kw-2">&amp;</span>win_desc, canvas, dpi_factor <span class="kw">as </span>f32);
 
         cx.remove_user_themes();
         <span class="kw">if let </span><span class="prelude-val">Some</span>(builder) = builder {
             (builder)(<span class="kw-2">&amp;mut </span>cx);
         }
 
-        <span class="kw">let </span>application = ApplicationRunner::new(cx, scale_policy);
+        <span class="kw">let </span>application = ApplicationRunner::new(cx, use_system_scaling, window_scale_factor);
         <span class="kw">unsafe </span>{ context.make_not_current() };
 
         ViziaWindow { application, on_idle }
@@ -309,8 +324,10 @@
         <span class="kw">let </span>window_settings = WindowOpenOptions {
             title: win_desc.title.clone(),
             size: baseview::Size::new(
-                win_desc.inner_size.width <span class="kw">as </span>f64,
-                win_desc.inner_size.height <span class="kw">as </span>f64,
+                <span class="comment">// We have our own uniform non-DPI scaling factor that gets applied in addition to
+                // the DPI scaling since both can change independently at runtime
+                </span>win_desc.inner_size.width <span class="kw">as </span>f64 * win_desc.user_scale_factor,
+                win_desc.inner_size.height <span class="kw">as </span>f64 * win_desc.user_scale_factor,
             ),
             scale: scale_policy,
             gl_config: <span class="prelude-val">Some</span>(GlConfig { vsync: <span class="bool-val">false</span>, ..GlConfig::default() }),
@@ -320,7 +337,7 @@
             parent,
             window_settings,
             <span class="kw">move </span>|window: <span class="kw-2">&amp;mut </span>baseview::Window&lt;<span class="lifetime">&#39;_</span>&gt;| -&gt; ViziaWindow {
-                <span class="kw">let </span><span class="kw-2">mut </span>context = Context::new();
+                <span class="kw">let </span><span class="kw-2">mut </span>context = Context::new(win_desc.inner_size, win_desc.user_scale_factor);
 
                 context.ignore_default_theme = ignore_default_theme;
                 context.remove_user_themes();
@@ -357,8 +374,8 @@
         <span class="kw">let </span>window_settings = WindowOpenOptions {
             title: win_desc.title.clone(),
             size: baseview::Size::new(
-                win_desc.inner_size.width <span class="kw">as </span>f64,
-                win_desc.inner_size.height <span class="kw">as </span>f64,
+                win_desc.inner_size.width <span class="kw">as </span>f64 * win_desc.user_scale_factor,
+                win_desc.inner_size.height <span class="kw">as </span>f64 * win_desc.user_scale_factor,
             ),
             scale: scale_policy,
             gl_config: <span class="prelude-val">Some</span>(GlConfig { vsync: <span class="bool-val">false</span>, ..GlConfig::default() }),
@@ -367,7 +384,7 @@
         Window::open_as_if_parented(
             window_settings,
             <span class="kw">move </span>|window: <span class="kw-2">&amp;mut </span>baseview::Window&lt;<span class="lifetime">&#39;_</span>&gt;| -&gt; ViziaWindow {
-                <span class="kw">let </span><span class="kw-2">mut </span>context = Context::new();
+                <span class="kw">let </span><span class="kw-2">mut </span>context = Context::new(win_desc.inner_size, win_desc.user_scale_factor);
 
                 context.ignore_default_theme = ignore_default_theme;
                 context.remove_user_themes();
@@ -403,8 +420,8 @@
         <span class="kw">let </span>window_settings = WindowOpenOptions {
             title: win_desc.title.clone(),
             size: baseview::Size::new(
-                win_desc.inner_size.width <span class="kw">as </span>f64,
-                win_desc.inner_size.height <span class="kw">as </span>f64,
+                win_desc.inner_size.width <span class="kw">as </span>f64 * win_desc.user_scale_factor,
+                win_desc.inner_size.height <span class="kw">as </span>f64 * win_desc.user_scale_factor,
             ),
             scale: scale_policy,
             gl_config: <span class="prelude-val">Some</span>(GlConfig { vsync: <span class="bool-val">false</span>, ..GlConfig::default() }),
@@ -413,7 +430,7 @@
         Window::open_blocking(
             window_settings,
             <span class="kw">move </span>|window: <span class="kw-2">&amp;mut </span>baseview::Window&lt;<span class="lifetime">&#39;_</span>&gt;| -&gt; ViziaWindow {
-                <span class="kw">let </span><span class="kw-2">mut </span>context = Context::new();
+                <span class="kw">let </span><span class="kw-2">mut </span>context = Context::new(win_desc.inner_size, win_desc.user_scale_factor);
 
                 context.ignore_default_theme = ignore_default_theme;
                 context.remove_user_themes();
@@ -436,10 +453,9 @@
 
 <span class="kw">impl </span>WindowHandler <span class="kw">for </span>ViziaWindow {
     <span class="kw">fn </span>on_frame(<span class="kw-2">&amp;mut </span><span class="self">self</span>, window: <span class="kw-2">&amp;mut </span>Window) {
+        <span class="self">self</span>.application.on_frame_update(window);
+
         <span class="kw">let </span>context = window.gl_context().expect(<span class="string">&quot;Window was created without OpenGL support&quot;</span>);
-
-        <span class="self">self</span>.application.on_frame_update();
-
         <span class="kw">unsafe </span>{ context.make_current() };
 
         <span class="self">self</span>.application.render();

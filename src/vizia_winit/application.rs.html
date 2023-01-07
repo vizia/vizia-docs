@@ -567,6 +567,9 @@
 <span id="567">567</span>
 <span id="568">568</span>
 <span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
 </pre><pre class="rust"><code><span class="kw">use crate</span>::{
     convert::{scan_code_to_code, virtual_key_code_to_code, virtual_key_code_to_key},
     window::Window,
@@ -632,8 +635,11 @@
         </span><span class="attribute">#[cfg(all(debug_assertions, target_arch = <span class="string">&quot;wasm32&quot;</span>))]
         </span>console_error_panic_hook::set_once();
 
-        <span class="attribute">#[allow(unused_mut)]
-        </span><span class="kw">let </span><span class="kw-2">mut </span>context = Context::new();
+        <span class="comment">// TODO: User scale factors and window resizing has not been implement for winit
+        // TODO: Changing the scale factor doesn&#39;t work for winit anyways since winit doesn&#39;t let
+        //       you resize the window, so there&#39;s no mutator for that at he moment
+        </span><span class="attribute">#[allow(unused_mut)]
+        </span><span class="kw">let </span><span class="kw-2">mut </span>context = Context::new(WindowSize::new(<span class="number">1</span>, <span class="number">1</span>), <span class="number">1.0</span>);
 
         <span class="kw">let </span>event_loop = EventLoopBuilder::with_user_event().build();
         <span class="attribute">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
@@ -730,8 +736,7 @@
             }
         }
 
-        <span class="comment">//let mut context = Context::new();
-        </span><span class="kw">let </span>scale_factor = window.window().scale_factor() <span class="kw">as </span>f32;
+        <span class="kw">let </span>scale_factor = window.window().scale_factor() <span class="kw">as </span>f32;
         BackendContext::new(<span class="kw-2">&amp;mut </span>context).add_main_window(
             <span class="kw-2">&amp;</span><span class="self">self</span>.window_description,
             canvas,
@@ -1000,6 +1005,7 @@
 
     <span class="kw">fn </span>inner_size&lt;S: Into&lt;WindowSize&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, size: <span class="kw">impl </span>Res&lt;S&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.window_description.inner_size = size.get_val(<span class="kw-2">&amp;mut </span><span class="self">self</span>.context).into();
+        <span class="kw-2">*</span>BackendContext::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.context).window_size() = <span class="self">self</span>.window_description.inner_size;
         size.set_or_bind(<span class="kw-2">&amp;mut </span><span class="self">self</span>.context, Entity::root(), |cx, <span class="kw">_</span>, val| {
             cx.emit(WindowEvent::SetSize(val.into()));
         });

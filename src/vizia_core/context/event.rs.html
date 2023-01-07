@@ -414,6 +414,40 @@
 <span id="414">414</span>
 <span id="415">415</span>
 <span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
 </pre><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::collections::{HashMap, HashSet, VecDeque};
 <span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
@@ -458,6 +492,8 @@
     <span class="kw">pub </span>mouse: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>MouseState&lt;Entity&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) event_queue: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>VecDeque&lt;Event&gt;,
     cursor_icon_locked: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>bool,
+    window_size: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>WindowSize,
+    user_scale_factor: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>f64,
     <span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
     </span>clipboard: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Box&lt;<span class="kw">dyn </span>ClipboardProvider&gt;,
     event_proxy: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span><span class="kw">crate</span>::context::EventProxy&gt;&gt;,
@@ -484,6 +520,8 @@
             mouse: <span class="kw-2">&amp;</span>cx.mouse,
             event_queue: <span class="kw-2">&amp;mut </span>cx.event_queue,
             cursor_icon_locked: <span class="kw-2">&amp;mut </span>cx.cursor_icon_locked,
+            window_size: <span class="kw-2">&amp;mut </span>cx.window_size,
+            user_scale_factor: <span class="kw-2">&amp;mut </span>cx.user_scale_factor,
             <span class="attribute">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
             </span>clipboard: <span class="kw-2">&amp;mut </span>cx.clipboard,
             event_proxy: <span class="kw-2">&amp;mut </span>cx.event_proxy,
@@ -780,8 +818,38 @@
         std::thread::spawn(<span class="kw">move </span>|| target(<span class="kw-2">&amp;mut </span>cxp));
     }
 
-    <span class="kw">pub fn </span>scale_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+    <span class="doccomment">/// The window&#39;s DPI factor. This includes both HiDPI scaling and the user scale factor.
+    </span><span class="kw">pub fn </span>dpi_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
         <span class="self">self</span>.style.dpi_factor <span class="kw">as </span>f32
+    }
+
+    <span class="doccomment">/// The window&#39;s size in logical pixels, before
+    /// [`user_scale_factor()`][Self::user_scale_factor()] gets applied to it. If this value changed
+    /// during a frame then the window will be resized and a [`WindowEvent::GeometryChanged`] will
+    /// be emitted.
+    </span><span class="kw">pub fn </span>window_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WindowSize {
+        <span class="kw-2">*</span><span class="self">self</span>.window_size
+    }
+
+    <span class="doccomment">/// Change the window size. A [`WindowEvent::GeometryChanged`] will be emitted when the window
+    /// has actually changed in size.
+    </span><span class="kw">pub fn </span>set_window_size(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_size: WindowSize) {
+        <span class="kw-2">*</span><span class="self">self</span>.window_size = new_size;
+    }
+
+    <span class="doccomment">/// A scale factor used for uniformly scaling the window independently of any HiDPI scaling.
+    /// `window_size` gets multplied with this factor to get the actual logical window size. If this
+    /// changes during a frame, then the window will be resized at the end of the frame and a
+    /// [`WindowEvent::GeometryChanged`] will be emitted. This can be initialized using
+    /// [`WindowDescription::user_scale_factor`][crate::WindowDescription::user_scale_factor].
+    </span><span class="kw">pub fn </span>user_scale_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f64 {
+        <span class="kw-2">*</span><span class="self">self</span>.user_scale_factor
+    }
+
+    <span class="doccomment">/// Change the user scale factor size. A [`WindowEvent::GeometryChanged`] will be emitted when the
+    /// window has actually changed in size.
+    </span><span class="kw">pub fn </span>set_user_scale_factor(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_factor: f64) {
+        <span class="kw-2">*</span><span class="self">self</span>.user_scale_factor = new_factor;
     }
 }
 

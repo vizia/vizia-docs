@@ -263,6 +263,23 @@
 <span id="263">263</span>
 <span id="264">264</span>
 <span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
 </pre><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::collections::HashSet;
 
@@ -310,14 +327,31 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.modifiers
     }
 
+    <span class="doccomment">/// The window&#39;s size in logical pixels, before
+    /// [`user_scale_factor()`][Self::user_scale_factor()] gets applied to it. If this value changed
+    /// during a frame then the window will be resized and a [`WindowEvent::GeometryChanged`] will be
+    /// emitted.
+    </span><span class="kw">pub fn </span>window_size(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>WindowSize {
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.window_size
+    }
+
+    <span class="doccomment">/// A scale factor used for uniformly scaling the window independently of any HiDPI scaling.
+    /// `window_size` gets multplied with this factor to get the actual logical window size. If this
+    /// changes during a frame, then the window will be resized at the end of the frame and a
+    /// [`WindowEvent::GeometryChanged`] will be emitted. This can be initialized using
+    /// [`WindowDescription::user_scale_factor`][crate::WindowDescription::user_scale_factor].
+    </span><span class="kw">pub fn </span>user_scale_factor(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>f64 {
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.user_scale_factor
+    }
+
     <span class="kw">pub fn </span>add_main_window(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         window_description: <span class="kw-2">&amp;</span>WindowDescription,
         <span class="kw-2">mut </span>canvas: Canvas&lt;OpenGl&gt;,
-        scale_factor: f32,
+        dpi_factor: f32,
     ) {
-        <span class="kw">let </span>physical_width = window_description.inner_size.width <span class="kw">as </span>f32 * scale_factor;
-        <span class="kw">let </span>physical_height = window_description.inner_size.height <span class="kw">as </span>f32 * scale_factor;
+        <span class="kw">let </span>physical_width = window_description.inner_size.width <span class="kw">as </span>f32 * dpi_factor;
+        <span class="kw">let </span>physical_height = window_description.inner_size.height <span class="kw">as </span>f32 * dpi_factor;
 
         <span class="comment">// Scale factor is set to 1.0 here because scaling is applied prior to rendering
         </span>canvas.set_size(physical_width <span class="kw">as </span>u32, physical_height <span class="kw">as </span>u32, <span class="number">1.0</span>);
@@ -329,7 +363,7 @@
             femtovg::Color::rgb(<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>),
         );
 
-        <span class="self">self</span>.<span class="number">0</span>.style.dpi_factor = scale_factor <span class="kw">as </span>f64;
+        <span class="self">self</span>.<span class="number">0</span>.style.dpi_factor = dpi_factor <span class="kw">as </span>f64;
 
         <span class="self">self</span>.<span class="number">0</span>.cache.set_width(Entity::root(), physical_width);
         <span class="self">self</span>.<span class="number">0</span>.cache.set_height(Entity::root(), physical_height);

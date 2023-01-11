@@ -374,6 +374,13 @@
 <span id="374">374</span>
 <span id="375">375</span>
 <span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::entity::Entity;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::Color;
 <span class="kw">use </span><span class="kw">crate</span>::style::Style;
@@ -382,11 +389,11 @@
     Attrs, AttrsList, Buffer, CacheKey, Color <span class="kw">as </span>FontColor, Edit, Editor, Family, FontSystem,
     Metrics, SubpixelBin, Wrap,
 };
-<span class="kw">use </span>femtovg::imgref::ImgRef;
+<span class="kw">use </span>femtovg::imgref::{Img, ImgRef};
 <span class="kw">use </span>femtovg::rgb::RGBA8;
 <span class="kw">use </span>femtovg::{
-    Atlas, Canvas, DrawCmd, ErrorKind, GlyphDrawCommands, ImageFlags, ImageId, ImageSource,
-    PixelFormat, Quad, Renderer,
+    Atlas, Canvas, DrawCmd, ErrorKind, GlyphDrawCommands, ImageFlags, ImageId, ImageSource, Quad,
+    Renderer,
 };
 <span class="kw">use </span>fnv::FnvHashMap;
 <span class="kw">use </span>ouroboros::self_referencing;
@@ -476,7 +483,7 @@
                 .style(font_style)
                 .monospaced(monospace)
                 .color(FontColor::rgba(color.r(), color.g(), color.b(), color.a()));
-            <span class="kw">let </span>wrap = <span class="kw">if </span>style.text_wrap.get(entity).copied().unwrap_or_default() {
+            <span class="kw">let </span>wrap = <span class="kw">if </span>style.text_wrap.get(entity).copied().unwrap_or(<span class="bool-val">true</span>) {
                 Wrap::Word
             } <span class="kw">else </span>{
                 Wrap::None
@@ -563,7 +570,7 @@
                                 <span class="comment">// if no atlas could fit the texture, make a new atlas tyvm
                                 // TODO error handling
                                 </span><span class="kw">let </span><span class="kw-2">mut </span>atlas = Atlas::new(TEXTURE_SIZE, TEXTURE_SIZE);
-                                <span class="kw">let </span>image_id = canvas.create_image_empty(TEXTURE_SIZE, TEXTURE_SIZE, PixelFormat::Rgba8, ImageFlags::empty()).unwrap();
+                                <span class="kw">let </span>image_id = canvas.create_image(Img::new(<span class="macro">vec!</span>[RGBA8::new(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>); TEXTURE_SIZE * TEXTURE_SIZE], TEXTURE_SIZE, TEXTURE_SIZE).as_ref(), ImageFlags::empty()).unwrap();
                                 <span class="kw">let </span>texture_index = int.glyph_textures.len();
                                 <span class="kw">let </span>(x, y) = atlas.add_rect(alloc_w <span class="kw">as </span>usize, alloc_h <span class="kw">as </span>usize).unwrap();
                                 int.glyph_textures.push(FontTexture {
@@ -636,10 +643,17 @@
                 }
             }
 
-            <span class="prelude-val">Ok</span>(alpha_cmd_map.into_iter().map(|(color, map)| (color, GlyphDrawCommands {
-                alpha_glyphs: map.into_iter().map(|(<span class="kw">_</span>, cmd)| cmd).collect(),
-                color_glyphs: color_cmd_map.drain().map(|(<span class="kw">_</span>, cmd)| cmd).collect(),
-            })).collect())
+            <span class="kw">if </span>!alpha_cmd_map.is_empty() {
+                <span class="prelude-val">Ok</span>(alpha_cmd_map.into_iter().map(|(color, map)| (color, GlyphDrawCommands {
+                    alpha_glyphs: map.into_iter().map(|(<span class="kw">_</span>, cmd)| cmd).collect(),
+                    color_glyphs: color_cmd_map.drain().map(|(<span class="kw">_</span>, cmd)| cmd).collect(),
+                })).collect())
+            } <span class="kw">else </span>{
+                <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[(FontColor(<span class="number">0</span>), GlyphDrawCommands {
+                    alpha_glyphs: <span class="macro">vec!</span>[],
+                    color_glyphs: color_cmd_map.drain().map(|(<span class="kw">_</span>, cmd)| cmd).collect(),
+                })])
+            }
         })
     }
 
@@ -751,4 +765,4 @@
 //    Stroke(u32),
 //}
 </span></code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0 (69f9c33d7 2022-12-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="vizia_core" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.1 (90743e729 2023-01-10)" ></div></body></html>

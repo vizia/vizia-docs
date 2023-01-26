@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["has_animations",""]],"struct":[["BackendContext",""]]};
+window.SIDEBAR_ITEMS = {"struct":[["BackendContext",""]]};

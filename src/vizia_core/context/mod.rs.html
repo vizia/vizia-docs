@@ -608,6 +608,14 @@
 <a href="#608" id="608">608</a>
 <a href="#609" id="609">609</a>
 <a href="#610" id="610">610</a>
+<a href="#611" id="611">611</a>
+<a href="#612" id="612">612</a>
+<a href="#613" id="613">613</a>
+<a href="#614" id="614">614</a>
+<a href="#615" id="615">615</a>
+<a href="#616" id="616">616</a>
+<a href="#617" id="617">617</a>
+<a href="#618" id="618">618</a>
 </pre><pre class="rust"><code><span class="kw">pub mod </span>backend;
 <span class="kw">mod </span>draw;
 <span class="kw">mod </span>event;
@@ -637,12 +645,13 @@
 <span class="kw">use </span><span class="kw">crate</span>::cache::CachedData;
 <span class="kw">use </span><span class="kw">crate</span>::environment::Environment;
 <span class="kw">use </span><span class="kw">crate</span>::events::ViewHandler;
-<span class="kw">use </span><span class="kw">crate</span>::fonts;
+<span class="attr">#[cfg(feature = <span class="string">&quot;embedded_fonts&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::fonts;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::resource::{ImageOrId, ImageRetentionPolicy, ResourceManager, StoredImage};
 <span class="kw">use </span><span class="kw">crate</span>::state::{BindingHandler, ModelDataStore};
 <span class="kw">use </span><span class="kw">crate</span>::style::Style;
-<span class="kw">use </span><span class="kw">crate</span>::text::TextContext;
+<span class="kw">use </span><span class="kw">crate</span>::text::{TextConfig, TextContext};
 <span class="kw">use </span>vizia_id::{GenerationalId, IdManager};
 <span class="kw">use </span>vizia_input::{Modifiers, MouseState};
 <span class="kw">use </span>vizia_storage::SparseSet;
@@ -686,6 +695,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) resource_manager: ResourceManager,
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) text_context: TextContext,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) text_config: TextConfig,
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) event_proxy: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>EventProxy&gt;&gt;,
 
@@ -724,13 +734,17 @@
         <span class="comment">// Add default fonts
         </span><span class="kw">let </span><span class="kw-2">mut </span>db = Database::new();
         db.load_system_fonts();
-        db.load_font_data(Vec::from(fonts::ROBOTO_REGULAR));
-        db.load_font_data(Vec::from(fonts::ROBOTO_BOLD));
-        db.load_font_data(Vec::from(fonts::ROBOTO_ITALIC));
-        db.load_font_data(Vec::from(fonts::ENTYPO));
-        db.load_font_data(Vec::from(fonts::OPEN_SANS_EMOJI));
-        db.load_font_data(Vec::from(fonts::AMIRI_REGULAR));
-        db.load_font_data(Vec::from(fonts::MATERIAL_ICONS_REGULAR));
+
+        <span class="attr">#[cfg(feature = <span class="string">&quot;embedded_fonts&quot;</span>)]
+        </span>{
+            db.load_font_data(Vec::from(fonts::ROBOTO_REGULAR));
+            db.load_font_data(Vec::from(fonts::ROBOTO_BOLD));
+            db.load_font_data(Vec::from(fonts::ROBOTO_ITALIC));
+            db.load_font_data(Vec::from(fonts::ENTYPO));
+            db.load_font_data(Vec::from(fonts::OPEN_SANS_EMOJI));
+            db.load_font_data(Vec::from(fonts::AMIRI_REGULAR));
+            db.load_font_data(Vec::from(fonts::MATERIAL_ICONS_REGULAR));
+        }
 
         <span class="kw">let </span><span class="kw-2">mut </span>result = <span class="self">Self </span>{
             entity_manager: IdManager::new(),
@@ -761,6 +775,8 @@
                 sys_locale::get_locale().unwrap_or_else(|| <span class="string">&quot;en-US&quot;</span>.to_owned()),
                 db,
             ),
+
+            text_config: TextConfig::default(),
 
             event_proxy: <span class="prelude-val">None</span>,
 

@@ -478,6 +478,17 @@
 <a href="#478" id="478">478</a>
 <a href="#479" id="479">479</a>
 <a href="#480" id="480">480</a>
+<a href="#481" id="481">481</a>
+<a href="#482" id="482">482</a>
+<a href="#483" id="483">483</a>
+<a href="#484" id="484">484</a>
+<a href="#485" id="485">485</a>
+<a href="#486" id="486">486</a>
+<a href="#487" id="487">487</a>
+<a href="#488" id="488">488</a>
+<a href="#489" id="489">489</a>
+<a href="#490" id="490">490</a>
+<a href="#491" id="491">491</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::window::ViziaWindow;
 <span class="kw">use </span>baseview::{Window, WindowHandle, WindowScalePolicy};
 <span class="kw">use </span>raw_window_handle::HasRawWindowHandle;
@@ -498,6 +509,7 @@
     window_scale_policy: WindowScalePolicy,
     on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
     ignore_default_theme: bool,
+    text_config: TextConfig,
 }
 
 <span class="kw">impl</span>&lt;F&gt; Application&lt;F&gt;
@@ -512,6 +524,7 @@
             window_scale_policy: WindowScalePolicy::SystemScaleFactor,
             on_idle: <span class="prelude-val">None</span>,
             ignore_default_theme: <span class="bool-val">false</span>,
+            text_config: TextConfig::default(),
         }
     }
 
@@ -525,6 +538,12 @@
     /// [`WindowDescription::scale_factor`] to set a separate arbitrary scale factor.
     </span><span class="kw">pub fn </span>with_scale_policy(<span class="kw-2">mut </span><span class="self">self</span>, scale_policy: WindowScalePolicy) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.window_scale_policy = scale_policy;
+        <span class="self">self
+    </span>}
+
+    <span class="kw">pub fn </span>with_text_config(<span class="kw-2">mut </span><span class="self">self</span>, text_config: TextConfig) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.text_config = text_config;
+
         <span class="self">self
     </span>}
 
@@ -560,6 +579,7 @@
             <span class="self">self</span>.app,
             <span class="self">self</span>.on_idle,
             <span class="self">self</span>.ignore_default_theme,
+            <span class="self">self</span>.text_config,
         )
     }
 
@@ -578,6 +598,7 @@
             <span class="self">self</span>.app,
             <span class="self">self</span>.on_idle,
             <span class="self">self</span>.ignore_default_theme,
+            <span class="self">self</span>.text_config,
         )
     }
 
@@ -594,6 +615,7 @@
             <span class="self">self</span>.app,
             <span class="self">self</span>.on_idle,
             <span class="self">self</span>.ignore_default_theme,
+            <span class="self">self</span>.text_config,
         )
     }
 

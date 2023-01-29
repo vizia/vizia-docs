@@ -235,6 +235,8 @@
 <a href="#235" id="235">235</a>
 <a href="#236" id="236">236</a>
 <a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
 </pre><pre class="rust"><code><span class="kw">use </span>cosmic_text::{FamilyOwned, Weight};
 <span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::ops::Range;
@@ -249,7 +251,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::resource::ResourceManager;
 <span class="kw">use </span><span class="kw">crate</span>::state::ModelDataStore;
 <span class="kw">use </span><span class="kw">crate</span>::style::{LinearGradient, Style};
-<span class="kw">use </span><span class="kw">crate</span>::text::TextContext;
+<span class="kw">use </span><span class="kw">crate</span>::text::{TextConfig, TextContext};
 <span class="kw">use </span>vizia_input::{Modifiers, MouseState};
 <span class="kw">use </span>vizia_storage::SparseSet;
 
@@ -284,6 +286,7 @@
     <span class="kw">pub </span>views: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
     <span class="kw">pub </span>resource_manager: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ResourceManager,
     <span class="kw">pub </span>text_context: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>TextContext,
+    <span class="kw">pub </span>text_config: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>TextConfig,
     <span class="kw">pub </span>modifiers: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Modifiers,
     <span class="kw">pub </span>mouse: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>MouseState&lt;Entity&gt;,
 }
@@ -325,6 +328,7 @@
             views: <span class="kw-2">&amp;</span>cx.views,
             resource_manager: <span class="kw-2">&amp;</span>cx.resource_manager,
             text_context: <span class="kw-2">&amp;mut </span>cx.text_context,
+            text_config: <span class="kw-2">&amp;</span>cx.text_config,
             modifiers: <span class="kw-2">&amp;</span>cx.modifiers,
             mouse: <span class="kw-2">&amp;</span>cx.mouse,
         }
@@ -401,12 +405,12 @@
 
     <span class="kw">pub fn </span>draw_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas, origin: (f32, f32), justify: (f32, f32)) {
         <span class="kw">if let </span><span class="prelude-val">Ok</span>(draw_commands) =
-            <span class="self">self</span>.text_context.fill_to_cmds(canvas, <span class="self">self</span>.current, origin, justify)
+            <span class="self">self</span>.text_context.fill_to_cmds(canvas, <span class="self">self</span>.current, origin, justify, <span class="kw-2">*</span><span class="self">self</span>.text_config)
         {
             <span class="kw">for </span>(color, cmds) <span class="kw">in </span>draw_commands.into_iter() {
                 <span class="kw">let </span>temp_paint =
                     Paint::color(femtovg::Color::rgba(color.r(), color.g(), color.b(), color.a()));
-                canvas.draw_glyph_cmds(cmds, <span class="kw-2">&amp;</span>temp_paint);
+                canvas.draw_glyph_cmds(cmds, <span class="kw-2">&amp;</span>temp_paint, <span class="number">1.0</span>);
             }
         }
     }

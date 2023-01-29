@@ -272,6 +272,9 @@
 <a href="#272" id="272">272</a>
 <a href="#273" id="273">273</a>
 <a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::convert::cursor_icon_to_cursor_icon;
 <span class="kw">use </span>femtovg::{renderer::OpenGl, Canvas, Color};
 <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
@@ -390,7 +393,10 @@
         };
 
         <span class="comment">// Build the femtovg renderer
-        </span><span class="kw">let </span>renderer = OpenGl::new_from_glutin_context(<span class="kw-2">&amp;</span>handle).expect(<span class="string">&quot;Cannot create renderer&quot;</span>);
+        </span><span class="kw">let </span>renderer = <span class="kw">unsafe </span>{
+            OpenGl::new_from_function(|s| handle.get_proc_address(s) <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>)
+                .expect(<span class="string">&quot;Cannot create renderer&quot;</span>)
+        };
 
         <span class="kw">let </span><span class="kw-2">mut </span>canvas = Canvas::new(renderer).expect(<span class="string">&quot;Failed to create canvas&quot;</span>);
 

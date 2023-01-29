@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["BackendContext",""]]};
+window.SIDEBAR_ITEMS = {"struct":[["BackendContext",""],["TextConfig",""]]};

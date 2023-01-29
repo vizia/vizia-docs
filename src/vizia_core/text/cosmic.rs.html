@@ -381,6 +381,19 @@
 <a href="#381" id="381">381</a>
 <a href="#382" id="382">382</a>
 <a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::entity::Entity;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::Color;
 <span class="kw">use </span><span class="kw">crate</span>::style::Style;
@@ -406,6 +419,18 @@
 <span class="kw">const </span>GLYPH_MARGIN: u32 = <span class="number">1</span>;
 <span class="kw">const </span>TEXTURE_SIZE: usize = <span class="number">512</span>;
 
+<span class="attr">#[derive(Debug, Clone, Copy)]
+</span><span class="kw">pub struct </span>TextConfig {
+    <span class="kw">pub </span>hint: bool,
+    <span class="kw">pub </span>subpixel: bool,
+}
+
+<span class="kw">impl </span>Default <span class="kw">for </span>TextConfig {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ hint: <span class="bool-val">true</span>, subpixel: <span class="bool-val">false </span>}
+    }
+}
+
 <span class="attr">#[self_referencing]
 </span><span class="kw">pub struct </span>TextContext {
     font_system: FontSystem,
@@ -424,7 +449,8 @@
 }
 
 <span class="kw">impl </span>TextContext {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>font_system(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>FontSystem {
+    <span class="attr">#[allow(dead_code)]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>font_system(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>FontSystem {
         <span class="self">self</span>.borrow_font_system()
     }
 
@@ -507,6 +533,7 @@
         entity: Entity,
         position: (f32, f32),
         justify: (f32, f32),
+        config: TextConfig,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;(FontColor, GlyphDrawCommands)&gt;, ErrorKind&gt; {
         <span class="kw">if </span>!<span class="self">self</span>.has_buffer(entity) {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[]);
@@ -546,7 +573,7 @@
                             Source::ColorBitmap(StrikeWith::BestFit),
                             Source::Outline,
                         ])
-                            .format(Format::Alpha)
+                            .format(<span class="kw">if </span>config.subpixel {Format::Subpixel} <span class="kw">else </span>{Format::Alpha})
                             .offset(offset)
                             .render(<span class="kw-2">&amp;mut </span>scaler, cache_key.glyph_id);
 
@@ -592,12 +619,11 @@
                                         src_buf.push(RGBA8::new(chunk[<span class="number">0</span>], <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>));
                                     }
                                 }
-                                Content::Color =&gt; {
+                                Content::Color | Content::SubpixelMask =&gt; {
                                     <span class="kw">for </span>chunk <span class="kw">in </span>rendered.data.chunks_exact(<span class="number">4</span>) {
                                         src_buf.push(RGBA8::new(chunk[<span class="number">0</span>], chunk[<span class="number">1</span>], chunk[<span class="number">2</span>], chunk[<span class="number">3</span>]));
                                     }
                                 }
-                                Content::SubpixelMask =&gt; <span class="macro">unreachable!</span>(),
                             }
                             canvas.update_image::&lt;ImageSource&gt;(int.glyph_textures[texture_index].image_id, ImgRef::new(<span class="kw-2">&amp;</span>src_buf, content_w, content_h).into(), atlas_content_x <span class="kw">as </span>usize, atlas_content_y <span class="kw">as </span>usize).unwrap();
 

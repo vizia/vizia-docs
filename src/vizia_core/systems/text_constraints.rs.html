@@ -131,29 +131,29 @@
 <a href="#131" id="131">131</a>
 <a href="#132" id="132">132</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::style::SystemFlags;
 <span class="kw">use </span>vizia_id::GenerationalId;
+<span class="kw">use </span>vizia_storage::DrawIterator;
 
 <span class="comment">// Apply this before layout
 // THE GOAL OF THIS FUNCTION: set content-width and content-height
-</span><span class="kw">pub fn </span>text_constraints_system(cx: <span class="kw-2">&amp;mut </span>Context, tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;) {
-    <span class="kw">let </span><span class="kw-2">mut </span>draw_tree: Vec&lt;Entity&gt; = tree.into_iter().collect();
-    draw_tree.sort_by_cached_key(|entity| cx.cache.get_z_index(<span class="kw-2">*</span>entity));
+</span><span class="kw">pub fn </span>text_constraints_system(cx: <span class="kw-2">&amp;mut </span>Context) {
+    <span class="kw">let </span>draw_tree = DrawIterator::full(<span class="kw-2">&amp;</span>cx.tree);
 
-    <span class="kw">for </span>entity <span class="kw">in </span>draw_tree.into_iter() {
+    <span class="kw">for </span>entity <span class="kw">in </span>draw_tree {
         <span class="comment">// Skip if the entity isn&#39;t marked as having its text modified
         </span><span class="kw">if </span>!cx.style.needs_text_layout.get(entity).copied().unwrap_or_default() {
             <span class="kw">continue</span>;
         }
 
-        <span class="kw">if </span>entity == Entity::root() {
-            <span class="kw">continue</span>;
-        }
-
-        <span class="kw">if </span>cx.cache.display.get(entity) == <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>Display::None) {
-            <span class="kw">continue</span>;
-        }
-
-        <span class="kw">if </span>tree.is_ignored(entity) {
+        <span class="comment">// Skip if the entity is invisible
+        // Unfortunately we can&#39;t skip the subtree because even if a parent is invisible
+        // a child might be explicitly set to be visible.
+        </span><span class="kw">if </span>entity == Entity::root()
+            || cx.cache.get_visibility(entity) == Visibility::Invisible
+            || cx.cache.get_display(entity) == Display::None
+            || cx.cache.get_opacity(entity) == <span class="number">0.0
+        </span>{
             <span class="kw">continue</span>;
         }
 
@@ -257,7 +257,7 @@
                 cx.style.content_width.insert(entity, content_width / cx.style.dpi_factor <span class="kw">as </span>f32);
                 cx.style.content_height.insert(entity, content_height / cx.style.dpi_factor <span class="kw">as </span>f32);
 
-                cx.style.needs_relayout = <span class="bool-val">true</span>;
+                cx.style.system_flags.set(SystemFlags::RELAYOUT, <span class="bool-val">true</span>);
             }
         }
     }

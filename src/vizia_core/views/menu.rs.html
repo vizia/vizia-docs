@@ -350,6 +350,8 @@
 <a href="#350" id="350">350</a>
 <a href="#351" id="351">351</a>
 <a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::cell::RefCell;
 
 <span class="kw">use </span><span class="kw">crate</span>::fonts::{icons_names::CHECK, material_names::RIGHT};
@@ -537,10 +539,12 @@
         <span class="kw">if </span>cx.data::&lt;MenuControllerData&gt;().is_none() {
             <span class="macro">panic!</span>(<span class="string">&quot;MenuStacks must be built inside a MenuController&quot;</span>);
         }
-        <span class="self">Self </span>{}.build(cx, <span class="kw">move </span>|cx| {
-            MenuData::default().build(cx);
-            builder(cx);
-        })
+        <span class="self">Self </span>{}
+            .build(cx, <span class="kw">move </span>|cx| {
+                MenuData::default().build(cx);
+                builder(cx);
+            })
+            .z_order(<span class="number">100</span>)
     }
 
     <span class="kw">pub fn </span>new_vertical&lt;F: FnOnce(<span class="kw-2">&amp;mut </span>Context)&gt;(cx: <span class="kw-2">&amp;mut </span>Context, builder: F) -&gt; Handle&lt;<span class="lifetime">&#39;_</span>, <span class="self">Self</span>&gt; {

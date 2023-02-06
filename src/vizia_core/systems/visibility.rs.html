@@ -43,49 +43,51 @@
 <a href="#43" id="43">43</a>
 <a href="#44" id="44">44</a>
 <a href="#45" id="45">45</a>
+<a href="#46" id="46">46</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::style::SystemFlags;
 <span class="kw">use </span>vizia_id::GenerationalId;
+<span class="kw">use </span>vizia_storage::DrawIterator;
 
-<span class="kw">pub fn </span>visibility_system(cx: <span class="kw-2">&amp;mut </span>Context, tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;) {
-    <span class="kw">let </span><span class="kw-2">mut </span>draw_tree: Vec&lt;Entity&gt; = tree.into_iter().collect();
-    draw_tree.sort_by_cached_key(|entity| cx.cache.get_z_index(<span class="kw-2">*</span>entity));
+<span class="kw">pub fn </span>visibility_system(cx: <span class="kw-2">&amp;mut </span>Context) {
+    <span class="kw">if </span>cx.style.system_flags.contains(SystemFlags::REHIDE) {
+        <span class="kw">let </span>draw_tree = DrawIterator::full(<span class="kw-2">&amp;</span>cx.tree);
 
-    <span class="kw">for </span>entity <span class="kw">in </span>draw_tree.into_iter() {
-        <span class="kw">if </span>entity == Entity::root() {
-            <span class="kw">continue</span>;
-        }
-
-        <span class="kw">if </span>tree.is_ignored(entity) {
-            <span class="kw">continue</span>;
-        }
-
-        <span class="kw">let </span>parent = tree.get_layout_parent(entity).unwrap();
-
-        <span class="kw">if </span>cx.cache.get_visibility(parent) == Visibility::Invisible {
-            cx.cache.set_visibility(entity, Visibility::Invisible);
-        } <span class="kw">else </span>{
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(visibility) = cx.style.visibility.get(entity).copied() {
-                cx.cache.set_visibility(entity, visibility);
-            } <span class="kw">else </span>{
-                cx.cache.set_visibility(entity, Visibility::Visible);
+        <span class="kw">for </span>entity <span class="kw">in </span>draw_tree {
+            <span class="kw">if </span>entity == Entity::root() {
+                <span class="kw">continue</span>;
             }
-        }
 
-        <span class="kw">if </span>cx.cache.get_display(parent) == Display::None {
-            cx.cache.set_display(entity, Display::None);
-        } <span class="kw">else </span>{
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(display) = cx.style.display.get(entity).copied() {
-                cx.cache.set_display(entity, display);
+            <span class="kw">let </span>parent = cx.tree.get_layout_parent(entity).unwrap();
+
+            <span class="kw">if </span>cx.cache.get_visibility(parent) == Visibility::Invisible {
+                cx.cache.set_visibility(entity, Visibility::Invisible);
             } <span class="kw">else </span>{
-                cx.cache.set_display(entity, Display::Flex);
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(visibility) = cx.style.visibility.get(entity).copied() {
+                    cx.cache.set_visibility(entity, visibility);
+                } <span class="kw">else </span>{
+                    cx.cache.set_visibility(entity, Visibility::Visible);
+                }
             }
+
+            <span class="kw">if </span>cx.cache.get_display(parent) == Display::None {
+                cx.cache.set_display(entity, Display::None);
+            } <span class="kw">else </span>{
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(display) = cx.style.display.get(entity).copied() {
+                    cx.cache.set_display(entity, display);
+                } <span class="kw">else </span>{
+                    cx.cache.set_display(entity, Display::Flex);
+                }
+            }
+
+            <span class="kw">let </span>parent_opacity = cx.cache.get_opacity(parent);
+
+            <span class="kw">let </span>opacity = cx.style.opacity.get(entity).cloned().unwrap_or_default();
+
+            cx.cache.set_opacity(entity, opacity.<span class="number">0 </span>* parent_opacity);
         }
 
-        <span class="kw">let </span>parent_opacity = cx.cache.get_opacity(parent);
-
-        <span class="kw">let </span>opacity = cx.style.opacity.get(entity).cloned().unwrap_or_default();
-
-        cx.cache.set_opacity(entity, opacity.<span class="number">0 </span>* parent_opacity);
+        cx.style.system_flags.set(SystemFlags::REHIDE, <span class="bool-val">false</span>);
     }
 }
 </code></pre></div>

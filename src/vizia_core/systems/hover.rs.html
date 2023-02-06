@@ -137,41 +137,31 @@
 <a href="#137" id="137">137</a>
 <a href="#138" id="138">138</a>
 <a href="#139" id="139">139</a>
-<a href="#140" id="140">140</a>
-<a href="#141" id="141">141</a>
-<a href="#142" id="142">142</a>
-<a href="#143" id="143">143</a>
-<a href="#144" id="144">144</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>vizia_id::GenerationalId;
+<span class="kw">use </span>vizia_storage::DrawIterator;
 
 <span class="comment">// Determines the hovered entity based on the mouse cursor position.
 </span><span class="kw">pub fn </span>hover_system(cx: <span class="kw-2">&amp;mut </span>Context) {
-    <span class="comment">// TODO - Cache this
-    </span><span class="kw">let </span><span class="kw-2">mut </span>draw_tree: Vec&lt;Entity&gt; = cx.tree.into_iter().collect();
-    draw_tree.sort_by_cached_key(|entity| cx.cache.get_z_index(<span class="kw-2">*</span>entity));
+    <span class="kw">let </span>draw_tree = DrawIterator::full(<span class="kw-2">&amp;</span>cx.tree);
 
     <span class="kw">let </span>cursorx = cx.mouse.cursorx;
     <span class="kw">let </span>cursory = cx.mouse.cursory;
 
     <span class="kw">let </span><span class="kw-2">mut </span>hovered_widget = Entity::root();
 
-    <span class="kw">for </span>entity <span class="kw">in </span>draw_tree.into_iter() {
-        <span class="comment">// Skip invisible widgets
-        </span><span class="kw">if </span>cx.cache.get_visibility(entity) == Visibility::Invisible {
-            <span class="kw">continue</span>;
-        }
+    <span class="kw">for </span>entity <span class="kw">in </span>draw_tree {
+        <span class="kw">let </span>window_bounds = cx.cache.get_bounds(Entity::root());
 
-        <span class="comment">// This shouldn&#39;t be here but there&#39;s a bug if it isn&#39;t
-        </span><span class="kw">if </span>cx.cache.get_opacity(entity) == <span class="number">0.0 </span>{
-            <span class="kw">continue</span>;
-        }
-
-        <span class="comment">// Skip non-displayed widgets
-        </span><span class="kw">if </span>cx.cache.get_display(entity) == Display::None {
-            <span class="kw">continue</span>;
-        }
-        <span class="kw">if </span>cx.tree.is_ignored(entity) {
+        <span class="comment">// Skip if the entity is invisible or out of bounds
+        // Unfortunately we can&#39;t skip the subtree because even if a parent is invisible
+        // a child might be explicitly set to be visible.
+        </span><span class="kw">if </span>entity == Entity::root()
+            || cx.cache.get_visibility(entity) == Visibility::Invisible
+            || cx.cache.get_display(entity) == Display::None
+            || cx.cache.get_opacity(entity) == <span class="number">0.0
+            </span>|| !window_bounds.contains(<span class="kw-2">&amp;</span>cx.cache.get_bounds(entity))
+        {
             <span class="kw">continue</span>;
         }
 
@@ -283,7 +273,7 @@
 
         cx.hovered = hovered_widget;
 
-        cx.style.needs_restyle = <span class="bool-val">true</span>;
+        cx.style.needs_restyle();
     }
 }
 </code></pre></div>

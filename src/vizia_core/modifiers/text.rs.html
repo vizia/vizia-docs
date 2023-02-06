@@ -76,8 +76,16 @@
 <a href="#76" id="76">76</a>
 <a href="#77" id="77">77</a>
 <a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
+<a href="#81" id="81">81</a>
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::internal;
-<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use crate</span>::{prelude::<span class="kw-2">*</span>, style::SystemFlags};
 <span class="kw">use </span>cosmic_text::{FamilyOwned, Weight};
 
 <span class="doccomment">/// Modifiers for changing the text properties of a view.
@@ -90,7 +98,7 @@
             cx.text_context.set_text(entity, <span class="kw-2">&amp;</span>text_data);
 
             cx.style.needs_text_layout.insert(entity, <span class="bool-val">true</span>).unwrap();
-            cx.need_redraw();
+            cx.style.system_flags |= SystemFlags::REFLOW;
         });
 
         <span class="self">self
@@ -101,19 +109,22 @@
         ///
         /// The font name refers to the name assigned when the font is added to context.
         </span>font_family,
-        Vec&lt;FamilyOwned&gt;
+        Vec&lt;FamilyOwned&gt;,
+        SystemFlags::REFLOW
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the font weight that should be used by the view.
         </span>font_weight,
-        Weight
+        Weight,
+        SystemFlags::REDRAW
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the font style that should be used by the view.
         </span>font_style,
-        FontStyle
+        FontStyle,
+        SystemFlags::REDRAW
     );
 
     <span class="doccomment">/// Sets the text color of the view.
@@ -121,6 +132,7 @@
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
         value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
             cx.style.font_color.insert(entity, v.into());
+            cx.style.needs_redraw();
         });
         <span class="self">self
     </span>}
@@ -130,6 +142,7 @@
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
         value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
             cx.style.font_size.insert(entity, v.into());
+            cx.style.system_flags |= SystemFlags::REFLOW;
         });
         <span class="self">self
     </span>}
@@ -137,19 +150,22 @@
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the ext caret color of the view.
         </span>caret_color,
-        Color
+        Color,
+        SystemFlags::REDRAW
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the color used to highlight selected text within the view.
         </span>selection_color,
-        Color
+        Color,
+        SystemFlags::REDRAW
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets whether the text of the view should be allowed to wrap.
         </span>text_wrap,
-        bool
+        bool,
+        SystemFlags::REFLOW
     );
 }
 

@@ -478,17 +478,6 @@
 <a href="#478" id="478">478</a>
 <a href="#479" id="479">479</a>
 <a href="#480" id="480">480</a>
-<a href="#481" id="481">481</a>
-<a href="#482" id="482">482</a>
-<a href="#483" id="483">483</a>
-<a href="#484" id="484">484</a>
-<a href="#485" id="485">485</a>
-<a href="#486" id="486">486</a>
-<a href="#487" id="487">487</a>
-<a href="#488" id="488">488</a>
-<a href="#489" id="489">489</a>
-<a href="#490" id="490">490</a>
-<a href="#491" id="491">491</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::window::ViziaWindow;
 <span class="kw">use </span>baseview::{Window, WindowHandle, WindowScalePolicy};
 <span class="kw">use </span>raw_window_handle::HasRawWindowHandle;
@@ -738,10 +727,7 @@
                 },
             );
 
-            cx.<span class="number">0</span>.need_restyle();
-            <span class="comment">// This will trigger a `WindowEvent::GeometryChanged`
-            </span>cx.<span class="number">0</span>.need_relayout();
-            cx.<span class="number">0</span>.need_redraw();
+            cx.needs_refresh();
 
             <span class="self">self</span>.event_manager.flush_events(cx.context());
         }
@@ -749,7 +735,7 @@
         cx.load_images();
 
         <span class="comment">// Force restyle on every frame for baseview backend to avoid style inheritance issues
-        </span>cx.style().needs_restyle = <span class="bool-val">true</span>;
+        </span>cx.style().needs_restyle();
         cx.process_data_updates();
         cx.process_style_updates();
 
@@ -757,11 +743,9 @@
 
         cx.process_visual_updates();
 
-        <span class="kw">if </span>cx.style().needs_redraw {
-            <span class="comment">// TODO - Move this to EventManager
-            </span><span class="self">self</span>.should_redraw = <span class="bool-val">true</span>;
-            cx.style().needs_redraw = <span class="bool-val">false</span>;
-        }
+        cx.style().should_redraw(|| {
+            <span class="self">self</span>.should_redraw = <span class="bool-val">true</span>;
+        });
     }
 
     <span class="kw">pub fn </span>render(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
@@ -882,11 +866,7 @@
                 }
             }
             baseview::Event::Window(event) =&gt; <span class="kw">match </span>event {
-                baseview::WindowEvent::Focused =&gt; {
-                    cx.<span class="number">0</span>.need_restyle();
-                    cx.<span class="number">0</span>.need_relayout();
-                    cx.<span class="number">0</span>.need_redraw();
-                }
+                baseview::WindowEvent::Focused =&gt; cx.needs_refresh(),
                 baseview::WindowEvent::Resized(window_info) =&gt; {
                     <span class="comment">// We keep track of the current size before applying the user scale factor while
                     // baseview&#39;s logical size includes that factor so we need to compensate for it
@@ -928,9 +908,7 @@
 
                     cx.cache().set_clip_region(Entity::root(), bounding_box);
 
-                    cx.<span class="number">0</span>.need_restyle();
-                    cx.<span class="number">0</span>.need_relayout();
-                    cx.<span class="number">0</span>.need_redraw();
+                    cx.needs_refresh();
                 }
                 baseview::WindowEvent::WillClose =&gt; {
                     cx.send_event(Event::new(WindowEvent::WindowClose));

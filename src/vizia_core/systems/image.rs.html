@@ -86,7 +86,9 @@
 <a href="#86" id="86">86</a>
 <a href="#87" id="87">87</a>
 <a href="#88" id="88">88</a>
-</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::Context;
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{Context, ResourceContext};
 <span class="kw">use </span><span class="kw">crate</span>::resource::{ImageRetentionPolicy, StoredImage};
 <span class="kw">use crate</span>::{prelude::<span class="kw-2">*</span>, resource::ImageOrId};
 <span class="kw">use </span>std::collections::HashSet;
@@ -94,10 +96,12 @@
 
 <span class="comment">// Iterate he tree and load any images used by entities which aren&#39;t already loaded. Remove any images no longer being used.
 </span><span class="kw">pub fn </span>image_system(cx: <span class="kw-2">&amp;mut </span>Context) {
+    <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>ResourceContext::new(cx);
+
     cx.resource_manager.mark_images_unused();
 
     <span class="comment">// Iterate the tree and load any defined images that aren&#39;t already loaded
-    </span><span class="kw">for </span>entity <span class="kw">in </span>cx.tree.clone().into_iter() {
+    </span><span class="kw">for </span>entity <span class="kw">in </span>cx.tree.into_iter() {
         <span class="comment">// Load a background-image if the entity has one
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(background_image) = cx.style.background_image.get(entity).cloned() {
             load_image(cx, entity, <span class="kw-2">&amp;</span>background_image);
@@ -112,7 +116,7 @@
     cx.resource_manager.evict_unused_images();
 }
 
-<span class="kw">fn </span>load_image(cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, image_name: <span class="kw-2">&amp;</span>String) {
+<span class="kw">fn </span>load_image(cx: <span class="kw-2">&amp;mut </span>ResourceContext, entity: Entity, image_name: <span class="kw-2">&amp;</span>String) {
     <span class="kw">if </span>!try_load_image(cx, entity, image_name) {
         <span class="comment">// Image doesn&#39;t exists yet so call the image loader
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = cx.resource_manager.image_loader.take() {
@@ -126,7 +130,7 @@
     }
 }
 
-<span class="kw">fn </span>try_load_image(cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, image_name: <span class="kw-2">&amp;</span>str) -&gt; bool {
+<span class="kw">fn </span>try_load_image(cx: <span class="kw-2">&amp;mut </span>ResourceContext, entity: Entity, image_name: <span class="kw-2">&amp;</span>str) -&gt; bool {
     <span class="comment">// Check if the image is already loaded
     </span><span class="kw">if let </span><span class="prelude-val">Some</span>(image_store) = cx.resource_manager.images.get_mut(image_name) {
         <span class="kw">match </span><span class="kw-2">&amp;</span>image_store.image {
@@ -143,8 +147,8 @@
                     <span class="comment">// This loads the image and sets the image id
                     </span>image_store.image.id(canvas);
                     image_store.used = <span class="bool-val">true</span>;
-                    cx.need_relayout();
-                    cx.need_redraw();
+                    cx.style.needs_relayout();
+                    cx.style.needs_redraw();
                 }
             }
         }

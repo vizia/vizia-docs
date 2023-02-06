@@ -23,20 +23,28 @@
 <a href="#23" id="23">23</a>
 <a href="#24" id="24">24</a>
 <a href="#25" id="25">25</a>
+<a href="#26" id="26">26</a>
+<a href="#27" id="27">27</a>
+<a href="#28" id="28">28</a>
+<a href="#29" id="29">29</a>
+<a href="#30" id="30">30</a>
 </pre><pre class="rust"><code><span class="kw">use </span>morphorm::layout;
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::style::SystemFlags;
 
 <span class="kw">use </span><span class="kw">super</span>::text_constraints_system;
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>layout_system(cx: <span class="kw-2">&amp;mut </span>Context, tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;) {
-    text_constraints_system(cx, tree);
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>layout_system(cx: <span class="kw-2">&amp;mut </span>Context) {
+    text_constraints_system(cx);
 
-    <span class="kw">if </span>cx.style.needs_relayout {
+    <span class="kw">if </span>cx.style.system_flags.contains(SystemFlags::RELAYOUT) {
         layout(<span class="kw-2">&amp;mut </span>cx.cache, <span class="kw-2">&amp;</span>cx.tree, <span class="kw-2">&amp;</span>cx.style, <span class="kw-2">&amp;mut </span>cx.text_context);
 
-        cx.style.needs_relayout = <span class="bool-val">false</span>;
-        cx.style.needs_redraw = <span class="bool-val">true</span>;
+        <span class="comment">// If layout has changed then reclip, retransform, and redraw
+        </span>cx.style.system_flags.set(SystemFlags::RETRANSFORM, <span class="bool-val">true</span>);
+        cx.style.system_flags.set(SystemFlags::RECLIP, <span class="bool-val">true</span>);
+        cx.style.system_flags.set(SystemFlags::REDRAW, <span class="bool-val">true</span>);
 
         <span class="kw">for </span>entity <span class="kw">in </span>cx.tree.into_iter() {
             <span class="kw">if </span>cx.text_context.has_buffer(entity) {
@@ -46,7 +54,9 @@
                 });
             }
         }
-    }
+
+        <span class="comment">// Defer resetting the layout system flag to the geometry changed system
+    </span>}
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.67.0 (fc594f156 2023-01-24)" data-search-js="search-444266647c4dba98.js" data-settings-js="settings-bebeae96e00e4617.js" data-settings-css="settings-af96d9e2fc13e081.css" ></div></body></html>

@@ -424,8 +424,33 @@
 <a href="#424" id="424">424</a>
 <a href="#425" id="425">425</a>
 <a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
+<a href="#434" id="434">434</a>
+<a href="#435" id="435">435</a>
+<a href="#436" id="436">436</a>
+<a href="#437" id="437">437</a>
+<a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
+<a href="#440" id="440">440</a>
+<a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
+<a href="#444" id="444">444</a>
+<a href="#445" id="445">445</a>
+<a href="#446" id="446">446</a>
+<a href="#447" id="447">447</a>
+<a href="#448" id="448">448</a>
+<a href="#449" id="449">449</a>
+<a href="#450" id="450">450</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::internal;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::style::SystemFlags;
 
 <span class="doccomment">/// Modifiers for changing the layout properties of a view.
 </span><span class="kw">pub trait </span>LayoutModifiers: internal::Modifiable {
@@ -457,7 +482,8 @@
         /// Element::new(cx).layout_type(AppData::layout_type); // Lens to target of type `LayoutType`.
         /// ```
         </span>layout_type,
-        LayoutType
+        LayoutType,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
@@ -477,7 +503,8 @@
         /// Element::new(cx).position_type(PositionType::SelfDirected);
         /// ```
         </span>position_type,
-        PositionType
+        PositionType,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
@@ -497,7 +524,8 @@
         /// Element::new(cx).left(Units::Pixels(100.0));
         /// ```
         </span>left,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
@@ -517,7 +545,8 @@
         /// Element::new(cx).right(Units::Pixels(100.0));
         /// ```
         </span>right,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
@@ -537,7 +566,8 @@
         /// Element::new(cx).top(Units::Pixels(100.0));
         /// ```
         </span>top,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
@@ -557,7 +587,8 @@
         /// Element::new(cx).bottom(Units::Pixels(100.0));
         /// ```
         </span>bottom,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="doccomment">/// Sets the space for all sides of the view.
@@ -570,8 +601,7 @@
             cx.style.top.insert(entity, value);
             cx.style.bottom.insert(entity, value);
 
-            cx.need_relayout();
-            cx.need_redraw();
+            cx.style.needs_relayout();
         });
 
         <span class="self">self
@@ -580,13 +610,15 @@
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the width of the view.
         </span>width,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the height of the view.
         </span>height,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="doccomment">/// Sets the width and height of the view.
@@ -597,8 +629,7 @@
             cx.style.width.insert(entity, value);
             cx.style.height.insert(entity, value);
 
-            cx.need_relayout();
-            cx.need_redraw();
+            cx.style.needs_relayout();
         });
 
         <span class="self">self
@@ -609,7 +640,8 @@
         ///
         /// Applies only to child views which have a `left` property set to `Auto`.
         </span>child_left,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
@@ -617,7 +649,8 @@
         ///
         /// Applies only to child views which have a `right` property set to `Auto`.
         </span>child_right,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
@@ -625,7 +658,8 @@
         ///
         /// Applies only to child views which have a `top` property set to `Auto`.
         </span>child_top,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
@@ -633,7 +667,8 @@
         ///
         /// Applies only to child views which have a `bottom` property set to `Auto`.
         </span>child_bottom,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="doccomment">/// Sets the space between the vew and its children.
@@ -648,8 +683,7 @@
             cx.style.child_top.insert(entity, value);
             cx.style.child_bottom.insert(entity, value);
 
-            cx.need_relayout();
-            cx.need_redraw();
+            cx.style.needs_relayout();
         });
 
         <span class="self">self
@@ -658,25 +692,29 @@
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the space between the views children in a vertical stack.
         </span>row_between,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the space between the views children in a horizontal stack.
         </span>col_between,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the minimum width of the view.
         </span>min_width,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the minimum height of the view.
         </span>min_height,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="doccomment">/// Sets the minimum width and minimum height of the view.
@@ -687,8 +725,7 @@
             cx.style.min_width.insert(entity, value);
             cx.style.min_height.insert(entity, value);
 
-            cx.need_relayout();
-            cx.need_redraw();
+            cx.needs_relayout();
         });
 
         <span class="self">self
@@ -697,13 +734,15 @@
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the maximum width of the view.
         </span>max_width,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the maximum height of the view.
         </span>max_height,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="doccomment">/// Sets the maximum width and maximum height of the view.
@@ -714,8 +753,7 @@
             cx.style.max_width.insert(entity, value);
             cx.style.max_height.insert(entity, value);
 
-            cx.need_relayout();
-            cx.need_redraw();
+            cx.needs_relayout();
         });
 
         <span class="self">self
@@ -724,25 +762,29 @@
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the minimum left space of the view.
         </span>min_left,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the minimum right space of the view.
         </span>min_right,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the minimum top space of the view.
         </span>min_top,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the minimum bottom space of the view.
         </span>min_bottom,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="doccomment">/// Sets the minimum space for all sides of the view.
@@ -755,8 +797,7 @@
             cx.style.min_top.insert(entity, value);
             cx.style.min_bottom.insert(entity, value);
 
-            cx.need_relayout();
-            cx.need_redraw();
+            cx.style.needs_relayout();
         });
 
         <span class="self">self
@@ -765,25 +806,29 @@
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the maximum left space of the view.
         </span>max_left,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the maximum right space of the view.
         </span>max_right,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the maximum top space of the view.
         </span>max_top,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the maximum bottom space of the view.
         </span>max_bottom,
-        Units
+        Units,
+        SystemFlags::RELAYOUT
     );
 
     <span class="doccomment">/// Sets the maximum space for all sides of the view.
@@ -796,8 +841,7 @@
             cx.style.max_top.insert(entity, value);
             cx.style.max_bottom.insert(entity, value);
 
-            cx.need_relayout();
-            cx.need_redraw();
+            cx.style.needs_relayout();
         });
 
         <span class="self">self
@@ -807,7 +851,7 @@
     </span><span class="kw">fn </span>grid_rows(<span class="kw-2">mut </span><span class="self">self</span>, rows: Vec&lt;Units&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
         <span class="self">self</span>.context().style.grid_rows.insert(entity, rows);
-        <span class="self">self</span>.context().need_relayout();
+        <span class="self">self</span>.context().needs_relayout();
         <span class="self">self
     </span>}
 
@@ -815,7 +859,7 @@
     </span><span class="kw">fn </span>grid_cols(<span class="kw-2">mut </span><span class="self">self</span>, cols: Vec&lt;Units&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
         <span class="self">self</span>.context().style.grid_cols.insert(entity, cols);
-        <span class="self">self</span>.context().need_relayout();
+        <span class="self">self</span>.context().needs_relayout();
         <span class="self">self
     </span>}
 
@@ -824,28 +868,32 @@
         ///
         /// This index relates to the grid rows of the parent view when the parent layout type is set to `Grid`.
         </span>row_index,
-        usize
+        usize,
+        SystemFlags::RELAYOUT
     );
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the grid row span of the view.
         ///
         /// This relates to the range of occupied grid rows of the parent view when the parent layout type is set to `Grid`.
         </span>row_span,
-        usize
+        usize,
+        SystemFlags::RELAYOUT
     );
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the grid column index of the view.
         ///
         /// This index relates to the grid columns of the parent view when the parent layout type is set to `Grid`.
         </span>col_index,
-        usize
+        usize,
+        SystemFlags::RELAYOUT
     );
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the grid column span of the view.
         ///
         /// This relates to the range of occupied grid columns of the parent view when the parent layout type is set to `Grid`.
         </span>col_span,
-        usize
+        usize,
+        SystemFlags::RELAYOUT
     );
 }
 

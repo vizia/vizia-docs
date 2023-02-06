@@ -295,8 +295,39 @@
 <a href="#295" id="295">295</a>
 <a href="#296" id="296">296</a>
 <a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::internal;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::style::SystemFlags;
 
 <span class="doccomment">/// Modifiers for changing the style properties of a view.
 </span><span class="kw">pub trait </span>StyleModifiers: internal::Modifiable {
@@ -321,7 +352,7 @@
         <span class="kw">let </span>id = id.into();
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
         <span class="self">self</span>.context().style.ids.insert(entity, id.clone()).expect(<span class="string">&quot;Could not insert id&quot;</span>);
-        <span class="self">self</span>.context().need_restyle();
+        <span class="self">self</span>.context().needs_restyle();
 
         <span class="self">self</span>.context().entity_identifiers.insert(id, entity);
 
@@ -335,7 +366,7 @@
             class_list.insert(name.to_string());
         }
 
-        <span class="self">self</span>.context().need_restyle();
+        <span class="self">self</span>.context().needs_restyle();
 
         <span class="self">self
     </span>}
@@ -353,7 +384,7 @@
                 }
             }
 
-            cx.need_restyle();
+            cx.needs_restyle();
         });
 
         <span class="self">self
@@ -374,7 +405,7 @@
                 cx.style.pseudo_classes.insert(entity, pseudoclass).unwrap();
             }
 
-            cx.need_restyle();
+            cx.needs_restyle();
         });
 
         <span class="self">self
@@ -385,7 +416,8 @@
         ///
         /// This property is inherited by the descendants of the view.
         </span>disabled,
-        bool
+        bool,
+        SystemFlags::RESTYLE
     );
 
     <span class="macro">modifier!</span>(
@@ -393,7 +425,8 @@
         ///
         /// A display value of `Display::None` causes the view to be ignored by both layout and rendering.
         </span>display,
-        Display
+        Display,
+        SystemFlags::REHIDE | SystemFlags::RELAYOUT | SystemFlags::REDRAW
     );
 
     <span class="macro">modifier!</span>(
@@ -401,38 +434,48 @@
         ///
         /// The layout system will still compute the size and position of an invisible view.
         </span>visibility,
-        Visibility
+        Visibility,
+        SystemFlags::REHIDE | SystemFlags::REDRAW
     );
 
-    <span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the z-order index of the view.
-        ///
-        /// Views with a higher z-order will be rendered on top of those with a lower z-order.
-        /// Views with the same z-order are rendered in tree order.
-        </span>z_order,
-        i32
-    );
+    <span class="doccomment">/// Sets the z-order index of the view.
+    ///
+    /// Views with a higher z-order will be rendered on top of those with a lower z-order.
+    /// Views with the same z-order are rendered in tree order.
+    </span><span class="kw">fn </span>z_order&lt;U: Into&lt;i32&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+            <span class="kw">let </span>value = v.into();
+            cx.tree.set_z_order(entity, value);
+            cx.needs_redraw();
+        });
+
+        <span class="self">self
+    </span>}
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the overflow behavior of the view.
         ///
         /// The overflow behavior determines whether child views can render outside the bounds of their parent.
         </span>overflow,
-        Overflow
+        Overflow,
+        SystemFlags::RECLIP | SystemFlags::REDRAW
     );
 
     <span class="comment">// Background Properties
     </span><span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the background color of the view.
         </span>background_color,
-        Color
+        Color,
+        SystemFlags::REDRAW
     );
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the background image of the view.
         ///
         /// Background image will override any background gradient or color.
         </span>background_image,
-        String
+        String,
+        SystemFlags::REDRAW
     );
 
     <span class="comment">// TODO: Docs for this.
@@ -444,12 +487,12 @@
                 <span class="kw">if </span>prev_data != <span class="kw-2">&amp;</span>val {
                     cx.style.image.insert(entity, val);
                     cx.style.needs_text_layout.insert(entity, <span class="bool-val">true</span>).unwrap();
-                    cx.need_redraw();
+                    cx.needs_redraw();
                 }
             } <span class="kw">else </span>{
                 cx.style.image.insert(entity, val);
                 cx.style.needs_text_layout.insert(entity, <span class="bool-val">true</span>).unwrap();
-                cx.need_redraw();
+                cx.needs_redraw();
             }
         });
 
@@ -460,34 +503,40 @@
     </span><span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the border width of the view.
         </span>border_width,
-        Units
+        Units,
+        SystemFlags::RELAYOUT | SystemFlags::REDRAW
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the border color of the view.
         </span>border_color,
-        Color
+        Color,
+        SystemFlags::REDRAW
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the border radius for the top-left corner of the view.
         </span>border_radius_top_left,
-        Units
+        Units,
+        SystemFlags::REDRAW
     );
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the border radius for the top-right corner of the view.
         </span>border_radius_top_right,
-        Units
+        Units,
+        SystemFlags::REDRAW
     );
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the border radius for the bottom-left corner of the view.
         </span>border_radius_bottom_left,
-        Units
+        Units,
+        SystemFlags::REDRAW
     );
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the border radius for the bottom-right corner of the view.
         </span>border_radius_bottom_right,
-        Units
+        Units,
+        SystemFlags::REDRAW
     );
 
     <span class="doccomment">/// Sets the border radius for all four corners of the view.
@@ -500,7 +549,7 @@
             cx.style.border_radius_bottom_left.insert(entity, value);
             cx.style.border_radius_bottom_right.insert(entity, value);
 
-            cx.need_redraw();
+            cx.needs_redraw();
         });
 
         <span class="self">self
@@ -509,22 +558,26 @@
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the border corner shape for the top-left corner of the view.
         </span>border_shape_top_left,
-        BorderCornerShape
+        BorderCornerShape,
+        SystemFlags::REDRAW
     );
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the border corner shape for the top-right corner of the view.
         </span>border_shape_top_right,
-        BorderCornerShape
+        BorderCornerShape,
+        SystemFlags::REDRAW
     );
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the border corner shape for the bottom-left corner of the view.
         </span>border_shape_bottom_left,
-        BorderCornerShape
+        BorderCornerShape,
+        SystemFlags::REDRAW
     );
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the border corner shape for the bottom-right corner of the view.
         </span>border_shape_bottom_right,
-        BorderCornerShape
+        BorderCornerShape,
+        SystemFlags::REDRAW
     );
 
     <span class="doccomment">/// Sets the border corner shape for all four corners of the view.
@@ -537,7 +590,7 @@
             cx.style.border_shape_bottom_left.insert(entity, value);
             cx.style.border_shape_bottom_right.insert(entity, value);
 
-            cx.need_redraw();
+            cx.needs_redraw();
         });
 
         <span class="self">self
@@ -547,24 +600,28 @@
     </span><span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the outline width of the view.
         </span>outline_width,
-        Units
+        Units,
+        SystemFlags::REDRAW
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the outline color of the view.
         </span>outline_color,
-        Color
+        Color,
+        SystemFlags::REDRAW
     );
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the outline offset of the view.
         </span>outline_offset,
-        Units
+        Units,
+        SystemFlags::REDRAW
     );
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the mouse cursor used when the view is hovered.
         </span>cursor,
-        CursorIcon
+        CursorIcon,
+        SystemFlags::empty()
     );
 
     <span class="comment">// Transform Properties
@@ -573,21 +630,24 @@
         ///
         /// Rotation applies to the rendered view and does not affect layout.
         </span>rotate,
-        f32
+        f32,
+        SystemFlags::RETRANSFORM | SystemFlags::REDRAW
     );
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the translation offset of the view.
         ///
         /// Translation applies to the rendered view and does not affect layout.
         </span>translate,
-        (f32, f32)
+        (f32, f32),
+        SystemFlags::RETRANSFORM | SystemFlags::REDRAW
     );
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the scale of the view.
         ///
         /// Scale applies to the rendered view and does not affect layout.
         </span>scale,
-        (f32, f32)
+        (f32, f32),
+        SystemFlags::RETRANSFORM | SystemFlags::REDRAW
     );
 }
 

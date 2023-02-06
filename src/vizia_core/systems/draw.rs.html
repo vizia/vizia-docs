@@ -96,14 +96,10 @@
 <a href="#96" id="96">96</a>
 <a href="#97" id="97">97</a>
 <a href="#98" id="98">98</a>
-<a href="#99" id="99">99</a>
-<a href="#100" id="100">100</a>
-<a href="#101" id="101">101</a>
-<a href="#102" id="102">102</a>
-<a href="#103" id="103">103</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::Context;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>vizia_id::GenerationalId;
+<span class="kw">use </span>vizia_storage::DrawIterator;
 
 <span class="kw">pub fn </span>draw_system(cx: <span class="kw-2">&amp;mut </span>Context) {
     <span class="kw">let </span>canvas = cx.canvases.get_mut(<span class="kw-2">&amp;</span>Entity::root()).unwrap();
@@ -117,29 +113,23 @@
         cx.style.background_color.get(Entity::root()).cloned().unwrap_or(Color::white());
     canvas.clear_rect(<span class="number">0</span>, <span class="number">0</span>, window_width <span class="kw">as </span>u32, window_height <span class="kw">as </span>u32, clear_color.into());
 
-    <span class="comment">// filter for widgets that should be drawn
-    </span><span class="kw">let </span>tree_iter = cx.tree.into_iter();
-    <span class="kw">let </span><span class="kw-2">mut </span>draw_tree: Vec&lt;Entity&gt; = tree_iter
-        .filter(|<span class="kw-2">&amp;</span>entity| {
-            entity != Entity::root()
-                &amp;&amp; cx.cache.get_visibility(entity) != Visibility::Invisible
-                &amp;&amp; cx.cache.get_display(entity) != Display::None
-                &amp;&amp; !cx.tree.is_ignored(entity)
-                &amp;&amp; cx.cache.get_opacity(entity) &gt; <span class="number">0.0
-                </span>&amp;&amp; {
-                    <span class="kw">let </span>bounds = cx.cache.get_bounds(entity);
-                    !(bounds.x &gt; window_width
-                        || bounds.y &gt; window_height
-                        || bounds.x + bounds.w &lt;= <span class="number">0.0
-                        </span>|| bounds.y + bounds.h &lt;= <span class="number">0.0</span>)
-                }
-        })
-        .collect();
+    <span class="kw">let </span><span class="kw-2">mut </span>draw_tree = DrawIterator::full(<span class="kw-2">&amp;</span>cx.tree);
 
-    <span class="comment">// Sort the tree by z order
-    </span>draw_tree.sort_by_cached_key(|entity| cx.cache.get_z_index(<span class="kw-2">*</span>entity));
+    <span class="kw">while let </span><span class="prelude-val">Some</span>(entity) = draw_tree.next() {
+        <span class="kw">let </span>window_bounds = cx.cache.get_bounds(Entity::root());
 
-    <span class="kw">for </span>entity <span class="kw">in </span>draw_tree.into_iter() {
+        <span class="comment">// Skip if the entity is invisible or out of bounds
+        // Unfortunately we can&#39;t skip the subtree because even if a parent is invisible
+        // a child might be explicitly set to be visible.
+        </span><span class="kw">if </span>entity == Entity::root()
+            || cx.cache.get_visibility(entity) == Visibility::Invisible
+            || cx.cache.get_display(entity) == Display::None
+            || cx.cache.get_opacity(entity) == <span class="number">0.0
+            </span>|| !window_bounds.contains(<span class="kw-2">&amp;</span>cx.cache.get_bounds(entity))
+        {
+            <span class="kw">continue</span>;
+        }
+
         <span class="comment">// Apply clipping
         </span><span class="kw">let </span>clip_region = cx.cache.get_clip_region(entity);
 

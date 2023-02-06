@@ -470,7 +470,7 @@
     <span class="kw">pub </span>cache: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>CachedData,
     <span class="kw">pub </span>draw_cache: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>DrawCache,
     <span class="kw">pub </span>tree: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Tree&lt;Entity&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>SparseSet&lt;ModelDataStore&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>SparseSet&lt;ModelDataStore&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) views: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
     listeners:
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>ViewHandler, <span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event)&gt;&gt;,
@@ -499,7 +499,7 @@
             cache: <span class="kw-2">&amp;</span>cx.cache,
             draw_cache: <span class="kw-2">&amp;</span>cx.draw_cache,
             tree: <span class="kw-2">&amp;</span>cx.tree,
-            data: <span class="kw-2">&amp;</span>cx.data,
+            data: <span class="kw-2">&amp;mut </span>cx.data,
             views: <span class="kw-2">&amp;mut </span>cx.views,
             listeners: <span class="kw-2">&amp;mut </span>cx.listeners,
             resource_manager: <span class="kw-2">&amp;</span>cx.resource_manager,
@@ -551,7 +551,7 @@
             pseudo_classes.set(PseudoClass::ACTIVE, active);
         }
 
-        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_restyle();
     }
 
     <span class="doccomment">/// Capture mouse input for the current entity.
@@ -611,7 +611,7 @@
         }
         <span class="self">self</span>.set_focus_pseudo_classes(new_focus, <span class="bool-val">true</span>, focus_visible);
 
-        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_restyle();
     }
 
     <span class="doccomment">/// Sets application focus to the current entity using the previous focus visibility.
@@ -675,7 +675,7 @@
             pseudo_classes.set(PseudoClass::HOVER, flag);
         }
 
-        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_restyle();
     }
 
     <span class="doccomment">/// Sets the checked flag of the current entity.
@@ -685,7 +685,7 @@
             pseudo_classes.set(PseudoClass::CHECKED, flag);
         }
 
-        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_restyle();
     }
 
     <span class="doccomment">/// Sets the checked flag of the current entity.
@@ -695,7 +695,7 @@
             pseudo_classes.set(PseudoClass::SELECTED, flag);
         }
 
-        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_restyle();
     }
 
     <span class="doccomment">/// Get the contents of the system clipboard. This may fail for a variety of backend-specific
@@ -729,7 +729,7 @@
             <span class="self">self</span>.style.classes.insert(current, class_list).expect(<span class="string">&quot;Failed to insert class name&quot;</span>);
         }
 
-        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_restyle();
     }
 
     <span class="kw">pub fn </span>play_animation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, animation: Animation) {
@@ -741,12 +741,12 @@
     }
 
     <span class="kw">pub fn </span>needs_redraw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_redraw();
     }
 
     <span class="kw">pub fn </span>needs_relayout(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="self">self</span>.style.needs_relayout = <span class="bool-val">true</span>;
-        <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_relayout();
+        <span class="self">self</span>.style.needs_redraw();
     }
 
     <span class="kw">pub fn </span>reload_styles(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), std::io::Error&gt; {
@@ -775,9 +775,9 @@
 
         <span class="self">self</span>.style.parse_theme(<span class="kw-2">&amp;</span>overall_theme);
 
-        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
-        <span class="self">self</span>.style.needs_relayout = <span class="bool-val">true</span>;
-        <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_restyle();
+        <span class="self">self</span>.style.needs_relayout();
+        <span class="self">self</span>.style.needs_redraw();
 
         <span class="prelude-val">Ok</span>(())
     }

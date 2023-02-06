@@ -56,14 +56,13 @@
 <a href="#56" id="56">56</a>
 <a href="#57" id="57">57</a>
 <a href="#58" id="58">58</a>
-<a href="#59" id="59">59</a>
 </pre><pre class="rust"><code><span class="doccomment">//! Methods on views for changing their style properties or for adding actions.
 
 </span><span class="comment">// Macro used within modifier traits to set style properties.
 </span><span class="macro">macro_rules! </span>modifier {
     (
         $(<span class="attr">#[<span class="macro-nonterminal">$meta</span>:meta]</span>)*
-        <span class="macro-nonterminal">$name</span>:ident, <span class="macro-nonterminal">$t</span>:ty
+        <span class="macro-nonterminal">$name</span>:ident, <span class="macro-nonterminal">$t</span>:ty, <span class="macro-nonterminal">$flags</span>:expr
     ) =&gt; {
         $(<span class="attr">#[<span class="macro-nonterminal">$meta</span>]</span>)*
         <span class="attr">#[allow(unused_variables)]
@@ -72,8 +71,7 @@
             value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
                 cx.style.<span class="macro-nonterminal">$name</span>.insert(entity, v.into());
 
-                cx.need_relayout();
-                cx.need_redraw();
+                cx.style.system_flags |= <span class="macro-nonterminal">$flags</span>;
             });
 
             <span class="self">self

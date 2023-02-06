@@ -576,16 +576,7 @@
 <a href="#576" id="576">576</a>
 <a href="#577" id="577">577</a>
 <a href="#578" id="578">578</a>
-<a href="#579" id="579">579</a>
-<a href="#580" id="580">580</a>
-<a href="#581" id="581">581</a>
-<a href="#582" id="582">582</a>
-<a href="#583" id="583">583</a>
-<a href="#584" id="584">584</a>
-<a href="#585" id="585">585</a>
-<a href="#586" id="586">586</a>
-<a href="#587" id="587">587</a>
-</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::InternalEvent;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
 <span class="kw">use </span><span class="kw">crate</span>::events::EventMeta;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="attr">#[cfg(debug_assertions)]
@@ -608,14 +599,11 @@
 </span><span class="kw">pub struct </span>EventManager {
     <span class="comment">// Queue of events to be processed
     </span>event_queue: Vec&lt;Event&gt;,
-
-    <span class="comment">// A copy of the tree for iteration
-    </span>tree: Tree&lt;Entity&gt;,
 }
 
 <span class="kw">impl </span>EventManager {
     <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
-        EventManager { event_queue: Vec::new(), tree: Tree::new() }
+        EventManager { event_queue: Vec::new() }
     }
 
     <span class="doccomment">/// Flush the event queue, dispatching events to their targets.
@@ -627,18 +615,14 @@
         <span class="comment">// Move events from state to event manager
         </span><span class="self">self</span>.event_queue.extend(context.event_queue.drain(<span class="number">0</span>..));
 
-        <span class="kw">if </span>context.tree.changed {
-            <span class="self">self</span>.tree = context.tree.clone();
-        }
-
         <span class="comment">// Loop over the events in the event queue
         </span><span class="lifetime">&#39;events</span>: <span class="kw">for </span>event <span class="kw">in </span><span class="self">self</span>.event_queue.iter_mut() {
             <span class="comment">// handle internal events
             </span>event.map(|internal_event, <span class="kw">_</span>| <span class="kw">match </span>internal_event {
-                InternalEvent::Redraw =&gt; context.need_redraw(),
+                InternalEvent::Redraw =&gt; context.needs_redraw(),
                 InternalEvent::LoadImage { path, image, policy } =&gt; {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(image) = image.lock().unwrap().take() {
-                        context.load_image(path.clone(), image, <span class="kw-2">*</span>policy);
+                        ResourceContext::new(context).load_image(path.clone(), image, <span class="kw-2">*</span>policy);
                     }
                 }
             });
@@ -688,6 +672,8 @@
                 }
             }
 
+            <span class="kw">let </span>context = <span class="kw-2">&amp;mut </span>EventContext::new(context);
+
             <span class="comment">// Define the target to prevent multiple mutable borrows error
             </span><span class="kw">let </span>target = event.meta.target;
 
@@ -701,7 +687,7 @@
             <span class="comment">// Propagate up from target to root (not including target)
             </span><span class="kw">if </span>event.meta.propagation == Propagation::Up {
                 <span class="comment">// Walk up the tree from parent to parent
-                </span><span class="kw">for </span>entity <span class="kw">in </span>target.parent_iter(<span class="kw-2">&amp;</span><span class="self">self</span>.tree) {
+                </span><span class="kw">for </span>entity <span class="kw">in </span>target.parent_iter(<span class="kw-2">&amp;</span>context.tree) {
                     <span class="comment">// Skip the target entity
                     </span><span class="kw">if </span>entity == event.meta.target {
                         <span class="kw">continue</span>;
@@ -718,7 +704,7 @@
             }
 
             <span class="kw">if </span>event.meta.propagation == Propagation::Subtree {
-                <span class="kw">for </span>entity <span class="kw">in </span>target.branch_iter(<span class="kw-2">&amp;</span><span class="self">self</span>.tree) {
+                <span class="kw">for </span>entity <span class="kw">in </span>target.branch_iter(<span class="kw-2">&amp;</span>context.tree) {
                     <span class="comment">// Skip the target entity
                     </span><span class="kw">if </span>entity == event.meta.target {
                         <span class="kw">continue</span>;
@@ -739,7 +725,7 @@
     }
 }
 
-<span class="kw">fn </span>visit_entity(cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, event: <span class="kw-2">&amp;mut </span>Event) {
+<span class="kw">fn </span>visit_entity(cx: <span class="kw-2">&amp;mut </span>EventContext, entity: Entity, event: <span class="kw-2">&amp;mut </span>Event) {
     <span class="comment">// Send event to models attached to the entity
     </span><span class="kw">if let </span><span class="prelude-val">Some</span>(ids) = cx.data.get(entity).and_then(|model_data_store| {
         <span class="prelude-val">Some</span>(model_data_store.models.keys().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;())
@@ -750,10 +736,9 @@
                 .get_mut(entity)
                 .and_then(|model_data_store| model_data_store.models.remove(<span class="kw-2">&amp;</span>id))
             {
-                <span class="kw">let </span><span class="kw-2">mut </span>context = EventContext::new(cx);
-                context.current = entity;
+                cx.current = entity;
 
-                model.event(<span class="kw-2">&amp;mut </span>context, event);
+                model.event(cx, event);
 
                 cx.data
                     .get_mut(entity)
@@ -769,11 +754,12 @@
 
     <span class="comment">// Send event to the view attached to the entity
     </span><span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>view) = cx.views.remove(<span class="kw-2">&amp;</span>entity) {
-        cx.with_current(entity, |cx| {
-            view.event(<span class="kw-2">&amp;mut </span>EventContext::new(cx), event);
-        });
+        <span class="comment">// cx.with_current(entity, |cx| {
+        </span>cx.current = entity;
+        view.event(cx, event);
+        <span class="comment">// });
 
-        cx.views.insert(entity, view);
+        </span>cx.views.insert(entity, view);
     }
 }
 
@@ -897,7 +883,7 @@
                 {
                     pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">false</span>);
                 }
-                context.need_restyle();
+                context.needs_restyle();
 
                 context.triggered = Entity::null();
             }
@@ -1063,7 +1049,7 @@
                         {
                             pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">false</span>);
                         }
-                        context.need_restyle();
+                        context.needs_restyle();
                         context.triggered = Entity::null();
                     }
                 } <span class="kw">else </span>{
@@ -1095,15 +1081,11 @@
                         {
                             pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">false</span>);
                         }
-                        context.need_restyle();
+                        context.needs_restyle();
                         context.triggered = Entity::null();
                     }
                 }
-
-                <span class="comment">// context.style.needs_relayout = true;
-                // context.style.needs_redraw = true;
-                // context.style.needs_restyle = true;
-            </span>}
+            }
 
             <span class="kw">if </span><span class="macro">matches!</span>(<span class="kw-2">*</span>code, Code::Enter | Code::NumpadEnter | Code::Space) {
                 context.triggered = context.focused;
@@ -1130,7 +1112,7 @@
                 {
                     pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">false</span>);
                 }
-                context.need_restyle();
+                context.needs_restyle();
                 context.triggered = Entity::null();
             }
         }

@@ -279,14 +279,6 @@
 <a href="#279" id="279">279</a>
 <a href="#280" id="280">280</a>
 <a href="#281" id="281">281</a>
-<a href="#282" id="282">282</a>
-<a href="#283" id="283">283</a>
-<a href="#284" id="284">284</a>
-<a href="#285" id="285">285</a>
-<a href="#286" id="286">286</a>
-<a href="#287" id="287">287</a>
-<a href="#288" id="288">288</a>
-<a href="#289" id="289">289</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::collections::HashSet;
 
@@ -294,6 +286,7 @@
 <span class="kw">use </span>fnv::FnvHashMap;
 
 <span class="kw">use </span><span class="kw">super</span>::EventProxy;
+<span class="kw">use </span><span class="kw">crate</span>::style::SystemFlags;
 <span class="kw">use crate</span>::{
     cache::{BoundingBox, CachedData},
     environment::Environment,
@@ -520,16 +513,12 @@
     }
 
     <span class="kw">pub fn </span>process_style_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="comment">// Not ideal
-        </span><span class="kw">let </span>tree = <span class="self">self</span>.<span class="number">0</span>.tree.clone();
-
         <span class="comment">// Apply any inline style inheritance.
-        </span>inline_inheritance_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
+        </span>inline_inheritance_system(<span class="self">self</span>.<span class="number">0</span>);
 
-        <span class="comment">//
-        </span>style_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
+        style_system(<span class="self">self</span>.<span class="number">0</span>);
 
-        shared_inheritance_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
+        shared_inheritance_system(<span class="self">self</span>.<span class="number">0</span>);
 
         <span class="comment">// Load any unloaded images and remove unused images.
         </span>image_system(<span class="self">self</span>.<span class="number">0</span>);
@@ -542,29 +531,20 @@
 
     <span class="doccomment">/// Massages the style system until everything is coherent
     </span><span class="kw">pub fn </span>process_visual_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="comment">// Not ideal
-        </span><span class="kw">let </span>tree = <span class="self">self</span>.<span class="number">0</span>.tree.clone();
-
-        <span class="comment">// Apply z-order inheritance.
-        </span>z_ordering_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
-
         <span class="comment">// Apply visibility inheritance.
-        </span>visibility_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
+        </span>visibility_system(<span class="self">self</span>.<span class="number">0</span>);
 
         <span class="comment">// Perform layout.
-        </span>layout_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
+        </span>layout_system(<span class="self">self</span>.<span class="number">0</span>);
 
         <span class="comment">// Apply transform inheritance.
-        </span>transform_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
-
-        <span class="comment">// Determine hovered entity.
-        </span>hover_system(<span class="self">self</span>.<span class="number">0</span>);
+        </span>transform_system(<span class="self">self</span>.<span class="number">0</span>);
 
         <span class="comment">// Apply clipping inheritance.
-        </span>clipping_system(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
+        </span>clipping_system(<span class="self">self</span>.<span class="number">0</span>);
 
         <span class="comment">// Emit any geometry changed events.
-        </span>geometry_changed(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span>tree);
+        </span>geometry_changed(<span class="self">self</span>.<span class="number">0</span>);
     }
 
     <span class="kw">pub fn </span>emit_origin&lt;M: Send + Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M) {
@@ -574,6 +554,10 @@
                 .origin(Entity::root())
                 .propagate(Propagation::Up),
         );
+    }
+
+    <span class="kw">pub fn </span>needs_refresh(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.<span class="number">0</span>.style.system_flags = SystemFlags::all();
     }
 }
 </code></pre></div>

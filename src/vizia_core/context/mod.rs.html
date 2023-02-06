@@ -588,43 +588,15 @@
 <a href="#588" id="588">588</a>
 <a href="#589" id="589">589</a>
 <a href="#590" id="590">590</a>
-<a href="#591" id="591">591</a>
-<a href="#592" id="592">592</a>
-<a href="#593" id="593">593</a>
-<a href="#594" id="594">594</a>
-<a href="#595" id="595">595</a>
-<a href="#596" id="596">596</a>
-<a href="#597" id="597">597</a>
-<a href="#598" id="598">598</a>
-<a href="#599" id="599">599</a>
-<a href="#600" id="600">600</a>
-<a href="#601" id="601">601</a>
-<a href="#602" id="602">602</a>
-<a href="#603" id="603">603</a>
-<a href="#604" id="604">604</a>
-<a href="#605" id="605">605</a>
-<a href="#606" id="606">606</a>
-<a href="#607" id="607">607</a>
-<a href="#608" id="608">608</a>
-<a href="#609" id="609">609</a>
-<a href="#610" id="610">610</a>
-<a href="#611" id="611">611</a>
-<a href="#612" id="612">612</a>
-<a href="#613" id="613">613</a>
-<a href="#614" id="614">614</a>
-<a href="#615" id="615">615</a>
-<a href="#616" id="616">616</a>
-<a href="#617" id="617">617</a>
-<a href="#618" id="618">618</a>
 </pre><pre class="rust"><code><span class="kw">pub mod </span>backend;
 <span class="kw">mod </span>draw;
 <span class="kw">mod </span>event;
 <span class="kw">mod </span>proxy;
+<span class="kw">mod </span>resource;
 
 <span class="kw">use </span>instant::Instant;
 <span class="kw">use </span>std::any::{Any, TypeId};
-<span class="kw">use </span>std::collections::hash_map::Entry;
-<span class="kw">use </span>std::collections::{HashMap, HashSet, VecDeque};
+<span class="kw">use </span>std::collections::{HashMap, VecDeque};
 <span class="kw">use </span>std::iter::once;
 <span class="kw">use </span>std::path::Path;
 <span class="kw">use </span>std::sync::Mutex;
@@ -641,6 +613,7 @@
 <span class="kw">pub use </span>draw::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>event::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>proxy::<span class="kw-2">*</span>;
+<span class="kw">pub use </span>resource::<span class="kw-2">*</span>;
 
 <span class="kw">use </span><span class="kw">crate</span>::cache::CachedData;
 <span class="kw">use </span><span class="kw">crate</span>::environment::Environment;
@@ -648,7 +621,7 @@
 <span class="attr">#[cfg(feature = <span class="string">&quot;embedded_fonts&quot;</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::fonts;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::resource::{ImageOrId, ImageRetentionPolicy, ResourceManager, StoredImage};
+<span class="kw">use </span><span class="kw">crate</span>::resource::{ImageRetentionPolicy, ResourceManager};
 <span class="kw">use </span><span class="kw">crate</span>::state::{BindingHandler, ModelDataStore};
 <span class="kw">use </span><span class="kw">crate</span>::style::Style;
 <span class="kw">use </span><span class="kw">crate</span>::text::{TextConfig, TextContext};
@@ -660,6 +633,9 @@
 <span class="kw">static </span>DEFAULT_THEME: <span class="kw-2">&amp;</span>str = <span class="macro">include_str!</span>(<span class="string">&quot;../../resources/themes/default_theme.css&quot;</span>);
 <span class="kw">static </span>DEFAULT_LAYOUT: <span class="kw-2">&amp;</span>str = <span class="macro">include_str!</span>(<span class="string">&quot;../../resources/themes/default_layout.css&quot;</span>);
 
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>DataStore = SparseSet&lt;ModelDataStore&gt;;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>Views = FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>BindingHandler&gt;&gt;;
+
 <span class="doccomment">/// The main storage and control object for a Vizia application.
 ///
 /// This type is part of the prelude.
@@ -670,8 +646,8 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) current: Entity,
     <span class="doccomment">/// TODO make this private when there&#39;s no longer a need to mutate views after building
     </span><span class="kw">pub </span>views: FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) data: SparseSet&lt;ModelDataStore&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) bindings: FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>BindingHandler&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) data: DataStore,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) bindings: Views,
     <span class="kw">pub</span>(<span class="kw">crate</span>) event_queue: VecDeque&lt;Event&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) listeners:
         HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>ViewHandler, <span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event)&gt;&gt;,
@@ -801,9 +777,9 @@
             ignore_default_theme: <span class="bool-val">false</span>,
         };
 
-        result.style.needs_restyle = <span class="bool-val">true</span>;
-        result.style.needs_relayout = <span class="bool-val">true</span>;
-        result.style.needs_redraw = <span class="bool-val">true</span>;
+        result.style.needs_restyle();
+        result.style.needs_relayout();
+        result.style.needs_redraw();
 
         Environment::new().build(<span class="kw-2">&amp;mut </span>result);
 
@@ -856,18 +832,18 @@
     }
 
     <span class="doccomment">/// Mark the application as needing to rerun the draw method
-    </span><span class="kw">pub fn </span>need_redraw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
+    </span><span class="kw">pub fn </span>needs_redraw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.style.needs_redraw();
     }
 
     <span class="doccomment">/// Mark the application as needing to recompute view styles
-    </span><span class="kw">pub fn </span>need_restyle(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
+    </span><span class="kw">pub fn </span>needs_restyle(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.style.needs_restyle();
     }
 
     <span class="doccomment">/// Mark the application as needing to rerun layout computations
-    </span><span class="kw">pub fn </span>need_relayout(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="self">self</span>.style.needs_relayout = <span class="bool-val">true</span>;
+    </span><span class="kw">pub fn </span>needs_relayout(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.style.needs_relayout();
     }
 
     <span class="doccomment">/// Enables or disables pseudoclasses for the focus of an entity
@@ -920,7 +896,7 @@
         }
         <span class="self">self</span>.set_focus_pseudo_classes(new_focus, <span class="bool-val">true</span>, focus_visible);
 
-        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_restyle();
     }
 
     <span class="doccomment">/// Sets application focus to the current entity using the previous focus visibility
@@ -942,7 +918,7 @@
             pseudo_classes.set(PseudoClass::SELECTED, flag);
         }
 
-        <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
+        <span class="self">self</span>.style.needs_restyle();
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>remove_children(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
@@ -956,9 +932,9 @@
         <span class="kw">let </span>delete_list = entity.branch_iter(<span class="kw-2">&amp;</span><span class="self">self</span>.tree).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
         <span class="kw">if </span>!delete_list.is_empty() {
-            <span class="self">self</span>.style.needs_restyle = <span class="bool-val">true</span>;
-            <span class="self">self</span>.style.needs_relayout = <span class="bool-val">true</span>;
-            <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
+            <span class="self">self</span>.style.needs_restyle();
+            <span class="self">self</span>.style.needs_relayout();
+            <span class="self">self</span>.style.needs_redraw();
         }
 
         <span class="kw">for </span>entity <span class="kw">in </span>delete_list.iter().rev() {
@@ -1107,40 +1083,8 @@
         AnimationBuilder::new(id, <span class="self">self</span>, duration)
     }
 
-    <span class="kw">pub fn </span>set_image_loader&lt;F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, <span class="kw-2">&amp;</span>str)&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, loader: F) {
+    <span class="kw">pub fn </span>set_image_loader&lt;F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>ResourceContext, <span class="kw-2">&amp;</span>str)&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, loader: F) {
         <span class="self">self</span>.resource_manager.image_loader = <span class="prelude-val">Some</span>(Box::new(loader));
-    }
-
-    <span class="kw">pub fn </span>load_image(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        path: String,
-        image: image::DynamicImage,
-        policy: ImageRetentionPolicy,
-    ) {
-        <span class="kw">match </span><span class="self">self</span>.resource_manager.images.entry(path) {
-            Entry::Occupied(<span class="kw-2">mut </span>occ) =&gt; {
-                occ.get_mut().image = ImageOrId::Image(
-                    image,
-                    femtovg::ImageFlags::REPEAT_X | femtovg::ImageFlags::REPEAT_Y,
-                );
-                occ.get_mut().dirty = <span class="bool-val">true</span>;
-                occ.get_mut().retention_policy = policy;
-            }
-            Entry::Vacant(vac) =&gt; {
-                vac.insert(StoredImage {
-                    image: ImageOrId::Image(
-                        image,
-                        femtovg::ImageFlags::REPEAT_X | femtovg::ImageFlags::REPEAT_Y,
-                    ),
-                    retention_policy: policy,
-                    used: <span class="bool-val">true</span>,
-                    dirty: <span class="bool-val">false</span>,
-                    observers: HashSet::new(),
-                });
-            }
-        }
-        <span class="self">self</span>.need_relayout();
-        <span class="self">self</span>.style.needs_redraw = <span class="bool-val">true</span>;
     }
 
     <span class="kw">pub fn </span>add_translation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, lang: LanguageIdentifier, ftl: String) {

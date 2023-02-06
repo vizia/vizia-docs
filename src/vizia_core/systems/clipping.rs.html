@@ -58,65 +58,77 @@
 <a href="#58" id="58">58</a>
 <a href="#59" id="59">59</a>
 <a href="#60" id="60">60</a>
-</pre><pre class="rust"><code><span class="kw">use crate</span>::{cache::BoundingBox, prelude::<span class="kw-2">*</span>};
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::style::SystemFlags;
+<span class="kw">use crate</span>::{cache::BoundingBox, prelude::<span class="kw-2">*</span>};
 <span class="kw">use </span>vizia_id::GenerationalId;
 
 <span class="comment">// Iterate tree and apply clip region to nodes based on specified clip widget and parent clip region.
-</span><span class="kw">pub fn </span>clipping_system(cx: <span class="kw-2">&amp;mut </span>Context, tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;) {
-    <span class="kw">for </span>entity <span class="kw">in </span>tree.into_iter() {
-        <span class="kw">if </span>entity == Entity::root() {
-            <span class="kw">continue</span>;
-        }
+</span><span class="kw">pub fn </span>clipping_system(cx: <span class="kw-2">&amp;mut </span>Context) {
+    <span class="kw">if </span>cx.style.system_flags.contains(SystemFlags::RECLIP) {
+        <span class="kw">for </span>entity <span class="kw">in </span>cx.tree.into_iter() {
+            <span class="kw">if </span>entity == Entity::root() {
+                <span class="kw">continue</span>;
+            }
 
-        <span class="kw">if </span>tree.is_ignored(entity) {
-            <span class="kw">continue</span>;
-        }
+            <span class="kw">if </span>cx.tree.is_ignored(entity) {
+                <span class="kw">continue</span>;
+            }
 
-        <span class="kw">let </span>parent = tree.get_layout_parent(entity).unwrap();
+            <span class="kw">let </span>parent = cx.tree.get_layout_parent(entity).unwrap();
 
-        <span class="kw">let </span>parent_clip_region = cx.cache.get_clip_region(parent);
+            <span class="kw">let </span>parent_clip_region = cx.cache.get_clip_region(parent);
 
-        <span class="kw">let </span>overflow = cx.style.overflow.get(entity).cloned().unwrap_or_default();
+            <span class="kw">let </span>overflow = cx.style.overflow.get(entity).cloned().unwrap_or_default();
 
-        <span class="kw">let </span>clip_region = <span class="kw">if </span>overflow == Overflow::Hidden {
-            <span class="kw">let </span>clip_widget = cx.style.clip_widget.get(entity).cloned().unwrap_or(entity);
+            <span class="kw">let </span>clip_region = <span class="kw">if </span>overflow == Overflow::Hidden {
+                <span class="kw">let </span>clip_widget = cx.style.clip_widget.get(entity).cloned().unwrap_or(entity);
 
-            <span class="kw">let </span>clip_x = cx.cache.get_posx(clip_widget);
-            <span class="kw">let </span>clip_y = cx.cache.get_posy(clip_widget);
-            <span class="kw">let </span>clip_w = cx.cache.get_width(clip_widget);
-            <span class="kw">let </span>clip_h = cx.cache.get_height(clip_widget);
+                <span class="kw">let </span>clip_x = cx.cache.get_posx(clip_widget);
+                <span class="kw">let </span>clip_y = cx.cache.get_posy(clip_widget);
+                <span class="kw">let </span>clip_w = cx.cache.get_width(clip_widget);
+                <span class="kw">let </span>clip_h = cx.cache.get_height(clip_widget);
 
-            <span class="kw">let </span><span class="kw-2">mut </span>intersection = BoundingBox::default();
-            intersection.x = clip_x.max(parent_clip_region.x);
-            intersection.y = clip_y.max(parent_clip_region.y);
+                <span class="kw">let </span><span class="kw-2">mut </span>intersection = BoundingBox::default();
+                intersection.x = clip_x.max(parent_clip_region.x);
+                intersection.y = clip_y.max(parent_clip_region.y);
 
-            intersection.w = <span class="kw">if </span>clip_x + clip_w &lt; parent_clip_region.x + parent_clip_region.w {
-                clip_x + clip_w - intersection.x
+                intersection.w = <span class="kw">if </span>clip_x + clip_w &lt; parent_clip_region.x + parent_clip_region.w {
+                    clip_x + clip_w - intersection.x
+                } <span class="kw">else </span>{
+                    parent_clip_region.x + parent_clip_region.w - intersection.x
+                };
+
+                intersection.h = <span class="kw">if </span>clip_y + clip_h &lt; parent_clip_region.y + parent_clip_region.h {
+                    clip_y + clip_h - intersection.y
+                } <span class="kw">else </span>{
+                    parent_clip_region.y + parent_clip_region.h - intersection.y
+                };
+
+                intersection.w = intersection.w.max(<span class="number">0.0</span>);
+                intersection.h = intersection.h.max(<span class="number">0.0</span>);
+
+                intersection
             } <span class="kw">else </span>{
-                parent_clip_region.x + parent_clip_region.w - intersection.x
+                parent_clip_region
             };
 
-            intersection.h = <span class="kw">if </span>clip_y + clip_h &lt; parent_clip_region.y + parent_clip_region.h {
-                clip_y + clip_h - intersection.y
-            } <span class="kw">else </span>{
-                parent_clip_region.y + parent_clip_region.h - intersection.y
-            };
+            <span class="comment">// Absolute positioned nodes ignore overflow hidden
+            //if position_type == PositionType::SelfDirected {
+            //    cx.cache().set_clip_region(entity, root_clip_region);
+            //} else {
+            </span>cx.cache.set_clip_region(entity, clip_region);
+            <span class="comment">//}
+        </span>}
 
-            intersection.w = intersection.w.max(<span class="number">0.0</span>);
-            intersection.h = intersection.h.max(<span class="number">0.0</span>);
-
-            intersection
-        } <span class="kw">else </span>{
-            parent_clip_region
-        };
-
-        <span class="comment">// Absolute positioned nodes ignore overflow hidden
-        //if position_type == PositionType::SelfDirected {
-        //    cx.cache().set_clip_region(entity, root_clip_region);
-        //} else {
-        </span>cx.cache.set_clip_region(entity, clip_region);
-        <span class="comment">//}
-    </span>}
+        <span class="comment">// If clipping has changed then redraw
+        </span>cx.style.system_flags.set(SystemFlags::REDRAW, <span class="bool-val">true</span>);
+    }
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.67.0 (fc594f156 2023-01-24)" data-search-js="search-444266647c4dba98.js" data-settings-js="settings-bebeae96e00e4617.js" data-settings-css="settings-af96d9e2fc13e081.css" ></div></body></html>

@@ -399,8 +399,8 @@
 <span class="kw">use </span><span class="kw">crate</span>::style::Style;
 <span class="kw">use </span>cosmic_text::{
     fontdb::{Database, Query},
-    Attrs, AttrsList, Buffer, CacheKey, Color <span class="kw">as </span>FontColor, Edit, Editor, Family, FontSystem,
-    Metrics, SubpixelBin, Wrap,
+    Attrs, AttrsList, Buffer, CacheKey, Color <span class="kw">as </span>FontColor, Color <span class="kw">as </span>CosmicColor, Edit, Editor,
+    Family, FontSystem, Metrics, SubpixelBin, Wrap,
 };
 <span class="kw">use </span>femtovg::imgref::{Img, ImgRef};
 <span class="kw">use </span>femtovg::rgb::RGBA8;
@@ -644,7 +644,7 @@
                     <span class="kw">let </span>cmd_map = <span class="kw">if </span>rendered.color_glyph {
                         <span class="kw-2">&amp;mut </span>color_cmd_map
                     } <span class="kw">else </span>{
-                        alpha_cmd_map.entry(glyph.color_opt.unwrap()).or_insert_with(FnvHashMap::default)
+                        alpha_cmd_map.entry(glyph.color_opt.unwrap_or(CosmicColor::rgb(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))).or_insert_with(FnvHashMap::default)
                     };
 
                     <span class="kw">let </span>cmd = cmd_map.entry(rendered.texture_index).or_insert_with(|| DrawCmd {

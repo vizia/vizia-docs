@@ -275,10 +275,77 @@
 <a href="#275" id="275">275</a>
 <a href="#276" id="276">276</a>
 <a href="#277" id="277">277</a>
-</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::convert::cursor_icon_to_cursor_icon;
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+</pre><pre class="rust"><code><span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+</span><span class="kw">use </span>std::num::NonZeroU32;
+
+<span class="kw">use </span><span class="kw">crate</span>::convert::cursor_icon_to_cursor_icon;
 <span class="kw">use </span>femtovg::{renderer::OpenGl, Canvas, Color};
+
 <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
-</span><span class="kw">use </span>glutin::ContextBuilder;
+</span><span class="kw">use </span>glutin_winit::DisplayBuilder;
+<span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+</span><span class="kw">use </span>raw_window_handle::HasRawWindowHandle;
+
+<span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+</span><span class="kw">use </span>glutin::{
+    config::ConfigTemplateBuilder,
+    context::{ContextApi, ContextAttributesBuilder},
+    display::GetGlDisplay,
+    prelude::<span class="kw-2">*</span>,
+    surface::{SurfaceAttributesBuilder, WindowSurface},
+};
+
 <span class="kw">use </span>vizia_core::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>winit::event_loop::EventLoop;
 <span class="kw">use </span>winit::window::{CursorGrabMode, WindowBuilder};
@@ -287,9 +354,10 @@
 <span class="kw">pub struct </span>Window {
     <span class="kw">pub </span>id: WindowId,
     <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
-    </span>handle: glutin::WindowedContext&lt;glutin::PossiblyCurrent&gt;,
-    <span class="attr">#[cfg(target_arch = <span class="string">&quot;wasm32&quot;</span>)]
-    </span>handle: winit::window::Window,
+    </span>context: glutin::context::PossiblyCurrentContext,
+    <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+    </span>surface: glutin::surface::Surface&lt;glutin::surface::WindowSurface&gt;,
+    window: winit::window::Window,
     <span class="kw">pub </span>should_close: bool,
 }
 
@@ -301,12 +369,9 @@
     ) -&gt; (<span class="self">Self</span>, Canvas&lt;OpenGl&gt;) {
         <span class="kw">let </span>window_builder = WindowBuilder::new();
 
-        <span class="comment">// For wasm, create or look up the canvas element we&#39;re drawing on
-        </span><span class="kw">let </span>canvas_element = {
+        <span class="kw">let </span>canvas_element = {
             <span class="kw">use </span>wasm_bindgen::JsCast;
-
             <span class="kw">let </span>document = web_sys::window().unwrap().document().unwrap();
-
             <span class="kw">if let </span><span class="prelude-val">Some</span>(canvas_id) = <span class="kw-2">&amp;</span>window_description.target_canvas {
                 document.get_element_by_id(canvas_id).unwrap()
             } <span class="kw">else </span>{
@@ -318,8 +383,10 @@
             .unwrap()
         };
 
-        <span class="comment">// Build the femtovg renderer
-        </span><span class="kw">let </span>renderer = OpenGl::new_from_html_canvas(<span class="kw-2">&amp;</span>canvas_element).unwrap();
+        <span class="kw">let </span>renderer =
+            OpenGl::new_from_html_canvas(<span class="kw-2">&amp;</span>canvas_element).expect(<span class="string">&quot;Cannot create renderer&quot;</span>);
+
+        <span class="kw">let </span><span class="kw-2">mut </span>canvas = Canvas::new(renderer).expect(<span class="string">&quot;Failed to create canvas&quot;</span>);
 
         <span class="comment">// tell winit about the above canvas
         </span><span class="kw">let </span>window_builder = {
@@ -334,14 +401,7 @@
         </span><span class="kw">let </span>handle = window_builder.build(<span class="kw-2">&amp;</span>events_loop).unwrap();
 
         <span class="comment">// Build our window
-        </span><span class="kw">let </span>window = Window {
-            id: handle.id(),
-            handle,
-            should_close: <span class="bool-val">false</span>,
-            <span class="comment">//canvas: Canvas::new(renderer).expect(&quot;Cannot create canvas&quot;),
-        </span>};
-
-        <span class="kw">let </span><span class="kw-2">mut </span>canvas = Canvas::new(renderer).expect(<span class="string">&quot;Failed to create canvas&quot;</span>);
+        </span><span class="kw">let </span>window = Window { id: handle.id(), window: handle, should_close: <span class="bool-val">false </span>};
 
         <span class="kw">let </span>size = window.window().inner_size();
         canvas.set_size(size.width <span class="kw">as </span>u32, size.height <span class="kw">as </span>u32, <span class="number">1.0</span>);
@@ -351,7 +411,7 @@
     }
 
     <span class="kw">pub fn </span>window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>winit::window::Window {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.handle
+        <span class="kw-2">&amp;</span><span class="self">self</span>.window
     }
 
     <span class="kw">pub fn </span>resize(<span class="kw-2">&amp;</span><span class="self">self</span>, _size: PhysicalSize&lt;u32&gt;) {
@@ -381,47 +441,94 @@
         <span class="comment">// Apply generic WindowBuilder properties
         </span><span class="kw">let </span>window_builder = apply_window_description(window_builder, <span class="kw-2">&amp;</span>window_description);
 
-        <span class="comment">// Get the window handle. this is a ContextWrapper
-        </span><span class="kw">let </span>handle = {
-            <span class="kw">let </span>handle = ContextBuilder::new()
-                .with_vsync(window_description.vsync)
-                <span class="comment">// .with_srgb(true)
-                </span>.build_windowed(window_builder, <span class="kw-2">&amp;</span>events_loop)
-                .expect(<span class="string">&quot;Window context creation failed!&quot;</span>);
+        <span class="kw">let </span>template = ConfigTemplateBuilder::new().with_alpha_size(<span class="number">8</span>);
+        <span class="kw">let </span>display_builder = DisplayBuilder::new().with_window_builder(<span class="prelude-val">Some</span>(window_builder));
 
-            <span class="kw">unsafe </span>{ handle.make_current().unwrap() }
-        };
+        <span class="kw">let </span>(window, gl_config) = display_builder
+            .build(<span class="kw-2">&amp;</span>events_loop, template, |configs| {
+                <span class="comment">// Find the config with the maximum number of samples, so our triangle will
+                // be smooth.
+                </span>configs
+                    .reduce(|accum, config| {
+                        <span class="kw">let </span>transparency_check = config.supports_transparency().unwrap_or(<span class="bool-val">false</span>)
+                            &amp; !accum.supports_transparency().unwrap_or(<span class="bool-val">false</span>);
+
+                        <span class="kw">if </span>transparency_check || config.num_samples() &lt; accum.num_samples() {
+                            config
+                        } <span class="kw">else </span>{
+                            accum
+                        }
+                    })
+                    .unwrap()
+            })
+            .unwrap();
+
+        <span class="kw">let </span>window = window.unwrap();
+
+        <span class="kw">let </span>raw_window_handle = <span class="prelude-val">Some</span>(window.raw_window_handle());
+
+        <span class="kw">let </span>gl_display = gl_config.display();
+
+        <span class="kw">let </span>context_attributes = ContextAttributesBuilder::new().build(raw_window_handle);
+        <span class="kw">let </span>fallback_context_attributes = ContextAttributesBuilder::new()
+            .with_context_api(ContextApi::Gles(<span class="prelude-val">None</span>))
+            .build(raw_window_handle);
+        <span class="kw">let </span><span class="kw-2">mut </span>not_current_gl_context = <span class="prelude-val">Some</span>(<span class="kw">unsafe </span>{
+            gl_display.create_context(<span class="kw-2">&amp;</span>gl_config, <span class="kw-2">&amp;</span>context_attributes).unwrap_or_else(|<span class="kw">_</span>| {
+                gl_display
+                    .create_context(<span class="kw-2">&amp;</span>gl_config, <span class="kw-2">&amp;</span>fallback_context_attributes)
+                    .expect(<span class="string">&quot;failed to create context&quot;</span>)
+            })
+        });
+
+        <span class="kw">let </span>(width, height): (u32, u32) = window.inner_size().into();
+        <span class="kw">let </span>raw_window_handle = window.raw_window_handle();
+        <span class="kw">let </span>attrs = SurfaceAttributesBuilder::&lt;WindowSurface&gt;::new().build(
+            raw_window_handle,
+            NonZeroU32::new(width).unwrap(),
+            NonZeroU32::new(height).unwrap(),
+        );
+
+        <span class="kw">let </span>surface =
+            <span class="kw">unsafe </span>{ gl_config.display().create_window_surface(<span class="kw-2">&amp;</span>gl_config, <span class="kw-2">&amp;</span>attrs).unwrap() };
+
+        <span class="kw">let </span>gl_context = not_current_gl_context.take().unwrap().make_current(<span class="kw-2">&amp;</span>surface).unwrap();
 
         <span class="comment">// Build the femtovg renderer
         </span><span class="kw">let </span>renderer = <span class="kw">unsafe </span>{
-            OpenGl::new_from_function(|s| handle.get_proc_address(s) <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>)
-                .expect(<span class="string">&quot;Cannot create renderer&quot;</span>)
-        };
+            OpenGl::new_from_function_cstr(|s| gl_display.get_proc_address(s) <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>)
+        }
+        .expect(<span class="string">&quot;Cannot create renderer&quot;</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>canvas = Canvas::new(renderer).expect(<span class="string">&quot;Failed to create canvas&quot;</span>);
 
-        <span class="kw">let </span>size = handle.window().inner_size();
+        <span class="kw">let </span>size = window.inner_size();
         canvas.set_size(size.width <span class="kw">as </span>u32, size.height <span class="kw">as </span>u32, <span class="number">1.0</span>);
         canvas.clear_rect(<span class="number">0</span>, <span class="number">0</span>, size.width <span class="kw">as </span>u32, size.height <span class="kw">as </span>u32, Color::rgb(<span class="number">255</span>, <span class="number">80</span>, <span class="number">80</span>));
 
         <span class="comment">//cx.canvases.insert(Entity::root(), canvas);
 
         // Build our window
-        </span><span class="kw">let </span>window = Window { id: handle.window().id(), handle, should_close: <span class="bool-val">false </span>};
+        </span><span class="kw">let </span>win =
+            Window { id: window.id(), context: gl_context, surface, window, should_close: <span class="bool-val">false </span>};
 
-        (window, canvas)
+        (win, canvas)
     }
 
     <span class="kw">pub fn </span>window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>winit::window::Window {
-        <span class="self">self</span>.handle.window()
+        <span class="kw-2">&amp;</span><span class="self">self</span>.window
     }
 
     <span class="kw">pub fn </span>resize(<span class="kw-2">&amp;</span><span class="self">self</span>, size: PhysicalSize&lt;u32&gt;) {
-        <span class="self">self</span>.handle.resize(size);
+        <span class="self">self</span>.surface.resize(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.context,
+            size.width.try_into().unwrap(),
+            size.height.try_into().unwrap(),
+        );
     }
 
     <span class="kw">pub fn </span>swap_buffers(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="self">self</span>.handle.swap_buffers().expect(<span class="string">&quot;Failed to swap buffers&quot;</span>);
+        <span class="self">self</span>.surface.swap_buffers(<span class="kw-2">&amp;</span><span class="self">self</span>.context).expect(<span class="string">&quot;Failed to swap buffers&quot;</span>);
     }
 }
 
@@ -492,10 +599,6 @@
                 <span class="self">self</span>.window().set_decorations(<span class="kw-2">*</span>flag);
             }
 
-            WindowEvent::SetAlwaysOnTop(flag) =&gt; {
-                <span class="self">self</span>.window().set_always_on_top(<span class="kw-2">*</span>flag);
-            }
-
             WindowEvent::ReloadStyles =&gt; {
                 cx.reload_styles().unwrap();
             }
@@ -538,7 +641,6 @@
         .with_visible(description.visible)
         .with_transparent(description.transparent)
         .with_decorations(description.decorations)
-        .with_always_on_top(description.always_on_top)
         .with_window_icon(<span class="kw">if let </span><span class="prelude-val">Some</span>(icon) = <span class="kw-2">&amp;</span>description.icon {
             <span class="prelude-val">Some</span>(
                 winit::window::Icon::from_rgba(

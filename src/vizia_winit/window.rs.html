@@ -326,6 +326,8 @@
 <a href="#326" id="326">326</a>
 <a href="#327" id="327">327</a>
 <a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
 </pre><pre class="rust"><code><span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
 </span><span class="kw">use </span>std::num::NonZeroU32;
 
@@ -520,11 +522,13 @@
     }
 
     <span class="kw">pub fn </span>resize(<span class="kw-2">&amp;</span><span class="self">self</span>, size: PhysicalSize&lt;u32&gt;) {
-        <span class="self">self</span>.surface.resize(
-            <span class="kw-2">&amp;</span><span class="self">self</span>.context,
-            size.width.try_into().unwrap(),
-            size.height.try_into().unwrap(),
-        );
+        <span class="kw">if </span>size.width != <span class="number">0 </span>&amp;&amp; size.height != <span class="number">0 </span>{
+            <span class="self">self</span>.surface.resize(
+                <span class="kw-2">&amp;</span><span class="self">self</span>.context,
+                size.width.try_into().unwrap(),
+                size.height.try_into().unwrap(),
+            );
+        }
     }
 
     <span class="kw">pub fn </span>swap_buffers(<span class="kw-2">&amp;</span><span class="self">self</span>) {

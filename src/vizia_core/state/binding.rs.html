@@ -180,6 +180,12 @@
 <a href="#180" id="180">180</a>
 <a href="#181" id="181">181</a>
 <a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
+<a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+<a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::any::TypeId;
 <span class="kw">use </span>std::collections::{HashMap, HashSet};
 
@@ -195,7 +201,8 @@
 {
     entity: Entity,
     lens: L,
-    content: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context, L)&gt;&gt;,
+    <span class="attr">#[allow(clippy::type_complexity)]
+    </span>content: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context, L)&gt;&gt;,
 }
 
 <span class="kw">impl</span>&lt;L&gt; Binding&lt;L&gt;
@@ -216,6 +223,7 @@
     ///     let value = *lens.get(cx);
     ///     Label::new(cx, value.to_string());
     /// });
+    </span><span class="attr">#[allow(clippy::new_ret_no_self)]
     </span><span class="kw">pub fn </span>new&lt;F&gt;(cx: <span class="kw-2">&amp;mut </span>Context, lens: L, builder: F)
     <span class="kw">where
         </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, L),
@@ -311,13 +319,13 @@
 }
 
 <span class="kw">pub trait </span>BindingHandler {
-    <span class="kw">fn </span>update&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context);
+    <span class="kw">fn </span>update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context);
     <span class="kw">fn </span>remove(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context);
     <span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt;;
 }
 
 <span class="kw">impl</span>&lt;L: <span class="lifetime">&#39;static </span>+ Lens&gt; BindingHandler <span class="kw">for </span>Binding&lt;L&gt; {
-    <span class="kw">fn </span>update&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context) {
+    <span class="kw">fn </span>update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context) {
         cx.remove_children(cx.current());
         <span class="kw">if let </span><span class="prelude-val">Some</span>(builder) = <span class="kw-2">&amp;</span><span class="self">self</span>.content {
             (builder)(cx, <span class="self">self</span>.lens.clone());
@@ -334,7 +342,9 @@
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(store) = model_data_store.stores.get_mut(<span class="kw-2">&amp;</span>key) {
                         store.remove_observer(<span class="kw-2">&amp;</span><span class="self">self</span>.entity);
 
-                        model_data_store.stores.retain(|<span class="kw">_</span>, store| store.num_observers() != <span class="number">0</span>);
+                        <span class="kw">if </span>store.num_observers() == <span class="number">0 </span>{
+                            model_data_store.stores.remove(<span class="kw-2">&amp;</span>key);
+                        }
                     }
 
                     <span class="kw">break</span>;
@@ -348,7 +358,9 @@
                         <span class="kw">if let </span><span class="prelude-val">Some</span>(store) = model_data_store.stores.get_mut(<span class="kw-2">&amp;</span>key) {
                             store.remove_observer(<span class="kw-2">&amp;</span><span class="self">self</span>.entity);
 
-                            model_data_store.stores.retain(|<span class="kw">_</span>, store| store.num_observers() != <span class="number">0</span>);
+                            <span class="kw">if </span>store.num_observers() == <span class="number">0 </span>{
+                                model_data_store.stores.remove(<span class="kw-2">&amp;</span>key);
+                            }
                         }
 
                         <span class="kw">break</span>;

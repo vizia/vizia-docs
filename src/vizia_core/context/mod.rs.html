@@ -588,6 +588,10 @@
 <a href="#588" id="588">588</a>
 <a href="#589" id="589">589</a>
 <a href="#590" id="590">590</a>
+<a href="#591" id="591">591</a>
+<a href="#592" id="592">592</a>
+<a href="#593" id="593">593</a>
+<a href="#594" id="594">594</a>
 </pre><pre class="rust"><code><span class="kw">pub mod </span>backend;
 <span class="kw">mod </span>draw;
 <span class="kw">mod </span>event;
@@ -953,12 +957,20 @@
                 <span class="self">self</span>.entity_identifiers.remove(identifier);
             }
 
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(index) = <span class="self">self</span>.focus_stack.iter().position(|r| r == entity) {
+                <span class="self">self</span>.focus_stack.remove(index);
+            }
+
             <span class="kw">if </span><span class="self">self</span>.focused == <span class="kw-2">*</span>entity
                 &amp;&amp; delete_list.contains(<span class="kw-2">&amp;</span><span class="self">self</span>.tree.lock_focus_within(<span class="kw-2">*</span>entity))
             {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(new_focus) = <span class="self">self</span>.focus_stack.pop() {
                     <span class="self">self</span>.with_current(new_focus, |cx| cx.focus());
                 }
+            }
+
+            <span class="kw">if </span><span class="self">self</span>.captured == <span class="kw-2">*</span>entity {
+                <span class="self">self</span>.captured = Entity::null();
             }
 
             <span class="self">self</span>.tree.remove(<span class="kw-2">*</span>entity).expect(<span class="string">&quot;&quot;</span>);
@@ -969,10 +981,6 @@
             <span class="self">self</span>.views.remove(entity);
             <span class="self">self</span>.entity_manager.destroy(<span class="kw-2">*</span>entity);
             <span class="self">self</span>.text_context.clear_buffer(<span class="kw-2">*</span>entity);
-
-            <span class="kw">if </span><span class="self">self</span>.captured == <span class="kw-2">*</span>entity {
-                <span class="self">self</span>.captured = Entity::null();
-            }
         }
     }
 

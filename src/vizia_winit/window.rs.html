@@ -332,10 +332,6 @@
 <a href="#332" id="332">332</a>
 <a href="#333" id="333">333</a>
 <a href="#334" id="334">334</a>
-<a href="#335" id="335">335</a>
-<a href="#336" id="336">336</a>
-<a href="#337" id="337">337</a>
-<a href="#338" id="338">338</a>
 </pre><pre class="rust"><code><span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
 </span><span class="kw">use </span>std::num::NonZeroU32;
 
@@ -451,13 +447,13 @@
         };
 
         <span class="comment">// Apply generic WindowBuilder properties
-        </span><span class="kw">let </span>window_builder = apply_window_description(window_builder, <span class="kw-2">&amp;</span>window_description);
+        </span><span class="kw">let </span>window_builder = apply_window_description(window_builder, window_description);
 
         <span class="kw">let </span>template = ConfigTemplateBuilder::new().with_alpha_size(<span class="number">8</span>);
         <span class="kw">let </span>display_builder = DisplayBuilder::new().with_window_builder(<span class="prelude-val">Some</span>(window_builder));
 
         <span class="kw">let </span>(window, gl_config) = display_builder
-            .build(<span class="kw-2">&amp;</span>events_loop, template, |configs| {
+            .build(events_loop, template, |configs| {
                 <span class="comment">// Find the config with the maximum number of samples, so our triangle will
                 // be smooth.
                 </span>configs
@@ -521,8 +517,8 @@
         <span class="kw">let </span><span class="kw-2">mut </span>canvas = Canvas::new(renderer).expect(<span class="string">&quot;Failed to create canvas&quot;</span>);
 
         <span class="kw">let </span>size = window.inner_size();
-        canvas.set_size(size.width <span class="kw">as </span>u32, size.height <span class="kw">as </span>u32, <span class="number">1.0</span>);
-        canvas.clear_rect(<span class="number">0</span>, <span class="number">0</span>, size.width <span class="kw">as </span>u32, size.height <span class="kw">as </span>u32, Color::rgb(<span class="number">255</span>, <span class="number">80</span>, <span class="number">80</span>));
+        canvas.set_size(size.width, size.height, <span class="number">1.0</span>);
+        canvas.clear_rect(<span class="number">0</span>, <span class="number">0</span>, size.width, size.height, Color::rgb(<span class="number">255</span>, <span class="number">80</span>, <span class="number">80</span>));
 
         <span class="comment">//cx.canvases.insert(Entity::root(), canvas);
 
@@ -661,18 +657,14 @@
         .with_visible(description.visible)
         .with_transparent(description.transparent)
         .with_decorations(description.decorations)
-        .with_window_icon(<span class="kw">if let </span><span class="prelude-val">Some</span>(icon) = <span class="kw-2">&amp;</span>description.icon {
-            <span class="prelude-val">Some</span>(
-                winit::window::Icon::from_rgba(
-                    icon.clone(),
-                    description.icon_width,
-                    description.icon_height,
-                )
-                .unwrap(),
+        .with_window_icon(description.icon.as_ref().map(|icon| {
+            winit::window::Icon::from_rgba(
+                icon.clone(),
+                description.icon_width,
+                description.icon_height,
             )
-        } <span class="kw">else </span>{
-            <span class="prelude-val">None
-        </span>})
+            .unwrap()
+        }))
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vizia_winit" data-themes="" data-resource-suffix="" data-rustdoc-version="1.67.1 (d5a82bbd2 2023-02-07)" data-search-js="search-444266647c4dba98.js" data-settings-js="settings-bebeae96e00e4617.js" data-settings-css="settings-af96d9e2fc13e081.css" ></div></body></html>

@@ -630,7 +630,7 @@
             <span class="comment">// handle state updates for window events
             </span>event.map(|window_event, meta| {
                 <span class="kw">if </span>meta.origin == Entity::root() {
-                    internal_state_updates(context, <span class="kw-2">&amp;</span>window_event, meta);
+                    internal_state_updates(context, window_event, meta);
                 }
             });
 
@@ -648,8 +648,7 @@
             std::mem::swap(<span class="kw-2">&amp;mut </span>context.global_listeners, <span class="kw-2">&amp;mut </span>global_listeners);
 
             <span class="comment">// Send events to any local listeners
-            </span><span class="kw">let </span>listeners =
-                context.listeners.iter().map(|(entity, <span class="kw">_</span>)| <span class="kw-2">*</span>entity).collect::&lt;Vec&lt;Entity&gt;&gt;();
+            </span><span class="kw">let </span>listeners = context.listeners.keys().copied().collect::&lt;Vec&lt;Entity&gt;&gt;();
             <span class="kw">for </span>entity <span class="kw">in </span>listeners {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(listener) = context.listeners.remove(<span class="kw-2">&amp;</span>entity) {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>event_handler) = context.views.remove(<span class="kw-2">&amp;</span>entity) {
@@ -687,7 +686,7 @@
             <span class="comment">// Propagate up from target to root (not including target)
             </span><span class="kw">if </span>event.meta.propagation == Propagation::Up {
                 <span class="comment">// Walk up the tree from parent to parent
-                </span><span class="kw">for </span>entity <span class="kw">in </span>target.parent_iter(<span class="kw-2">&amp;</span>context.tree) {
+                </span><span class="kw">for </span>entity <span class="kw">in </span>target.parent_iter(context.tree) {
                     <span class="comment">// Skip the target entity
                     </span><span class="kw">if </span>entity == event.meta.target {
                         <span class="kw">continue</span>;
@@ -704,7 +703,7 @@
             }
 
             <span class="kw">if </span>event.meta.propagation == Propagation::Subtree {
-                <span class="kw">for </span>entity <span class="kw">in </span>target.branch_iter(<span class="kw-2">&amp;</span>context.tree) {
+                <span class="kw">for </span>entity <span class="kw">in </span>target.branch_iter(context.tree) {
                     <span class="comment">// Skip the target entity
                     </span><span class="kw">if </span>entity == event.meta.target {
                         <span class="kw">continue</span>;
@@ -727,9 +726,11 @@
 
 <span class="kw">fn </span>visit_entity(cx: <span class="kw-2">&amp;mut </span>EventContext, entity: Entity, event: <span class="kw-2">&amp;mut </span>Event) {
     <span class="comment">// Send event to models attached to the entity
-    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(ids) = cx.data.get(entity).and_then(|model_data_store| {
-        <span class="prelude-val">Some</span>(model_data_store.models.keys().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;())
-    }) {
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(ids) = cx
+        .data
+        .get(entity)
+        .map(|model_data_store| model_data_store.models.keys().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;())
+    {
         <span class="kw">for </span>id <span class="kw">in </span>ids {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>model) = cx
                 .data
@@ -1022,12 +1023,12 @@
                 <span class="kw">let </span>lock_focus_to = context.tree.lock_focus_within(context.focused);
                 <span class="kw">if </span>context.modifiers.contains(Modifiers::SHIFT) {
                     <span class="kw">let </span>prev_focused = <span class="kw">if let </span><span class="prelude-val">Some</span>(prev_focused) =
-                        focus_backward(<span class="kw-2">&amp;</span>context, context.focused, lock_focus_to)
+                        focus_backward(context, context.focused, lock_focus_to)
                     {
                         prev_focused
                     } <span class="kw">else </span>{
                         TreeIterator::full(<span class="kw-2">&amp;</span>context.tree)
-                            .filter(|node| is_navigatable(<span class="kw-2">&amp;</span>context, <span class="kw-2">*</span>node, lock_focus_to))
+                            .filter(|node| is_navigatable(context, <span class="kw-2">*</span>node, lock_focus_to))
                             .next_back()
                             .unwrap_or(Entity::root())
                     };
@@ -1054,13 +1055,12 @@
                     }
                 } <span class="kw">else </span>{
                     <span class="kw">let </span>next_focused = <span class="kw">if let </span><span class="prelude-val">Some</span>(next_focused) =
-                        focus_forward(<span class="kw-2">&amp;</span>context, context.focused, lock_focus_to)
+                        focus_forward(context, context.focused, lock_focus_to)
                     {
                         next_focused
                     } <span class="kw">else </span>{
                         TreeIterator::full(<span class="kw-2">&amp;</span>context.tree)
-                            .filter(|node| is_navigatable(<span class="kw-2">&amp;</span>context, <span class="kw-2">*</span>node, lock_focus_to))
-                            .next()
+                            .find(|node| is_navigatable(context, <span class="kw-2">*</span>node, lock_focus_to))
                             .unwrap_or(Entity::root())
                     };
 

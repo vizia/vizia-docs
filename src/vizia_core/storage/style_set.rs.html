@@ -432,9 +432,6 @@
 <a href="#432" id="432">432</a>
 <a href="#433" id="433">433</a>
 <a href="#434" id="434">434</a>
-<a href="#435" id="435">435</a>
-<a href="#436" id="436">436</a>
-<a href="#437" id="437">437</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::style::Rule;
 <span class="kw">use </span>vizia_id::GenerationalId;
@@ -615,8 +612,8 @@
             }
         }
 
-        <span class="kw">return </span><span class="bool-val">false</span>;
-    }
+        <span class="bool-val">false
+    </span>}
 
     <span class="kw">pub fn </span>inherit_shared(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, parent: Entity) -&gt; bool {
         <span class="kw">let </span>entity_index = entity.index();
@@ -658,8 +655,8 @@
             }
         }
 
-        <span class="kw">return </span><span class="bool-val">false</span>;
-    }
+        <span class="bool-val">false
+    </span>}
 
     <span class="kw">pub fn </span>clear_rules(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="comment">// Remove transitions (TODO)
@@ -729,10 +726,8 @@
                 <span class="kw">if </span>data_index.index() &lt; <span class="self">self</span>.inline_data.dense.len() {
                     <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.inline_data.dense[data_index.index()].value);
                 }
-            } <span class="kw">else </span>{
-                <span class="kw">if </span>data_index.index() &lt; <span class="self">self</span>.shared_data.dense.len() {
-                    <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.shared_data.dense[data_index.index()].value);
-                }
+            } <span class="kw">else if </span>data_index.index() &lt; <span class="self">self</span>.shared_data.dense.len() {
+                <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.shared_data.dense[data_index.index()].value);
             }
         }
 
@@ -743,10 +738,8 @@
         <span class="kw">let </span>entity_index = entity.index();
         <span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
             <span class="kw">let </span>data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
-            <span class="kw">if </span>data_index.is_inline() {
-                <span class="kw">if </span>data_index.index() &lt; <span class="self">self</span>.inline_data.dense.len() {
-                    <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>.inline_data.dense[data_index.index()].value);
-                }
+            <span class="kw">if </span>data_index.is_inline() &amp;&amp; data_index.index() &lt; <span class="self">self</span>.inline_data.dense.len() {
+                <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>.inline_data.dense[data_index.index()].value);
             }
         }
 
@@ -790,11 +783,12 @@
         <span class="comment">// No matching rules so set if the data is shared set the index to null if not already null
         </span><span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
             <span class="kw">let </span>data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
-            <span class="kw">if </span>!data_index.is_inline() &amp;&amp; !data_index.is_inherited() {
-                <span class="kw">if </span><span class="self">self</span>.inline_data.sparse[entity_index].data_index != DataIndex::null() {
-                    <span class="self">self</span>.inline_data.sparse[entity_index].data_index = DataIndex::null();
-                    <span class="kw">return </span><span class="bool-val">true</span>;
-                }
+            <span class="kw">if </span>!data_index.is_inline()
+                &amp;&amp; !data_index.is_inherited()
+                &amp;&amp; <span class="self">self</span>.inline_data.sparse[entity_index].data_index != DataIndex::null()
+            {
+                <span class="self">self</span>.inline_data.sparse[entity_index].data_index = DataIndex::null();
+                <span class="kw">return </span><span class="bool-val">true</span>;
             }
         }
 

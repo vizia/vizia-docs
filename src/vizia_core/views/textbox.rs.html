@@ -777,8 +777,6 @@
 <a href="#777" id="777">777</a>
 <a href="#778" id="778">778</a>
 <a href="#779" id="779">779</a>
-<a href="#780" id="780">780</a>
-<a href="#781" id="781">781</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::cache::BoundingBox;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::text::{enforce_text_bounds, ensure_visible, Direction, Movement};
@@ -823,10 +821,10 @@
         </span><span class="kw">let </span>scale = cx.style.dpi_factor <span class="kw">as </span>f32;
 
         <span class="comment">// calculate visible area for content and container
-        </span><span class="kw">let </span>bounds = cx.cache.bounds.get(entity).unwrap().clone();
-        <span class="kw">let </span><span class="kw-2">mut </span>parent_bounds = cx.cache.bounds.get(parent).unwrap().clone();
+        </span><span class="kw">let </span>bounds = <span class="kw-2">*</span>cx.cache.bounds.get(entity).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>parent_bounds = <span class="kw-2">*</span>cx.cache.bounds.get(parent).unwrap();
 
-        cx.text_context.sync_styles(entity, <span class="kw-2">&amp;</span>cx.style);
+        cx.text_context.sync_styles(entity, cx.style);
 
         <span class="comment">// do the computation
         </span><span class="kw">let </span>(<span class="kw-2">mut </span>tx, <span class="kw-2">mut </span>ty) = <span class="self">self</span>.transform;
@@ -899,8 +897,8 @@
                 Movement::LineStart =&gt; Action::Home,
                 Movement::LineEnd =&gt; Action::End,
                 Movement::Page(dir) =&gt; {
-                    <span class="kw">let </span>parent = <span class="self">self</span>.content_entity.parent(<span class="kw-2">&amp;</span>cx.tree).unwrap();
-                    <span class="kw">let </span>parent_bounds = cx.cache.bounds.get(parent).unwrap().clone();
+                    <span class="kw">let </span>parent = <span class="self">self</span>.content_entity.parent(cx.tree).unwrap();
+                    <span class="kw">let </span>parent_bounds = <span class="kw-2">*</span>cx.cache.bounds.get(parent).unwrap();
                     <span class="kw">let </span>sign = <span class="kw">if let </span>Direction::Upstream = dir { -<span class="number">1 </span>} <span class="kw">else </span>{ <span class="number">1 </span>};
                     Action::Vertical(sign * parent_bounds.h <span class="kw">as </span>i32)
                 }
@@ -950,8 +948,8 @@
     /// The output text coordinates will also be physical, but relative to the top of the text
     /// glyphs, appropriate for passage to cosmic.
     </span><span class="kw">pub fn </span>coordinates_global_to_text(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>EventContext, x: f32, y: f32) -&gt; (f32, f32) {
-        <span class="kw">let </span>parent = <span class="self">self</span>.content_entity.parent(<span class="kw-2">&amp;</span>cx.tree).unwrap();
-        <span class="kw">let </span>parent_bounds = cx.cache.bounds.get(parent).unwrap().clone();
+        <span class="kw">let </span>parent = <span class="self">self</span>.content_entity.parent(cx.tree).unwrap();
+        <span class="kw">let </span>parent_bounds = <span class="kw-2">*</span>cx.cache.bounds.get(parent).unwrap();
 
         <span class="kw">let </span>x = x - <span class="self">self</span>.transform.<span class="number">0 </span>* cx.style.dpi_factor <span class="kw">as </span>f32 - parent_bounds.x;
         <span class="kw">let </span>y = y - <span class="self">self</span>.transform.<span class="number">1 </span>* cx.style.dpi_factor <span class="kw">as </span>f32 - parent_bounds.y;
@@ -980,8 +978,8 @@
     </span><span class="kw">pub fn </span>scroll(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, x: f32, y: f32) {
         <span class="kw">let </span>entity = <span class="self">self</span>.content_entity;
         <span class="kw">let </span>parent = cx.tree.get_parent(entity).unwrap();
-        <span class="kw">let </span>bounds = cx.cache.bounds.get(entity).unwrap().clone();
-        <span class="kw">let </span>parent_bounds = cx.cache.bounds.get(parent).unwrap().clone();
+        <span class="kw">let </span>bounds = <span class="kw-2">*</span>cx.cache.bounds.get(entity).unwrap();
+        <span class="kw">let </span>parent_bounds = <span class="kw-2">*</span>cx.cache.bounds.get(parent).unwrap();
         <span class="kw">let </span>(<span class="kw-2">mut </span>tx, <span class="kw-2">mut </span>ty) = <span class="self">self</span>.transform;
         <span class="kw">let </span>scale = cx.style.dpi_factor <span class="kw">as </span>f32;
         tx <span class="kw-2">*</span>= scale;
@@ -999,7 +997,7 @@
 
     <span class="kw">pub fn </span>clone_text(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) -&gt; String {
         cx.text_context.with_buffer(<span class="self">self</span>.content_entity, |buf| {
-            buf.lines.iter().map(|line| line.text()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;().join(<span class="string">&quot;\n&quot;</span>).to_string()
+            buf.lines.iter().map(|line| line.text()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;().join(<span class="string">&quot;\n&quot;</span>)
         })
     }
 }
@@ -1073,13 +1071,11 @@
             }
 
             TextEvent::StartEdit =&gt; {
-                <span class="kw">if </span>!cx.is_disabled() {
-                    <span class="kw">if </span>!<span class="self">self</span>.edit {
-                        <span class="self">self</span>.edit = <span class="bool-val">true</span>;
-                        cx.focus_with_visibility(<span class="bool-val">false</span>);
-                        cx.capture();
-                        cx.set_checked(<span class="bool-val">true</span>);
-                    }
+                <span class="kw">if </span>!cx.is_disabled() &amp;&amp; !<span class="self">self</span>.edit {
+                    <span class="self">self</span>.edit = <span class="bool-val">true</span>;
+                    cx.focus_with_visibility(<span class="bool-val">false</span>);
+                    cx.capture();
+                    cx.set_checked(<span class="bool-val">true</span>);
                 }
             }
 
@@ -1134,7 +1130,7 @@
                 <span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
                 </span><span class="kw">if </span><span class="self">self</span>.edit {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(selected_text) = <span class="self">self</span>.clone_selected(cx) {
-                        <span class="kw">if </span>selected_text.len() &gt; <span class="number">0 </span>{
+                        <span class="kw">if </span>!selected_text.is_empty() {
                             cx.set_clipboard(selected_text)
                                 .expect(<span class="string">&quot;Failed to add text to clipboard&quot;</span>);
                         }
@@ -1157,7 +1153,7 @@
                 <span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
                 </span><span class="kw">if </span><span class="self">self</span>.edit {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(selected_text) = <span class="self">self</span>.clone_selected(cx) {
-                        <span class="kw">if </span>selected_text.len() &gt; <span class="number">0 </span>{
+                        <span class="kw">if </span>!selected_text.is_empty() {
                             cx.set_clipboard(selected_text)
                                 .expect(<span class="string">&quot;Failed to add text to clipboard&quot;</span>);
                             <span class="self">self</span>.delete_text(cx, Movement::Grapheme(Direction::Upstream));

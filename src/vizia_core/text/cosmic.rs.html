@@ -394,6 +394,7 @@
 <a href="#394" id="394">394</a>
 <a href="#395" id="395">395</a>
 <a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::entity::Entity;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::Color;
 <span class="kw">use </span><span class="kw">crate</span>::style::Style;
@@ -472,9 +473,10 @@
 
     <span class="kw">pub fn </span>with_editor&lt;O&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, f: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;mut </span>Editor) -&gt; O) -&gt; O {
         <span class="self">self</span>.with_int_mut(<span class="kw">move </span>|int: <span class="kw-2">&amp;mut </span>TextContextInternal| {
-            f(int.buffers.entry(entity).or_insert_with(|| {
-                Editor::new(Buffer::new(<span class="kw-2">&amp;</span>int.font_system, Metrics::new(<span class="number">18</span>, <span class="number">20</span>)))
-            }))
+            f(int
+                .buffers
+                .entry(entity)
+                .or_insert_with(|| Editor::new(Buffer::new(int.font_system, Metrics::new(<span class="number">18</span>, <span class="number">20</span>)))))
         })
     }
 
@@ -634,8 +636,8 @@
                                 height: used_h,
                                 offset_x: rendered.placement.left,
                                 offset_y: rendered.placement.top,
-                                atlas_x: atlas_used_x <span class="kw">as </span>u32,
-                                atlas_y: atlas_used_y <span class="kw">as </span>u32,
+                                atlas_x: atlas_used_x,
+                                atlas_y: atlas_used_y,
                                 color_glyph: <span class="macro">matches!</span>(rendered.content, Content::Color),
                             }
                         })
@@ -671,7 +673,7 @@
 
             <span class="kw">if </span>!alpha_cmd_map.is_empty() {
                 <span class="prelude-val">Ok</span>(alpha_cmd_map.into_iter().map(|(color, map)| (color, GlyphDrawCommands {
-                    alpha_glyphs: map.into_iter().map(|(<span class="kw">_</span>, cmd)| cmd).collect(),
+                    alpha_glyphs: map.into_values().collect(),
                     color_glyphs: color_cmd_map.drain().map(|(<span class="kw">_</span>, cmd)| cmd).collect(),
                 })).collect())
             } <span class="kw">else </span>{

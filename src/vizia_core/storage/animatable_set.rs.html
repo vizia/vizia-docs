@@ -741,9 +741,6 @@
 <a href="#741" id="741">741</a>
 <a href="#742" id="742">742</a>
 <a href="#743" id="743">743</a>
-<a href="#744" id="744">744</a>
-<a href="#745" id="745">745</a>
-<a href="#746" id="746">746</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::animation::{AnimationState, Interpolator};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::style::Rule;
@@ -959,8 +956,8 @@
             }
         }
 
-        <span class="kw">return </span><span class="bool-val">false</span>;
-    }
+        <span class="bool-val">false
+    </span>}
 
     <span class="kw">pub fn </span>inherit_shared(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, parent: Entity) -&gt; bool {
         <span class="kw">let </span>entity_index = entity.index();
@@ -1002,8 +999,8 @@
             }
         }
 
-        <span class="kw">return </span><span class="bool-val">false</span>;
-    }
+        <span class="bool-val">false
+    </span>}
 
     <span class="doccomment">/// Inserts an animation
     ///
@@ -1273,10 +1270,8 @@
                 <span class="kw">if </span>data_index.index() &lt; <span class="self">self</span>.inline_data.dense.len() {
                     <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.inline_data.dense[data_index.index()].value);
                 }
-            } <span class="kw">else </span>{
-                <span class="kw">if </span>data_index.index() &lt; <span class="self">self</span>.shared_data.dense.len() {
-                    <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.shared_data.dense[data_index.index()].value);
-                }
+            } <span class="kw">else if </span>data_index.index() &lt; <span class="self">self</span>.shared_data.dense.len() {
+                <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.shared_data.dense[data_index.index()].value);
             }
         }
 
@@ -1344,33 +1339,31 @@
                             current_anim_state.start_time = instant::Instant::now();
                         }
                     }
-                } <span class="kw">else </span>{
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(transition_state) = <span class="self">self</span>.animations.get_mut(rule_animation) {
-                        <span class="comment">// Safe to unwrap because already checked that the rule exists
-                        </span><span class="kw">let </span>end = <span class="self">self</span>.shared_data.get(<span class="kw-2">*</span>rule).unwrap();
+                } <span class="kw">else if let </span><span class="prelude-val">Some</span>(transition_state) = <span class="self">self</span>.animations.get_mut(rule_animation) {
+                    <span class="comment">// Safe to unwrap because already checked that the rule exists
+                    </span><span class="kw">let </span>end = <span class="self">self</span>.shared_data.get(<span class="kw-2">*</span>rule).unwrap();
 
-                        <span class="kw">let </span>entity_data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
+                    <span class="kw">let </span>entity_data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
 
-                        <span class="kw">if </span>!entity_data_index.is_inline()
-                            &amp;&amp; entity_data_index.index() &lt; <span class="self">self</span>.shared_data.dense.len()
-                        {
-                            <span class="kw">let </span>start_data =
-                                <span class="self">self</span>.shared_data.dense[entity_data_index.index()].value.clone();
-                            <span class="kw-2">*</span>transition_state.keyframes.first_mut().unwrap() = (<span class="number">0.0</span>, start_data);
-                        } <span class="kw">else </span>{
-                            <span class="kw-2">*</span>transition_state.keyframes.first_mut().unwrap() = (<span class="number">0.0</span>, end.clone());
-                        }
+                    <span class="kw">if </span>!entity_data_index.is_inline()
+                        &amp;&amp; entity_data_index.index() &lt; <span class="self">self</span>.shared_data.dense.len()
+                    {
+                        <span class="kw">let </span>start_data =
+                            <span class="self">self</span>.shared_data.dense[entity_data_index.index()].value.clone();
+                        <span class="kw-2">*</span>transition_state.keyframes.first_mut().unwrap() = (<span class="number">0.0</span>, start_data);
+                    } <span class="kw">else </span>{
+                        <span class="kw-2">*</span>transition_state.keyframes.first_mut().unwrap() = (<span class="number">0.0</span>, end.clone());
+                    }
 
-                        <span class="kw-2">*</span>transition_state.keyframes.last_mut().unwrap() = (<span class="number">1.0</span>, end.clone());
-                        transition_state.from_rule =
-                            <span class="self">self</span>.inline_data.sparse[entity_index].data_index.index();
-                        transition_state.to_rule = shared_data_index.index();
-                        <span class="kw">if </span>transition_state.from_rule != transition_state.to_rule {
-                            <span class="self">self</span>.play_animation(entity, rule_animation);
-                        }
-                        <span class="comment">//}
-                    </span>}
-                }
+                    <span class="kw-2">*</span>transition_state.keyframes.last_mut().unwrap() = (<span class="number">1.0</span>, end.clone());
+                    transition_state.from_rule =
+                        <span class="self">self</span>.inline_data.sparse[entity_index].data_index.index();
+                    transition_state.to_rule = shared_data_index.index();
+                    <span class="kw">if </span>transition_state.from_rule != transition_state.to_rule {
+                        <span class="self">self</span>.play_animation(entity, rule_animation);
+                    }
+                    <span class="comment">//}
+                </span>}
                 <span class="comment">//}
 
                 </span><span class="kw">let </span>data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
@@ -1389,11 +1382,12 @@
         <span class="comment">// No matching rules so set if the data is shared set the index to null if not already null
         </span><span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
             <span class="kw">let </span>data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
-            <span class="kw">if </span>!data_index.is_inline() &amp;&amp; !data_index.is_inherited() {
-                <span class="kw">if </span><span class="self">self</span>.inline_data.sparse[entity_index].data_index != DataIndex::null() {
-                    <span class="self">self</span>.inline_data.sparse[entity_index].data_index = DataIndex::null();
-                    <span class="kw">return </span><span class="bool-val">true</span>;
-                }
+            <span class="kw">if </span>!data_index.is_inline()
+                &amp;&amp; !data_index.is_inherited()
+                &amp;&amp; <span class="self">self</span>.inline_data.sparse[entity_index].data_index != DataIndex::null()
+            {
+                <span class="self">self</span>.inline_data.sparse[entity_index].data_index = DataIndex::null();
+                <span class="kw">return </span><span class="bool-val">true</span>;
             }
         }
 

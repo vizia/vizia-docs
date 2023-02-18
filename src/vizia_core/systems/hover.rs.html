@@ -133,10 +133,6 @@
 <a href="#133" id="133">133</a>
 <a href="#134" id="134">134</a>
 <a href="#135" id="135">135</a>
-<a href="#136" id="136">136</a>
-<a href="#137" id="137">137</a>
-<a href="#138" id="138">138</a>
-<a href="#139" id="139">139</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>vizia_id::GenerationalId;
 <span class="kw">use </span>vizia_storage::DrawIterator;
@@ -192,15 +188,14 @@
             &amp;&amp; ty &lt; (clip_region.y + clip_region.h)
         {
             hovered_widget = entity;
-            <span class="kw">if </span>cx
+            <span class="kw">if </span>!cx
                 .style
                 .pseudo_classes
                 .get(entity)
                 .cloned()
                 .unwrap_or_default()
                 .contains(PseudoClass::OVER)
-                == <span class="bool-val">false
-            </span>{
+            {
                 cx.event_queue.push_back(
                     Event::new(WindowEvent::MouseOver)
                         .target(entity)
@@ -211,23 +206,20 @@
                     pseudo_class.set(PseudoClass::OVER, <span class="bool-val">true</span>);
                 }
             }
-        } <span class="kw">else </span>{
-            <span class="kw">if </span>cx
-                .style
-                .pseudo_classes
-                .get(entity)
-                .cloned()
-                .unwrap_or_default()
-                .contains(PseudoClass::OVER)
-                == <span class="bool-val">true
-            </span>{
-                cx.event_queue.push_back(
-                    Event::new(WindowEvent::MouseOut).target(entity).propagate(Propagation::Direct),
-                );
+        } <span class="kw">else if </span>cx
+            .style
+            .pseudo_classes
+            .get(entity)
+            .cloned()
+            .unwrap_or_default()
+            .contains(PseudoClass::OVER)
+        {
+            cx.event_queue.push_back(
+                Event::new(WindowEvent::MouseOut).target(entity).propagate(Propagation::Direct),
+            );
 
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_class) = cx.style.pseudo_classes.get_mut(entity) {
-                    pseudo_class.set(PseudoClass::OVER, <span class="bool-val">false</span>);
-                }
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_class) = cx.style.pseudo_classes.get_mut(entity) {
+                pseudo_class.set(PseudoClass::OVER, <span class="bool-val">false</span>);
             }
         }
     }

@@ -251,9 +251,6 @@
 <a href="#251" id="251">251</a>
 <a href="#252" id="252">252</a>
 <a href="#253" id="253">253</a>
-<a href="#254" id="254">254</a>
-<a href="#255" id="255">255</a>
-<a href="#256" id="256">256</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::animation::Interpolator;
 <span class="kw">use </span>std::fmt;
 <span class="kw">use </span>std::fmt::Formatter;
@@ -376,10 +373,7 @@
             }
 
             <span class="number">6 </span>| <span class="number">8 </span>=&gt; {
-                <span class="kw">let </span><span class="kw-2">mut </span>x = <span class="kw">match </span>u32::from_str_radix(<span class="kw-2">&amp;</span>clean_hex, <span class="number">16</span>) {
-                    <span class="prelude-val">Ok</span>(x) =&gt; x,
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="number">0</span>,
-                };
+                <span class="kw">let </span><span class="kw-2">mut </span>x = u32::from_str_radix(clean_hex, <span class="number">16</span>).unwrap_or(<span class="number">0</span>);
 
                 <span class="kw">if </span>clean_hex.len() == <span class="number">6 </span>{
                     x = (x &lt;&lt; <span class="number">8</span>) | <span class="number">0x00_000_0FF</span>;
@@ -465,7 +459,7 @@
 
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>Color {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
-        Color::interpolate(start.clone(), end.clone(), t <span class="kw">as </span>f64)
+        Color::interpolate(<span class="kw-2">*</span>start, <span class="kw-2">*</span>end, t <span class="kw">as </span>f64)
     }
 }
 

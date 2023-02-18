@@ -594,7 +594,7 @@
 </span><span class="kw">pub type </span>Canvas = femtovg::Canvas&lt;OpenGl&gt;;
 
 <span class="comment">// Length proportional to radius of a cubic bezier handle for 90deg arcs.
-</span><span class="kw">const </span>KAPPA90: f32 = <span class="number">0.5522847493</span>;
+</span><span class="kw">const </span>KAPPA90: f32 = <span class="number">0.552_284_8</span>;
 
 <span class="doccomment">/// A view is any object which can be displayed on the screen.
 ///
@@ -641,7 +641,7 @@
     </span>T: std::marker::Sized + View + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
-        &lt;T <span class="kw">as </span>View&gt;::element(<span class="kw-2">&amp;</span><span class="self">self</span>)
+        &lt;T <span class="kw">as </span>View&gt;::element(<span class="self">self</span>)
     }
 
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
@@ -677,7 +677,7 @@
     <span class="kw">let </span>parent = cx
         .tree
         .get_layout_parent(cx.current)
-        .expect(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;Failed to find parent somehow: {}&quot;</span>, cx.current));
+        .unwrap_or_else(|| <span class="macro">panic!</span>(<span class="string">&quot;Failed to find parent somehow: {}&quot;</span>, cx.current));
 
     <span class="kw">let </span>parent_width = cx.cache.get_width(parent);
     <span class="kw">let </span>parent_height = cx.cache.get_height(parent);

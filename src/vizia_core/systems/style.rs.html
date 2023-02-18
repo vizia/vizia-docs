@@ -504,11 +504,6 @@
 <a href="#504" id="504">504</a>
 <a href="#505" id="505">505</a>
 <a href="#506" id="506">506</a>
-<a href="#507" id="507">507</a>
-<a href="#508" id="508">508</a>
-<a href="#509" id="509">509</a>
-<a href="#510" id="510">510</a>
-<a href="#511" id="511">511</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::style::SystemFlags;
 <span class="kw">use </span><span class="kw">crate</span>::style::{Rule, Selector, SelectorRelation, Style, StyleRule};
@@ -557,12 +552,10 @@
 
         <span class="kw">if </span>!cx.cache.get_hoverability(parent) {
             cx.cache.set_hoverability(entity, <span class="bool-val">false</span>);
+        } <span class="kw">else if let </span><span class="prelude-val">Some</span>(abilities) = cx.style.abilities.get(entity) {
+            cx.cache.set_hoverability(entity, abilities.contains(Abilities::HOVERABLE));
         } <span class="kw">else </span>{
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(abilities) = cx.style.abilities.get(entity) {
-                cx.cache.set_hoverability(entity, abilities.contains(Abilities::HOVERABLE));
-            } <span class="kw">else </span>{
-                cx.cache.set_hoverability(entity, <span class="bool-val">false</span>);
-            }
+            cx.cache.set_hoverability(entity, <span class="bool-val">false</span>);
         }
     }
 }
@@ -601,11 +594,8 @@
                 pseudo_classes.set(PseudoClass::DISABLED, <span class="kw-2">*</span>disabled);
             }
             <span class="kw">let </span>selector_pseudo_classes = selector.pseudo_classes;
-            <span class="kw">if </span>!pseudo_classes.is_empty() &amp;&amp; !pseudo_classes.contains(selector_pseudo_classes) {
-                <span class="kw">return </span><span class="bool-val">false</span>;
-            } <span class="kw">else </span>{
-                <span class="kw">return </span><span class="bool-val">true</span>;
-            }
+            <span class="kw">return </span>!(!pseudo_classes.is_empty()
+                &amp;&amp; !pseudo_classes.contains(selector_pseudo_classes));
         } <span class="kw">else </span>{
             <span class="kw">return </span><span class="bool-val">true</span>;
         }
@@ -655,8 +645,8 @@
         }
     }
 
-    <span class="kw">return </span><span class="bool-val">true</span>;
-}
+    <span class="bool-val">true
+</span>}
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>compute_matched_rules&lt;<span class="lifetime">&#39;a</span>&gt;(
     cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Context,
@@ -731,232 +721,232 @@
     <span class="kw">let </span><span class="kw-2">mut </span>should_rehide = <span class="bool-val">false</span>;
 
     <span class="comment">// Display
-    </span><span class="kw">if </span>style.display.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    </span><span class="kw">if </span>style.display.link(entity, matched_rules) {
         should_rehide = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.visibility.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.visibility.link(entity, matched_rules) {
         should_rehide = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.z_order.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.z_order.link(entity, matched_rules) {
         should_reorder = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.overflow.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.overflow.link(entity, matched_rules) {
         should_reclip = <span class="bool-val">true</span>;
     }
 
     <span class="comment">// Opacity
-    </span><span class="kw">if </span>style.opacity.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    </span><span class="kw">if </span>style.opacity.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.left.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.left.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.right.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.right.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.top.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.top.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.bottom.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.bottom.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
     <span class="comment">// Size
-    </span><span class="kw">if </span>style.width.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    </span><span class="kw">if </span>style.width.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.height.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.height.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
     <span class="comment">// Size Constraints
-    </span><span class="kw">if </span>style.max_width.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    </span><span class="kw">if </span>style.max_width.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.min_width.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.min_width.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.max_height.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.max_height.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.min_height.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.min_height.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
     <span class="comment">// Border
-    </span><span class="kw">if </span>style.border_width.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    </span><span class="kw">if </span>style.border_width.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.border_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.border_color.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.border_shape_top_left.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.border_shape_top_left.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.border_shape_top_right.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.border_shape_top_right.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.border_shape_bottom_left.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.border_shape_bottom_left.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.border_shape_bottom_right.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.border_shape_bottom_right.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.border_radius_top_left.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.border_radius_top_left.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.border_radius_top_right.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.border_radius_top_right.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.border_radius_bottom_left.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.border_radius_bottom_left.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.border_radius_bottom_right.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.border_radius_bottom_right.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.outline_width.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.outline_width.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.outline_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.outline_color.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.outline_offset.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.outline_offset.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.layout_type.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.layout_type.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.position_type.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.position_type.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
     <span class="comment">// Background
-    </span><span class="kw">if </span>style.background_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    </span><span class="kw">if </span>style.background_color.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.background_image.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.background_image.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
     <span class="comment">// Font
-    </span><span class="kw">if </span>style.font_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    </span><span class="kw">if </span>style.font_color.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.font_size.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.font_size.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.font_family.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.font_family.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.font_weight.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.font_weight.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.font_style.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.font_style.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.text_wrap.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.text_wrap.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.selection_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.selection_color.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.caret_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.caret_color.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
     <span class="comment">// Outer Shadow
-    </span><span class="kw">if </span>style.outer_shadow_h_offset.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    </span><span class="kw">if </span>style.outer_shadow_h_offset.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.outer_shadow_v_offset.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.outer_shadow_v_offset.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.outer_shadow_blur.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.outer_shadow_blur.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.outer_shadow_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.outer_shadow_color.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
     <span class="comment">// Inner Shadow
-    </span><span class="kw">if </span>style.inner_shadow_h_offset.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    </span><span class="kw">if </span>style.inner_shadow_h_offset.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.inner_shadow_v_offset.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.inner_shadow_v_offset.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.inner_shadow_blur.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.inner_shadow_blur.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.inner_shadow_color.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.inner_shadow_color.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.child_left.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.child_left.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
         should_redraw = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.child_right.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.child_right.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.child_top.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.child_top.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.child_bottom.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.child_bottom.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.row_between.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.row_between.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.col_between.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.col_between.link(entity, matched_rules) {
         should_relayout = <span class="bool-val">true</span>;
     }
 
-    <span class="kw">if </span>style.cursor.link(entity, <span class="kw-2">&amp;</span>matched_rules) {
+    <span class="kw">if </span>style.cursor.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
     }
 

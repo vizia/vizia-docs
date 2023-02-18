@@ -78,7 +78,6 @@
 <a href="#78" id="78">78</a>
 <a href="#79" id="79">79</a>
 <a href="#80" id="80">80</a>
-<a href="#81" id="81">81</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>std::marker::PhantomData;
 
@@ -107,8 +106,7 @@
         <span class="self">self</span>.cx.focus_stack.push(<span class="self">self</span>.cx.focused);
         <span class="kw">if </span>!<span class="self">self</span>.cx.focused.is_descendant_of(<span class="kw-2">&amp;</span><span class="self">self</span>.cx.tree, <span class="self">self</span>.entity) {
             <span class="kw">let </span>new_focus = vizia_storage::TreeIterator::subtree(<span class="kw-2">&amp;</span><span class="self">self</span>.cx.tree, <span class="self">self</span>.entity)
-                .filter(|node| <span class="kw">crate</span>::tree::is_focusable(<span class="self">self</span>.cx, <span class="kw-2">*</span>node))
-                .next()
+                .find(|node| <span class="kw">crate</span>::tree::is_focusable(<span class="self">self</span>.cx, <span class="kw-2">*</span>node))
                 .unwrap_or(<span class="self">self</span>.cx.focus_stack.pop().unwrap());
             <span class="self">self</span>.cx.with_current(new_focus, |cx| cx.focus());
         }

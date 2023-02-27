@@ -406,8 +406,8 @@
 <span class="kw">use </span>femtovg::imgref::{Img, ImgRef};
 <span class="kw">use </span>femtovg::rgb::RGBA8;
 <span class="kw">use </span>femtovg::{
-    Atlas, Canvas, DrawCmd, ErrorKind, GlyphDrawCommands, ImageFlags, ImageId, ImageSource, Quad,
-    Renderer,
+    Atlas, Canvas, DrawCommand, ErrorKind, GlyphDrawCommands, ImageFlags, ImageId, ImageSource,
+    Quad, Renderer,
 };
 <span class="kw">use </span>fnv::FnvHashMap;
 <span class="kw">use </span>ouroboros::self_referencing;
@@ -649,7 +649,7 @@
                         alpha_cmd_map.entry(glyph.color_opt.unwrap_or(CosmicColor::rgb(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))).or_insert_with(FnvHashMap::default)
                     };
 
-                    <span class="kw">let </span>cmd = cmd_map.entry(rendered.texture_index).or_insert_with(|| DrawCmd {
+                    <span class="kw">let </span>cmd = cmd_map.entry(rendered.texture_index).or_insert_with(|| DrawCommand {
                         image_id: int.glyph_textures[rendered.texture_index].image_id,
                         quads: Vec::new(),
                     });

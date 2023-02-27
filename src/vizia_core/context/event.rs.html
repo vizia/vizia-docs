@@ -436,6 +436,8 @@
 <a href="#436" id="436">436</a>
 <a href="#437" id="437">437</a>
 <a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
+<a href="#440" id="440">440</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::collections::{HashMap, HashSet, VecDeque};
 <span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
@@ -448,7 +450,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::resource::ResourceManager;
 <span class="kw">use </span><span class="kw">crate</span>::state::ModelDataStore;
-<span class="kw">use </span><span class="kw">crate</span>::style::Style;
+<span class="kw">use </span><span class="kw">crate</span>::style::{Style, SystemFlags};
 <span class="kw">use </span>vizia_id::GenerationalId;
 <span class="kw">use </span>vizia_input::{Modifiers, MouseState};
 <span class="kw">use </span>vizia_storage::SparseSet;
@@ -826,6 +828,8 @@
     /// window has actually changed in size.
     </span><span class="kw">pub fn </span>set_user_scale_factor(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_factor: f64) {
         <span class="kw-2">*</span><span class="self">self</span>.user_scale_factor = new_factor;
+        <span class="self">self</span>.style.system_flags.set(SystemFlags::RELAYOUT, <span class="bool-val">true</span>);
+        <span class="self">self</span>.style.system_flags.set(SystemFlags::REFLOW, <span class="bool-val">true</span>);
     }
 }
 

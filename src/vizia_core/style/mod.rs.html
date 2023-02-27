@@ -1260,6 +1260,16 @@
 <a href="#1260" id="1260">1260</a>
 <a href="#1261" id="1261">1261</a>
 <a href="#1262" id="1262">1262</a>
+<a href="#1263" id="1263">1263</a>
+<a href="#1264" id="1264">1264</a>
+<a href="#1265" id="1265">1265</a>
+<a href="#1266" id="1266">1266</a>
+<a href="#1267" id="1267">1267</a>
+<a href="#1268" id="1268">1268</a>
+<a href="#1269" id="1269">1269</a>
+<a href="#1270" id="1270">1270</a>
+<a href="#1271" id="1271">1271</a>
+<a href="#1272" id="1272">1272</a>
 </pre><pre class="rust"><code><span class="kw">use </span>morphorm::{LayoutType, PositionType, Units};
 <span class="kw">use </span>std::collections::{HashMap, HashSet};
 <span class="kw">use </span>vizia_id::GenerationalId;
@@ -1540,7 +1550,17 @@
     //     self.set_style_properties();
     // }
 
-    </span><span class="kw">pub fn </span>remove_rules(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    </span><span class="doccomment">/// Function to convert logical points to physical pixels.
+    </span><span class="kw">pub fn </span>logical_to_physical(<span class="kw-2">&amp;</span><span class="self">self</span>, logical: f32) -&gt; f32 {
+        (logical * <span class="self">self</span>.dpi_factor <span class="kw">as </span>f32).round()
+    }
+
+    <span class="doccomment">/// Function to convert physical pixels to logical points.
+    </span><span class="kw">pub fn </span>physical_to_logical(<span class="kw-2">&amp;</span><span class="self">self</span>, physical: f32) -&gt; f32 {
+        physical / <span class="self">self</span>.dpi_factor <span class="kw">as </span>f32
+    }
+
+    <span class="kw">pub fn </span>remove_rules(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="kw">for </span>rule <span class="kw">in </span><span class="self">self</span>.rules.iter() {
             <span class="self">self</span>.rule_manager.destroy(rule.id);
         }

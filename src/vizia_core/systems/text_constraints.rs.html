@@ -130,6 +130,11 @@
 <a href="#130" id="130">130</a>
 <a href="#131" id="131">131</a>
 <a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::style::SystemFlags;
 <span class="kw">use </span>vizia_id::GenerationalId;
@@ -142,7 +147,9 @@
 
     <span class="kw">for </span>entity <span class="kw">in </span>draw_tree {
         <span class="comment">// Skip if the entity isn&#39;t marked as having its text modified
-        </span><span class="kw">if </span>!cx.style.needs_text_layout.get(entity).copied().unwrap_or_default() {
+        </span><span class="kw">if </span>!cx.style.needs_text_layout.get(entity).copied().unwrap_or_default()
+            &amp;&amp; !cx.style.system_flags.contains(SystemFlags::REFLOW)
+        {
             <span class="kw">continue</span>;
         }
 
@@ -218,9 +225,8 @@
                     (w, h)
                 });
 
-                <span class="comment">// Add an extra pixel to account for AA
-                </span><span class="kw">let </span>text_width = text_width.ceil() + <span class="number">1.0 </span>+ child_space_x;
-                <span class="kw">let </span>text_height = text_height.ceil() + <span class="number">1.0 </span>+ child_space_y;
+                <span class="kw">let </span>text_width = text_width + child_space_x;
+                <span class="kw">let </span>text_height = text_height + child_space_y;
 
                 <span class="kw">if </span>content_width &lt; text_width {
                     content_width = text_width;
@@ -254,13 +260,17 @@
             <span class="kw">if </span>(desired_width == Auto &amp;&amp; content_width != bounds.w)
                 || (desired_height == Auto &amp;&amp; content_height != bounds.h)
             {
-                cx.style.content_width.insert(entity, content_width / cx.style.dpi_factor <span class="kw">as </span>f32);
-                cx.style.content_height.insert(entity, content_height / cx.style.dpi_factor <span class="kw">as </span>f32);
+                cx.style.content_width.insert(entity, cx.style.physical_to_logical(content_width));
+                cx.style
+                    .content_height
+                    .insert(entity, cx.style.physical_to_logical(content_height));
 
                 cx.style.system_flags.set(SystemFlags::RELAYOUT, <span class="bool-val">true</span>);
             }
         }
     }
+
+    cx.style.system_flags.set(SystemFlags::REFLOW, <span class="bool-val">false</span>);
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.67.1 (d5a82bbd2 2023-02-07)" data-search-js="search-444266647c4dba98.js" data-settings-js="settings-bebeae96e00e4617.js" data-settings-css="settings-af96d9e2fc13e081.css" ></div></body></html>

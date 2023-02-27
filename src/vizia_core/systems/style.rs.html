@@ -504,6 +504,20 @@
 <a href="#504" id="504">504</a>
 <a href="#505" id="505">505</a>
 <a href="#506" id="506">506</a>
+<a href="#507" id="507">507</a>
+<a href="#508" id="508">508</a>
+<a href="#509" id="509">509</a>
+<a href="#510" id="510">510</a>
+<a href="#511" id="511">511</a>
+<a href="#512" id="512">512</a>
+<a href="#513" id="513">513</a>
+<a href="#514" id="514">514</a>
+<a href="#515" id="515">515</a>
+<a href="#516" id="516">516</a>
+<a href="#517" id="517">517</a>
+<a href="#518" id="518">518</a>
+<a href="#519" id="519">519</a>
+<a href="#520" id="520">520</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::style::SystemFlags;
 <span class="kw">use </span><span class="kw">crate</span>::style::{Rule, Selector, SelectorRelation, Style, StyleRule};
@@ -1005,6 +1019,20 @@
 
             prev_matched_rule_ids.clear();
             prev_matched_rule_ids.append(<span class="kw-2">&amp;mut </span>matched_rule_ids);
+        }
+
+        <span class="comment">// Z-Order system
+        </span><span class="kw">let </span>iterator = LayoutTreeIterator::full(<span class="kw-2">&amp;</span>cx.tree);
+        <span class="kw">if </span>cx.style.system_flags.contains(SystemFlags::REORDER) {
+            <span class="kw">let </span><span class="kw-2">mut </span>entities = Vec::new();
+            <span class="kw">for </span>entity <span class="kw">in </span>iterator {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(z_order) = cx.style.z_order.get(entity) {
+                    entities.push((entity, <span class="kw-2">*</span>z_order));
+                }
+            }
+            <span class="kw">for </span>(entity, z_order) <span class="kw">in </span>entities {
+                cx.tree.set_z_order(entity, z_order);
+            }
         }
 
         cx.style.system_flags.set(SystemFlags::RESTYLE, <span class="bool-val">false</span>);

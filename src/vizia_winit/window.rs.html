@@ -332,7 +332,10 @@
 <a href="#332" id="332">332</a>
 <a href="#333" id="333">333</a>
 <a href="#334" id="334">334</a>
-</pre><pre class="rust"><code><span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::application::UserEvent;
+<span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
 </span><span class="kw">use </span>std::num::NonZeroU32;
 
 <span class="kw">use </span><span class="kw">crate</span>::convert::cursor_icon_to_cursor_icon;
@@ -372,7 +375,7 @@
 <span class="attr">#[cfg(target_arch = <span class="string">&quot;wasm32&quot;</span>)]
 </span><span class="kw">impl </span>Window {
     <span class="kw">pub fn </span>new(
-        events_loop: <span class="kw-2">&amp;</span>EventLoop&lt;Event&gt;,
+        events_loop: <span class="kw-2">&amp;</span>EventLoop&lt;UserEvent&gt;,
         window_description: <span class="kw-2">&amp;</span>WindowDescription,
     ) -&gt; (<span class="self">Self</span>, Canvas&lt;OpenGl&gt;) {
         <span class="kw">let </span>window_builder = WindowBuilder::new();
@@ -434,7 +437,7 @@
 <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
 </span><span class="kw">impl </span>Window {
     <span class="kw">pub fn </span>new(
-        events_loop: <span class="kw-2">&amp;</span>EventLoop&lt;Event&gt;,
+        events_loop: <span class="kw-2">&amp;</span>EventLoop&lt;UserEvent&gt;,
         window_description: <span class="kw-2">&amp;</span>WindowDescription,
     ) -&gt; (<span class="self">Self</span>, Canvas&lt;OpenGl&gt;) {
         <span class="kw">let </span>window_builder = WindowBuilder::new();
@@ -654,7 +657,8 @@
     builder
         .with_resizable(description.resizable)
         .with_maximized(description.maximized)
-        .with_visible(description.visible)
+        <span class="comment">// Accesskit requires that the window start invisible until accesskit is initialized.
+        </span>.with_visible(<span class="bool-val">false</span>)
         .with_transparent(description.transparent)
         .with_decorations(description.decorations)
         .with_window_icon(description.icon.as_ref().map(|icon| {

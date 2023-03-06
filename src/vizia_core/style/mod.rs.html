@@ -1270,6 +1270,33 @@
 <a href="#1270" id="1270">1270</a>
 <a href="#1271" id="1271">1271</a>
 <a href="#1272" id="1272">1272</a>
+<a href="#1273" id="1273">1273</a>
+<a href="#1274" id="1274">1274</a>
+<a href="#1275" id="1275">1275</a>
+<a href="#1276" id="1276">1276</a>
+<a href="#1277" id="1277">1277</a>
+<a href="#1278" id="1278">1278</a>
+<a href="#1279" id="1279">1279</a>
+<a href="#1280" id="1280">1280</a>
+<a href="#1281" id="1281">1281</a>
+<a href="#1282" id="1282">1282</a>
+<a href="#1283" id="1283">1283</a>
+<a href="#1284" id="1284">1284</a>
+<a href="#1285" id="1285">1285</a>
+<a href="#1286" id="1286">1286</a>
+<a href="#1287" id="1287">1287</a>
+<a href="#1288" id="1288">1288</a>
+<a href="#1289" id="1289">1289</a>
+<a href="#1290" id="1290">1290</a>
+<a href="#1291" id="1291">1291</a>
+<a href="#1292" id="1292">1292</a>
+<a href="#1293" id="1293">1293</a>
+<a href="#1294" id="1294">1294</a>
+<a href="#1295" id="1295">1295</a>
+<a href="#1296" id="1296">1296</a>
+<a href="#1297" id="1297">1297</a>
+<a href="#1298" id="1298">1298</a>
+<a href="#1299" id="1299">1299</a>
 </pre><pre class="rust"><code><span class="kw">use </span>morphorm::{LayoutType, PositionType, Units};
 <span class="kw">use </span>std::collections::{HashMap, HashSet};
 <span class="kw">use </span>vizia_id::GenerationalId;
@@ -1392,6 +1419,17 @@
     <span class="kw">pub </span>pseudo_classes: SparseSet&lt;PseudoClass&gt;,
     <span class="kw">pub </span>disabled: StyleSet&lt;bool&gt;,
     <span class="kw">pub </span>abilities: SparseSet&lt;Abilities&gt;,
+
+    <span class="kw">pub </span>accesskit_node_classes: accesskit::NodeClassSet,
+
+    <span class="kw">pub </span>roles: SparseSet&lt;Role&gt;,
+    <span class="kw">pub </span>default_action_verb: SparseSet&lt;DefaultActionVerb&gt;,
+    <span class="kw">pub </span>live: SparseSet&lt;Live&gt;,
+    <span class="kw">pub </span>labelled_by: SparseSet&lt;Entity&gt;,
+    <span class="kw">pub </span>hidden: SparseSet&lt;bool&gt;,
+    <span class="comment">// TODO: Should we store these or somehow derive them from app state?
+    </span><span class="kw">pub </span>text_value: SparseSet&lt;String&gt;,
+    <span class="kw">pub </span>numeric_value: SparseSet&lt;f64&gt;,
 
     <span class="comment">// Display
     </span><span class="kw">pub </span>display: AnimatableSet&lt;Display&gt;,
@@ -1534,6 +1572,8 @@
     <span class="comment">// TODO: When we can do incremental updates on a per entity basis, change this to a bitflag
     // for layout, text layout, rendering, etc. to replace the above `needs_` members.
     </span><span class="kw">pub </span>needs_text_layout: SparseSet&lt;bool&gt;,
+
+    <span class="kw">pub </span>needs_access_update: SparseSet&lt;bool&gt;,
 
     <span class="doccomment">/// This includes both the system&#39;s HiDPI scaling factor as well as `cx.user_scale_factor`.
     </span><span class="kw">pub </span>dpi_factor: f64,
@@ -2284,6 +2324,15 @@
         <span class="self">self</span>.pseudo_classes.remove(entity);
         <span class="self">self</span>.disabled.remove(entity);
         <span class="self">self</span>.abilities.remove(entity);
+
+        <span class="self">self</span>.roles.remove(entity);
+        <span class="self">self</span>.default_action_verb.remove(entity);
+        <span class="self">self</span>.live.remove(entity);
+        <span class="self">self</span>.labelled_by.remove(entity);
+        <span class="self">self</span>.hidden.remove(entity);
+        <span class="self">self</span>.text_value.remove(entity);
+        <span class="self">self</span>.numeric_value.remove(entity);
+
         <span class="comment">// Display
         </span><span class="self">self</span>.display.remove(entity);
         <span class="comment">// Visibility
@@ -2403,6 +2452,7 @@
         <span class="self">self</span>.image.remove(entity);
 
         <span class="self">self</span>.needs_text_layout.remove(entity);
+        <span class="self">self</span>.needs_access_update.remove(entity);
     }
 
     <span class="kw">pub fn </span>needs_restyle(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
@@ -2415,6 +2465,10 @@
 
     <span class="kw">pub fn </span>needs_redraw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.system_flags.set(SystemFlags::REDRAW, <span class="bool-val">true</span>);
+    }
+
+    <span class="kw">pub fn </span>needs_access_update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
+        <span class="self">self</span>.needs_access_update.insert(entity, <span class="bool-val">true</span>).unwrap();
     }
 
     <span class="kw">pub fn </span>should_redraw&lt;F: FnOnce()&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, f: F) {

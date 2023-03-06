@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["Application",""],["WinitEventProxy",""]]};
+window.SIDEBAR_ITEMS = {"enum":[["UserEvent",""]],"struct":[["Application",""],["WinitEventProxy",""]]};

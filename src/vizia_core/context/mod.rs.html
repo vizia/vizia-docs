@@ -592,7 +592,21 @@
 <a href="#592" id="592">592</a>
 <a href="#593" id="593">593</a>
 <a href="#594" id="594">594</a>
-</pre><pre class="rust"><code><span class="kw">pub mod </span>backend;
+<a href="#595" id="595">595</a>
+<a href="#596" id="596">596</a>
+<a href="#597" id="597">597</a>
+<a href="#598" id="598">598</a>
+<a href="#599" id="599">599</a>
+<a href="#600" id="600">600</a>
+<a href="#601" id="601">601</a>
+<a href="#602" id="602">602</a>
+<a href="#603" id="603">603</a>
+<a href="#604" id="604">604</a>
+<a href="#605" id="605">605</a>
+<a href="#606" id="606">606</a>
+<a href="#607" id="607">607</a>
+</pre><pre class="rust"><code><span class="kw">mod </span>access;
+<span class="kw">pub mod </span>backend;
 <span class="kw">mod </span>draw;
 <span class="kw">mod </span>event;
 <span class="kw">mod </span>proxy;
@@ -614,6 +628,7 @@
 <span class="kw">use </span>replace_with::replace_with_or_abort;
 <span class="kw">use </span>unic_langid::LanguageIdentifier;
 
+<span class="kw">pub use </span>access::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>draw::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>event::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>proxy::<span class="kw-2">*</span>;
@@ -653,6 +668,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) data: DataStore,
     <span class="kw">pub</span>(<span class="kw">crate</span>) bindings: Views,
     <span class="kw">pub</span>(<span class="kw">crate</span>) event_queue: VecDeque&lt;Event&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) tree_updates: Vec&lt;accesskit::TreeUpdate&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) listeners:
         HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>ViewHandler, <span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event)&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) global_listeners: Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event)&gt;&gt;,
@@ -698,6 +714,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) click_pos: (f32, f32),
 
     <span class="kw">pub </span>ignore_default_theme: bool,
+    <span class="kw">pub </span>window_has_focus: bool,
 }
 
 <span class="kw">impl </span>Default <span class="kw">for </span>Context {
@@ -740,6 +757,7 @@
             canvases: HashMap::new(),
             <span class="comment">// environment: Environment::new(),
             </span>event_queue: VecDeque::new(),
+            tree_updates: Vec::new(),
             listeners: HashMap::default(),
             global_listeners: <span class="macro">vec!</span>[],
             mouse: MouseState::default(),
@@ -779,6 +797,7 @@
             click_pos: (<span class="number">0.0</span>, <span class="number">0.0</span>),
 
             ignore_default_theme: <span class="bool-val">false</span>,
+            window_has_focus: <span class="bool-val">true</span>,
         };
 
         result.style.needs_restyle();
@@ -789,6 +808,8 @@
 
         result.entity_manager.create();
         result.set_default_font(<span class="kw-2">&amp;</span>[<span class="string">&quot;Roboto&quot;</span>]);
+
+        result.style.roles.insert(Entity::root(), Role::Window).unwrap();
 
         result
     }
@@ -807,7 +828,7 @@
     }
 
     <span class="doccomment">/// Makes the above black magic more explicit
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>with_current(<span class="kw-2">&amp;mut </span><span class="self">self</span>, e: Entity, f: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;mut </span>Context)) {
+    </span><span class="kw">pub fn </span>with_current(<span class="kw-2">&amp;mut </span><span class="self">self</span>, e: Entity, f: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;mut </span>Context)) {
         <span class="kw">let </span>prev = <span class="self">self</span>.current;
         <span class="self">self</span>.current = e;
         f(<span class="self">self</span>);
@@ -1110,6 +1131,11 @@
         };
 
         std::thread::spawn(<span class="kw">move </span>|| target(<span class="kw-2">&amp;mut </span>cxp));
+    }
+
+    <span class="doccomment">/// Finds the entity that identifier identifies
+    </span><span class="kw">pub fn </span>resolve_entity_identifier(<span class="kw-2">&amp;</span><span class="self">self</span>, identity: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;Entity&gt; {
+        <span class="self">self</span>.entity_identifiers.get(identity).cloned()
     }
 }
 

@@ -575,12 +575,55 @@
 <a href="#575" id="575">575</a>
 <a href="#576" id="576">576</a>
 <a href="#577" id="577">577</a>
-</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#578" id="578">578</a>
+<a href="#579" id="579">579</a>
+<a href="#580" id="580">580</a>
+<a href="#581" id="581">581</a>
+<a href="#582" id="582">582</a>
+<a href="#583" id="583">583</a>
+<a href="#584" id="584">584</a>
+<a href="#585" id="585">585</a>
+<a href="#586" id="586">586</a>
+<a href="#587" id="587">587</a>
+<a href="#588" id="588">588</a>
+<a href="#589" id="589">589</a>
+<a href="#590" id="590">590</a>
+<a href="#591" id="591">591</a>
+<a href="#592" id="592">592</a>
+<a href="#593" id="593">593</a>
+<a href="#594" id="594">594</a>
+<a href="#595" id="595">595</a>
+<a href="#596" id="596">596</a>
+<a href="#597" id="597">597</a>
+<a href="#598" id="598">598</a>
+<a href="#599" id="599">599</a>
+<a href="#600" id="600">600</a>
+<a href="#601" id="601">601</a>
+<a href="#602" id="602">602</a>
+<a href="#603" id="603">603</a>
+<a href="#604" id="604">604</a>
+<a href="#605" id="605">605</a>
+<a href="#606" id="606">606</a>
+<a href="#607" id="607">607</a>
+<a href="#608" id="608">608</a>
+<a href="#609" id="609">609</a>
+<a href="#610" id="610">610</a>
+<a href="#611" id="611">611</a>
+<a href="#612" id="612">612</a>
+<a href="#613" id="613">613</a>
+<a href="#614" id="614">614</a>
+<a href="#615" id="615">615</a>
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::AccessNode;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::systems::get_access_node;
+<span class="kw">use crate</span>::{accessibility::IntoNode, context::AccessContext};
 <span class="kw">use </span>std::{any::Any, collections::HashMap};
 
 <span class="kw">use </span><span class="kw">crate</span>::events::ViewHandler;
 <span class="kw">use </span><span class="kw">crate</span>::resource::ImageOrId;
 <span class="kw">use </span><span class="kw">crate</span>::state::ModelDataStore;
+
+<span class="kw">use </span>accesskit::{NodeBuilder, TreeUpdate};
 <span class="kw">use </span>femtovg::{renderer::OpenGl, ImageFlags, Paint, Path, PixelFormat, RenderTarget};
 
 <span class="doccomment">/// The canvas we will be drawing to.
@@ -605,6 +648,32 @@
         cx.cache.add(id).expect(<span class="string">&quot;Failed to add to cache&quot;</span>);
         cx.style.add(id);
         cx.views.insert(id, Box::new(<span class="self">self</span>));
+        <span class="kw">let </span>parent_id = cx.tree.get_layout_parent(id).unwrap();
+        <span class="kw">let </span>parent_node_id = parent_id.accesskit_id();
+        <span class="kw">let </span>node_id = id.accesskit_id();
+        <span class="kw">let </span>children =
+            parent_id.child_iter(<span class="kw-2">&amp;</span>cx.tree).map(|entity| entity.accesskit_id()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+
+        <span class="kw">let </span><span class="kw-2">mut </span>access_context = AccessContext {
+            current: id,
+            tree: <span class="kw-2">&amp;</span>cx.tree,
+            cache: <span class="kw-2">&amp;</span>cx.cache,
+            style: <span class="kw-2">&amp;</span>cx.style,
+            text_context: <span class="kw-2">&amp;mut </span>cx.text_context,
+        };
+
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>parent_node) =
+            get_access_node(<span class="kw-2">&amp;mut </span>access_context, <span class="kw-2">&amp;mut </span>cx.views, parent_id)
+        {
+            parent_node.node_builder.set_children(children);
+            <span class="kw">let </span>parent_node = parent_node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes);
+            <span class="kw">let </span>node = NodeBuilder::default().build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes);
+            cx.tree_updates.push(TreeUpdate {
+                nodes: <span class="macro">vec!</span>[(parent_node_id, parent_node), (node_id, node)],
+                tree: <span class="prelude-val">None</span>,
+                focus: <span class="prelude-val">None</span>,
+            });
+        }
 
         cx.data
             .insert(id, ModelDataStore { models: HashMap::default(), stores: HashMap::default() })
@@ -629,6 +698,9 @@
     <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
         draw_view(cx, canvas);
     }
+
+    <span class="attr">#[allow(unused_variables)]
+    </span><span class="kw">fn </span>accessibility(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>AccessContext, node: <span class="kw-2">&amp;mut </span>AccessNode) {}
 }
 
 <span class="kw">impl</span>&lt;T: View&gt; ViewHandler <span class="kw">for </span>T
@@ -645,6 +717,10 @@
 
     <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
         &lt;T <span class="kw">as </span>View&gt;::draw(<span class="self">self</span>, cx, canvas);
+    }
+
+    <span class="kw">fn </span>accessibility(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>AccessContext, node: <span class="kw-2">&amp;mut </span>AccessNode) {
+        &lt;T <span class="kw">as </span>View&gt;::accessibility(<span class="self">self</span>, cx, node);
     }
 
     <span class="kw">fn </span>as_any_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Any {

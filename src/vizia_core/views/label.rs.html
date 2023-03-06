@@ -169,6 +169,14 @@
 <a href="#169" id="169">169</a>
 <a href="#170" id="170">170</a>
 <a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// A label used to display text to the screen.
@@ -270,11 +278,15 @@
     /// #
     /// Label::new(cx, &quot;Text&quot;);
     /// ```
-    </span><span class="kw">pub fn </span>new&lt;<span class="lifetime">&#39;a</span>, T&gt;(cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context, text: <span class="kw">impl </span>Res&lt;T&gt;) -&gt; Handle&lt;<span class="lifetime">&#39;a</span>, <span class="self">Self</span>&gt;
+    </span><span class="kw">pub fn </span>new&lt;<span class="lifetime">&#39;a</span>, T&gt;(cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context, text: <span class="kw">impl </span>Res&lt;T&gt; + Clone) -&gt; Handle&lt;<span class="lifetime">&#39;a</span>, <span class="self">Self</span>&gt;
     <span class="kw">where
         </span>T: ToString,
     {
-        <span class="self">Self </span>{ describing: <span class="prelude-val">None </span>}.build(cx, |<span class="kw">_</span>| {}).text(text)
+        <span class="self">Self </span>{ describing: <span class="prelude-val">None </span>}
+            .build(cx, |<span class="kw">_</span>| {})
+            .text(text.clone())
+            .role(Role::StaticText)
+            .name(text.clone())
     }
 }
 
@@ -305,7 +317,11 @@
     /// Label::new(cx, &quot;hello&quot;).describing(&quot;checkbox_identifier&quot;);
     /// ```
     </span><span class="kw">pub fn </span>describing(<span class="self">self</span>, entity_identifier: <span class="kw">impl </span>Into&lt;String&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.modify(|label| label.describing = <span class="prelude-val">Some</span>(entity_identifier.into())).class(<span class="string">&quot;describing&quot;</span>)
+        <span class="kw">let </span>identifier = entity_identifier.into();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(id) = <span class="self">self</span>.cx.resolve_entity_identifier(<span class="kw-2">&amp;</span>identifier) {
+            <span class="self">self</span>.cx.style.labelled_by.insert(id, <span class="self">self</span>.entity).unwrap();
+        }
+        <span class="self">self</span>.modify(|label| label.describing = <span class="prelude-val">Some</span>(identifier)).class(<span class="string">&quot;describing&quot;</span>)
     }
 }
 

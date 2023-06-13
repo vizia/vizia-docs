@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["item_height","num_items","root","visible_items"]};

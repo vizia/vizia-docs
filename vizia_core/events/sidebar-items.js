@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["Propagation","Determines how an event propagates through the tree."]],"struct":[["Event","A wrapper around a message, providing metadata on how the event travels through the tree."],["EventMeta","The meta data of an [`Event`]."]],"trait":[["ViewHandler",""]]};
+window.SIDEBAR_ITEMS = {"enum":["Propagation"],"struct":["Event","EventMeta"]};

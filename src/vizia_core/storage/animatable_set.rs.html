@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/storage/animatable_set.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>animatable_set.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/storage/animatable_set.rs`."><title>animatable_set.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ba5701c5741a7b69.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0 (90c541806 2023-05-31)" data-search-js="search-e077946657036a58.js" data-settings-js="settings-298e1ea74db45b39.js" data-settings-css="settings-7bfb4c59cc6bc502.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-905937fbbdc8e9ea.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f61008743c98d196.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -741,9 +741,29 @@
 <a href="#741" id="741">741</a>
 <a href="#742" id="742">742</a>
 <a href="#743" id="743">743</a>
-</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::animation::{AnimationState, Interpolator};
+<a href="#744" id="744">744</a>
+<a href="#745" id="745">745</a>
+<a href="#746" id="746">746</a>
+<a href="#747" id="747">747</a>
+<a href="#748" id="748">748</a>
+<a href="#749" id="749">749</a>
+<a href="#750" id="750">750</a>
+<a href="#751" id="751">751</a>
+<a href="#752" id="752">752</a>
+<a href="#753" id="753">753</a>
+<a href="#754" id="754">754</a>
+<a href="#755" id="755">755</a>
+<a href="#756" id="756">756</a>
+<a href="#757" id="757">757</a>
+<a href="#758" id="758">758</a>
+<a href="#759" id="759">759</a>
+<a href="#760" id="760">760</a>
+<a href="#761" id="761">761</a>
+<a href="#762" id="762">762</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::animation::{Animation, AnimationState, Interpolator};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::style::Rule;
+<span class="kw">use </span>instant::Duration;
 <span class="kw">use </span>vizia_id::GenerationalId;
 <span class="kw">use </span>vizia_storage::{SparseSet, SparseSetGeneric, SparseSetIndex};
 
@@ -816,7 +836,7 @@
     }
 }
 
-<span class="doccomment">/// An Index is used by the AnimatableStorage and contains a data index and an animation index.
+<span class="doccomment">/// An Index is used by the AnimatableSet and contains a data index and an animation index.
 </span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>InlineIndex {
     data_index: DataIndex,
@@ -869,14 +889,14 @@
     }
 }
 
-<span class="doccomment">/// Animatable storage is used for storing inline and shared data for entities as well as definitions for
+<span class="doccomment">/// Animatable set is used for storing inline and shared data for entities as well as definitions for
 /// animations, which can be played for entities, and transitions, which play when an entity matches a new shared style
 /// rule which defines a trnasition.
 ///
 /// Animations are moved from animations to active_animations when played. This allows the active
 /// animations to be quickly iterated to update the value.
 </span><span class="attr">#[derive(Default, Debug)]
-</span><span class="kw">pub struct </span>AnimatableSet&lt;T: Interpolator&gt; {
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>AnimatableSet&lt;T: Interpolator&gt; {
     <span class="doccomment">/// Shared data determined by style rules
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) shared_data: SparseSetGeneric&lt;SharedIndex, T&gt;,
     <span class="doccomment">/// Inline data defined on specific entities
@@ -891,14 +911,9 @@
 <span class="kw">where
     </span>T: <span class="lifetime">&#39;static </span>+ Default + Clone + Interpolator + PartialEq + std::fmt::Debug,
 {
-    <span class="doccomment">/// Create a new empty animatable storage.
-    </span><span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>::default()
-    }
-
     <span class="doccomment">/// Insert an inline value for an entity.
     </span><span class="kw">pub fn </span>insert(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, value: T) {
-        <span class="self">self</span>.inline_data.insert(entity, value).unwrap();
+        <span class="self">self</span>.inline_data.insert(entity, value);
     }
 
     <span class="doccomment">/// Remove an entity and any inline data.
@@ -1007,39 +1022,40 @@
     /// Animations exist separately to inline (entity) data and shared (rule) data.
     /// Playing an aimation for a particular entity will clone the animation state to the
     /// active animations and then link the entity to it.  
-    </span><span class="kw">pub fn </span>insert_animation(
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>insert_animation(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         animation: Animation,
         animation_description: AnimationState&lt;T&gt;,
     ) {
-        <span class="self">self</span>.animations.insert(animation, animation_description).unwrap();
+        <span class="self">self</span>.animations.insert(animation, animation_description);
     }
 
-    <span class="kw">pub fn </span>remove_animation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, animation: Animation) -&gt; <span class="prelude-ty">Option</span>&lt;AnimationState&lt;T&gt;&gt; {
-        <span class="self">self</span>.animations.remove(animation)
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>insert_rule(<span class="kw-2">&amp;mut </span><span class="self">self</span>, rule: Rule, value: T) {
+        <span class="self">self</span>.shared_data.insert(rule, value);
     }
 
-    <span class="kw">pub fn </span>insert_rule(<span class="kw-2">&amp;mut </span><span class="self">self</span>, rule: Rule, value: T) {
-        <span class="self">self</span>.shared_data.insert(rule, value).unwrap();
-    }
+    <span class="comment">// pub(crate) fn remove_rule(&amp;mut self, rule: Rule) -&gt; Option&lt;T&gt; {
+    //     self.shared_data.remove(rule)
+    // }
 
-    <span class="kw">pub fn </span>remove_rule(<span class="kw-2">&amp;mut </span><span class="self">self</span>, rule: Rule) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
-        <span class="self">self</span>.shared_data.remove(rule)
-    }
-
-    <span class="doccomment">/// Inserts a transition for a given rule
+    </span><span class="doccomment">/// Inserts a transition for a given rule
     ///
     /// Transitions are animations which are defined for a particular rule. When an entity is linked to
     /// a rule any transition associated with that rule will play for that entity.
     ///
-    </span><span class="kw">pub fn </span>insert_transition(<span class="kw-2">&amp;mut </span><span class="self">self</span>, rule: Rule, animation: Animation) {
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>insert_transition(<span class="kw-2">&amp;mut </span><span class="self">self</span>, rule: Rule, animation: Animation) {
         <span class="comment">// Check if the rule exists
         </span><span class="kw">if </span><span class="self">self</span>.shared_data.contains(rule) &amp;&amp; <span class="self">self</span>.animations.contains(animation) {
             <span class="self">self</span>.shared_data.sparse[rule.index()].animation = animation;
         }
     }
 
-    <span class="kw">pub fn </span>play_animation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, animation: Animation) {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>play_animation(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        entity: Entity,
+        animation: Animation,
+        duration: Duration,
+    ) {
         <span class="kw">let </span>entity_index = entity.index();
 
         <span class="kw">if </span>!<span class="self">self</span>.animations.contains(animation) {
@@ -1056,7 +1072,6 @@
             <span class="kw">if </span>active_anim_index &lt; <span class="self">self</span>.active_animations.len() {
                 <span class="kw">let </span>anim_state = <span class="kw-2">&amp;mut </span><span class="self">self</span>.active_animations[active_anim_index];
                 <span class="kw">if </span>anim_state.id == animation {
-                    anim_state.t0 = <span class="number">0.0</span>;
                     anim_state.active = <span class="bool-val">true</span>;
                     anim_state.t = <span class="number">0.0</span>;
                     anim_state.start_time = instant::Instant::now();
@@ -1068,8 +1083,8 @@
                             .keyframes
                             .first()
                             .unwrap()
-                            .<span class="number">1
-                            </span>.clone(),
+                            .value
+                            .clone(),
                     );
                 } <span class="kw">else </span>{
                     anim_state.output = <span class="prelude-val">Some</span>(
@@ -1080,17 +1095,16 @@
                             .keyframes
                             .first()
                             .unwrap()
-                            .<span class="number">1
-                            </span>.clone(),
+                            .value
+                            .clone(),
                     );
                     anim_state.entities.remove(<span class="kw-2">&amp;</span>entity);
                 }
-                <span class="comment">//println!(&quot;Already playing: {:?}&quot;, anim_state);
-                //anim_state.play(entity);
-            </span>}
-            <span class="comment">//else {
-            // Safe to unwrap because already checked that the animation exists
+            }
+
+            <span class="comment">// Safe to unwrap because already checked that the animation exists
             </span><span class="kw">let </span><span class="kw-2">mut </span>anim_state = <span class="self">self</span>.animations.get(animation).cloned().unwrap();
+            anim_state.duration = duration;
             anim_state.output = <span class="prelude-val">Some</span>(
                 <span class="self">self</span>.animations
                     .get(animation)
@@ -1099,57 +1113,49 @@
                     .keyframes
                     .first()
                     .unwrap()
-                    .<span class="number">1
-                    </span>.clone(),
+                    .value
+                    .clone(),
             );
             anim_state.play(entity);
             <span class="self">self</span>.inline_data.sparse[entity_index].anim_index = <span class="self">self</span>.active_animations.len() <span class="kw">as </span>u32;
             <span class="self">self</span>.active_animations.push(anim_state);
-            <span class="comment">//}
-        </span>}
+        }
     }
 
     <span class="kw">pub fn </span>tick(<span class="kw-2">&amp;mut </span><span class="self">self</span>, time: instant::Instant) -&gt; bool {
         <span class="kw">if </span><span class="self">self</span>.has_animations() {
             <span class="kw">for </span>state <span class="kw">in </span><span class="self">self</span>.active_animations.iter_mut() {
-                <span class="comment">// If the animation is already finished then return false
-                </span><span class="kw">if </span>state.t0 == <span class="number">1.0 </span>{
+                <span class="comment">// If the animation is already finished then skip
+                </span><span class="kw">if </span>state.t == <span class="number">1.0 </span>{
                     <span class="kw">continue</span>;
                 }
 
-                <span class="kw">let </span>start = state.keyframes.first().unwrap();
-                <span class="kw">let </span>end = state.keyframes.last().unwrap();
-
-                <span class="kw">if </span>start.<span class="number">1 </span>== end.<span class="number">1 </span>{
-                    state.t0 = <span class="number">1.0</span>;
-                    state.output = <span class="prelude-val">Some</span>(end.<span class="number">1</span>.clone());
-                    <span class="kw">continue</span>;
+                <span class="kw">if </span>state.keyframes.len() == <span class="number">1 </span>{
+                    state.output = <span class="prelude-val">Some</span>(state.keyframes[<span class="number">0</span>].value.clone());
+                    <span class="kw">return </span><span class="bool-val">true</span>;
                 }
 
                 <span class="kw">let </span>elapsed_time = time.duration_since(state.start_time);
+                <span class="kw">let </span><span class="kw-2">mut </span>normalised_time =
+                    (elapsed_time.as_secs_f32() / state.duration.as_secs_f32()) - state.delay;
 
-                <span class="comment">// Store previous time state
-                </span>state.t0 = state.t;
+                normalised_time = normalised_time.clamp(<span class="number">0.0</span>, <span class="number">1.0</span>);
 
-                <span class="comment">// Update time state
-                </span>state.t = (elapsed_time.as_secs_f32() / state.duration.as_secs_f32()) - state.delay;
-
-                <span class="kw">if </span>state.t &gt;= <span class="number">1.0 </span>{
-                    <span class="comment">//Animation is finished
-                    </span>state.output = <span class="prelude-val">Some</span>(T::interpolate(<span class="kw-2">&amp;</span>start.<span class="number">1</span>, <span class="kw-2">&amp;</span>end.<span class="number">1</span>, <span class="number">1.0</span>));
-
-                    <span class="kw">if </span>!state.persistent {
-                        <span class="comment">//state.output = Some(T::interpolate(&amp;start.1, &amp;end.1, 0.0));
-                        </span>state.t = <span class="number">1.0</span>;
-                        state.active = <span class="bool-val">false</span>;
-                    } <span class="kw">else </span>{
-                        state.t = <span class="number">1.0</span>;
-                    }
-                } <span class="kw">else if </span>state.t &lt;= <span class="number">0.0 </span>{
-                    state.output = <span class="prelude-val">Some</span>(start.<span class="number">1</span>.clone());
-                } <span class="kw">else </span>{
-                    state.output = <span class="prelude-val">Some</span>(T::interpolate(<span class="kw-2">&amp;</span>start.<span class="number">1</span>, <span class="kw-2">&amp;</span>end.<span class="number">1</span>, state.t));
+                <span class="kw">let </span><span class="kw-2">mut </span>i = <span class="number">0</span>;
+                <span class="kw">while </span>i &lt; state.keyframes.len() - <span class="number">1 </span>&amp;&amp; state.keyframes[i + <span class="number">1</span>].time &lt; normalised_time
+                {
+                    i += <span class="number">1</span>;
                 }
+                <span class="kw">let </span>start = <span class="kw-2">&amp;</span>state.keyframes[i];
+                <span class="kw">let </span>end = <span class="kw-2">&amp;</span>state.keyframes[i + <span class="number">1</span>];
+
+                <span class="kw">let </span>normalised_elapsed_time =
+                    (normalised_time - start.time) / (end.time - start.time);
+
+                state.t = normalised_time;
+
+                <span class="kw">let </span>timing_t = start.timing_function.value(normalised_elapsed_time);
+                state.output = <span class="prelude-val">Some</span>(T::interpolate(<span class="kw-2">&amp;</span>start.value, <span class="kw-2">&amp;</span>end.value, timing_t));
             }
 
             <span class="self">self</span>.remove_innactive_animations();
@@ -1160,32 +1166,31 @@
         <span class="bool-val">false
     </span>}
 
-    <span class="kw">pub fn </span>is_animating(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, animation: Animation) -&gt; bool {
-        <span class="kw">if </span><span class="self">self</span>.animations.contains(animation) {
-            <span class="kw">let </span>entity_index = entity.index();
-            <span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
-                <span class="kw">let </span>anim_index = <span class="self">self</span>.inline_data.sparse[entity_index].anim_index <span class="kw">as </span>usize;
-                <span class="kw">if </span>anim_index &lt; <span class="self">self</span>.active_animations.len() {
-                    <span class="kw">return </span><span class="bool-val">true</span>;
-                }
-            }
-        }
+    <span class="doccomment">/// Returns true if the given entity is linked to an active animation
+    </span><span class="comment">// pub fn is_animating(&amp;self, entity: Entity) -&gt; bool {
+    //     let entity_index = entity.index();
+    //     if entity_index &lt; self.inline_data.sparse.len() {
+    //         let anim_index = self.inline_data.sparse[entity_index].anim_index as usize;
+    //         if anim_index &lt; self.active_animations.len() {
+    //             return true;
+    //         }
+    //     }
 
-        <span class="bool-val">false
-    </span>}
+    //     false
+    // }
 
-    <span class="kw">pub fn </span>remove_innactive_animations(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    </span><span class="kw">pub fn </span>remove_innactive_animations(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="comment">// Create a list of finished animations
         </span><span class="kw">let </span>inactive: Vec&lt;AnimationState&lt;T&gt;&gt; = <span class="self">self
             </span>.active_animations
             .iter()
-            .filter(|e| e.t0 == <span class="number">1.0 </span>&amp;&amp; !e.persistent)
+            .filter(|e| e.t == <span class="number">1.0 </span>&amp;&amp; !e.persistent)
             .cloned()
             .collect();
 
         <span class="comment">// Remove inactive animation states from active animations list
         // Retains persistent animations
-        </span><span class="self">self</span>.active_animations.retain(|e| e.t0 &lt; <span class="number">1.0 </span>|| e.persistent);
+        </span><span class="self">self</span>.active_animations.retain(|e| e.t &lt; <span class="number">1.0 </span>|| e.persistent);
 
         <span class="kw">for </span>state <span class="kw">in </span>inactive.into_iter() {
             <span class="kw">for </span>entity <span class="kw">in </span>state.entities.iter() {
@@ -1202,7 +1207,21 @@
 
     <span class="kw">pub fn </span>has_animations(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="kw">for </span>state <span class="kw">in </span><span class="self">self</span>.active_animations.iter() {
-            <span class="kw">if </span>state.t0 &lt; <span class="number">1.0 </span>{
+            <span class="kw">if </span>state.t &lt; <span class="number">1.0 </span>{
+                <span class="kw">return </span><span class="bool-val">true</span>;
+            }
+        }
+
+        <span class="bool-val">false
+    </span>}
+
+    <span class="kw">pub fn </span>has_active_animation(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity, animation: Animation) -&gt; bool {
+        <span class="kw">let </span>entity_index = entity.index();
+        <span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
+            <span class="kw">let </span>anim_index = <span class="self">self</span>.inline_data.sparse[entity_index].anim_index <span class="kw">as </span>usize;
+            <span class="kw">if </span>anim_index &lt; <span class="self">self</span>.active_animations.len()
+                &amp;&amp; <span class="self">self</span>.active_animations[anim_index].id == animation
+            {
                 <span class="kw">return </span><span class="bool-val">true</span>;
             }
         }
@@ -1211,19 +1230,19 @@
     </span>}
 
     <span class="doccomment">/// Returns a reference to any inline data on the entity if it exists.
-    </span><span class="kw">pub fn </span>get_inline(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
-        <span class="kw">let </span>entity_index = entity.index();
-        <span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
-            <span class="kw">let </span>data_index = <span class="self">self</span>.inline_data.sparse[entity_index].data_index;
-            <span class="kw">if </span>data_index.is_inline() {
-                <span class="kw">return </span><span class="self">self</span>.inline_data.get(entity);
-            }
-        }
+    </span><span class="comment">// pub fn get_inline(&amp;self, entity: Entity) -&gt; Option&lt;&amp;T&gt; {
+    //     let entity_index = entity.index();
+    //     if entity_index &lt; self.inline_data.sparse.len() {
+    //         let data_index = self.inline_data.sparse[entity_index].data_index;
+    //         if data_index.is_inline() {
+    //             return self.inline_data.get(entity);
+    //         }
+    //     }
 
-        <span class="prelude-val">None
-    </span>}
+    //     None
+    // }
 
-    <span class="doccomment">/// Returns a mutable reference to any inline data on the entity if it exists.
+    </span><span class="doccomment">/// Returns a mutable reference to any inline data on the entity if it exists.
     </span><span class="kw">pub fn </span>get_inline_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>T&gt; {
         <span class="kw">let </span>entity_index = entity.index();
         <span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
@@ -1236,23 +1255,36 @@
         <span class="prelude-val">None
     </span>}
 
-    <span class="doccomment">/// Returns a reference to any shared data for a given rule if it exists.
-    </span><span class="kw">pub fn </span>get_shared(<span class="kw-2">&amp;</span><span class="self">self</span>, rule: Rule) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
-        <span class="self">self</span>.shared_data.get(rule)
-    }
+    <span class="comment">// /// Returns a reference to any shared data for a given rule if it exists.
+    // pub(crate) fn get_shared(&amp;self, rule: Rule) -&gt; Option&lt;&amp;T&gt; {
+    //     self.shared_data.get(rule)
+    // }
 
-    <span class="doccomment">/// Returns a mutable reference to any shared data for a given rule if it exists.
-    </span><span class="kw">pub fn </span>get_shared_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, rule: Rule) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>T&gt; {
-        <span class="self">self</span>.shared_data.get_mut(rule)
-    }
+    // /// Returns a mutable reference to any shared data for a given rule if it exists.
+    // pub(crate) fn get_shared_mut(&amp;mut self, rule: Rule) -&gt; Option&lt;&amp;mut T&gt; {
+    //     self.shared_data.get_mut(rule)
+    // }
 
-    <span class="kw">pub fn </span>get_animation(<span class="kw-2">&amp;</span><span class="self">self</span>, animation: Animation) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>AnimationState&lt;T&gt;&gt; {
-        <span class="self">self</span>.animations.get(animation)
-    }
-
-    <span class="kw">pub fn </span>get_animation_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, animation: Animation) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>AnimationState&lt;T&gt;&gt; {
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_animation_mut(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        animation: Animation,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>AnimationState&lt;T&gt;&gt; {
         <span class="self">self</span>.animations.get_mut(animation)
     }
+
+    <span class="doccomment">/// Returns a reference to the active animation linked to the given entity if it exists,
+    /// else returns None.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_active_animation(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>AnimationState&lt;T&gt;&gt; {
+        <span class="kw">let </span>entity_index = entity.index();
+        <span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
+            <span class="kw">let </span>anim_index = <span class="self">self</span>.inline_data.sparse[entity_index].anim_index <span class="kw">as </span>usize;
+            <span class="kw">if </span>anim_index &lt; <span class="self">self</span>.active_animations.len() {
+                <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.active_animations[anim_index]);
+            }
+        }
+
+        <span class="prelude-val">None
+    </span>}
 
     <span class="doccomment">/// Get the animated, inline, or shared data value from the storage.
     </span><span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
@@ -1279,7 +1311,7 @@
     </span>}
 
     <span class="doccomment">/// Link an entity to some shared data.
-    </span><span class="kw">pub fn </span>link(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, rules: <span class="kw-2">&amp;</span>[Rule]) -&gt; bool {
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>link(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, rules: <span class="kw-2">&amp;</span>[Rule]) -&gt; bool {
         <span class="kw">let </span>entity_index = entity.index();
 
         <span class="comment">// Check if the entity already has some data
@@ -1309,34 +1341,38 @@
                     </span><span class="kw">let </span>current_value = <span class="self">self</span>.get(entity).cloned().unwrap_or_default();
                     <span class="kw">let </span>current_anim_state = <span class="kw-2">&amp;mut </span><span class="self">self</span>.active_animations[entity_anim_index];
                     <span class="kw">let </span>rule_data_index = shared_data_index.data_index <span class="kw">as </span>usize;
-                    <span class="comment">// Skip if the transition hasn&#39;t changed
-                    </span><span class="kw">if </span>current_anim_state.to_rule != rule_data_index {
-                        <span class="kw">if </span>rule_data_index == current_anim_state.from_rule {
-                            <span class="comment">// Transitioning back to previous rule
-                            </span>current_anim_state.from_rule = current_anim_state.to_rule;
-                            current_anim_state.to_rule = rule_data_index;
-                            <span class="kw-2">*</span>current_anim_state.keyframes.first_mut().unwrap() = (
-                                <span class="number">0.0</span>,
-                                <span class="self">self</span>.shared_data.dense[current_anim_state.from_rule].value.clone(),
-                            );
-                            <span class="kw-2">*</span>current_anim_state.keyframes.last_mut().unwrap() = (
-                                <span class="number">1.0</span>,
-                                <span class="self">self</span>.shared_data.dense[current_anim_state.to_rule].value.clone(),
-                            );
-                            current_anim_state.delay = current_anim_state.t - <span class="number">1.0</span>;
-                            current_anim_state.start_time = instant::Instant::now();
-                        } <span class="kw">else </span>{
-                            <span class="comment">// Transitioning to new rule
-                            </span>current_anim_state.to_rule = rule_data_index;
-                            <span class="kw-2">*</span>current_anim_state.keyframes.first_mut().unwrap() =
-                                (<span class="number">0.0</span>, current_value);
-                            <span class="kw-2">*</span>current_anim_state.keyframes.last_mut().unwrap() = (
-                                <span class="number">1.0</span>,
-                                <span class="self">self</span>.shared_data.dense[current_anim_state.to_rule].value.clone(),
-                            );
-                            current_anim_state.t = <span class="number">0.0</span>;
-                            current_anim_state.t0 = <span class="number">0.0</span>;
-                            current_anim_state.start_time = instant::Instant::now();
+
+                    <span class="kw">if </span>current_anim_state.is_transition() {
+                        <span class="comment">// Skip if the transition hasn&#39;t changed
+                        </span><span class="kw">if </span>current_anim_state.to_rule != rule_data_index {
+                            <span class="kw">if </span>rule_data_index == current_anim_state.from_rule {
+                                <span class="comment">// Transitioning back to previous rule
+                                </span>current_anim_state.from_rule = current_anim_state.to_rule;
+                                current_anim_state.to_rule = rule_data_index;
+                                current_anim_state.keyframes.first_mut().unwrap().value =
+                                    <span class="self">self</span>.shared_data.dense[current_anim_state.from_rule]
+                                        .value
+                                        .clone();
+
+                                current_anim_state.keyframes.last_mut().unwrap().value =
+                                    <span class="self">self</span>.shared_data.dense[current_anim_state.to_rule]
+                                        .value
+                                        .clone();
+
+                                current_anim_state.delay = current_anim_state.t - <span class="number">1.0</span>;
+                                current_anim_state.start_time = instant::Instant::now();
+                            } <span class="kw">else </span>{
+                                <span class="comment">// Transitioning to new rule
+                                </span>current_anim_state.to_rule = rule_data_index;
+                                current_anim_state.keyframes.first_mut().unwrap().value =
+                                    current_value;
+                                current_anim_state.keyframes.last_mut().unwrap().value =
+                                    <span class="self">self</span>.shared_data.dense[current_anim_state.to_rule]
+                                        .value
+                                        .clone();
+                                current_anim_state.t = <span class="number">0.0</span>;
+                                current_anim_state.start_time = instant::Instant::now();
+                            }
                         }
                     }
                 } <span class="kw">else if let </span><span class="prelude-val">Some</span>(transition_state) = <span class="self">self</span>.animations.get_mut(rule_animation) {
@@ -1350,17 +1386,20 @@
                     {
                         <span class="kw">let </span>start_data =
                             <span class="self">self</span>.shared_data.dense[entity_data_index.index()].value.clone();
-                        <span class="kw-2">*</span>transition_state.keyframes.first_mut().unwrap() = (<span class="number">0.0</span>, start_data);
+                        transition_state.keyframes.first_mut().unwrap().value = start_data;
                     } <span class="kw">else </span>{
-                        <span class="kw-2">*</span>transition_state.keyframes.first_mut().unwrap() = (<span class="number">0.0</span>, end.clone());
+                        transition_state.keyframes.first_mut().unwrap().value = end.clone();
                     }
 
-                    <span class="kw-2">*</span>transition_state.keyframes.last_mut().unwrap() = (<span class="number">1.0</span>, end.clone());
+                    transition_state.keyframes.last_mut().unwrap().value = end.clone();
                     transition_state.from_rule =
                         <span class="self">self</span>.inline_data.sparse[entity_index].data_index.index();
                     transition_state.to_rule = shared_data_index.index();
+
+                    <span class="kw">let </span>duration = transition_state.duration;
+
                     <span class="kw">if </span>transition_state.from_rule != transition_state.to_rule {
-                        <span class="self">self</span>.play_animation(entity, rule_animation);
+                        <span class="self">self</span>.play_animation(entity, rule_animation, duration);
                     }
                     <span class="comment">//}
                 </span>}
@@ -1395,13 +1434,12 @@
     </span>}
 
     <span class="kw">pub fn </span>clear_rules(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="comment">// Remove transitions (TODO)
+        <span class="comment">// Remove transitions
         </span><span class="kw">for </span>index <span class="kw">in </span><span class="self">self</span>.shared_data.sparse.iter() {
             <span class="kw">let </span>animation = index.animation;
             <span class="self">self</span>.animations.remove(animation);
         }
-        <span class="self">self</span>.animations.clear();
-        <span class="self">self</span>.active_animations.clear();
+
         <span class="self">self</span>.shared_data.clear();
 
         <span class="kw">for </span>index <span class="kw">in </span><span class="self">self</span>.inline_data.sparse.iter_mut() {
@@ -1469,7 +1507,7 @@
     </span><span class="doccomment">/// Test for constructing a new empty animatable storage.
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>new() {
-        <span class="kw">let </span>animatable_storage = AnimatableSet::&lt;f32&gt;::new();
+        <span class="kw">let </span>animatable_storage = AnimatableSet::&lt;f32&gt;::default();
         <span class="macro">assert_eq!</span>(animatable_storage.inline_data.is_empty(), <span class="bool-val">true</span>);
         <span class="macro">assert_eq!</span>(animatable_storage.shared_data.is_empty(), <span class="bool-val">true</span>);
         <span class="macro">assert_eq!</span>(animatable_storage.animations.is_empty(), <span class="bool-val">true</span>);
@@ -1479,10 +1517,9 @@
     <span class="doccomment">/// Test inserting inline data into the storage.
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>insert_inline() {
-        <span class="kw">let </span><span class="kw-2">mut </span>animatable_storage = AnimatableSet::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>animatable_storage = AnimatableSet::default();
         animatable_storage.insert(Entity::root(), <span class="number">5.0</span>);
         <span class="comment">//assert_eq!(animatable_storage.entity_indices.first().unwrap().data_index, DataIndex::inline(0));
     </span>}
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.2 (9eb3afe9e 2023-03-27)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/draw.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>draw.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/draw.rs`."><title>draw.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ba5701c5741a7b69.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0 (90c541806 2023-05-31)" data-search-js="search-e077946657036a58.js" data-settings-js="settings-298e1ea74db45b39.js" data-settings-css="settings-7bfb4c59cc6bc502.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-905937fbbdc8e9ea.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f61008743c98d196.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -89,96 +89,175 @@
 <a href="#89" id="89">89</a>
 <a href="#90" id="90">90</a>
 <a href="#91" id="91">91</a>
-</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::Context;
-<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>std::cmp::Ordering;
+<span class="kw">use </span>std::collections::BinaryHeap;
 <span class="kw">use </span>vizia_id::GenerationalId;
-<span class="kw">use </span>vizia_storage::DrawIterator;
+<span class="kw">use </span>vizia_storage::LayoutChildIterator;
 
-<span class="kw">pub fn </span>draw_system(cx: <span class="kw-2">&amp;mut </span>Context) {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>draw_system(cx: <span class="kw-2">&amp;mut </span>Context) {
     <span class="kw">let </span>canvas = cx.canvases.get_mut(<span class="kw-2">&amp;</span>Entity::root()).unwrap();
     cx.resource_manager.mark_images_unused();
-
     <span class="kw">let </span>window_width = cx.cache.get_width(Entity::root());
     <span class="kw">let </span>window_height = cx.cache.get_height(Entity::root());
-
-    canvas.set_size(window_width <span class="kw">as </span>u32, window_height <span class="kw">as </span>u32, <span class="number">1.0</span>);
     <span class="kw">let </span>clear_color =
-        cx.style.background_color.get(Entity::root()).cloned().unwrap_or(Color::white());
+        cx.style.background_color.get(Entity::root()).cloned().unwrap_or(RGBA::TRANSPARENT.into());
+    canvas.set_size(window_width <span class="kw">as </span>u32, window_height <span class="kw">as </span>u32, <span class="number">1.0</span>);
     canvas.clear_rect(<span class="number">0</span>, <span class="number">0</span>, window_width <span class="kw">as </span>u32, window_height <span class="kw">as </span>u32, clear_color.into());
 
-    <span class="kw">let </span>draw_tree = DrawIterator::full(<span class="kw-2">&amp;</span>cx.tree);
-
-    <span class="kw">for </span>entity <span class="kw">in </span>draw_tree {
-        <span class="kw">let </span>window_bounds = cx.cache.get_bounds(Entity::root());
-
-        <span class="comment">// Skip if the entity is invisible or out of bounds
-        // Unfortunately we can&#39;t skip the subtree because even if a parent is invisible
-        // a child might be explicitly set to be visible.
-        </span><span class="kw">if </span>entity == Entity::root()
-            || cx.cache.get_visibility(entity) == Visibility::Invisible
-            || cx.cache.get_display(entity) == Display::None
-            || cx.cache.get_opacity(entity) == <span class="number">0.0
-            </span>|| !window_bounds.intersects(<span class="kw-2">&amp;</span>cx.cache.get_bounds(entity))
-        {
-            <span class="kw">continue</span>;
-        }
-
-        <span class="comment">// Apply clipping
-        </span><span class="kw">let </span>clip_region = cx.cache.get_clip_region(entity);
-
-        <span class="comment">// Skips drawing views with zero-sized clip regions
-        // This skips calling the `draw` method of the view
-        </span><span class="kw">if </span>clip_region.height() == <span class="number">0.0 </span>|| clip_region.width() == <span class="number">0.0 </span>{
-            <span class="kw">continue</span>;
-        }
-
-        canvas.scissor(clip_region.x, clip_region.y, clip_region.w, clip_region.h);
-
-        <span class="comment">// Apply transform
-        </span><span class="kw">let </span>transform = cx.cache.get_transform(entity);
+    <span class="kw">let </span><span class="kw-2">mut </span>queue = BinaryHeap::new();
+    queue.push(ZEntity { index: <span class="number">0</span>, entity: Entity::root(), opacity: <span class="number">1.0</span>, visible: <span class="bool-val">true </span>});
+    <span class="kw">while </span>!queue.is_empty() {
+        <span class="kw">let </span>zentity = queue.pop().unwrap();
         canvas.save();
-        canvas.set_transform(<span class="kw-2">&amp;</span>transform);
-
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(view) = cx.views.remove(<span class="kw-2">&amp;</span>entity) {
-            cx.current = entity;
-            view.draw(
-                <span class="kw-2">&amp;mut </span>DrawContext {
-                    current: cx.current,
-                    captured: <span class="kw-2">&amp;</span>cx.captured,
-                    focused: <span class="kw-2">&amp;</span>cx.focused,
-                    hovered: <span class="kw-2">&amp;</span>cx.hovered,
-                    style: <span class="kw-2">&amp;</span>cx.style,
-                    cache: <span class="kw-2">&amp;mut </span>cx.cache,
-                    draw_cache: <span class="kw-2">&amp;mut </span>cx.draw_cache,
-                    tree: <span class="kw-2">&amp;</span>cx.tree,
-                    data: <span class="kw-2">&amp;</span>cx.data,
-                    views: <span class="kw-2">&amp;</span>cx.views,
-                    resource_manager: <span class="kw-2">&amp;</span>cx.resource_manager,
-                    text_context: <span class="kw-2">&amp;mut </span>cx.text_context,
-                    text_config: <span class="kw-2">&amp;</span>cx.text_config,
-                    modifiers: <span class="kw-2">&amp;</span>cx.modifiers,
-                    mouse: <span class="kw-2">&amp;</span>cx.mouse,
-                },
-                canvas,
-            );
-
-            cx.views.insert(entity, view);
-        }
-
+        draw_entity(
+            <span class="kw-2">&amp;mut </span>DrawContext {
+                current: zentity.entity,
+                style: <span class="kw-2">&amp;</span>cx.style,
+                cache: <span class="kw-2">&amp;mut </span>cx.cache,
+                tree: <span class="kw-2">&amp;</span>cx.tree,
+                data: <span class="kw-2">&amp;</span>cx.data,
+                views: <span class="kw-2">&amp;mut </span>cx.views,
+                resource_manager: <span class="kw-2">&amp;</span>cx.resource_manager,
+                text_context: <span class="kw-2">&amp;mut </span>cx.text_context,
+                text_config: <span class="kw-2">&amp;</span>cx.text_config,
+                modifiers: <span class="kw-2">&amp;</span>cx.modifiers,
+                mouse: <span class="kw-2">&amp;</span>cx.mouse,
+                opacity: zentity.opacity,
+            },
+            canvas,
+            zentity.index,
+            <span class="kw-2">&amp;mut </span>queue,
+            zentity.visible,
+        );
         canvas.restore();
-
-        <span class="comment">// Uncomment this for debug outlines
-        // TODO - Hook this up to a key in debug mode
-        // let mut path = Path::new();
-        // path.rect(bounds.x, bounds.y, bounds.w, bounds.h);
-        // let mut paint = Paint::color(femtovg::Color::rgb(255, 0, 0));
-        // paint.set_line_width(1.0);
-        // canvas.stroke_path(&amp;mut path, paint);
-    </span>}
+    }
 
     canvas.flush();
+}
 
-    <span class="comment">//cx.resource_manager.evict_unused_images();
-</span>}
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.2 (9eb3afe9e 2023-03-27)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+<span class="kw">fn </span>draw_entity(
+    cx: <span class="kw-2">&amp;mut </span>DrawContext,
+    canvas: <span class="kw-2">&amp;mut </span>Canvas,
+    current_z: i32,
+    queue: <span class="kw-2">&amp;mut </span>BinaryHeap&lt;ZEntity&gt;,
+    visible: bool,
+) {
+    <span class="kw">let </span>current = cx.current;
+
+    <span class="comment">// Skip views with display: none.
+    </span><span class="kw">if </span>cx.display() == Display::None {
+        <span class="kw">return</span>;
+    }
+
+    <span class="comment">// TODO: Looks like I&#39;ll need to keep track of the current transform manually instead of within femtovg
+    // because elements with a higher z-index aren&#39;t getting the transform of their parent.
+    </span><span class="kw">let </span>z_index = cx.tree.z_index(current);
+    <span class="kw">if </span>z_index &gt; current_z {
+        queue.push(ZEntity { index: z_index, entity: current, opacity: cx.opacity, visible });
+        <span class="kw">return</span>;
+    }
+
+    canvas.save();
+
+    canvas.set_transform(<span class="kw-2">&amp;</span>cx.transform());
+
+    <span class="kw">let </span>clip_region = cx.clip_region();
+
+    canvas.intersect_scissor(clip_region.x, clip_region.y, clip_region.w, clip_region.h);
+
+    <span class="kw">let </span>is_visible = <span class="kw">match </span>(visible, cx.visibility()) {
+        (v, <span class="prelude-val">None</span>) =&gt; v,
+        (<span class="kw">_</span>, <span class="prelude-val">Some</span>(Visibility::Hidden)) =&gt; <span class="bool-val">false</span>,
+        (<span class="kw">_</span>, <span class="prelude-val">Some</span>(Visibility::Visible)) =&gt; <span class="bool-val">true</span>,
+    };
+
+    <span class="comment">// Draw the view
+    </span><span class="kw">if </span>is_visible {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(view) = cx.views.remove(<span class="kw-2">&amp;</span>current) {
+            view.draw(cx, canvas);
+            cx.views.insert(current, view);
+        }
+    }
+
+    <span class="kw">let </span>child_iter = LayoutChildIterator::new(cx.tree, cx.current);
+
+    <span class="kw">let </span>parent_opacity = cx.opacity();
+    <span class="comment">// Draw its children
+    </span><span class="kw">for </span>child <span class="kw">in </span>child_iter {
+        cx.current = child;
+        <span class="kw">let </span>opactiy = cx.style.opacity.get(child).copied().unwrap_or(Opacity(<span class="number">1.0</span>)).<span class="number">0</span>;
+        cx.opacity = parent_opacity * opactiy;
+        <span class="comment">// TODO: Skip views with zero-sized bounding boxes here? Or let user decide if they want to skip?
+        </span>draw_entity(cx, canvas, current_z, queue, is_visible);
+    }
+
+    canvas.restore();
+    cx.current = current;
+}
+
+<span class="kw">struct </span>ZEntity {
+    <span class="kw">pub </span>index: i32,
+    <span class="kw">pub </span>entity: Entity,
+    <span class="kw">pub </span>opacity: f32,
+    <span class="kw">pub </span>visible: bool,
+}
+
+<span class="kw">impl </span>Ord <span class="kw">for </span>ZEntity {
+    <span class="kw">fn </span>cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; Ordering {
+        other.index.cmp(<span class="kw-2">&amp;</span><span class="self">self</span>.index)
+    }
+}
+<span class="kw">impl </span>PartialOrd <span class="kw">for </span>ZEntity {
+    <span class="kw">fn </span>partial_cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Ordering&gt; {
+        <span class="prelude-val">Some</span>(<span class="self">self</span>.cmp(other))
+    }
+}
+<span class="kw">impl </span>PartialEq <span class="kw">for </span>ZEntity {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+        <span class="self">self</span>.index == other.index
+    }
+}
+
+<span class="kw">impl </span>Eq <span class="kw">for </span>ZEntity {}
+</code></pre></div></section></main></body></html>

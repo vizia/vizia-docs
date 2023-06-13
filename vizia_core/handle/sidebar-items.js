@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["Handle","A handle to a view which has been already built into the tree."]]};

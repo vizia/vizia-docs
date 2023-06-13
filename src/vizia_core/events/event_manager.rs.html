@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/events/event_manager.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event_manager.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/events/event_manager.rs`."><title>event_manager.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ba5701c5741a7b69.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0 (90c541806 2023-05-31)" data-search-js="search-e077946657036a58.js" data-settings-js="settings-298e1ea74db45b39.js" data-settings-css="settings-7bfb4c59cc6bc502.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-905937fbbdc8e9ea.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f61008743c98d196.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -576,12 +576,40 @@
 <a href="#576" id="576">576</a>
 <a href="#577" id="577">577</a>
 <a href="#578" id="578">578</a>
-</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
+<a href="#579" id="579">579</a>
+<a href="#580" id="580">580</a>
+<a href="#581" id="581">581</a>
+<a href="#582" id="582">582</a>
+<a href="#583" id="583">583</a>
+<a href="#584" id="584">584</a>
+<a href="#585" id="585">585</a>
+<a href="#586" id="586">586</a>
+<a href="#587" id="587">587</a>
+<a href="#588" id="588">588</a>
+<a href="#589" id="589">589</a>
+<a href="#590" id="590">590</a>
+<a href="#591" id="591">591</a>
+<a href="#592" id="592">592</a>
+<a href="#593" id="593">593</a>
+<a href="#594" id="594">594</a>
+<a href="#595" id="595">595</a>
+<a href="#596" id="596">596</a>
+<a href="#597" id="597">597</a>
+<a href="#598" id="598">598</a>
+<a href="#599" id="599">599</a>
+<a href="#600" id="600">600</a>
+<a href="#601" id="601">601</a>
+<a href="#602" id="602">602</a>
+<a href="#603" id="603">603</a>
+<a href="#604" id="604">604</a>
+<a href="#605" id="605">605</a>
+<a href="#606" id="606">606</a>
+<a href="#607" id="607">607</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
 <span class="kw">use </span><span class="kw">crate</span>::events::EventMeta;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="attr">#[cfg(debug_assertions)]
-</span><span class="kw">use </span><span class="kw">crate</span>::systems::compute_matched_rules;
-<span class="kw">use </span><span class="kw">crate</span>::systems::hover_system;
+<span class="kw">use </span><span class="kw">crate</span>::style::{Abilities, PseudoClassFlags};
+<span class="kw">use </span><span class="kw">crate</span>::systems::{compute_matched_rules, hover_system};
 <span class="kw">use </span><span class="kw">crate</span>::tree::{focus_backward, focus_forward, is_navigatable};
 <span class="kw">use </span>instant::{Duration, Instant};
 <span class="kw">use </span>std::any::Any;
@@ -596,74 +624,58 @@
 /// The [EventManager] is responsible for taking the events in the event queue in context
 /// and dispatching them to views and models based on the target and propagation metadata of the event.
 </span><span class="attr">#[doc(hidden)]
-</span><span class="kw">pub struct </span>EventManager {
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>EventManager {
     <span class="comment">// Queue of events to be processed
     </span>event_queue: Vec&lt;Event&gt;,
 }
 
 <span class="kw">impl </span>EventManager {
     <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
-        EventManager { event_queue: Vec::new() }
+        EventManager { event_queue: Vec::with_capacity(<span class="number">10</span>) }
     }
 
     <span class="doccomment">/// Flush the event queue, dispatching events to their targets.
     /// Returns whether there are still more events to process, i.e. the event handlers sent events.
-    </span><span class="kw">pub fn </span>flush_events(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: <span class="kw-2">&amp;mut </span>Context) -&gt; bool {
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>flush_events(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context) -&gt; bool {
         <span class="comment">// Clear the event queue in the event manager
         </span><span class="self">self</span>.event_queue.clear();
 
         <span class="comment">// Move events from state to event manager
-        </span><span class="self">self</span>.event_queue.extend(context.event_queue.drain(<span class="number">0</span>..));
+        </span><span class="self">self</span>.event_queue.extend(cx.event_queue.drain(<span class="number">0</span>..));
 
         <span class="comment">// Loop over the events in the event queue
         </span><span class="lifetime">&#39;events</span>: <span class="kw">for </span>event <span class="kw">in </span><span class="self">self</span>.event_queue.iter_mut() {
-            <span class="comment">// handle internal events
+            <span class="comment">// Handle internal events
             </span>event.map(|internal_event, <span class="kw">_</span>| <span class="kw">match </span>internal_event {
-                InternalEvent::Redraw =&gt; context.needs_redraw(),
+                InternalEvent::Redraw =&gt; cx.needs_redraw(),
                 InternalEvent::LoadImage { path, image, policy } =&gt; {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(image) = image.lock().unwrap().take() {
-                        ResourceContext::new(context).load_image(path.clone(), image, <span class="kw-2">*</span>policy);
+                        ResourceContext::new(cx).load_image(path.clone(), image, <span class="kw-2">*</span>policy);
                     }
                 }
             });
-
-            <span class="comment">// handle state updates for window events
-            </span>event.map(|window_event, meta| {
-                <span class="kw">if </span>meta.origin == Entity::root() {
-                    internal_state_updates(context, window_event, meta);
-                }
-            });
-
-            <span class="kw">if </span>event.meta.consumed {
-                <span class="kw">continue </span><span class="lifetime">&#39;events</span>;
-            }
 
             <span class="comment">// Send events to any global listeners
             </span><span class="kw">let </span><span class="kw-2">mut </span>global_listeners = <span class="macro">vec!</span>[];
-            std::mem::swap(<span class="kw-2">&amp;mut </span>context.global_listeners, <span class="kw-2">&amp;mut </span>global_listeners);
+            std::mem::swap(<span class="kw-2">&amp;mut </span>cx.global_listeners, <span class="kw-2">&amp;mut </span>global_listeners);
             <span class="kw">for </span>listener <span class="kw">in </span><span class="kw-2">&amp;</span>global_listeners {
-                context
-                    .with_current(Entity::root(), |cx| listener(<span class="kw-2">&amp;mut </span>EventContext::new(cx), event));
+                cx.with_current(Entity::root(), |cx| listener(<span class="kw-2">&amp;mut </span>EventContext::new(cx), event));
             }
-            std::mem::swap(<span class="kw-2">&amp;mut </span>context.global_listeners, <span class="kw-2">&amp;mut </span>global_listeners);
+            std::mem::swap(<span class="kw-2">&amp;mut </span>cx.global_listeners, <span class="kw-2">&amp;mut </span>global_listeners);
 
             <span class="comment">// Send events to any local listeners
-            </span><span class="kw">let </span>listeners = context.listeners.keys().copied().collect::&lt;Vec&lt;Entity&gt;&gt;();
+            </span><span class="kw">let </span>listeners = cx.listeners.keys().copied().collect::&lt;Vec&lt;Entity&gt;&gt;();
             <span class="kw">for </span>entity <span class="kw">in </span>listeners {
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(listener) = context.listeners.remove(<span class="kw-2">&amp;</span>entity) {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>event_handler) = context.views.remove(<span class="kw-2">&amp;</span>entity) {
-                        context.with_current(entity, |context| {
-                            (listener)(
-                                event_handler.as_mut(),
-                                <span class="kw-2">&amp;mut </span>EventContext::new(context),
-                                event,
-                            );
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(listener) = cx.listeners.remove(<span class="kw-2">&amp;</span>entity) {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>event_handler) = cx.views.remove(<span class="kw-2">&amp;</span>entity) {
+                        cx.with_current(entity, |cx| {
+                            (listener)(event_handler.as_mut(), <span class="kw-2">&amp;mut </span>EventContext::new(cx), event);
                         });
 
-                        context.views.insert(entity, event_handler);
+                        cx.views.insert(entity, event_handler);
                     }
 
-                    context.listeners.insert(entity, listener);
+                    cx.listeners.insert(entity, listener);
                 }
 
                 <span class="kw">if </span>event.meta.consumed {
@@ -671,29 +683,39 @@
                 }
             }
 
-            <span class="kw">let </span>context = <span class="kw-2">&amp;mut </span>EventContext::new(context);
+            <span class="comment">// Handle state updates for window events
+            </span>event.map(|window_event, meta| {
+                <span class="kw">if </span>meta.origin == Entity::root() {
+                    internal_state_updates(cx, window_event, meta);
+                }
+            });
 
-            <span class="comment">// Define the target to prevent multiple mutable borrows error
+            <span class="comment">// Skip to next event if the current event was consumed when handling state updates.
+            </span><span class="kw">if </span>event.meta.consumed {
+                <span class="kw">continue </span><span class="lifetime">&#39;events</span>;
+            }
+
+            <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new(cx);
+
+            <span class="comment">// Copy the target to prevent multiple mutable borrows error.
             </span><span class="kw">let </span>target = event.meta.target;
 
             <span class="comment">// Send event to target
-            </span>visit_entity(context, target, event);
+            </span>visit_entity(cx, target, event);
 
-            <span class="kw">if </span>event.meta.consumed {
+            <span class="comment">// Skip to next event if the current event was consumed.
+            </span><span class="kw">if </span>event.meta.consumed {
                 <span class="kw">continue </span><span class="lifetime">&#39;events</span>;
             }
 
             <span class="comment">// Propagate up from target to root (not including target)
             </span><span class="kw">if </span>event.meta.propagation == Propagation::Up {
+                <span class="comment">// Create a parent iterator and skip the first element which is the target.
+                </span><span class="kw">let </span>iter = target.parent_iter(cx.tree).skip(<span class="number">1</span>);
                 <span class="comment">// Walk up the tree from parent to parent
-                </span><span class="kw">for </span>entity <span class="kw">in </span>target.parent_iter(context.tree) {
-                    <span class="comment">// Skip the target entity
-                    </span><span class="kw">if </span>entity == event.meta.target {
-                        <span class="kw">continue</span>;
-                    }
-
+                </span><span class="kw">for </span>entity <span class="kw">in </span>iter {
                     <span class="comment">// Send event to all entities before the target
-                    </span>visit_entity(context, entity, event);
+                    </span>visit_entity(cx, entity, event);
 
                     <span class="comment">// Skip to the next event if the current event is consumed
                     </span><span class="kw">if </span>event.meta.consumed {
@@ -703,14 +725,12 @@
             }
 
             <span class="kw">if </span>event.meta.propagation == Propagation::Subtree {
-                <span class="kw">for </span>entity <span class="kw">in </span>target.branch_iter(context.tree) {
-                    <span class="comment">// Skip the target entity
-                    </span><span class="kw">if </span>entity == event.meta.target {
-                        <span class="kw">continue</span>;
-                    }
-
-                    <span class="comment">// Send event to all entities before the target
-                    </span>visit_entity(context, entity, event);
+                <span class="comment">// Create a parent iterator and skip the first element which is the target.
+                </span><span class="kw">let </span>iter = target.branch_iter(cx.tree).skip(<span class="number">1</span>);
+                <span class="comment">// Walk down the subtree
+                </span><span class="kw">for </span>entity <span class="kw">in </span>iter {
+                    <span class="comment">// Send event to all entities in the subtree after the target
+                    </span>visit_entity(cx, entity, event);
 
                     <span class="comment">// Skip to the next event if the current event is consumed
                     </span><span class="kw">if </span>event.meta.consumed {
@@ -720,7 +740,8 @@
             }
         }
 
-        !context.event_queue.is_empty()
+        <span class="comment">// Return true if there are new events in the queue
+        </span>!cx.event_queue.is_empty()
     }
 }
 
@@ -755,17 +776,20 @@
 
     <span class="comment">// Send event to the view attached to the entity
     </span><span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>view) = cx.views.remove(<span class="kw-2">&amp;</span>entity) {
-        <span class="comment">// cx.with_current(entity, |cx| {
-        </span>cx.current = entity;
+        cx.current = entity;
         view.event(cx, event);
-        <span class="comment">// });
 
-        </span>cx.views.insert(entity, view);
+        cx.views.insert(entity, view);
     }
 }
 
-<span class="kw">fn </span>internal_state_updates(context: <span class="kw-2">&amp;mut </span>Context, window_event: <span class="kw-2">&amp;</span>WindowEvent, meta: <span class="kw-2">&amp;mut </span>EventMeta) {
+<span class="doccomment">/// Update the internal state of the context based on received window event and emit window event to relevant target.
+</span><span class="kw">fn </span>internal_state_updates(context: <span class="kw-2">&amp;mut </span>Context, window_event: <span class="kw-2">&amp;</span>WindowEvent, meta: <span class="kw-2">&amp;mut </span>EventMeta) {
     <span class="kw">match </span>window_event {
+        WindowEvent::Drop(drop_data) =&gt; {
+            context.drop_data = <span class="prelude-val">Some</span>(drop_data.clone());
+        }
+
         WindowEvent::MouseMove(x, y) =&gt; {
             context.mouse.previous_cursorx = context.mouse.cursorx;
             context.mouse.previous_cursory = context.mouse.cursory;
@@ -774,7 +798,17 @@
 
             hover_system(context);
             mutate_direct_or_up(meta, context.captured, context.hovered, <span class="bool-val">false</span>);
-        }
+
+            <span class="comment">// if let Some(dropped_file) = context.dropped_file.take() {
+            //     emit_direct_or_up(
+            //         context,
+            //         WindowEvent::DroppedFile(dropped_file),
+            //         context.captured,
+            //         context.hovered,
+            //         true,
+            //     );
+            // }
+        </span>}
         WindowEvent::MouseDown(button) =&gt; {
             <span class="comment">// do direct state-updates
             </span><span class="kw">match </span>button {
@@ -784,10 +818,16 @@
                     context.mouse.left.pos_down = (context.mouse.cursorx, context.mouse.cursory);
                     context.mouse.left.pressed = context.hovered;
                     context.triggered = context.hovered;
+
+                    <span class="kw">let </span>disabled =
+                        context.style.disabled.get(context.hovered).copied().unwrap_or_default();
+
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) =
                         context.style.pseudo_classes.get_mut(context.triggered)
                     {
-                        pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">true</span>);
+                        <span class="kw">if </span>!disabled {
+                            pseudo_classes.set(PseudoClassFlags::ACTIVE, <span class="bool-val">true</span>);
+                        }
                     }
                     <span class="kw">let </span>focusable = context
                         .style
@@ -795,6 +835,9 @@
                         .get(context.hovered)
                         .filter(|abilities| abilities.contains(Abilities::FOCUSABLE))
                         .is_some();
+
+                    <span class="comment">// Reset drag data
+                    </span>context.drop_data = <span class="prelude-val">None</span>;
 
                     context.with_current(
                         <span class="kw">if </span>focusable { context.hovered } <span class="kw">else </span>{ context.focused },
@@ -882,7 +925,7 @@
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) =
                     context.style.pseudo_classes.get_mut(context.triggered)
                 {
-                    pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">false</span>);
+                    pseudo_classes.set(PseudoClassFlags::ACTIVE, <span class="bool-val">false</span>);
                 }
                 context.needs_restyle();
 
@@ -938,38 +981,49 @@
 
                 <span class="kw">for </span>entity <span class="kw">in </span>TreeIterator::full(tree).skip(<span class="number">1</span>) {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(element_name) = views.get(<span class="kw-2">&amp;</span>entity).and_then(|view| view.element()) {
+                        <span class="kw">let </span>w = cache.get_bounds(entity).w;
+                        <span class="kw">let </span>h = cache.get_bounds(entity).h;
+                        <span class="kw">let </span>classes = context.style.classes.get(entity);
+                        <span class="kw">let </span><span class="kw-2">mut </span>class_names = String::new();
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(classes) = classes {
+                            <span class="kw">for </span>class <span class="kw">in </span>classes.iter() {
+                                class_names += <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;.{}&quot;</span>, class);
+                            }
+                        }
                         <span class="macro">println!</span>(
-                            <span class="string">&quot;{}{} {} {:?} display={:?} bounds={} clip={}&quot;</span>,
+                            <span class="string">&quot;{}{} {}{} [x: {} y: {} w: {} h: {}]&quot;</span>,
                             indents(entity),
                             entity,
                             element_name,
-                            cache.get_visibility(entity),
-                            cache.get_display(entity),
-                            cache.get_bounds(entity),
-                            cache.get_clip_region(entity),
-                        );
-                    } <span class="kw">else if let </span><span class="prelude-val">Some</span>(binding_name) =
-                        context.bindings.get(<span class="kw-2">&amp;</span>entity).and_then(|binding| binding.name())
-                    {
-                        <span class="macro">println!</span>(
-                            <span class="string">&quot;{}{} binding observing {}&quot;</span>,
-                            indents(entity),
-                            entity,
-                            binding_name
-                        );
-                    } <span class="kw">else </span>{
-                        <span class="macro">println!</span>(
-                            <span class="string">&quot;{}{} {}&quot;</span>,
-                            indents(entity),
-                            entity,
-                            <span class="kw">if </span>views.get(<span class="kw-2">&amp;</span>entity).is_some() {
-                                <span class="string">&quot;unnamed view&quot;
-                            </span>} <span class="kw">else </span>{
-                                <span class="string">&quot;no binding or view&quot;
-                            </span>}
+                            class_names,
+                            cache.get_bounds(entity).x,
+                            cache.get_bounds(entity).y,
+                            <span class="kw">if </span>w == f32::MAX { <span class="string">&quot;inf&quot;</span>.to_string() } <span class="kw">else </span>{ w.to_string() },
+                            <span class="kw">if </span>h == f32::MAX { <span class="string">&quot;inf&quot;</span>.to_string() } <span class="kw">else </span>{ h.to_string() },
                         );
                     }
-                }
+                    <span class="comment">// else if let Some(binding_name) =
+                    //     context.bindings.get(&amp;entity).and_then(|binding| binding.name())
+                    // {
+                    //     println!(
+                    //         &quot;{}{} binding observing {}&quot;,
+                    //         indents(entity),
+                    //         entity,
+                    //         binding_name
+                    //     );
+                    // } else {
+                    //     println!(
+                    //         &quot;{}{} {}&quot;,
+                    //         indents(entity),
+                    //         entity,
+                    //         if views.get(&amp;entity).is_some() {
+                    //             &quot;unnamed view&quot;
+                    //         } else {
+                    //             &quot;no binding or view&quot;
+                    //         }
+                    //     );
+                    // }
+                </span>}
             }
 
             <span class="attr">#[cfg(debug_assertions)]
@@ -977,7 +1031,7 @@
                 &amp;&amp; context.modifiers == Modifiers::CTRL | Modifiers::SHIFT | Modifiers::ALT
             {
                 <span class="kw">let </span><span class="kw-2">mut </span>result = <span class="macro">vec!</span>[];
-                compute_matched_rules(context, <span class="kw-2">&amp;</span>context.tree, context.hovered, <span class="kw-2">&amp;mut </span>result);
+                compute_matched_rules(context, context.hovered, <span class="kw-2">&amp;mut </span>result);
 
                 <span class="kw">let </span>entity = context.hovered;
                 <span class="macro">println!</span>(<span class="string">&quot;/* Matched rules for Entity: {} Parent: {:?} View: {} posx: {} posy: {} width: {} height: {}&quot;</span>,
@@ -993,7 +1047,11 @@
                     context.cache.get_height(entity)
                 );
                 <span class="kw">for </span>rule <span class="kw">in </span>result.into_iter() {
-                    <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, rule);
+                    <span class="kw">for </span>selectors <span class="kw">in </span>context.style.rules.iter() {
+                        <span class="kw">if </span>selectors.<span class="number">0 </span>== rule.<span class="number">0 </span>{
+                            <span class="macro">println!</span>(<span class="string">&quot;{:?}&quot;</span>, selectors.<span class="number">1</span>);
+                        }
+                    }
                 }
             }
 
@@ -1002,10 +1060,10 @@
                 &amp;&amp; context.modifiers == Modifiers::CTRL | Modifiers::SHIFT | Modifiers::ALT
             {
                 <span class="macro">println!</span>(<span class="string">&quot;Loaded font face info:&quot;</span>);
-                <span class="kw">for </span>face <span class="kw">in </span>context.text_context.font_system().db().faces().iter() {
+                <span class="kw">for </span>face <span class="kw">in </span>context.text_context.font_system().db().faces() {
                     <span class="macro">println!</span>(
                         <span class="string">&quot;family: {:?}\npost_script_name: {:?}\nstyle: {:?}\nweight: {:?}\nstretch: {:?}\nmonospaced: {:?}\n&quot;</span>,
-                        face.family,
+                        face.families,
                         face.post_script_name,
                         face.style,
                         face.weight,
@@ -1048,7 +1106,7 @@
                         <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) =
                             context.style.pseudo_classes.get_mut(context.triggered)
                         {
-                            pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">false</span>);
+                            pseudo_classes.set(PseudoClassFlags::ACTIVE, <span class="bool-val">false</span>);
                         }
                         context.needs_restyle();
                         context.triggered = Entity::null();
@@ -1079,7 +1137,7 @@
                         <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) =
                             context.style.pseudo_classes.get_mut(context.triggered)
                         {
-                            pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">false</span>);
+                            pseudo_classes.set(PseudoClassFlags::ACTIVE, <span class="bool-val">false</span>);
                         }
                         context.needs_restyle();
                         context.triggered = Entity::null();
@@ -1092,7 +1150,7 @@
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) =
                     context.style.pseudo_classes.get_mut(context.triggered)
                 {
-                    pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">true</span>);
+                    pseudo_classes.set(PseudoClassFlags::ACTIVE, <span class="bool-val">true</span>);
                 }
                 context.with_current(context.focused, |cx| {
                     cx.emit(WindowEvent::PressDown { mouse: <span class="bool-val">false </span>})
@@ -1110,7 +1168,7 @@
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) =
                     context.style.pseudo_classes.get_mut(context.triggered)
                 {
-                    pseudo_classes.set(PseudoClass::ACTIVE, <span class="bool-val">false</span>);
+                    pseudo_classes.set(PseudoClassFlags::ACTIVE, <span class="bool-val">false</span>);
                 }
                 context.needs_restyle();
                 context.triggered = Entity::null();
@@ -1131,7 +1189,7 @@
     }
 }
 
-<span class="kw">pub fn </span>mutate_direct_or_up(meta: <span class="kw-2">&amp;mut </span>EventMeta, direct: Entity, up: Entity, root: bool) {
+<span class="kw">fn </span>mutate_direct_or_up(meta: <span class="kw-2">&amp;mut </span>EventMeta, direct: Entity, up: Entity, root: bool) {
     <span class="kw">if </span>direct != Entity::null() {
         meta.target = direct;
         meta.propagation = Propagation::Direct;
@@ -1143,7 +1201,7 @@
     }
 }
 
-<span class="kw">pub fn </span>emit_direct_or_up&lt;M: Any + Send&gt;(
+<span class="kw">fn </span>emit_direct_or_up&lt;M: Any + Send&gt;(
     context: <span class="kw-2">&amp;mut </span>Context,
     message: M,
     direct: Entity,
@@ -1154,5 +1212,4 @@
     mutate_direct_or_up(<span class="kw-2">&amp;mut </span>event.meta, direct, up, root);
     context.emit_custom(event);
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.2 (9eb3afe9e 2023-03-27)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

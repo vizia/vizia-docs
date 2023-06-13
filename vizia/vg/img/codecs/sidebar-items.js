@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":[["png","Decoding and Encoding of PNG Images"]]};
+window.SIDEBAR_ITEMS = {"mod":["png"]};

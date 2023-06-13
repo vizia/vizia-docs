@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["WindowScalePolicy","The dpi scaling policy of the window"]],"struct":[["Application",""],["ParentWindow",""]]};
+window.SIDEBAR_ITEMS = {"enum":["WindowScalePolicy"],"struct":["Application","ParentWindow"]};

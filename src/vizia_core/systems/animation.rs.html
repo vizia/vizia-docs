@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/animation.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>animation.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/animation.rs`."><title>animation.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ba5701c5741a7b69.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0 (90c541806 2023-05-31)" data-search-js="search-e077946657036a58.js" data-settings-js="settings-298e1ea74db45b39.js" data-settings-css="settings-7bfb4c59cc6bc502.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-905937fbbdc8e9ea.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f61008743c98d196.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -65,45 +65,81 @@
 <a href="#65" id="65">65</a>
 <a href="#66" id="66">66</a>
 <a href="#67" id="67">67</a>
-</pre><pre class="rust"><code><span class="kw">use crate</span>::{prelude::<span class="kw-2">*</span>, style::SystemFlags};
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
+<a href="#81" id="81">81</a>
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{prelude::<span class="kw-2">*</span>, style::SystemFlags};
 
-<span class="kw">pub fn </span>animation_system(cx: <span class="kw-2">&amp;mut </span>Context) -&gt; bool {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>animation_system(cx: <span class="kw-2">&amp;mut </span>Context) -&gt; bool {
     <span class="kw">let </span>time = instant::Instant::now();
 
-    <span class="comment">// Properties which affect visibility
-    </span><span class="kw">let </span>needs_rehide =
-        cx.style.display.tick(time) | cx.style.visibility.tick(time) | cx.style.opacity.tick(time);
-
     <span class="comment">// Properties which affect rendering
-    </span><span class="kw">let </span>needs_redraw = cx.style.rotate.tick(time)
+    </span><span class="kw">let </span>needs_redraw =
+        <span class="comment">// Opacity
+        </span>cx.style.opacity.tick(time)
+        <span class="comment">// Border Colour
+        </span>| cx.style.border_color.tick(time)
+        <span class="comment">// Border Radius
+        </span>| cx.style.border_top_left_radius.tick(time)
+        | cx.style.border_top_right_radius.tick(time)
+        | cx.style.border_bottom_left_radius.tick(time)
+        | cx.style.border_bottom_right_radius.tick(time)
+        <span class="comment">// Background
+        </span>| cx.style.background_color.tick(time)
+        | cx.style.background_image.tick(time)
+        | cx.style.background_size.tick(time)
+        <span class="comment">// Box Shadow
+        </span>| cx.style.box_shadow.tick(time)
+        <span class="comment">// Font Color
+        </span>| cx.style.font_color.tick(time)
+        <span class="comment">// Transform
+        </span>| cx.style.transform.tick(time)
+        | cx.style.transform_origin.tick(time)
         | cx.style.translate.tick(time)
+        | cx.style.rotate.tick(time)
         | cx.style.scale.tick(time)
-        | cx.style.border_color.tick(time)
-        | cx.style.border_radius_top_left.tick(time)
-        | cx.style.border_radius_top_right.tick(time)
-        | cx.style.border_radius_bottom_left.tick(time)
-        | cx.style.border_radius_bottom_right.tick(time)
-        | cx.style.background_color.tick(time)
-        | cx.style.outer_shadow_h_offset.tick(time)
-        | cx.style.outer_shadow_v_offset.tick(time)
-        | cx.style.outer_shadow_blur.tick(time)
-        | cx.style.outer_shadow_color.tick(time)
-        | cx.style.font_color.tick(time);
+        <span class="comment">// Outline
+        </span>| cx.style.outline_color.tick(time)
+        | cx.style.outline_offset.tick(time)
+        | cx.style.outline_width.tick(time)
+        <span class="comment">// Clip Path
+        </span>| cx.style.clip_path.tick(time);
 
     <span class="comment">// Properties which affect layout
-    </span><span class="kw">let </span>needs_relayout = cx.style.border_width.tick(time)
-        | cx.style.font_size.tick(time)
-        | cx.style.left.tick(time)
+    </span><span class="kw">let </span>needs_relayout =
+        <span class="comment">// Border Width
+        </span>cx.style.border_width.tick(time)
+        <span class="comment">// Font Size
+        </span>| cx.style.font_size.tick(time)
+        <span class="comment">// Space
+        </span>| cx.style.left.tick(time)
         | cx.style.right.tick(time)
         | cx.style.top.tick(time)
         | cx.style.bottom.tick(time)
-        | cx.style.width.tick(time)
+        <span class="comment">// Size
+        </span>| cx.style.width.tick(time)
         | cx.style.height.tick(time)
-        | cx.style.max_width.tick(time)
+        <span class="comment">// Min/Max Size
+        </span>| cx.style.max_width.tick(time)
         | cx.style.max_height.tick(time)
         | cx.style.min_width.tick(time)
         | cx.style.min_height.tick(time)
-        | cx.style.min_left.tick(time)
+        <span class="comment">// Min/Max Space
+        </span>| cx.style.min_left.tick(time)
         | cx.style.max_left.tick(time)
         | cx.style.min_right.tick(time)
         | cx.style.max_right.tick(time)
@@ -111,9 +147,11 @@
         | cx.style.max_top.tick(time)
         | cx.style.min_bottom.tick(time)
         | cx.style.max_bottom.tick(time)
-        | cx.style.row_between.tick(time)
+        <span class="comment">// Row/Col Between
+        </span>| cx.style.row_between.tick(time)
         | cx.style.col_between.tick(time)
-        | cx.style.child_left.tick(time)
+        <span class="comment">// Child Space
+        </span>| cx.style.child_left.tick(time)
         | cx.style.child_right.tick(time)
         | cx.style.child_top.tick(time)
         | cx.style.child_bottom.tick(time);
@@ -122,15 +160,10 @@
         cx.style.system_flags.set(SystemFlags::RELAYOUT, <span class="bool-val">true</span>);
     }
 
-    <span class="kw">if </span>needs_rehide {
-        cx.style.system_flags.set(SystemFlags::REHIDE, <span class="bool-val">true</span>);
-    }
-
     <span class="kw">if </span>needs_redraw {
         cx.style.system_flags.set(SystemFlags::REDRAW, <span class="bool-val">true</span>);
     }
 
     needs_redraw | needs_relayout
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.2 (9eb3afe9e 2023-03-27)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/accessibility.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>accessibility.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/accessibility.rs`."><title>accessibility.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ba5701c5741a7b69.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0 (90c541806 2023-05-31)" data-search-js="search-e077946657036a58.js" data-settings-js="settings-298e1ea74db45b39.js" data-settings-css="settings-7bfb4c59cc6bc502.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-905937fbbdc8e9ea.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f61008743c98d196.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -181,73 +181,79 @@
 <a href="#181" id="181">181</a>
 <a href="#182" id="182">182</a>
 <a href="#183" id="183">183</a>
-</pre><pre class="rust"><code><span class="kw">use crate</span>::{
+<a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
     accessibility::IntoNode,
     context::{AccessContext, AccessNode},
     events::ViewHandler,
     prelude::<span class="kw-2">*</span>,
+    style::{Abilities, PseudoClassFlags},
 };
 <span class="kw">use </span>accesskit::{CheckedState, NodeBuilder, Rect, TreeUpdate};
 <span class="kw">use </span>fnv::FnvHashMap;
 <span class="kw">use </span>vizia_storage::LayoutTreeIterator;
 
-<span class="comment">// Updates node properties from view properties
-// Should be run after layout so that things like bounding box are correct
-// This system doesn&#39;t change the structure of the accessibility tree as this is done when views are built/removed
-// TODO: Change this to incrementally update nodes when required instead of updating all nodes every frame
-</span><span class="kw">pub fn </span>accessibility_system(cx: <span class="kw-2">&amp;mut </span>Context) {
+<span class="doccomment">/// Updates node properties from view properties
+/// Should be run after layout so that things like bounding box are correct.
+/// This system doesn&#39;t change the structure of the accessibility tree as this is done when views are built/removed.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>accessibility_system(cx: <span class="kw-2">&amp;mut </span>Context) {
     <span class="kw">let </span>iterator = LayoutTreeIterator::full(<span class="kw-2">&amp;</span>cx.tree);
 
     <span class="kw">for </span>entity <span class="kw">in </span>iterator {
-        <span class="kw">let </span><span class="kw-2">mut </span>access_context = AccessContext {
-            current: entity,
-            tree: <span class="kw-2">&amp;</span>cx.tree,
-            cache: <span class="kw-2">&amp;</span>cx.cache,
-            style: <span class="kw-2">&amp;</span>cx.style,
-            text_context: <span class="kw-2">&amp;mut </span>cx.text_context,
-        };
+        <span class="kw">if </span>cx.style.needs_access_update.get(entity).filter(|flag| <span class="kw-2">**</span>flag).is_some() {
+            <span class="kw">let </span><span class="kw-2">mut </span>access_context = AccessContext {
+                current: entity,
+                tree: <span class="kw-2">&amp;</span>cx.tree,
+                cache: <span class="kw-2">&amp;</span>cx.cache,
+                style: <span class="kw-2">&amp;</span>cx.style,
+                text_context: <span class="kw-2">&amp;mut </span>cx.text_context,
+            };
 
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>node) = get_access_node(<span class="kw-2">&amp;mut </span>access_context, <span class="kw-2">&amp;mut </span>cx.views, entity) {
-            <span class="kw">let </span>navigable = cx
-                .style
-                .abilities
-                .get(entity)
-                .copied()
-                .unwrap_or_default()
-                .contains(Abilities::NAVIGABLE);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>node) = get_access_node(<span class="kw-2">&amp;mut </span>access_context, <span class="kw-2">&amp;mut </span>cx.views, entity) {
+                <span class="kw">let </span>navigable = cx
+                    .style
+                    .abilities
+                    .get(entity)
+                    .copied()
+                    .unwrap_or_default()
+                    .contains(Abilities::NAVIGABLE);
 
-            <span class="kw">if </span>node.node_builder.role() == Role::Unknown &amp;&amp; !navigable {
-                <span class="comment">// println!(&quot;Skip: {}&quot;, entity);
-                </span><span class="kw">continue</span>;
+                <span class="kw">if </span>node.node_builder.role() == Role::Unknown &amp;&amp; !navigable {
+                    <span class="kw">continue</span>;
+                }
+
+                <span class="kw">let </span>child_ids =
+                    node.children.iter().map(|child_node| child_node.node_id()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+
+                <span class="kw">if </span>!child_ids.is_empty() {
+                    node.node_builder.set_children(child_ids);
+                }
+
+                <span class="kw">let </span><span class="kw-2">mut </span>nodes = <span class="macro">vec!</span>[(
+                    node.node_id(),
+                    node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes),
+                )];
+
+                <span class="comment">// If child nodes were generated then append them to the nodes list
+                </span><span class="kw">if </span>!node.children.is_empty() {
+                    nodes.extend(node.children.into_iter().map(|child_node| {
+                        (
+                            child_node.node_id(),
+                            child_node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes),
+                        )
+                    }));
+                }
+
+                cx.tree_updates.push(TreeUpdate {
+                    nodes,
+                    tree: <span class="prelude-val">None</span>,
+                    focus: cx.window_has_focus.then_some(cx.focused.accesskit_id()),
+                });
             }
 
-            <span class="kw">let </span>child_ids =
-                node.children.iter().map(|child_node| child_node.node_id()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-
-            <span class="kw">if </span>!child_ids.is_empty() {
-                node.node_builder.set_children(child_ids);
-            }
-
-            <span class="kw">let </span><span class="kw-2">mut </span>nodes = <span class="macro">vec!</span>[(
-                node.node_id(),
-                node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes),
-            )];
-
-            <span class="comment">// If child nodes were generated then append them to the nodes list
-            </span><span class="kw">if </span>!node.children.is_empty() {
-                nodes.extend(node.children.into_iter().map(|child_node| {
-                    (
-                        child_node.node_id(),
-                        child_node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes),
-                    )
-                }));
-            }
-
-            cx.tree_updates.push(TreeUpdate {
-                nodes,
-                tree: <span class="prelude-val">None</span>,
-                focus: cx.window_has_focus.then_some(cx.focused.accesskit_id()),
-            });
+            cx.style.needs_access_update.insert(entity, <span class="bool-val">false</span>);
         }
     }
 }
@@ -259,17 +265,17 @@
 ) -&gt; <span class="prelude-ty">Option</span>&lt;AccessNode&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>node_builder = NodeBuilder::default();
 
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(role) = cx.style.roles.get(entity) {
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(role) = cx.style.role.get(entity) {
         node_builder.set_role(<span class="kw-2">*</span>role);
     }
 
     <span class="kw">let </span>bounds = cx.cache.get_bounds(entity);
 
     node_builder.set_bounds(Rect {
-        x0: bounds.x <span class="kw">as </span>f64,
-        y0: bounds.y <span class="kw">as </span>f64,
-        x1: (bounds.x + bounds.w) <span class="kw">as </span>f64,
-        y1: (bounds.y + bounds.h) <span class="kw">as </span>f64,
+        x0: bounds.left() <span class="kw">as </span>f64,
+        y0: bounds.top() <span class="kw">as </span>f64,
+        x1: bounds.right() <span class="kw">as </span>f64,
+        y1: bounds.bottom() <span class="kw">as </span>f64,
     });
 
     <span class="kw">if let </span><span class="prelude-val">Some</span>(disabled) = cx.style.disabled.get(entity).copied() {
@@ -337,7 +343,7 @@
             .style
             .pseudo_classes
             .get(entity)
-            .and_then(|pseudoclass| <span class="prelude-val">Some</span>(pseudoclass.contains(PseudoClass::CHECKED)))
+            .map(|pseudoclass| pseudoclass.contains(PseudoClassFlags::CHECKED))
         {
             <span class="kw">if </span>checked {
                 node_builder.set_checked_state(CheckedState::True);
@@ -348,7 +354,7 @@
     }
 
     <span class="kw">let </span>children =
-        entity.child_iter(<span class="kw-2">&amp;</span>cx.tree).map(|entity| entity.accesskit_id()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+        entity.child_iter(cx.tree).map(|entity| entity.accesskit_id()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
     <span class="kw">if </span>!children.is_empty() {
         node_builder.set_children(children);
     }
@@ -362,7 +368,6 @@
         views.insert(entity, view);
     }
 
-    <span class="kw">return </span><span class="prelude-val">Some</span>(node);
+    <span class="prelude-val">Some</span>(node)
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.2 (9eb3afe9e 2023-03-27)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/backend.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>backend.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/backend.rs`."><title>backend.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ba5701c5741a7b69.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0 (90c541806 2023-05-31)" data-search-js="search-e077946657036a58.js" data-settings-js="settings-298e1ea74db45b39.js" data-settings-css="settings-7bfb4c59cc6bc502.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-905937fbbdc8e9ea.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f61008743c98d196.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -261,58 +261,15 @@
 <a href="#261" id="261">261</a>
 <a href="#262" id="262">262</a>
 <a href="#263" id="263">263</a>
-<a href="#264" id="264">264</a>
-<a href="#265" id="265">265</a>
-<a href="#266" id="266">266</a>
-<a href="#267" id="267">267</a>
-<a href="#268" id="268">268</a>
-<a href="#269" id="269">269</a>
-<a href="#270" id="270">270</a>
-<a href="#271" id="271">271</a>
-<a href="#272" id="272">272</a>
-<a href="#273" id="273">273</a>
-<a href="#274" id="274">274</a>
-<a href="#275" id="275">275</a>
-<a href="#276" id="276">276</a>
-<a href="#277" id="277">277</a>
-<a href="#278" id="278">278</a>
-<a href="#279" id="279">279</a>
-<a href="#280" id="280">280</a>
-<a href="#281" id="281">281</a>
-<a href="#282" id="282">282</a>
-<a href="#283" id="283">283</a>
-<a href="#284" id="284">284</a>
-<a href="#285" id="285">285</a>
-<a href="#286" id="286">286</a>
-<a href="#287" id="287">287</a>
-<a href="#288" id="288">288</a>
-<a href="#289" id="289">289</a>
-<a href="#290" id="290">290</a>
-<a href="#291" id="291">291</a>
-<a href="#292" id="292">292</a>
-<a href="#293" id="293">293</a>
-<a href="#294" id="294">294</a>
-<a href="#295" id="295">295</a>
-<a href="#296" id="296">296</a>
-<a href="#297" id="297">297</a>
-</pre><pre class="rust"><code><span class="kw">use </span>std::any::Any;
-<span class="kw">use </span>std::collections::HashSet;
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 
 <span class="kw">use </span>femtovg::{renderer::OpenGl, Canvas};
-<span class="kw">use </span>fnv::FnvHashMap;
+<span class="kw">use </span>vizia_window::WindowDescription;
 
 <span class="kw">use </span><span class="kw">super</span>::EventProxy;
+<span class="kw">use </span><span class="kw">crate</span>::events::EventManager;
 <span class="kw">use </span><span class="kw">crate</span>::style::SystemFlags;
-<span class="kw">use crate</span>::{
-    cache::{BoundingBox, CachedData},
-    environment::Environment,
-    events::ViewHandler,
-    layout::geometry_changed,
-    prelude::<span class="kw-2">*</span>,
-    state::ModelOrView,
-    style::Style,
-    systems::<span class="kw-2">*</span>,
-};
+<span class="kw">use crate</span>::{cache::CachedData, environment::Environment, prelude::<span class="kw-2">*</span>, style::Style, systems::<span class="kw-2">*</span>};
 <span class="kw">use </span>vizia_id::GenerationalId;
 
 <span class="kw">pub use </span><span class="kw">crate</span>::text::cosmic::TextConfig;
@@ -320,30 +277,53 @@
 <span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
 </span><span class="kw">use </span>copypasta::ClipboardProvider;
 
-<span class="kw">pub struct </span>BackendContext&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw">pub </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context);
+<span class="doccomment">/// Context used to integrate vizia with windowing backends such as winit and baseview.
+</span><span class="kw">pub struct </span>BackendContext&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw">pub </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context, <span class="prelude-ty">Option</span>&lt;EventManager&gt;);
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; BackendContext&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context) -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>(cx)
+    <span class="doccomment">/// Creates a new instance of a backend context.
+    </span><span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(cx, <span class="prelude-val">None</span>)
     }
 
-    <span class="kw">pub fn </span>views(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt; {
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.views
+    <span class="doccomment">/// Creates a new instance of a backend context which includes an event manager.
+    </span><span class="kw">pub fn </span>new_with_event_manager(cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(cx, <span class="prelude-val">Some</span>(EventManager::new()))
     }
 
-    <span class="kw">pub fn </span>style(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Style {
+    <span class="doccomment">/// Helper function for mutating the state of the root window.
+    </span><span class="kw">pub fn </span>mutate_window&lt;W: Any, F: Fn(<span class="kw-2">&amp;mut </span>BackendContext, <span class="kw-2">&amp;</span>W)&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, f: F) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(window_event_handler) = <span class="self">self</span>.<span class="number">0</span>.views.remove(<span class="kw-2">&amp;</span>Entity::root()) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(window) = window_event_handler.downcast_ref::&lt;W&gt;() {
+                f(<span class="self">self</span>, window);
+            }
+
+            <span class="self">self</span>.<span class="number">0</span>.views.insert(Entity::root(), window_event_handler);
+        }
+    }
+
+    <span class="doccomment">/// Adds a root window view to the context.
+    </span><span class="kw">pub fn </span>add_window&lt;W: View&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, window: W) {
+        <span class="self">self</span>.<span class="number">0</span>.views.insert(Entity::root(), Box::new(window));
+    }
+
+    <span class="doccomment">/// Returns a mutable reference to the style data.
+    </span><span class="kw">pub fn </span>style(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Style {
         <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.style
     }
 
-    <span class="kw">pub fn </span>cache(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>CachedData {
+    <span class="doccomment">/// Returns a mutable reference to the cache of computed properties data.
+    </span><span class="kw">pub fn </span>cache(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>CachedData {
         <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.cache
     }
 
-    <span class="kw">pub fn </span>modifiers(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Modifiers {
+    <span class="doccomment">/// Returns a reference to the keyboard modifiers state.
+    </span><span class="kw">pub fn </span>modifiers(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Modifiers {
         <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.modifiers
     }
 
-    <span class="kw">pub fn </span>focused(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
+    <span class="doccomment">/// Returns the entity id of the currently focused view.
+    </span><span class="kw">pub fn </span>focused(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
         <span class="self">self</span>.<span class="number">0</span>.focused
     }
 
@@ -360,8 +340,8 @@
     /// changes during a frame, then the window will be resized at the end of the frame and a
     /// [`WindowEvent::GeometryChanged`] will be emitted. This can be initialized using
     /// [`WindowDescription::user_scale_factor`][crate::WindowDescription::user_scale_factor].
-    </span><span class="kw">pub fn </span>user_scale_factor(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>f64 {
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.user_scale_factor
+    </span><span class="kw">pub fn </span>user_scale_factor(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; f64 {
+        <span class="self">self</span>.<span class="number">0</span>.user_scale_factor
     }
 
     <span class="kw">pub fn </span>add_main_window(
@@ -380,7 +360,7 @@
             <span class="number">0</span>,
             physical_width <span class="kw">as </span>u32,
             physical_height <span class="kw">as </span>u32,
-            femtovg::Color::rgb(<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>),
+            femtovg::Color::rgba(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),
         );
 
         <span class="self">self</span>.<span class="number">0</span>.style.dpi_factor = dpi_factor <span class="kw">as </span>f64;
@@ -397,35 +377,24 @@
             .height
             .insert(Entity::root(), Units::Pixels(window_description.inner_size.height <span class="kw">as </span>f32));
 
-        <span class="self">self</span>.<span class="number">0</span>.style.pseudo_classes.insert(Entity::root(), PseudoClass::ROOT).unwrap();
         <span class="self">self</span>.<span class="number">0</span>.style.disabled.insert(Entity::root(), <span class="bool-val">false</span>);
-
-        <span class="kw">let </span>bounding_box =
-            BoundingBox { w: physical_width, h: physical_height, ..Default::default() };
-
-        <span class="self">self</span>.<span class="number">0</span>.cache.set_clip_region(Entity::root(), bounding_box);
 
         <span class="self">self</span>.<span class="number">0</span>.canvases.insert(Entity::root(), canvas);
     }
 
-    <span class="kw">pub fn </span>environment(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Environment {
+    <span class="doccomment">/// Returns a reference to the [`Environment`] model.
+    </span><span class="kw">pub fn </span>environment(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Environment {
         <span class="self">self</span>.<span class="number">0</span>.data::&lt;Environment&gt;().unwrap()
     }
 
-    <span class="kw">pub fn </span>context(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Context {
+    <span class="doccomment">/// Returns a mutable reference to the inner context.
+    </span><span class="kw">pub fn </span>context(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Context {
         <span class="self">self</span>.<span class="number">0
     </span>}
 
-    <span class="kw">pub fn </span>remove_all_children(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="self">self</span>.<span class="number">0</span>.remove_children(Entity::root());
-    }
-
-    <span class="kw">pub fn </span>draw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="doccomment">/// Calls the draw system.
+    </span><span class="kw">pub fn </span>draw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         draw_system(<span class="self">self</span>.<span class="number">0</span>);
-    }
-
-    <span class="kw">pub fn </span>load_images(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        image_system(<span class="self">self</span>.<span class="number">0</span>);
     }
 
     <span class="doccomment">/// Set the current entity. This is useful in user code when you&#39;re performing black magic and
@@ -438,6 +407,22 @@
     <span class="doccomment">/// Sets the default text configuration to use for text rendering.
     </span><span class="kw">pub fn </span>set_text_config(<span class="kw-2">&amp;mut </span><span class="self">self</span>, text_config: TextConfig) {
         <span class="self">self</span>.<span class="number">0</span>.text_config = text_config;
+    }
+
+    <span class="doccomment">/// Sets the scale factor used by the application.
+    </span><span class="kw">pub fn </span>set_scale_factor(<span class="kw-2">&amp;mut </span><span class="self">self</span>, scale: f64) {
+        <span class="self">self</span>.<span class="number">0</span>.style.dpi_factor = scale;
+    }
+
+    <span class="doccomment">/// Sets the size of the root window.
+    </span><span class="kw">pub fn </span>set_window_size(<span class="kw-2">&amp;mut </span><span class="self">self</span>, physical_width: f32, physical_height: f32) {
+        <span class="self">self</span>.<span class="number">0</span>.cache.set_width(Entity::root(), physical_width);
+        <span class="self">self</span>.<span class="number">0</span>.cache.set_height(Entity::root(), physical_height);
+
+        <span class="kw">let </span>logical_width = <span class="self">self</span>.<span class="number">0</span>.style.physical_to_logical(physical_width);
+        <span class="kw">let </span>logical_height = <span class="self">self</span>.<span class="number">0</span>.style.physical_to_logical(physical_height);
+        <span class="self">self</span>.<span class="number">0</span>.style.width.insert(Entity::root(), Units::Pixels(logical_width));
+        <span class="self">self</span>.<span class="number">0</span>.style.height.insert(Entity::root(), Units::Pixels(logical_height));
     }
 
     <span class="doccomment">/// Temporarily sets the current entity, calls the provided closure, and then resets the current entity back to previous.
@@ -475,68 +460,26 @@
         !<span class="self">self</span>.<span class="number">0</span>.event_queue.is_empty()
     }
 
-    <span class="kw">pub fn </span>accesskit_node_classes(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>accesskit::NodeClassSet {
+    <span class="doccomment">/// Returns a mutable reference to the accesskit node classes.
+    </span><span class="kw">pub fn </span>accesskit_node_classes(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>accesskit::NodeClassSet {
         <span class="kw-2">&amp;mut </span><span class="self">self</span>.style().accesskit_node_classes
+    }
+
+    <span class="doccomment">/// Calls the event manager to process any queued events.
+    </span><span class="kw">pub fn </span>process_events(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(event_manager) = <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">1 </span>{
+            <span class="kw">while </span>event_manager.flush_events(<span class="self">self</span>.<span class="number">0</span>) {}
+        }
     }
 
     <span class="doccomment">/// For each binding or data observer, check if its data has changed, and if so, rerun its
     /// builder/body.
     </span><span class="kw">pub fn </span>process_data_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="kw">let </span><span class="kw-2">mut </span>observers: HashSet&lt;Entity&gt; = HashSet::new();
-
-        <span class="kw">for </span>entity <span class="kw">in </span><span class="self">self</span>.<span class="number">0</span>.tree.into_iter() {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = <span class="self">self</span>.<span class="number">0</span>.data.get_mut(entity) {
-                <span class="comment">// Determine observers of model data
-                </span><span class="kw">for </span>(<span class="kw">_</span>, model) <span class="kw">in </span>model_data_store.models.iter() {
-                    <span class="kw">let </span>model = ModelOrView::Model(model.as_ref());
-
-                    <span class="kw">for </span>(<span class="kw">_</span>, store) <span class="kw">in </span>model_data_store.stores.iter_mut() {
-                        <span class="kw">if </span>store.update(model) {
-                            observers.extend(store.observers().iter())
-                        }
-                    }
-                }
-
-                <span class="comment">// Determine observers of view data
-                </span><span class="kw">for </span>(<span class="kw">_</span>, store) <span class="kw">in </span>model_data_store.stores.iter_mut() {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = <span class="self">self</span>.<span class="number">0</span>.views.get(<span class="kw-2">&amp;</span>entity) {
-                        <span class="kw">let </span>view_model = ModelOrView::View(view_handler.as_ref());
-
-                        <span class="kw">if </span>store.update(view_model) {
-                            observers.extend(store.observers().iter())
-                        }
-                    }
-                }
-            }
-        }
-
-        <span class="kw">for </span>img <span class="kw">in </span><span class="self">self</span>.<span class="number">0</span>.resource_manager.images.values_mut() {
-            <span class="kw">if </span>img.dirty {
-                observers.extend(img.observers.iter());
-                img.dirty = <span class="bool-val">false</span>;
-            }
-        }
-
-        <span class="kw">let </span>ordered_observers =
-            <span class="self">self</span>.<span class="number">0</span>.tree.into_iter().filter(|ent| observers.contains(ent)).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-
-        <span class="comment">// Update observers in tree order
-        </span><span class="kw">for </span>observer <span class="kw">in </span>ordered_observers.into_iter() {
-            <span class="kw">if </span>!<span class="self">self</span>.<span class="number">0</span>.entity_manager.is_alive(observer) {
-                <span class="kw">continue</span>;
-            }
-
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>binding) = <span class="self">self</span>.<span class="number">0</span>.bindings.remove(<span class="kw-2">&amp;</span>observer) {
-                <span class="kw">let </span>prev = <span class="self">self</span>.<span class="number">0</span>.current;
-                <span class="self">self</span>.<span class="number">0</span>.current = observer;
-                binding.update(<span class="self">self</span>.<span class="number">0</span>);
-                <span class="self">self</span>.<span class="number">0</span>.current = prev;
-                <span class="self">self</span>.<span class="number">0</span>.bindings.insert(observer, binding);
-            }
-        }
+        binding_system(<span class="self">self</span>.<span class="number">0</span>);
     }
 
-    <span class="kw">pub fn </span>process_tree_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>, process: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Vec&lt;accesskit::TreeUpdate&gt;)) {
+    <span class="doccomment">/// Calls the accessibility system and updates the accesskit node tree.
+    </span><span class="kw">pub fn </span>process_tree_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>, process: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Vec&lt;accesskit::TreeUpdate&gt;)) {
         accessibility_system(<span class="self">self</span>.<span class="number">0</span>);
 
         (process)(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.tree_updates);
@@ -544,7 +487,8 @@
         <span class="self">self</span>.<span class="number">0</span>.tree_updates.clear();
     }
 
-    <span class="kw">pub fn </span>process_style_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="doccomment">/// Calls the style system to match entities with shared styles.
+    </span><span class="kw">pub fn </span>process_style_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="comment">// Apply any inline style inheritance.
         </span>inline_inheritance_system(<span class="self">self</span>.<span class="number">0</span>);
 
@@ -563,20 +507,8 @@
 
     <span class="doccomment">/// Massages the style system until everything is coherent
     </span><span class="kw">pub fn </span>process_visual_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="comment">// Apply visibility inheritance.
-        </span>visibility_system(<span class="self">self</span>.<span class="number">0</span>);
-
         <span class="comment">// Perform layout.
         </span>layout_system(<span class="self">self</span>.<span class="number">0</span>);
-
-        <span class="comment">// Apply transform inheritance.
-        </span>transform_system(<span class="self">self</span>.<span class="number">0</span>);
-
-        <span class="comment">// Apply clipping inheritance.
-        </span>clipping_system(<span class="self">self</span>.<span class="number">0</span>);
-
-        <span class="comment">// Emit any geometry changed events.
-        </span>geometry_changed(<span class="self">self</span>.<span class="number">0</span>);
     }
 
     <span class="kw">pub fn </span>emit_origin&lt;M: Send + Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M) {
@@ -592,5 +524,4 @@
         <span class="self">self</span>.<span class="number">0</span>.style.system_flags = SystemFlags::all();
     }
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.2 (9eb3afe9e 2023-03-27)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

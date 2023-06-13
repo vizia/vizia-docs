@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/layout/node.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>node.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/layout/node.rs`."><title>node.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ba5701c5741a7b69.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0 (90c541806 2023-05-31)" data-search-js="search-e077946657036a58.js" data-settings-js="settings-298e1ea74db45b39.js" data-settings-css="settings-7bfb4c59cc6bc502.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ></div><script src="../../../static.files/storage-62ce34ea385b278a.js"></script><script defer src="../../../static.files/source-script-905937fbbdc8e9ea.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-f61008743c98d196.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../vizia_core/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -274,281 +274,422 @@
 <a href="#274" id="274">274</a>
 <a href="#275" id="275">275</a>
 <a href="#276" id="276">276</a>
-</pre><pre class="rust"><code><span class="kw">use </span>morphorm::{Node, Units};
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>morphorm::{Node, Units};
+<span class="kw">use </span>vizia_storage::MorphormChildIter;
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::style::Style;
+<span class="kw">use </span><span class="kw">crate</span>::resource::{ImageOrId, ResourceManager};
+<span class="kw">use </span><span class="kw">crate</span>::style::{ImageOrGradient, Style};
 <span class="kw">use </span><span class="kw">crate</span>::text::TextContext;
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;w</span>&gt; Node&lt;<span class="lifetime">&#39;w</span>&gt; <span class="kw">for </span>Entity {
-    <span class="kw">type </span>Data = Style;
-    <span class="kw">type </span>Sublayout = TextContext;
+<span class="kw">pub struct </span>SubLayout&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub </span>text_context: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>TextContext,
+    <span class="kw">pub </span>resource_manager: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ResourceManager,
+}
 
-    <span class="kw">fn </span>layout_type(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::LayoutType&gt; {
+<span class="kw">impl </span>Node <span class="kw">for </span>Entity {
+    <span class="kw">type </span>Store = Style;
+    <span class="kw">type </span>Tree = Tree&lt;Entity&gt;;
+    <span class="kw">type </span>CacheKey = Entity;
+    <span class="kw">type </span>ChildIter&lt;<span class="lifetime">&#39;t</span>&gt; = MorphormChildIter&lt;<span class="lifetime">&#39;t</span>, Entity&gt;;
+    <span class="kw">type </span>SubLayout&lt;<span class="lifetime">&#39;a</span>&gt; = SubLayout&lt;<span class="lifetime">&#39;a</span>&gt;;
+
+    <span class="kw">fn </span>children&lt;<span class="lifetime">&#39;t</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;t </span><span class="self">self</span>, tree: <span class="kw-2">&amp;</span><span class="lifetime">&#39;t </span><span class="self">Self</span>::Tree) -&gt; <span class="self">Self</span>::ChildIter&lt;<span class="lifetime">&#39;t</span>&gt; {
+        MorphormChildIter::new(tree, <span class="kw-2">*</span><span class="self">self</span>)
+    }
+
+    <span class="kw">fn </span>key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::CacheKey {
+        <span class="kw-2">*</span><span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>visible(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; bool {
+        store.display.get(<span class="kw-2">*</span><span class="self">self</span>).copied().map(|display| display == Display::Flex).unwrap_or(<span class="bool-val">true</span>)
+    }
+
+    <span class="kw">fn </span>layout_type(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::LayoutType&gt; {
         store.layout_type.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
     }
 
-    <span class="kw">fn </span>position_type(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::PositionType&gt; {
+    <span class="kw">fn </span>position_type(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::PositionType&gt; {
         store.position_type.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
     }
 
-    <span class="kw">fn </span>left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|l| <span class="kw">match </span>l {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>min_left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>min_left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.min_left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|l| <span class="kw">match </span>l {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>max_left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>max_left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.max_left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|l| <span class="kw">match </span>l {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|r| <span class="kw">match </span>r {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>min_right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>min_right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.min_right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|r| <span class="kw">match </span>r {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>max_right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>max_right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.max_right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|r| <span class="kw">match </span>r {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.top.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|t| <span class="kw">match </span>t {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>min_top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>min_top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.min_top.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|t| <span class="kw">match </span>t {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>max_top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>max_top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.max_top.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|t| <span class="kw">match </span>t {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.bottom.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|b| <span class="kw">match </span>b {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>min_bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>min_bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.min_bottom.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|b| <span class="kw">match </span>b {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>max_bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>max_bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.max_bottom.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|b| <span class="kw">match </span>b {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>width(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>width(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|w| <span class="kw">match </span>w {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>min_width(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>min_width(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.min_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|w| <span class="kw">match </span>w {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>max_width(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>max_width(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.max_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|w| <span class="kw">match </span>w {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>content_width(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;f32&gt; {
-        store.content_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|x| (x * store.dpi_factor <span class="kw">as </span>f32).ceil())
-    }
-
-    <span class="kw">fn </span>content_height(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;f32&gt; {
-        store.content_height.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|x| (x * store.dpi_factor <span class="kw">as </span>f32).ceil())
-    }
-
-    <span class="kw">fn </span>content_width_secondary(
+    <span class="kw">fn </span>content_size(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        store: <span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span><span class="self">Self</span>::Data,
-        _sublayout: <span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span><span class="kw-2">mut </span><span class="self">Self</span>::Sublayout,
-        _height: f32,
-    ) -&gt; <span class="prelude-ty">Option</span>&lt;f32&gt; {
-        store.content_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|x| (x * store.dpi_factor <span class="kw">as </span>f32).ceil())
-    }
+        store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store,
+        sublayout: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::SubLayout&lt;<span class="lifetime">&#39;_</span>&gt;,
+        width: <span class="prelude-ty">Option</span>&lt;f32&gt;,
+        height: <span class="prelude-ty">Option</span>&lt;f32&gt;,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;(f32, f32)&gt; {
+        <span class="kw">if </span>sublayout.text_context.has_buffer(<span class="kw-2">*</span><span class="self">self</span>) {
+            <span class="comment">// If the width is known use that, else use 0 for wrapping text or 999999 for non-wrapping text.
+            </span><span class="kw">let </span>max_width = <span class="kw">if let </span><span class="prelude-val">Some</span>(width) = width {
+                <span class="kw">let </span>child_left =
+                    store.child_left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().unwrap_or_default().to_px(width, <span class="number">0.0</span>)
+                        * store.scale_factor();
+                <span class="kw">let </span>child_right =
+                    store.child_right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().unwrap_or_default().to_px(width, <span class="number">0.0</span>)
+                        * store.scale_factor();
+                (width.ceil() - child_left - child_right) <span class="kw">as </span>i32
+            } <span class="kw">else if </span>store.text_wrap.get(<span class="kw-2">*</span><span class="self">self</span>).copied().unwrap_or(<span class="bool-val">true</span>) {
+                <span class="number">0
+            </span>} <span class="kw">else </span>{
+                <span class="number">999999
+            </span>};
 
-    <span class="kw">fn </span>content_height_secondary(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data,
-        sublayout: <span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span><span class="kw-2">mut </span><span class="self">Self</span>::Sublayout,
-        width: f32,
-    ) -&gt; <span class="prelude-ty">Option</span>&lt;f32&gt; {
-        <span class="kw">let </span>width = width.ceil();
-        <span class="kw">if </span>!store.text_wrap.get(<span class="kw-2">*</span><span class="self">self</span>).copied().unwrap_or(<span class="bool-val">true</span>) {
-            <span class="kw">return </span><span class="prelude-val">None</span>;
-        }
+            <span class="kw">let </span>child_left = store.child_left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().unwrap_or_default();
+            <span class="kw">let </span>child_right = store.child_right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().unwrap_or_default();
+            <span class="kw">let </span>child_top = store.child_top.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().unwrap_or_default();
+            <span class="kw">let </span>child_bottom = store.child_bottom.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().unwrap_or_default();
 
-        <span class="kw">if </span>sublayout.has_buffer(<span class="kw-2">*</span><span class="self">self</span>) {
-            <span class="prelude-val">Some</span>(sublayout.with_buffer(<span class="kw-2">*</span><span class="self">self</span>, |buf| {
-                buf.set_size(width <span class="kw">as </span>i32, i32::MAX);
-                buf.layout_runs().count() <span class="kw">as </span>f32 * buf.metrics().line_height <span class="kw">as </span>f32
-            }))
+            <span class="kw">let </span><span class="kw-2">mut </span>child_space_x = <span class="number">0.0</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>child_space_y = <span class="number">0.0</span>;
+
+            <span class="comment">// shrink the bounding box based on pixel values
+            </span><span class="kw">if let </span>Pixels(val) = child_left {
+                <span class="kw">let </span>val = val * store.scale_factor();
+                child_space_x += val;
+            }
+            <span class="kw">if let </span>Pixels(val) = child_right {
+                <span class="kw">let </span>val = val * store.scale_factor();
+                child_space_x += val;
+            }
+            <span class="kw">if let </span>Pixels(val) = child_top {
+                <span class="kw">let </span>val = val * store.scale_factor();
+                child_space_y += val;
+            }
+            <span class="kw">if let </span>Pixels(val) = child_bottom {
+                <span class="kw">let </span>val = val * store.scale_factor();
+                child_space_y += val;
+            }
+
+            sublayout.text_context.sync_styles(<span class="kw-2">*</span><span class="self">self</span>, store);
+            <span class="kw">let </span>(text_width, <span class="kw-2">mut </span>text_height) =
+                sublayout.text_context.with_buffer(<span class="kw-2">*</span><span class="self">self</span>, |fs, buffer| {
+                    buffer.set_size(fs, max_width <span class="kw">as </span>f32, f32::MAX);
+                    <span class="kw">let </span>w = buffer
+                        .layout_runs()
+                        .filter_map(|r| (!r.line_w.is_nan()).then_some(r.line_w))
+                        .max_by(|f1, f2| f1.partial_cmp(f2).unwrap())
+                        .unwrap_or_default();
+                    <span class="kw">let </span>lines = buffer.layout_runs().filter(|run| run.line_w != <span class="number">0.0</span>).count();
+                    <span class="kw">let </span>h = lines <span class="kw">as </span>f32 * buffer.metrics().line_height;
+                    (w, h)
+                });
+
+            <span class="kw">if </span>height.is_none() {
+                text_height = sublayout.text_context.with_buffer(<span class="kw-2">*</span><span class="self">self</span>, |fs, buffer| {
+                    buffer.set_size(fs, text_width, f32::MAX);
+                    <span class="kw">let </span>h = buffer.layout_runs().len() <span class="kw">as </span>f32 * buffer.metrics().line_height;
+                    h
+                });
+            }
+
+            <span class="kw">let </span>height =
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(height) = height { height } <span class="kw">else </span>{ text_height + child_space_y };
+            <span class="kw">let </span>width = <span class="kw">if let </span><span class="prelude-val">Some</span>(width) = width { width } <span class="kw">else </span>{ text_width + child_space_x };
+
+            <span class="comment">// Cache the text_width/ text_height in the text context so we can use it to compute transforms later
+            </span>sublayout.text_context.set_bounds(
+                <span class="kw-2">*</span><span class="self">self</span>,
+                BoundingBox { w: text_width, h: text_height, ..Default::default() },
+            );
+
+            <span class="prelude-val">Some</span>((width, height))
+        } <span class="kw">else if let </span><span class="prelude-val">Some</span>(images) = store.background_image.get(<span class="kw-2">*</span><span class="self">self</span>) {
+            <span class="kw">let </span><span class="kw-2">mut </span>max_width = <span class="number">0.0f32</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>max_height = <span class="number">0.0f32</span>;
+            <span class="kw">for </span>image <span class="kw">in </span>images.iter() {
+                <span class="kw">match </span>image {
+                    ImageOrGradient::Image(image_name) =&gt; {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(ImageOrId::Id(<span class="kw">_</span>, dim)) = sublayout
+                            .resource_manager
+                            .images
+                            .get(image_name)
+                            .map(|stored_img| <span class="kw-2">&amp;</span>stored_img.image)
+                        {
+                            max_width = max_width.max(dim.<span class="number">0 </span><span class="kw">as </span>f32);
+                            max_height = max_height.max(dim.<span class="number">1 </span><span class="kw">as </span>f32);
+                        }
+                    }
+                    <span class="kw">_ </span>=&gt; {}
+                }
+            }
+
+            <span class="kw">let </span>width = <span class="kw">if let </span><span class="prelude-val">Some</span>(width) = width { width } <span class="kw">else </span>{ max_width };
+            <span class="kw">let </span>height = <span class="kw">if let </span><span class="prelude-val">Some</span>(height) = height { height } <span class="kw">else </span>{ max_height };
+
+            <span class="prelude-val">Some</span>((width, height))
         } <span class="kw">else </span>{
             <span class="prelude-val">None
         </span>}
     }
 
-    <span class="kw">fn </span>height(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>height(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.height.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|h| <span class="kw">match </span>h {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>min_height(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>min_height(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.min_height.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|h| <span class="kw">match </span>h {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>max_height(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>max_height(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.max_height.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|h| <span class="kw">match </span>h {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>child_left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>child_left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.child_left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|l| <span class="kw">match </span>l {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>child_right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>child_right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.child_right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|r| <span class="kw">match </span>r {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>child_top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>child_top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.child_top.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|t| <span class="kw">match </span>t {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>child_bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>child_bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.child_bottom.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|b| <span class="kw">match </span>b {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>grid_cols(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;morphorm::Units&gt;&gt; {
-        store.grid_cols.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
-    }
-
-    <span class="kw">fn </span>grid_rows(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;morphorm::Units&gt;&gt; {
-        store.grid_rows.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
-    }
-
-    <span class="kw">fn </span>row_between(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>row_between(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.row_between.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>col_between(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+    <span class="kw">fn </span>col_between(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
         store.col_between.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
             Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
             t =&gt; t,
         })
     }
 
-    <span class="kw">fn </span>border_left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
-            Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
-            t =&gt; t,
+    <span class="kw">fn </span>border_left(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+        store.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).map(|border_width| <span class="kw">match </span>border_width {
+            LengthOrPercentage::Length(val) =&gt; Units::Pixels(val.to_px().unwrap_or_default()),
+            LengthOrPercentage::Percentage(val) =&gt; Units::Percentage(<span class="kw-2">*</span>val),
         })
     }
 
-    <span class="kw">fn </span>border_right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
-            Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
-            t =&gt; t,
+    <span class="kw">fn </span>border_right(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+        store.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).map(|border_width| <span class="kw">match </span>border_width {
+            LengthOrPercentage::Length(val) =&gt; Units::Pixels(val.to_px().unwrap_or_default()),
+            LengthOrPercentage::Percentage(val) =&gt; Units::Percentage(<span class="kw-2">*</span>val),
         })
     }
 
-    <span class="kw">fn </span>border_top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
-            Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
-            t =&gt; t,
+    <span class="kw">fn </span>border_top(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+        store.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).map(|border_width| <span class="kw">match </span>border_width {
+            LengthOrPercentage::Length(val) =&gt; Units::Pixels(val.to_px().unwrap_or_default()),
+            LengthOrPercentage::Percentage(val) =&gt; Units::Percentage(<span class="kw-2">*</span>val),
         })
     }
 
-    <span class="kw">fn </span>border_bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
-        store.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().map(|v| <span class="kw">match </span>v {
-            Units::Pixels(val) =&gt; Units::Pixels(store.logical_to_physical(val)),
-            t =&gt; t,
+    <span class="kw">fn </span>border_bottom(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Store) -&gt; <span class="prelude-ty">Option</span>&lt;morphorm::Units&gt; {
+        store.border_width.get(<span class="kw-2">*</span><span class="self">self</span>).map(|border_width| <span class="kw">match </span>border_width {
+            LengthOrPercentage::Length(val) =&gt; Units::Pixels(val.to_px().unwrap_or_default()),
+            LengthOrPercentage::Percentage(val) =&gt; Units::Percentage(<span class="kw-2">*</span>val),
         })
-    }
-
-    <span class="kw">fn </span>row_index(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
-        store.row_index.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
-    }
-
-    <span class="kw">fn </span>row_span(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
-        store.row_span.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
-    }
-
-    <span class="kw">fn </span>col_index(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
-        store.col_index.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
-    }
-
-    <span class="kw">fn </span>col_span(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="self">Self</span>::Data) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
-        store.col_span.get(<span class="kw-2">*</span><span class="self">self</span>).cloned()
     }
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.2 (9eb3afe9e 2023-03-27)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

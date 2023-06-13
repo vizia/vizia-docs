@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":[["enforce_text_bounds",""],["ensure_visible",""]]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"trait":[["View","A view is any object which can be displayed on the screen."]],"type":[["Canvas","The canvas we will be drawing to."]]};
+window.SIDEBAR_ITEMS = {"struct":["Handle"],"trait":["View"],"type":["Canvas"]};

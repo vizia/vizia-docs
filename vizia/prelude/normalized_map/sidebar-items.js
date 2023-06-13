@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["DisplayDecimals",""],["FrequencyDisplayMode",""],["ValueScaling",""]],"fn":[["amplitude_to_db",""],["db_to_amplitude",""]],"struct":[["DecibelMap",""],["FrequencyMap",""],["GenericMap",""],["IntMap",""]],"trait":[["NormalizedMap",""]]};

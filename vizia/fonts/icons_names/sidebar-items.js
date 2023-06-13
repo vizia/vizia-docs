@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":[["CANCEL",""],["CHECK",""],["DOWN",""],["LEFT",""],["MINUS",""],["PLUS",""],["RIGHT",""],["UP",""]]};

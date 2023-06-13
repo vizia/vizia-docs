@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["KeymapEvent","An event used to interact with a [`Keymap`] at runtime."]],"struct":[["Keymap","A keymap that associates key chords with actions."],["KeymapEntry","An entry inside of a `Keymap`."]]};
+window.SIDEBAR_ITEMS = {"enum":["Code","Key","KeymapEvent","MouseButton"],"struct":["Keymap","KeymapEntry","Modifiers","MouseButtonData","MouseState"]};

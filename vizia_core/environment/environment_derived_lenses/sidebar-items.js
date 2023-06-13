@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["locale","Lens for the field `locale` on `Environment`."],["root",""]]};
+window.SIDEBAR_ITEMS = {"struct":["locale","root","theme_mode"]};

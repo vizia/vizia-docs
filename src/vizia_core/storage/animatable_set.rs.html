@@ -760,10 +760,16 @@
 <a href="#760" id="760">760</a>
 <a href="#761" id="761">761</a>
 <a href="#762" id="762">762</a>
+<a href="#763" id="763">763</a>
+<a href="#764" id="764">764</a>
+<a href="#765" id="765">765</a>
+<a href="#766" id="766">766</a>
+<a href="#767" id="767">767</a>
+<a href="#768" id="768">768</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::animation::{Animation, AnimationState, Interpolator};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::style::Rule;
-<span class="kw">use </span>instant::Duration;
+<span class="kw">use </span>instant::{Duration, Instant};
 <span class="kw">use </span>vizia_id::GenerationalId;
 <span class="kw">use </span>vizia_storage::{SparseSet, SparseSetGeneric, SparseSetIndex};
 
@@ -1054,6 +1060,7 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         entity: Entity,
         animation: Animation,
+        start_time: Instant,
         duration: Duration,
     ) {
         <span class="kw">let </span>entity_index = entity.index();
@@ -1074,7 +1081,7 @@
                 <span class="kw">if </span>anim_state.id == animation {
                     anim_state.active = <span class="bool-val">true</span>;
                     anim_state.t = <span class="number">0.0</span>;
-                    anim_state.start_time = instant::Instant::now();
+                    anim_state.start_time = start_time;
                     anim_state.output = <span class="prelude-val">Some</span>(
                         <span class="self">self</span>.animations
                             .get(animation)
@@ -1399,7 +1406,12 @@
                     <span class="kw">let </span>duration = transition_state.duration;
 
                     <span class="kw">if </span>transition_state.from_rule != transition_state.to_rule {
-                        <span class="self">self</span>.play_animation(entity, rule_animation, duration);
+                        <span class="self">self</span>.play_animation(
+                            entity,
+                            rule_animation,
+                            instant::Instant::now(),
+                            duration,
+                        );
                     }
                     <span class="comment">//}
                 </span>}

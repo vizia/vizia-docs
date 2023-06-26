@@ -1126,8 +1126,6 @@
 <a href="#1126" id="1126">1126</a>
 <a href="#1127" id="1127">1127</a>
 <a href="#1128" id="1128">1128</a>
-<a href="#1129" id="1129">1129</a>
-<a href="#1130" id="1130">1130</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::accessibility::IntoNode;
 <span class="kw">use </span><span class="kw">crate</span>::context::AccessNode;
 <span class="kw">use </span><span class="kw">crate</span>::layout::BoundingBox;
@@ -1569,13 +1567,11 @@
     }
 
     <span class="kw">pub fn </span>placeholder&lt;T: ToString&gt;(<span class="self">self</span>, text: <span class="kw">impl </span>Res&lt;T&gt;) -&gt; <span class="self">Self </span>{
-        text.set_or_bind(<span class="self">self</span>.cx, <span class="self">self</span>.entity, |cx, entity, val| {
+        text.set_or_bind(<span class="self">self</span>.cx, <span class="self">self</span>.entity, |cx, val| {
             <span class="comment">// self.modify(|textbox| textbox.placeholder = val.to_string());
-            </span>cx.with_current(entity, |cx| {
-                cx.emit(TextEvent::SetPlaceholder(val.to_string()));
-                cx.needs_relayout();
-                cx.needs_redraw();
-            });
+            </span>cx.emit(TextEvent::SetPlaceholder(val.to_string()));
+            cx.needs_relayout();
+            cx.needs_redraw();
         });
 
         <span class="self">self

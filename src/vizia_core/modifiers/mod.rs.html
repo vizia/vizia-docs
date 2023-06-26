@@ -146,8 +146,8 @@
         <span class="attr">#[allow(unused_variables)]
         </span><span class="kw">fn </span><span class="macro-nonterminal">$name</span>&lt;U: Into&lt;<span class="macro-nonterminal">$t</span>&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
             <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-            value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
-                cx.style.<span class="macro-nonterminal">$name</span>.insert(entity, v.into());
+            value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
+                cx.style.<span class="macro-nonterminal">$name</span>.insert(cx.current, v.into());
 
                 cx.style.system_flags |= <span class="macro-nonterminal">$flags</span>;
             });

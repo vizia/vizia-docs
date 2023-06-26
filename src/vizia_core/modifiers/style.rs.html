@@ -605,6 +605,8 @@
 <a href="#605" id="605">605</a>
 <a href="#606" id="606">606</a>
 <a href="#607" id="607">607</a>
+<a href="#608" id="608">608</a>
+<a href="#609" id="609">609</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>vizia_style::{BorderRadius, BoxShadow, ColorStop, Gradient, Position, Rect, Scale, Translate};
 
 <span class="kw">use </span><span class="kw">super</span>::internal;
@@ -674,7 +676,7 @@
     </span><span class="kw">fn </span>toggle_class(<span class="kw-2">mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str, applied: <span class="kw">impl </span>Res&lt;bool&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>name = name.to_owned();
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        applied.set_or_bind(<span class="self">self</span>.context(), entity, <span class="kw">move </span>|cx, entity, applied| {
+        applied.set_or_bind(<span class="self">self</span>.context(), entity, <span class="kw">move </span>|cx, applied| {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(class_list) = cx.style.classes.get_mut(entity) {
                 <span class="kw">if </span>applied {
                     class_list.insert(name.clone());
@@ -701,9 +703,9 @@
             abilities.set(Abilities::CHECKABLE, <span class="bool-val">true</span>);
         }
 
-        state.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, val| {
+        state.set_or_bind(<span class="self">self</span>.context(), entity, |cx, val| {
             <span class="kw">let </span>val = val.into();
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(entity) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(cx.current) {
                 pseudo_classes.set(PseudoClassFlags::CHECKED, val);
             }
 
@@ -715,9 +717,9 @@
 
     <span class="kw">fn </span>read_only&lt;U: Into&lt;bool&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, state: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        state.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, val| {
+        state.set_or_bind(<span class="self">self</span>.context(), entity, |cx, val| {
             <span class="kw">let </span>val = val.into();
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(entity) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(cx.current) {
                 pseudo_classes.set(PseudoClassFlags::READ_ONLY, val);
             }
 
@@ -729,9 +731,9 @@
 
     <span class="kw">fn </span>read_write&lt;U: Into&lt;bool&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, state: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        state.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, val| {
+        state.set_or_bind(<span class="self">self</span>.context(), entity, |cx, val| {
             <span class="kw">let </span>val = val.into();
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(entity) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(cx.current) {
                 pseudo_classes.set(PseudoClassFlags::READ_WRITE, val);
             }
 
@@ -783,21 +785,21 @@
     /// Views with the same z-index are rendered in tree order.
     </span><span class="kw">fn </span>z_index&lt;U: Into&lt;i32&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
-            <span class="kw">let </span>value = v.into();
-            cx.tree.set_z_index(entity, value);
-            cx.needs_redraw();
-        });
+        <span class="comment">// value.set_or_bind(self.context(), entity, |cx, v| {
+        </span><span class="kw">let </span>value = value.get_val(<span class="self">self</span>.context()).into();
+        <span class="self">self</span>.context().tree.set_z_index(entity, value);
+        <span class="self">self</span>.context().needs_redraw();
+        <span class="comment">// });
 
-        <span class="self">self
+        </span><span class="self">self
     </span>}
 
     <span class="doccomment">/// Sets the clip path for the the view.
     </span><span class="kw">fn </span>clip_path&lt;U: Into&lt;ClipPath&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
             <span class="kw">let </span>value = v.into();
-            cx.style.clip_path.insert(entity, value);
+            cx.style.clip_path.insert(cx.current, value);
 
             cx.needs_redraw();
         });
@@ -807,10 +809,10 @@
 
     <span class="kw">fn </span>overflow&lt;U: Into&lt;Overflow&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
             <span class="kw">let </span>value = v.into();
-            cx.style.overflowx.insert(entity, value);
-            cx.style.overflowy.insert(entity, value);
+            cx.style.overflowx.insert(cx.current, value);
+            cx.style.overflowy.insert(cx.current, value);
 
             cx.needs_redraw();
         });
@@ -839,9 +841,9 @@
     <span class="doccomment">/// Sets the backdrop filter for the view.
     </span><span class="kw">fn </span>backdrop_filter&lt;U: Into&lt;Filter&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
             <span class="kw">let </span>value = v.into();
-            cx.style.backdrop_filter.insert(entity, value);
+            cx.style.backdrop_filter.insert(cx.current, value);
 
             cx.needs_redraw();
         });
@@ -852,12 +854,12 @@
     <span class="doccomment">/// Add a box-shadow to the view.
     </span><span class="kw">fn </span>box_shadow&lt;U: Into&lt;BoxShadow&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
             <span class="kw">let </span>value = v.into();
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(box_shadows) = cx.style.box_shadow.get_inline_mut(entity) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(box_shadows) = cx.style.box_shadow.get_inline_mut(cx.current) {
                 box_shadows.push(value);
             } <span class="kw">else </span>{
-                cx.style.box_shadow.insert(entity, <span class="macro">vec!</span>[value]);
+                cx.style.box_shadow.insert(cx.current, <span class="macro">vec!</span>[value]);
             }
 
             cx.needs_redraw();
@@ -868,12 +870,14 @@
 
     <span class="kw">fn </span>background_gradient&lt;U: Into&lt;Gradient&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
             <span class="kw">let </span>value = v.into();
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(background_images) = cx.style.background_image.get_inline_mut(entity) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(background_images) = cx.style.background_image.get_inline_mut(cx.current) {
                 background_images.push(ImageOrGradient::Gradient(value));
             } <span class="kw">else </span>{
-                cx.style.background_image.insert(entity, <span class="macro">vec!</span>[ImageOrGradient::Gradient(value)]);
+                cx.style
+                    .background_image
+                    .insert(cx.current, <span class="macro">vec!</span>[ImageOrGradient::Gradient(value)]);
             }
 
             cx.needs_redraw();
@@ -895,7 +899,7 @@
         value: <span class="kw">impl </span>Res&lt;U&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, val| {
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, val| {
             <span class="kw">let </span>images = val.into();
             <span class="kw">let </span>images = images
                 .into_iter()
@@ -907,7 +911,7 @@
                     <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
                 })
                 .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-            cx.style.background_image.insert(entity, images);
+            cx.style.background_image.insert(cx.current, images);
             cx.needs_redraw();
         });
 
@@ -963,12 +967,12 @@
         value: <span class="kw">impl </span>Res&lt;U&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
             <span class="kw">let </span>value = v.into();
-            cx.style.border_top_left_radius.insert(entity, value.top_left);
-            cx.style.border_top_right_radius.insert(entity, value.top_right);
-            cx.style.border_bottom_left_radius.insert(entity, value.bottom_left);
-            cx.style.border_bottom_right_radius.insert(entity, value.bottom_right);
+            cx.style.border_top_left_radius.insert(cx.current, value.top_left);
+            cx.style.border_top_right_radius.insert(cx.current, value.top_right);
+            cx.style.border_bottom_left_radius.insert(cx.current, value.bottom_left);
+            cx.style.border_bottom_right_radius.insert(cx.current, value.bottom_right);
 
             cx.needs_redraw();
         });
@@ -1010,12 +1014,12 @@
         value: <span class="kw">impl </span>Res&lt;U&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
             <span class="kw">let </span>value = v.into();
-            cx.style.border_top_left_shape.insert(entity, value.<span class="number">0</span>);
-            cx.style.border_top_right_shape.insert(entity, value.<span class="number">1</span>);
-            cx.style.border_bottom_right_shape.insert(entity, value.<span class="number">2</span>);
-            cx.style.border_bottom_left_shape.insert(entity, value.<span class="number">3</span>);
+            cx.style.border_top_left_shape.insert(cx.current, value.<span class="number">0</span>);
+            cx.style.border_top_right_shape.insert(cx.current, value.<span class="number">1</span>);
+            cx.style.border_bottom_right_shape.insert(cx.current, value.<span class="number">2</span>);
+            cx.style.border_bottom_left_shape.insert(cx.current, value.<span class="number">3</span>);
 
             cx.needs_redraw();
         });
@@ -1056,9 +1060,9 @@
     <span class="doccomment">/// Sets the transform of the view with a list of transform functions.
     </span><span class="kw">fn </span>transform&lt;U: Into&lt;Vec&lt;Transform&gt;&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
             <span class="kw">let </span>value = v.into();
-            cx.style.transform.insert(entity, value);
+            cx.style.transform.insert(cx.current, value);
             cx.needs_redraw();
         });
 
@@ -1068,11 +1072,11 @@
     <span class="doccomment">/// Sets the transform origin of the the view.
     </span><span class="kw">fn </span>transform_origin&lt;U: Into&lt;Position&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
             <span class="kw">let </span>value: Position = v.into();
             <span class="kw">let </span>x = value.x.to_length_or_percentage();
             <span class="kw">let </span>y = value.y.to_length_or_percentage();
-            cx.style.transform_origin.insert(entity, Translate { x, y });
+            cx.style.transform_origin.insert(cx.current, Translate { x, y });
             cx.needs_redraw();
         });
 

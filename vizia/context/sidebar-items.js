@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["ProxyEmitError"],"struct":["AccessContext","AccessNode","Context","ContextProxy","DrawContext","EventContext","ResourceContext"],"trait":["DataContext","EmitContext","EventProxy"]};
+window.SIDEBAR_ITEMS = {"enum":["ProxyEmitError"],"struct":["AccessContext","AccessNode","Context","ContextProxy","DrawContext","EventContext","ResourceContext"],"trait":["DataContext","EmitContext","EventProxy","TreeProps"]};

@@ -1810,6 +1810,28 @@
 <a href="#1810" id="1810">1810</a>
 <a href="#1811" id="1811">1811</a>
 <a href="#1812" id="1812">1812</a>
+<a href="#1813" id="1813">1813</a>
+<a href="#1814" id="1814">1814</a>
+<a href="#1815" id="1815">1815</a>
+<a href="#1816" id="1816">1816</a>
+<a href="#1817" id="1817">1817</a>
+<a href="#1818" id="1818">1818</a>
+<a href="#1819" id="1819">1819</a>
+<a href="#1820" id="1820">1820</a>
+<a href="#1821" id="1821">1821</a>
+<a href="#1822" id="1822">1822</a>
+<a href="#1823" id="1823">1823</a>
+<a href="#1824" id="1824">1824</a>
+<a href="#1825" id="1825">1825</a>
+<a href="#1826" id="1826">1826</a>
+<a href="#1827" id="1827">1827</a>
+<a href="#1828" id="1828">1828</a>
+<a href="#1829" id="1829">1829</a>
+<a href="#1830" id="1830">1830</a>
+<a href="#1831" id="1831">1831</a>
+<a href="#1832" id="1832">1832</a>
+<a href="#1833" id="1833">1833</a>
+<a href="#1834" id="1834">1834</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Styling determines the appearance of a view.
 //!
 //! # Styling Views
@@ -1873,7 +1895,7 @@
 //! ```
 
 </span><span class="kw">use </span>fnv::FnvHashMap;
-<span class="kw">use </span>instant::Duration;
+<span class="kw">use </span>instant::{Duration, Instant};
 <span class="kw">use </span>morphorm::{LayoutType, PositionType, Units};
 <span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>std::fmt::Debug;
@@ -1967,6 +1989,8 @@
     <span class="comment">// Creates and destroys animation ids
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) animation_manager: IdManager&lt;Animation&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) animations: FnvHashMap&lt;String, Animation&gt;,
+    <span class="comment">// List of animations to be started on the next frame
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) pending_animations: Vec&lt;(Entity, Animation, Duration)&gt;,
 
     <span class="comment">// List of rules
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) rules: Vec&lt;(Rule, SelectorList&lt;Selectors&gt;)&gt;,
@@ -2434,73 +2458,93 @@
         animation_id
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>play_animation(
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>enqueue_animation(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         entity: Entity,
         animation: Animation,
         duration: Duration,
     ) {
-        <span class="self">self</span>.display.play_animation(entity, animation, duration);
-        <span class="self">self</span>.opacity.play_animation(entity, animation, duration);
-        <span class="self">self</span>.clip_path.play_animation(entity, animation, duration);
+        <span class="self">self</span>.pending_animations.push((entity, animation, duration));
+    }
 
-        <span class="self">self</span>.transform.play_animation(entity, animation, duration);
-        <span class="self">self</span>.transform_origin.play_animation(entity, animation, duration);
-        <span class="self">self</span>.translate.play_animation(entity, animation, duration);
-        <span class="self">self</span>.rotate.play_animation(entity, animation, duration);
-        <span class="self">self</span>.scale.play_animation(entity, animation, duration);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>play_pending_animations(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let </span>start_time = instant::Instant::now();
 
-        <span class="self">self</span>.border_width.play_animation(entity, animation, duration);
-        <span class="self">self</span>.border_color.play_animation(entity, animation, duration);
+        <span class="kw">let </span>pending_animations = <span class="self">self</span>.pending_animations.drain(..).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-        <span class="self">self</span>.border_top_left_radius.play_animation(entity, animation, duration);
-        <span class="self">self</span>.border_top_right_radius.play_animation(entity, animation, duration);
-        <span class="self">self</span>.border_bottom_left_radius.play_animation(entity, animation, duration);
-        <span class="self">self</span>.border_bottom_right_radius.play_animation(entity, animation, duration);
+        <span class="kw">for </span>(entity, animation, duration) <span class="kw">in </span>pending_animations {
+            <span class="self">self</span>.play_animation(entity, animation, start_time, duration)
+        }
+    }
 
-        <span class="self">self</span>.outline_width.play_animation(entity, animation, duration);
-        <span class="self">self</span>.outline_color.play_animation(entity, animation, duration);
-        <span class="self">self</span>.outline_offset.play_animation(entity, animation, duration);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>play_animation(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        entity: Entity,
+        animation: Animation,
+        start_time: Instant,
+        duration: Duration,
+    ) {
+        <span class="self">self</span>.display.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.opacity.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.clip_path.play_animation(entity, animation, start_time, duration);
 
-        <span class="self">self</span>.background_color.play_animation(entity, animation, duration);
-        <span class="self">self</span>.background_image.play_animation(entity, animation, duration);
-        <span class="self">self</span>.background_size.play_animation(entity, animation, duration);
+        <span class="self">self</span>.transform.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.transform_origin.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.translate.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.rotate.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.scale.play_animation(entity, animation, start_time, duration);
 
-        <span class="self">self</span>.box_shadow.play_animation(entity, animation, duration);
+        <span class="self">self</span>.border_width.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.border_color.play_animation(entity, animation, start_time, duration);
 
-        <span class="self">self</span>.font_color.play_animation(entity, animation, duration);
-        <span class="self">self</span>.font_size.play_animation(entity, animation, duration);
-        <span class="self">self</span>.caret_color.play_animation(entity, animation, duration);
-        <span class="self">self</span>.selection_color.play_animation(entity, animation, duration);
+        <span class="self">self</span>.border_top_left_radius.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.border_top_right_radius.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.border_bottom_left_radius.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.border_bottom_right_radius.play_animation(entity, animation, start_time, duration);
 
-        <span class="self">self</span>.left.play_animation(entity, animation, duration);
-        <span class="self">self</span>.right.play_animation(entity, animation, duration);
-        <span class="self">self</span>.top.play_animation(entity, animation, duration);
-        <span class="self">self</span>.bottom.play_animation(entity, animation, duration);
+        <span class="self">self</span>.outline_width.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.outline_color.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.outline_offset.play_animation(entity, animation, start_time, duration);
 
-        <span class="self">self</span>.child_left.play_animation(entity, animation, duration);
-        <span class="self">self</span>.child_right.play_animation(entity, animation, duration);
-        <span class="self">self</span>.child_top.play_animation(entity, animation, duration);
-        <span class="self">self</span>.child_bottom.play_animation(entity, animation, duration);
-        <span class="self">self</span>.col_between.play_animation(entity, animation, duration);
-        <span class="self">self</span>.row_between.play_animation(entity, animation, duration);
+        <span class="self">self</span>.background_color.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.background_image.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.background_size.play_animation(entity, animation, start_time, duration);
 
-        <span class="self">self</span>.width.play_animation(entity, animation, duration);
-        <span class="self">self</span>.height.play_animation(entity, animation, duration);
+        <span class="self">self</span>.box_shadow.play_animation(entity, animation, start_time, duration);
 
-        <span class="self">self</span>.min_width.play_animation(entity, animation, duration);
-        <span class="self">self</span>.max_width.play_animation(entity, animation, duration);
-        <span class="self">self</span>.min_height.play_animation(entity, animation, duration);
-        <span class="self">self</span>.max_height.play_animation(entity, animation, duration);
+        <span class="self">self</span>.font_color.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.font_size.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.caret_color.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.selection_color.play_animation(entity, animation, start_time, duration);
 
-        <span class="self">self</span>.min_left.play_animation(entity, animation, duration);
-        <span class="self">self</span>.max_left.play_animation(entity, animation, duration);
-        <span class="self">self</span>.min_right.play_animation(entity, animation, duration);
-        <span class="self">self</span>.max_right.play_animation(entity, animation, duration);
-        <span class="self">self</span>.min_top.play_animation(entity, animation, duration);
-        <span class="self">self</span>.max_top.play_animation(entity, animation, duration);
-        <span class="self">self</span>.min_bottom.play_animation(entity, animation, duration);
-        <span class="self">self</span>.max_bottom.play_animation(entity, animation, duration);
+        <span class="self">self</span>.left.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.right.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.top.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.bottom.play_animation(entity, animation, start_time, duration);
+
+        <span class="self">self</span>.child_left.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.child_right.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.child_top.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.child_bottom.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.col_between.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.row_between.play_animation(entity, animation, start_time, duration);
+
+        <span class="self">self</span>.width.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.height.play_animation(entity, animation, start_time, duration);
+
+        <span class="self">self</span>.min_width.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.max_width.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.min_height.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.max_height.play_animation(entity, animation, start_time, duration);
+
+        <span class="self">self</span>.min_left.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.max_left.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.min_right.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.max_right.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.min_top.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.max_top.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.min_bottom.play_animation(entity, animation, start_time, duration);
+        <span class="self">self</span>.max_bottom.play_animation(entity, animation, start_time, duration);
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_animating(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity, animation: Animation) -&gt; bool {

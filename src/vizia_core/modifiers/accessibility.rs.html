@@ -101,9 +101,9 @@
     <span class="doccomment">/// Sets the accessibility name of the view.
     </span><span class="kw">fn </span>name&lt;U: ToStringLocalized&gt;(<span class="kw-2">mut </span><span class="self">self</span>, name: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        name.set_or_bind(<span class="self">self</span>.context(), entity, |cx, id, name| {
-            cx.style.name.insert(id, name.to_string_local(cx));
-            cx.style.needs_access_update(id);
+        name.set_or_bind(<span class="self">self</span>.context(), entity, |cx, name| {
+            cx.style.name.insert(cx.current, name.to_string_local(cx));
+            cx.style.needs_access_update(cx.current);
         });
 
         <span class="self">self
@@ -132,9 +132,9 @@
     <span class="doccomment">/// Sets whether the view should be hidden from accessibility.
     </span><span class="kw">fn </span>hidden&lt;U: Into&lt;bool&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, hidden: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        hidden.set_or_bind(<span class="self">self</span>.context(), entity, |cx, id, hidden| {
-            cx.style.hidden.insert(id, hidden.into());
-            cx.style.needs_access_update(id);
+        hidden.set_or_bind(<span class="self">self</span>.context(), entity, |cx, hidden| {
+            cx.style.hidden.insert(cx.current, hidden.into());
+            cx.style.needs_access_update(cx.current);
         });
 
         <span class="self">self
@@ -143,11 +143,11 @@
     <span class="doccomment">/// Sets the accessibility numeric value for the view.
     </span><span class="kw">fn </span>numeric_value&lt;U: Into&lt;f64&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, id, val| {
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, val| {
             <span class="kw">let </span>v = val.into();
 
-            cx.style.numeric_value.insert(id, v);
-            cx.style.needs_access_update(id);
+            cx.style.numeric_value.insert(cx.current, v);
+            cx.style.needs_access_update(cx.current);
         });
 
         <span class="self">self
@@ -156,9 +156,9 @@
     <span class="doccomment">/// Sets the accessibility text value for the view.
     </span><span class="kw">fn </span>text_value&lt;U: ToString&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, id, val| {
-            cx.style.text_value.insert(id, val.to_string());
-            cx.style.needs_access_update(id);
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, val| {
+            cx.style.text_value.insert(cx.current, val.to_string());
+            cx.style.needs_access_update(cx.current);
         });
 
         <span class="self">self

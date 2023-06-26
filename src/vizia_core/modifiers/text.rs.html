@@ -110,11 +110,11 @@
     <span class="doccomment">/// Sets the text content of the view.
     </span><span class="kw">fn </span>text&lt;T: ToStringLocalized&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;T&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, val| {
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, val| {
             <span class="kw">let </span>text_data = val.to_string_local(cx);
-            cx.text_context.set_text(entity, <span class="kw-2">&amp;</span>text_data);
+            cx.text_context.set_text(cx.current, <span class="kw-2">&amp;</span>text_data);
 
-            cx.style.needs_text_layout.insert(entity, <span class="bool-val">true</span>);
+            cx.style.needs_text_layout.insert(cx.current, <span class="bool-val">true</span>);
             cx.needs_relayout();
             cx.needs_redraw();
         });
@@ -155,8 +155,8 @@
     <span class="doccomment">/// Sets the text color of the view.
     </span><span class="kw">fn </span>color&lt;U: Into&lt;Color&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
-            cx.style.font_color.insert(entity, v.into());
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
+            cx.style.font_color.insert(cx.current, v.into());
             cx.style.needs_redraw();
         });
         <span class="self">self
@@ -165,9 +165,9 @@
     <span class="doccomment">/// Sets the font size of the view.
     </span><span class="kw">fn </span>font_size&lt;U: Into&lt;FontSize&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
-            cx.style.font_size.insert(entity, v.into());
-            cx.style.needs_text_layout.insert(entity, <span class="bool-val">true</span>);
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
+            cx.style.font_size.insert(cx.current, v.into());
+            cx.style.needs_text_layout.insert(cx.current, <span class="bool-val">true</span>);
         });
         <span class="self">self
     </span>}

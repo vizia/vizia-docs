@@ -405,6 +405,31 @@
 <a href="#405" id="405">405</a>
 <a href="#406" id="406">406</a>
 <a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+<a href="#410" id="410">410</a>
+<a href="#411" id="411">411</a>
+<a href="#412" id="412">412</a>
+<a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
+<a href="#415" id="415">415</a>
+<a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>vizia_style::{BoxShadow, FontStretch, FontStyle, FontWeight, FontWeightKeyword};
 
 <span class="kw">use crate</span>::{
@@ -421,10 +446,11 @@
 
             <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
             <span class="kw">where
-                </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+                </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
             {
                 cx.with_current(entity, |cx| {
-                    (closure)(cx, entity, <span class="kw-2">*</span><span class="self">self</span>);
+                    <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+                    (closure)(cx, <span class="kw-2">*</span><span class="self">self</span>);
                 });
             }
         }
@@ -440,10 +466,11 @@
 
             <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
             <span class="kw">where
-                </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+                </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
             {
                 cx.with_current(entity, |cx| {
-                    (closure)(cx, entity, <span class="self">self</span>.clone());
+                    <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+                    (closure)(cx, <span class="self">self</span>.clone());
                 });
             }
         }
@@ -462,7 +489,7 @@
     }
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Entity, T);
+        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>EventContext, T);
 }
 
 <span class="macro">impl_res_simple!</span>(i8);
@@ -515,12 +542,13 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, L::Target),
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, L::Target),
     {
         cx.with_current(entity, |cx| {
             Binding::new(cx, <span class="self">self</span>.clone(), <span class="kw">move </span>|cx, val| {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(v) = val.get_val_fallible(cx) {
-                    (closure)(cx, entity, v);
+                    <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+                    (closure)(cx, v);
                 }
             });
         });
@@ -534,9 +562,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="self">self</span>.clone());
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>.clone());
     }
 }
 
@@ -547,9 +576,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="self">self</span>.clone());
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>.clone());
     }
 }
 
@@ -560,9 +590,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="self">self</span>);
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>);
     }
 }
 
@@ -573,9 +604,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="self">self</span>);
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>);
     }
 }
 
@@ -586,9 +618,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="self">self</span>.clone());
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>.clone());
     }
 }
 
@@ -599,9 +632,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="kw-2">*</span><span class="self">self</span>);
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="kw-2">*</span><span class="self">self</span>);
     }
 }
 
@@ -612,9 +646,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="self">self</span>.clone());
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>.clone());
     }
 }
 
@@ -625,9 +660,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="kw-2">*</span><span class="self">self</span>);
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="kw-2">*</span><span class="self">self</span>);
     }
 }
 
@@ -638,9 +674,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="kw-2">*</span><span class="self">self</span>);
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="kw-2">*</span><span class="self">self</span>);
     }
 }
 
@@ -651,9 +688,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="kw-2">*</span><span class="self">self</span>);
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="kw-2">*</span><span class="self">self</span>);
     }
 }
 
@@ -664,9 +702,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="kw-2">*</span><span class="self">self</span>);
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="kw-2">*</span><span class="self">self</span>);
     }
 }
 
@@ -677,9 +716,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="kw-2">*</span><span class="self">self</span>);
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="kw-2">*</span><span class="self">self</span>);
     }
 }
 
@@ -690,9 +730,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="prelude-ty">Option</span>&lt;T&gt;),
+        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="prelude-ty">Option</span>&lt;T&gt;),
     {
-        (closure)(cx, entity, <span class="self">self</span>.clone())
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>.clone())
     }
 }
 
@@ -703,9 +744,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="self">self</span>.clone())
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>.clone())
     }
 }
 
@@ -716,9 +758,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="self">self</span>.clone())
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>.clone())
     }
 }
 
@@ -729,9 +772,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="kw-2">*</span><span class="self">self</span>)
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
@@ -742,9 +786,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Entity, Vec&lt;T&gt;),
+        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>EventContext, Vec&lt;T&gt;),
     {
-        (closure)(cx, entity, <span class="self">self</span>.clone())
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>.clone())
     }
 }
 
@@ -755,9 +800,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Entity, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="self">Self</span>),
     {
-        (closure)(cx, entity, <span class="self">self</span>.clone())
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>.clone())
     }
 }
 
@@ -768,9 +814,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Entity, FamilyOwned),
+        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>EventContext, FamilyOwned),
     {
-        (closure)(cx, entity, <span class="self">self</span>.clone())
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>.clone())
     }
 }
 
@@ -781,9 +828,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Entity, (T1, T2)),
+        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>EventContext, (T1, T2)),
     {
-        (closure)(cx, entity, <span class="self">self</span>.clone());
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>.clone());
     }
 }
 
@@ -794,9 +842,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Entity, (T1, T2, T3)),
+        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>EventContext, (T1, T2, T3)),
     {
-        (closure)(cx, entity, <span class="self">self</span>.clone());
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>.clone());
     }
 }
 
@@ -807,9 +856,10 @@
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Entity, (T1, T2, T3, T4)),
+        </span>F: <span class="lifetime">&#39;static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>EventContext, (T1, T2, T3, T4)),
     {
-        (closure)(cx, entity, <span class="self">self</span>.clone());
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
+        (closure)(cx, <span class="self">self</span>.clone());
     }
 }
 </code></pre></div></section></main></body></html>

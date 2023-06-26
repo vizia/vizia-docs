@@ -126,8 +126,8 @@
     /// ```
     </span><span class="kw">fn </span>hoverable&lt;U: Into&lt;bool&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, state: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        state.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(abilities) = cx.style.abilities.get_mut(entity) {
+        state.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(abilities) = cx.style.abilities.get_mut(cx.current) {
                 abilities.set(Abilities::HOVERABLE, v.into());
                 cx.needs_restyle();
             }
@@ -148,8 +148,8 @@
     /// ```
     </span><span class="kw">fn </span>focusable&lt;U: Into&lt;bool&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, state: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        state.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(abilities) = cx.style.abilities.get_mut(entity) {
+        state.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(abilities) = cx.style.abilities.get_mut(cx.current) {
                 <span class="kw">let </span>state = v.into();
                 abilities.set(Abilities::FOCUSABLE, state);
 
@@ -177,8 +177,8 @@
     /// ```
     </span><span class="kw">fn </span>checkable&lt;U: Into&lt;bool&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, state: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        state.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(abilities) = cx.style.abilities.get_mut(entity) {
+        state.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(abilities) = cx.style.abilities.get_mut(cx.current) {
                 <span class="kw">let </span>state = v.into();
                 abilities.set(Abilities::CHECKABLE, state);
 
@@ -202,8 +202,8 @@
     /// ```
     </span><span class="kw">fn </span>navigable&lt;U: Into&lt;bool&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, state: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        state.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, v| {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(abilities) = cx.style.abilities.get_mut(entity) {
+        state.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(abilities) = cx.style.abilities.get_mut(cx.current) {
                 abilities.set(Abilities::NAVIGABLE, v.into());
                 cx.needs_restyle();
             }

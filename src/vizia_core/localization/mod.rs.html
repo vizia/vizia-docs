@@ -284,6 +284,62 @@
 <a href="#284" id="284">284</a>
 <a href="#285" id="285">285</a>
 <a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Provides types for adapting an application to a particular language or regional peculiarities.
 //!
 //! # Language Translation
@@ -359,6 +415,7 @@
 <span class="kw">use </span>fluent_bundle::FluentArgs;
 <span class="kw">use </span>fluent_bundle::FluentValue;
 <span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>std::rc::Rc;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>FluentStore {
     <span class="kw">fn </span>get_val(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>Context) -&gt; FluentValue&lt;<span class="lifetime">&#39;static</span>&gt;;
@@ -421,6 +478,13 @@
 </span><span class="kw">pub struct </span>Localized {
     key: String,
     args: HashMap&lt;String, Box&lt;<span class="kw">dyn </span>FluentStore&gt;&gt;,
+    map: Rc&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>str) -&gt; String + <span class="lifetime">&#39;static</span>&gt;,
+}
+
+<span class="kw">impl </span>PartialEq <span class="kw">for </span>Localized {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+        <span class="self">self</span>.key == other.key
+    }
 }
 
 <span class="kw">impl </span>Clone <span class="kw">for </span>Localized {
@@ -428,6 +492,7 @@
         <span class="self">Self </span>{
             key: <span class="self">self</span>.key.clone(),
             args: <span class="self">self</span>.args.iter().map(|(k, v)| (k.clone(), v.make_clone())).collect(),
+            map: <span class="self">self</span>.map.clone(),
         }
     }
 }
@@ -455,8 +520,15 @@
     /// })
     /// .run();
     </span><span class="kw">pub fn </span>new(key: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{ key: key.to_owned(), args: HashMap::new() }
+        <span class="self">Self </span>{ key: key.to_owned(), args: HashMap::new(), map: Rc::new(|s| s.to_string()) }
     }
+
+    <span class="doccomment">/// Sets a mapping function to apply to the translated text.
+    </span><span class="kw">pub fn </span>map(<span class="kw-2">mut </span><span class="self">self</span>, mapping: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>str) -&gt; String + <span class="lifetime">&#39;static</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.map = Rc::new(mapping);
+
+        <span class="self">self
+    </span>}
 
     <span class="doccomment">/// Add a variable argument binding to the Localized type.
     ///
@@ -516,13 +588,13 @@
         <span class="kw">let </span>message = <span class="kw">if let </span><span class="prelude-val">Some</span>(msg) = bundle.get_message(<span class="kw-2">&amp;</span><span class="self">self</span>.key) {
             msg
         } <span class="kw">else </span>{
-            <span class="kw">return </span><span class="macro">format!</span>(<span class="string">&quot;{{MISSING: {}}}&quot;</span>, <span class="self">self</span>.key);
+            <span class="kw">return </span>(<span class="self">self</span>.map)(<span class="kw-2">&amp;</span><span class="self">self</span>.key);
         };
 
         <span class="kw">let </span>value = <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = message.value() {
             value
         } <span class="kw">else </span>{
-            <span class="kw">return </span><span class="macro">format!</span>(<span class="string">&quot;{{MISSING: {}}}&quot;</span>, <span class="self">self</span>.key);
+            <span class="kw">return </span>(<span class="self">self</span>.map)(<span class="kw-2">&amp;</span><span class="self">self</span>.key);
         };
 
         <span class="kw">let </span><span class="kw-2">mut </span>err = <span class="macro">vec!</span>[];
@@ -530,7 +602,7 @@
         <span class="kw">let </span>res = bundle.format_pattern(value, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>args), <span class="kw-2">&amp;mut </span>err);
 
         <span class="kw">if </span>err.is_empty() {
-            res.to_string()
+            (<span class="self">self</span>.map)(<span class="kw-2">&amp;</span>res)
         } <span class="kw">else </span>{
             <span class="macro">format!</span>(<span class="string">&quot;{} {{ERROR: {:?}}}&quot;</span>, res, err)
         }
@@ -568,6 +640,46 @@
         );
     } <span class="kw">else </span>{
         closure(cx);
+    }
+}
+
+<span class="kw">impl</span>&lt;T: ToString&gt; ToStringLocalized <span class="kw">for </span>T {
+    <span class="kw">fn </span>to_string_local(<span class="kw-2">&amp;</span><span class="self">self</span>, _cx: <span class="kw-2">&amp;</span>Context) -&gt; String {
+        <span class="self">self</span>.to_string()
+    }
+}
+
+<span class="kw">pub trait </span>ToStringLocalized {
+    <span class="kw">fn </span>to_string_local(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>Context) -&gt; String;
+}
+
+<span class="kw">impl </span>ToStringLocalized <span class="kw">for </span>Localized {
+    <span class="kw">fn </span>to_string_local(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>Context) -&gt; String {
+        <span class="kw">let </span>locale = <span class="kw-2">&amp;</span>cx.environment().locale;
+        <span class="kw">let </span>bundle = cx.resource_manager.current_translation(locale);
+        <span class="kw">let </span>message = <span class="kw">if let </span><span class="prelude-val">Some</span>(msg) = bundle.get_message(<span class="kw-2">&amp;</span><span class="self">self</span>.key) {
+            msg
+        } <span class="kw">else </span>{
+            <span class="comment">// Warn here of missing key
+            </span><span class="kw">return </span>(<span class="self">self</span>.map)(<span class="kw-2">&amp;</span><span class="self">self</span>.key);
+        };
+
+        <span class="kw">let </span>value = <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = message.value() {
+            value
+        } <span class="kw">else </span>{
+            <span class="comment">// Warn here of missing value
+            </span><span class="kw">return </span>(<span class="self">self</span>.map)(<span class="kw-2">&amp;</span><span class="self">self</span>.key);
+        };
+
+        <span class="kw">let </span><span class="kw-2">mut </span>err = <span class="macro">vec!</span>[];
+        <span class="kw">let </span>args = <span class="self">self</span>.get_args(cx);
+        <span class="kw">let </span>res = bundle.format_pattern(value, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>args), <span class="kw-2">&amp;mut </span>err);
+
+        <span class="kw">if </span>err.is_empty() {
+            (<span class="self">self</span>.map)(<span class="kw-2">&amp;</span>res)
+        } <span class="kw">else </span>{
+            <span class="macro">format!</span>(<span class="string">&quot;{} {{ERROR: {:?}}}&quot;</span>, res, err)
+        }
     }
 }
 </code></pre></div></section></main></body></html>

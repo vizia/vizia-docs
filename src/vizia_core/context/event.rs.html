@@ -985,6 +985,17 @@
 <a href="#985" id="985">985</a>
 <a href="#986" id="986">986</a>
 <a href="#987" id="987">987</a>
+<a href="#988" id="988">988</a>
+<a href="#989" id="989">989</a>
+<a href="#990" id="990">990</a>
+<a href="#991" id="991">991</a>
+<a href="#992" id="992">992</a>
+<a href="#993" id="993">993</a>
+<a href="#994" id="994">994</a>
+<a href="#995" id="995">995</a>
+<a href="#996" id="996">996</a>
+<a href="#997" id="997">997</a>
+<a href="#998" id="998">998</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::collections::{HashMap, HashSet, VecDeque};
 <span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
@@ -1324,6 +1335,17 @@
                 }
             }),
         );
+    }
+
+    <span class="doccomment">/// Sets the language used by the application for localization.
+    </span><span class="kw">pub fn </span>set_language(<span class="kw-2">&amp;mut </span><span class="self">self</span>, lang: LanguageIdentifier) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>model_data_store) = <span class="self">self</span>.data.remove(Entity::root()) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(model) = model_data_store.models.get_mut(<span class="kw-2">&amp;</span>TypeId::of::&lt;Environment&gt;()) {
+                model.event(<span class="self">self</span>, <span class="kw-2">&amp;mut </span>Event::new(EnvironmentEvent::SetLocale(lang)));
+            }
+
+            <span class="self">self</span>.data.insert(Entity::root(), model_data_store);
+        }
     }
 
     <span class="doccomment">/// Capture mouse input for the current view.

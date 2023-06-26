@@ -500,22 +500,22 @@
 <span class="macro">impl_res_clone!</span>(Scale);
 <span class="macro">impl_res_clone!</span>(Position);
 
-<span class="kw">impl</span>&lt;T, L&gt; Res&lt;T&gt; <span class="kw">for </span>L
+<span class="kw">impl</span>&lt;L&gt; Res&lt;L::Target&gt; <span class="kw">for </span>L
 <span class="kw">where
-    </span>L: Lens&lt;Target = T&gt; + LensExt,
-    T: Clone + Data,
+    </span>L: Lens + LensExt,
+    L::Target: Clone + Data,
 {
-    <span class="kw">fn </span>get_val(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>Context) -&gt; T {
+    <span class="kw">fn </span>get_val(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>Context) -&gt; L::Target {
         <span class="self">self</span>.get(cx)
     }
 
-    <span class="kw">fn </span>get_val_fallible(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>Context) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+    <span class="kw">fn </span>get_val_fallible(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>Context) -&gt; <span class="prelude-ty">Option</span>&lt;L::Target&gt; {
         <span class="self">self</span>.get_fallible(cx)
     }
 
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, T),
+        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, Entity, L::Target),
     {
         cx.with_current(entity, |cx| {
             Binding::new(cx, <span class="self">self</span>.clone(), <span class="kw">move </span>|cx, val| {

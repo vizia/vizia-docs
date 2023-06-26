@@ -305,6 +305,8 @@
 <a href="#305" id="305">305</a>
 <a href="#306" id="306">306</a>
 <a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>chrono::{Datelike, NaiveDate, Weekday};
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -315,7 +317,7 @@
 </span><span class="attr">#[derive(Lens)]
 </span><span class="kw">pub struct </span>Datepicker {
     view_date: NaiveDate,
-    months: Vec&lt;String&gt;,
+    months: Vec&lt;Localized&gt;,
     selected_month: usize,
 
     <span class="attr">#[lens(ignore)]
@@ -337,7 +339,8 @@
     <span class="string">&quot;December&quot;</span>,
 ];
 
-<span class="kw">const </span>DAYS_HEADER: [<span class="kw-2">&amp;</span>str; <span class="number">7</span>] = [<span class="string">&quot;Mo&quot;</span>, <span class="string">&quot;Tu&quot;</span>, <span class="string">&quot;We&quot;</span>, <span class="string">&quot;Th&quot;</span>, <span class="string">&quot;Fr&quot;</span>, <span class="string">&quot;Sa&quot;</span>, <span class="string">&quot;Su&quot;</span>];
+<span class="kw">const </span>DAYS_HEADER: [<span class="kw-2">&amp;</span>str; <span class="number">7</span>] =
+    [<span class="string">&quot;Monday&quot;</span>, <span class="string">&quot;Tuesday&quot;</span>, <span class="string">&quot;Wednesday&quot;</span>, <span class="string">&quot;Thursday&quot;</span>, <span class="string">&quot;Friday&quot;</span>, <span class="string">&quot;Saturday&quot;</span>, <span class="string">&quot;Sunday&quot;</span>];
 
 <span class="kw">pub enum </span>DatepickerEvent {
     IncrementMonth,
@@ -424,7 +427,7 @@
         <span class="kw">let </span>view_date = lens.get(cx);
 
         <span class="self">Self </span>{
-            months: MONTHS.to_vec().iter_mut().map(|v| v.to_string()).collect(),
+            months: MONTHS.iter().map(|m| Localized::new(m)).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
             selected_month: view_date.month() <span class="kw">as </span>usize - <span class="number">1</span>,
             view_date: NaiveDate::from_ymd_opt(view_date.year(), view_date.month(), <span class="number">1</span>).unwrap(),
             on_select: <span class="prelude-val">None</span>,
@@ -465,7 +468,8 @@
                 <span class="comment">// Days of the week
                 </span>HStack::new(cx, |cx| {
                     <span class="kw">for </span>h <span class="kw">in </span>DAYS_HEADER {
-                        Label::new(cx, h).class(<span class="string">&quot;datepicker-calendar-header&quot;</span>);
+                        Label::new(cx, Localized::new(h).map(|day| day[<span class="number">0</span>..<span class="number">2</span>].to_string()))
+                            .class(<span class="string">&quot;datepicker-calendar-header&quot;</span>);
                     }
                 })
                 .class(<span class="string">&quot;datepicker-calendar-headers&quot;</span>);

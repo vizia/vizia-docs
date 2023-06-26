@@ -108,10 +108,10 @@
 <span class="doccomment">/// Modifiers for changing the text properties of a view.
 </span><span class="kw">pub trait </span>TextModifiers: internal::Modifiable {
     <span class="doccomment">/// Sets the text content of the view.
-    </span><span class="kw">fn </span>text&lt;U: ToString&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">fn </span>text&lt;T: ToStringLocalized&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;T&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
         value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, entity, val| {
-            <span class="kw">let </span>text_data = val.to_string();
+            <span class="kw">let </span>text_data = val.to_string_local(cx);
             cx.text_context.set_text(entity, <span class="kw-2">&amp;</span>text_data);
 
             cx.style.needs_text_layout.insert(entity, <span class="bool-val">true</span>);

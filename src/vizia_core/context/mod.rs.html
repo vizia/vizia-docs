@@ -674,6 +674,17 @@
 <a href="#674" id="674">674</a>
 <a href="#675" id="675">675</a>
 <a href="#676" id="676">676</a>
+<a href="#677" id="677">677</a>
+<a href="#678" id="678">678</a>
+<a href="#679" id="679">679</a>
+<a href="#680" id="680">680</a>
+<a href="#681" id="681">681</a>
+<a href="#682" id="682">682</a>
+<a href="#683" id="683">683</a>
+<a href="#684" id="684">684</a>
+<a href="#685" id="685">685</a>
+<a href="#686" id="686">686</a>
+<a href="#687" id="687">687</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Context types for retained state, used during view building, event handling, and drawing.
 
 </span><span class="kw">mod </span>access;
@@ -1170,6 +1181,18 @@
         });
     }
 
+    <span class="doccomment">/// Sets the language used by the application for localization.
+    </span><span class="kw">pub fn </span>set_language(<span class="kw-2">&amp;mut </span><span class="self">self</span>, lang: LanguageIdentifier) {
+        <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new(<span class="self">self</span>);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>model_data_store) = cx.data.remove(Entity::root()) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(model) = model_data_store.models.get_mut(<span class="kw-2">&amp;</span>TypeId::of::&lt;Environment&gt;()) {
+                model.event(cx, <span class="kw-2">&amp;mut </span>Event::new(EnvironmentEvent::SetLocale(lang)));
+            }
+
+            <span class="self">self</span>.data.insert(Entity::root(), model_data_store);
+        }
+    }
+
     <span class="doccomment">/// Sets the global default font for the application.
     </span><span class="kw">pub fn </span>set_default_font(<span class="kw-2">&amp;mut </span><span class="self">self</span>, names: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str]) {
         <span class="self">self</span>.style.default_font = names
@@ -1218,7 +1241,6 @@
 
     <span class="kw">pub fn </span>add_translation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, lang: LanguageIdentifier, ftl: <span class="kw">impl </span>ToString) {
         <span class="self">self</span>.resource_manager.add_translation(lang, ftl.to_string());
-        <span class="self">self</span>.emit(EnvironmentEvent::SetLocale(<span class="self">self</span>.resource_manager.language.clone()));
     }
 
     <span class="kw">pub fn </span>load_image(

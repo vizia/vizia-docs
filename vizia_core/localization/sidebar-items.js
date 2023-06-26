@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["Localized"]};
+window.SIDEBAR_ITEMS = {"struct":["Localized"],"trait":["ToStringLocalized"]};

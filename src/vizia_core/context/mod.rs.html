@@ -654,37 +654,6 @@
 <a href="#654" id="654">654</a>
 <a href="#655" id="655">655</a>
 <a href="#656" id="656">656</a>
-<a href="#657" id="657">657</a>
-<a href="#658" id="658">658</a>
-<a href="#659" id="659">659</a>
-<a href="#660" id="660">660</a>
-<a href="#661" id="661">661</a>
-<a href="#662" id="662">662</a>
-<a href="#663" id="663">663</a>
-<a href="#664" id="664">664</a>
-<a href="#665" id="665">665</a>
-<a href="#666" id="666">666</a>
-<a href="#667" id="667">667</a>
-<a href="#668" id="668">668</a>
-<a href="#669" id="669">669</a>
-<a href="#670" id="670">670</a>
-<a href="#671" id="671">671</a>
-<a href="#672" id="672">672</a>
-<a href="#673" id="673">673</a>
-<a href="#674" id="674">674</a>
-<a href="#675" id="675">675</a>
-<a href="#676" id="676">676</a>
-<a href="#677" id="677">677</a>
-<a href="#678" id="678">678</a>
-<a href="#679" id="679">679</a>
-<a href="#680" id="680">680</a>
-<a href="#681" id="681">681</a>
-<a href="#682" id="682">682</a>
-<a href="#683" id="683">683</a>
-<a href="#684" id="684">684</a>
-<a href="#685" id="685">685</a>
-<a href="#686" id="686">686</a>
-<a href="#687" id="687">687</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Context types for retained state, used during view building, event handling, and drawing.
 
 </span><span class="kw">mod </span>access;
@@ -695,7 +664,6 @@
 <span class="kw">mod </span>proxy;
 <span class="kw">mod </span>resource;
 
-<span class="kw">use </span>cosmic_text::Shaping;
 <span class="kw">use </span>instant::Instant;
 <span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::collections::hash_map::Entry;
@@ -706,9 +674,8 @@
 </span><span class="kw">use </span>copypasta::ClipboardContext;
 <span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
 </span><span class="kw">use </span>copypasta::{nop_clipboard::NopClipboardContext, ClipboardProvider};
-<span class="kw">use </span>cosmic_text::{fontdb::Database, Attrs, AttrsList, BufferLine, FamilyOwned};
+<span class="kw">use </span>cosmic_text::{fontdb::Database, FamilyOwned};
 <span class="kw">use </span>fnv::FnvHashMap;
-<span class="kw">use </span>replace_with::replace_with_or_abort;
 
 <span class="kw">use </span>unic_langid::LanguageIdentifier;
 
@@ -1148,39 +1115,6 @@
         <span class="self">self</span>.global_listeners.push(Box::new(listener));
     }
 
-    <span class="doccomment">/// Add a font from memory to the application.
-    ///
-    ///
-    /// The `include_bytes!()` macro can be used to embed a font into the application binary.
-    /// # Example
-    /// ```
-    /// # use vizia_core::prelude::*;
-    /// # let cx = &amp;mut Context::default();
-    /// cx.add_fonts_mem(&amp;[include_bytes!(&quot;../../resources/fonts/Roboto-Regular.ttf&quot;)]);
-    /// ```
-    </span><span class="kw">pub fn </span>add_fonts_mem(<span class="kw-2">&amp;mut </span><span class="self">self</span>, data: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[u8]]) {
-        <span class="self">self</span>.text_context.take_buffers();
-        replace_with_or_abort(<span class="kw-2">&amp;mut </span><span class="self">self</span>.text_context, |<span class="kw-2">mut </span>ccx| {
-            <span class="kw">let </span>buffers = ccx.take_buffers();
-            <span class="kw">let </span>(locale, <span class="kw-2">mut </span>db) = ccx.into_font_system().into_locale_and_db();
-            <span class="kw">for </span>font_data <span class="kw">in </span>data {
-                db.load_font_data(Vec::from(<span class="kw-2">*</span>font_data));
-            }
-            <span class="kw">let </span><span class="kw-2">mut </span>new_ccx = TextContext::new_from_locale_and_db(locale, db);
-            <span class="kw">for </span>(entity, lines) <span class="kw">in </span>buffers {
-                new_ccx.with_buffer(entity, <span class="kw">move </span>|<span class="kw">_</span>, buf| {
-                    buf.lines = lines
-                        .into_iter()
-                        .map(|line| {
-                            BufferLine::new(line, AttrsList::new(Attrs::new()), Shaping::Advanced)
-                        })
-                        .collect();
-                });
-            }
-            new_ccx
-        });
-    }
-
     <span class="doccomment">/// Sets the language used by the application for localization.
     </span><span class="kw">pub fn </span>set_language(<span class="kw-2">&amp;mut </span><span class="self">self</span>, lang: LanguageIdentifier) {
         <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new(<span class="self">self</span>);
@@ -1191,6 +1125,10 @@
 
             <span class="self">self</span>.data.insert(Entity::root(), model_data_store);
         }
+    }
+
+    <span class="kw">pub fn </span>add_font_mem(<span class="kw-2">&amp;mut </span><span class="self">self</span>, data: <span class="kw">impl </span>AsRef&lt;[u8]&gt;) {
+        <span class="self">self</span>.text_context.font_system().db_mut().load_font_data(data.as_ref().to_vec());
     }
 
     <span class="doccomment">/// Sets the global default font for the application.

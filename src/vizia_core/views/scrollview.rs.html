@@ -283,6 +283,7 @@
 <a href="#283" id="283">283</a>
 <a href="#284" id="284">284</a>
 <a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span>morphorm::PositionType;
@@ -446,20 +447,17 @@
     <span class="kw">where
         </span>F: <span class="lifetime">&#39;static </span>+ FnOnce(<span class="kw-2">&amp;mut </span>Context),
     {
-        ScrollContent::new(cx, content).class(<span class="string">&quot;scroll_content&quot;</span>).bind(
-            data.clone(),
-            |handle, data| {
-                <span class="kw">let </span>dpi_factor = handle.scale_factor();
-                <span class="kw">if </span>dpi_factor &gt; <span class="number">0.0 </span>{
-                    <span class="kw">let </span>data = data.get(handle.cx);
-                    <span class="kw">let </span>left = ((data.child_x - data.parent_x) * data.scroll_x).round()
-                        / handle.cx.style.dpi_factor <span class="kw">as </span>f32;
-                    <span class="kw">let </span>top = ((data.child_y - data.parent_y) * data.scroll_y).round()
-                        / handle.cx.style.dpi_factor <span class="kw">as </span>f32;
-                    handle.left(Units::Pixels(-left.abs())).top(Units::Pixels(-top.abs()));
-                }
-            },
-        );
+        ScrollContent::new(cx, content).bind(data.clone(), |handle, data| {
+            <span class="kw">let </span>dpi_factor = handle.scale_factor();
+            <span class="kw">if </span>dpi_factor &gt; <span class="number">0.0 </span>{
+                <span class="kw">let </span>data = data.get(handle.cx);
+                <span class="kw">let </span>left = ((data.child_x - data.parent_x) * data.scroll_x).round()
+                    / handle.cx.style.dpi_factor <span class="kw">as </span>f32;
+                <span class="kw">let </span>top = ((data.child_y - data.parent_y) * data.scroll_y).round()
+                    / handle.cx.style.dpi_factor <span class="kw">as </span>f32;
+                handle.left(Units::Pixels(-left.abs())).top(Units::Pixels(-top.abs()));
+            }
+        });
 
         <span class="kw">if </span>scroll_y {
             Scrollbar::new(
@@ -553,6 +551,10 @@
 }
 
 <span class="kw">impl </span>View <span class="kw">for </span>ScrollContent {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+        <span class="prelude-val">Some</span>(<span class="string">&quot;scroll_content&quot;</span>)
+    }
+
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
         event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
             WindowEvent::GeometryChanged(geo) =&gt; {

@@ -1047,6 +1047,42 @@
 <a href="#1047" id="1047">1047</a>
 <a href="#1048" id="1048">1048</a>
 <a href="#1049" id="1049">1049</a>
+<a href="#1050" id="1050">1050</a>
+<a href="#1051" id="1051">1051</a>
+<a href="#1052" id="1052">1052</a>
+<a href="#1053" id="1053">1053</a>
+<a href="#1054" id="1054">1054</a>
+<a href="#1055" id="1055">1055</a>
+<a href="#1056" id="1056">1056</a>
+<a href="#1057" id="1057">1057</a>
+<a href="#1058" id="1058">1058</a>
+<a href="#1059" id="1059">1059</a>
+<a href="#1060" id="1060">1060</a>
+<a href="#1061" id="1061">1061</a>
+<a href="#1062" id="1062">1062</a>
+<a href="#1063" id="1063">1063</a>
+<a href="#1064" id="1064">1064</a>
+<a href="#1065" id="1065">1065</a>
+<a href="#1066" id="1066">1066</a>
+<a href="#1067" id="1067">1067</a>
+<a href="#1068" id="1068">1068</a>
+<a href="#1069" id="1069">1069</a>
+<a href="#1070" id="1070">1070</a>
+<a href="#1071" id="1071">1071</a>
+<a href="#1072" id="1072">1072</a>
+<a href="#1073" id="1073">1073</a>
+<a href="#1074" id="1074">1074</a>
+<a href="#1075" id="1075">1075</a>
+<a href="#1076" id="1076">1076</a>
+<a href="#1077" id="1077">1077</a>
+<a href="#1078" id="1078">1078</a>
+<a href="#1079" id="1079">1079</a>
+<a href="#1080" id="1080">1080</a>
+<a href="#1081" id="1081">1081</a>
+<a href="#1082" id="1082">1082</a>
+<a href="#1083" id="1083">1083</a>
+<a href="#1084" id="1084">1084</a>
+<a href="#1085" id="1085">1085</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::collections::{HashMap, HashSet, VecDeque};
 <span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
@@ -1137,6 +1173,25 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) drop_data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="prelude-ty">Option</span>&lt;DropData&gt;,
 }
 
+<span class="macro">macro_rules! </span>get_length_property {
+    (
+        $(<span class="attr">#[<span class="macro-nonterminal">$meta</span>:meta]</span>)*
+        <span class="macro-nonterminal">$name</span>:ident
+    ) =&gt; {
+        $(<span class="attr">#[<span class="macro-nonterminal">$meta</span>]</span>)*
+        <span class="kw">pub fn </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(length) = <span class="self">self</span>.style.<span class="macro-nonterminal">$name</span>.get(<span class="self">self</span>.current) {
+                <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
+
+                <span class="kw">let </span>px = length.to_pixels(bounds.w.min(bounds.h), <span class="self">self</span>.scale_factor());
+                <span class="kw">return </span>px.round();
+            }
+
+            <span class="number">0.0
+        </span>}
+    };
+}
+
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; EventContext&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
@@ -1222,6 +1277,10 @@
 
     <span class="kw">pub fn </span>nth_child(<span class="kw-2">&amp;</span><span class="self">self</span>, n: usize) -&gt; <span class="prelude-ty">Option</span>&lt;Entity&gt; {
         <span class="self">self</span>.tree.get_child(<span class="self">self</span>.current, n)
+    }
+
+    <span class="kw">pub fn </span>last_child(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Entity&gt; {
+        <span class="self">self</span>.tree.get_last_child(<span class="self">self</span>.current).copied()
     }
 
     <span class="kw">pub fn </span>with_current&lt;T&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, f: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;mut </span><span class="self">Self</span>) -&gt; T) -&gt; T {
@@ -2028,6 +2087,19 @@
         <span class="self">self</span>.style.needs_text_layout.insert(<span class="self">self</span>.current, <span class="bool-val">true</span>);
         <span class="self">self</span>.needs_relayout();
         <span class="self">self</span>.needs_redraw();
+    }
+
+    <span class="comment">// GETTERS
+    </span><span class="macro">get_length_property!</span>(
+        <span class="doccomment">/// Returns the border width of the current view in physical pixels.
+        </span>border_width
+    );
+
+    <span class="doccomment">/// Returns the font-size of the current view in physical pixels.
+    </span><span class="kw">pub fn </span>font_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.logical_to_physical(
+            <span class="self">self</span>.style.font_size.get(<span class="self">self</span>.current).copied().map(|f| f.<span class="number">0</span>).unwrap_or(<span class="number">16.0</span>),
+        )
     }
 }
 

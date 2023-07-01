@@ -160,6 +160,10 @@
 <a href="#160" id="160">160</a>
 <a href="#161" id="161">161</a>
 <a href="#162" id="162">162</a>
+<a href="#163" id="163">163</a>
+<a href="#164" id="164">164</a>
+<a href="#165" id="165">165</a>
+<a href="#166" id="166">166</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Resource management for fonts, themes, images, and translations.
 
 </span><span class="kw">use </span><span class="kw">crate</span>::context::ResourceContext;
@@ -226,29 +230,33 @@
         <span class="kw">let </span>locale = sys_locale::get_locale().and_then(|l| l.parse().ok()).unwrap_or_default();
 
         <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
-        </span><span class="kw">let </span>default_image_loader: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>ResourceContext, <span class="kw-2">&amp;</span>str)&gt;&gt; =
-            <span class="prelude-val">Some</span>(Box::new(|cx: <span class="kw-2">&amp;mut </span>ResourceContext, path: <span class="kw-2">&amp;</span>str| {
-                <span class="kw">if </span>path.starts_with(<span class="string">&quot;https://&quot;</span>) {
-                    <span class="kw">let </span>path = path.to_string();
-                    cx.spawn(<span class="kw">move </span>|cx| {
-                        <span class="kw">let </span>data = reqwest::blocking::get(<span class="kw-2">&amp;</span>path).unwrap().bytes().unwrap();
-                        cx.load_image(
-                            path,
-                            image::load_from_memory_with_format(
-                                <span class="kw-2">&amp;</span>data,
-                                image::guess_format(<span class="kw-2">&amp;</span>data).unwrap(),
-                            )
-                            .unwrap(),
-                            ImageRetentionPolicy::DropWhenUnusedForOneFrame,
-                        )
-                        .unwrap();
-                    });
-                } <span class="kw">else </span>{
-                    <span class="comment">// TODO: Try to load path from file
-                </span>}
-            }));
+        </span><span class="kw">let </span>default_image_loader: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>ResourceContext, <span class="kw-2">&amp;</span>str)&gt;&gt; = <span class="prelude-val">None</span>;
 
-        <span class="attr">#[cfg(target_arch = <span class="string">&quot;wasm32&quot;</span>)]
+        <span class="comment">// Disable this for now because reqwest pulls in too many dependencies.
+        // #[cfg(not(target_arch = &quot;wasm32&quot;))]
+        // let default_image_loader: Option&lt;Box&lt;dyn Fn(&amp;mut ResourceContext, &amp;str)&gt;&gt; =
+        //     Some(Box::new(|cx: &amp;mut ResourceContext, path: &amp;str| {
+        //         if path.starts_with(&quot;https://&quot;) {
+        //             let path = path.to_string();
+        //             cx.spawn(move |cx| {
+        //                 let data = reqwest::blocking::get(&amp;path).unwrap().bytes().unwrap();
+        //                 cx.load_image(
+        //                     path,
+        //                     image::load_from_memory_with_format(
+        //                         &amp;data,
+        //                         image::guess_format(&amp;data).unwrap(),
+        //                     )
+        //                     .unwrap(),
+        //                     ImageRetentionPolicy::DropWhenUnusedForOneFrame,
+        //                 )
+        //                 .unwrap();
+        //             });
+        //         } else {
+        //             // TODO: Try to load path from file
+        //         }
+        //     }));
+
+        </span><span class="attr">#[cfg(target_arch = <span class="string">&quot;wasm32&quot;</span>)]
         </span><span class="kw">let </span>default_image_loader: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>ResourceContext, <span class="kw-2">&amp;</span>str)&gt;&gt; = <span class="prelude-val">None</span>;
 
         ResourceManager {

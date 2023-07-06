@@ -618,6 +618,12 @@
 <a href="#618" id="618">618</a>
 <a href="#619" id="619">619</a>
 <a href="#620" id="620">620</a>
+<a href="#621" id="621">621</a>
+<a href="#622" id="622">622</a>
+<a href="#623" id="623">623</a>
+<a href="#624" id="624">624</a>
+<a href="#625" id="625">625</a>
+<a href="#626" id="626">626</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::Range;
 
 <span class="kw">use </span>accesskit::ActionData;
@@ -891,6 +897,9 @@
                     <span class="self">self</span>.is_dragging = <span class="bool-val">true</span>;
                     cx.capture();
                     cx.focus_with_visibility(<span class="bool-val">false</span>);
+                    cx.with_current(Entity::root(), |cx| {
+                        cx.set_pointer_events(<span class="bool-val">false</span>);
+                    });
 
                     <span class="kw">let </span>thumb_size = <span class="self">self</span>.internal.thumb_size;
                     <span class="kw">let </span>min = <span class="self">self</span>.internal.range.start;
@@ -934,6 +943,9 @@
                 <span class="self">self</span>.is_dragging = <span class="bool-val">false</span>;
                 cx.focus_with_visibility(<span class="bool-val">false</span>);
                 cx.release();
+                cx.with_current(Entity::root(), |cx| {
+                    cx.set_pointer_events(<span class="bool-val">true</span>);
+                });
             }
 
             WindowEvent::MouseMove(x, y) =&gt; {

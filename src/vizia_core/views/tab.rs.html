@@ -112,6 +112,7 @@
 <a href="#112" id="112">112</a>
 <a href="#113" id="113">113</a>
 <a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">pub enum </span>TabEvent {
@@ -140,12 +141,13 @@
                     <span class="kw">for </span>index <span class="kw">in </span><span class="number">0</span>..list_length {
                         <span class="kw">let </span>l = lens.clone().index(index);
                         <span class="kw">let </span>builder = (content2)(cx, l).header;
-                        TabHeader::new(cx, index, builder)
-                            .bind(TabView::selected_index, <span class="kw">move </span>|handle, selected_index| {
+                        TabHeader::new(cx, index, builder).bind(
+                            TabView::selected_index,
+                            <span class="kw">move </span>|handle, selected_index| {
                                 <span class="kw">let </span>selected_index = selected_index.get(handle.cx);
                                 handle.checked(selected_index == index);
-                            })
-                            .cursor(CursorIcon::Hand);
+                            },
+                        );
                     }
                 })
             })

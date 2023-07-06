@@ -1832,6 +1832,16 @@
 <a href="#1832" id="1832">1832</a>
 <a href="#1833" id="1833">1833</a>
 <a href="#1834" id="1834">1834</a>
+<a href="#1835" id="1835">1835</a>
+<a href="#1836" id="1836">1836</a>
+<a href="#1837" id="1837">1837</a>
+<a href="#1838" id="1838">1838</a>
+<a href="#1839" id="1839">1839</a>
+<a href="#1840" id="1840">1840</a>
+<a href="#1841" id="1841">1841</a>
+<a href="#1842" id="1842">1842</a>
+<a href="#1843" id="1843">1843</a>
+<a href="#1844" id="1844">1844</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Styling determines the appearance of a view.
 //!
 //! # Styling Views
@@ -1908,8 +1918,8 @@
     CursorIcon, Display, Filter, FontFamily, FontSize, FontStretch, FontStyle, FontWeight,
     FontWeightKeyword, GenericFontFamily, Gradient, HorizontalPosition, HorizontalPositionKeyword,
     Length, LengthOrPercentage, LengthValue, LineDirection, LinearGradient, Matrix, Opacity,
-    Overflow, Position, Scale, TextAlign, Transform, Transition, Translate, VerticalPosition,
-    VerticalPositionKeyword, Visibility, RGBA,
+    Overflow, PointerEvents, Position, Scale, TextAlign, Transform, Transition, Translate,
+    VerticalPosition, VerticalPositionKeyword, Visibility, RGBA,
 };
 
 <span class="kw">use </span>vizia_style::{
@@ -2088,6 +2098,8 @@
 
     <span class="comment">// cursor Icon
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) cursor: StyleSet&lt;CursorIcon&gt;,
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) pointer_events: StyleSet&lt;PointerEvents&gt;,
 
     <span class="comment">// LAYOUT
 
@@ -3359,6 +3371,10 @@
                 <span class="self">self</span>.cursor.insert_rule(rule_id, cursor);
             }
 
+            Property::PointerEvents(pointer_events) =&gt; {
+                <span class="self">self</span>.pointer_events.insert_rule(rule_id, pointer_events);
+            }
+
             <span class="comment">// Unparsed. TODO: Log the error.
             </span>Property::Unparsed(unparsed) =&gt; {
                 <span class="macro">println!</span>(<span class="string">&quot;Unparsed: {}&quot;</span>, unparsed.name);
@@ -3528,6 +3544,8 @@
         <span class="comment">// Cursor
         </span><span class="self">self</span>.cursor.remove(entity);
 
+        <span class="self">self</span>.pointer_events.remove(entity);
+
         <span class="self">self</span>.name.remove(entity);
 
         <span class="self">self</span>.needs_text_layout.remove(entity);
@@ -3662,6 +3680,8 @@
         <span class="self">self</span>.caret_color.clear_rules();
 
         <span class="self">self</span>.cursor.clear_rules();
+
+        <span class="self">self</span>.pointer_events.clear_rules();
 
         <span class="self">self</span>.name.clear_rules();
     }

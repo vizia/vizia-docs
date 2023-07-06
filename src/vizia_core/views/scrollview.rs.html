@@ -302,6 +302,26 @@
 <a href="#302" id="302">302</a>
 <a href="#303" id="303">303</a>
 <a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span>morphorm::PositionType;
@@ -395,15 +415,29 @@
                     }
                 }
 
-                ScrollEvent::ChildGeo(x, y) =&gt; {
-                    <span class="self">self</span>.inner_width = <span class="kw-2">*</span>x;
-                    <span class="self">self</span>.inner_height = <span class="kw-2">*</span>y;
+                ScrollEvent::ChildGeo(w, h) =&gt; {
+                    <span class="self">self</span>.inner_width = <span class="kw-2">*</span>w;
+                    <span class="self">self</span>.inner_height = <span class="kw-2">*</span>h;
                     <span class="self">self</span>.reset();
                 }
-
                 ScrollEvent::ParentGeo(w, h) =&gt; {
+                    <span class="kw">let </span>scale_factor = cx.scale_factor();
+                    <span class="kw">let </span>top = ((<span class="self">self</span>.inner_height - <span class="self">self</span>.container_height) * <span class="self">self</span>.scroll_y).round()
+                        / scale_factor;
+                    <span class="kw">let </span>left = ((<span class="self">self</span>.inner_width - <span class="self">self</span>.container_width) * <span class="self">self</span>.scroll_x).round()
+                        / scale_factor;
                     <span class="self">self</span>.container_width = <span class="kw-2">*</span>w;
                     <span class="self">self</span>.container_height = <span class="kw-2">*</span>h;
+                    <span class="self">self</span>.scroll_y = ((top * scale_factor)
+                        / (<span class="self">self</span>.inner_height - <span class="self">self</span>.container_height))
+                        .clamp(<span class="number">0.0</span>, <span class="number">1.0</span>);
+                    <span class="self">self</span>.scroll_x = ((left * scale_factor)
+                        / (<span class="self">self</span>.inner_width - <span class="self">self</span>.container_width))
+                        .clamp(<span class="number">0.0</span>, <span class="number">1.0</span>);
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_scroll {
+                        (callback)(cx, <span class="self">self</span>.scroll_x, <span class="self">self</span>.scroll_y);
+                    }
+
                     <span class="self">self</span>.reset();
                 }
 
@@ -419,8 +453,10 @@
     }
 }
 
-<span class="kw">pub struct </span>ScrollView&lt;L&gt; {
+<span class="attr">#[derive(Lens)]
+</span><span class="kw">pub struct </span>ScrollView&lt;L: Lens&gt; {
     data: L,
+    scroll_to_cursor: bool,
 }
 
 <span class="kw">impl </span>ScrollView&lt;Wrapper&lt;scroll_data_derived_lenses::root&gt;&gt; {
@@ -435,7 +471,7 @@
     <span class="kw">where
         </span>F: <span class="lifetime">&#39;static </span>+ FnOnce(<span class="kw-2">&amp;mut </span>Context),
     {
-        <span class="self">Self </span>{ data: ScrollData::root }
+        <span class="self">Self </span>{ data: ScrollData::root, scroll_to_cursor: <span class="bool-val">false </span>}
             .build(cx, <span class="kw">move </span>|cx| {
                 ScrollData {
                     scroll_x: initial_x,
@@ -472,7 +508,7 @@
             <span class="macro">panic!</span>(<span class="string">&quot;ScrollView::custom requires a ScrollData to be built into a parent&quot;</span>);
         }
 
-        <span class="self">Self </span>{ data: data.clone() }.build(cx, |cx| {
+        <span class="self">Self </span>{ data: data.clone(), scroll_to_cursor: <span class="bool-val">false </span>}.build(cx, |cx| {
             <span class="self">Self</span>::common_builder(cx, data, content, scroll_x, scroll_y);
         })
     }
@@ -482,15 +518,13 @@
         </span>F: <span class="lifetime">&#39;static </span>+ FnOnce(<span class="kw-2">&amp;mut </span>Context),
     {
         ScrollContent::new(cx, content).bind(data.clone(), |handle, data| {
-            <span class="kw">let </span>dpi_factor = handle.scale_factor();
-            <span class="kw">if </span>dpi_factor &gt; <span class="number">0.0 </span>{
-                <span class="kw">let </span>data = data.get(handle.cx);
-                <span class="kw">let </span>left = ((data.inner_width - data.container_width) * data.scroll_x).round()
-                    / handle.cx.style.dpi_factor <span class="kw">as </span>f32;
-                <span class="kw">let </span>top = ((data.inner_height - data.container_height) * data.scroll_y).round()
-                    / handle.cx.style.dpi_factor <span class="kw">as </span>f32;
-                handle.left(Units::Pixels(-left.abs())).top(Units::Pixels(-top.abs()));
-            }
+            <span class="kw">let </span>scale_factor = handle.scale_factor();
+            <span class="kw">let </span>data = data.get(handle.cx);
+            <span class="kw">let </span>left =
+                ((data.inner_width - data.container_width) * data.scroll_x).round() / scale_factor;
+            <span class="kw">let </span>top = ((data.inner_height - data.container_height) * data.scroll_y).round()
+                / scale_factor;
+            handle.left(Units::Pixels(-left.abs())).top(Units::Pixels(-top.abs()));
         });
 
         <span class="kw">if </span>scroll_y {
@@ -504,7 +538,8 @@
                     cx.emit(ScrollEvent::SetY(value));
                 },
             )
-            .position_type(PositionType::SelfDirected);
+            .position_type(PositionType::SelfDirected)
+            .scroll_to_cursor(<span class="self">Self</span>::scroll_to_cursor);
         }
 
         <span class="kw">if </span>scroll_x {
@@ -517,7 +552,8 @@
                     cx.emit(ScrollEvent::SetX(value));
                 },
             )
-            .position_type(PositionType::SelfDirected);
+            .position_type(PositionType::SelfDirected)
+            .scroll_to_cursor(<span class="self">Self</span>::scroll_to_cursor);
         }
     }
 }
@@ -575,6 +611,10 @@
         <span class="self">self</span>.cx.emit_to(<span class="self">self</span>.entity(), ScrollEvent::SetOnScroll(<span class="prelude-val">Some</span>(Arc::new(callback))));
         <span class="self">self
     </span>}
+
+    <span class="kw">pub fn </span>scroll_to_cursor(<span class="self">self</span>, scroll_to_cursor: bool) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.modify(|scrollview: <span class="kw-2">&amp;mut </span>ScrollView&lt;L&gt;| scrollview.scroll_to_cursor = scroll_to_cursor)
+    }
 }
 
 <span class="kw">struct </span>ScrollContent {}

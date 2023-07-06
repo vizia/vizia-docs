@@ -605,6 +605,24 @@
 <a href="#605" id="605">605</a>
 <a href="#606" id="606">606</a>
 <a href="#607" id="607">607</a>
+<a href="#608" id="608">608</a>
+<a href="#609" id="609">609</a>
+<a href="#610" id="610">610</a>
+<a href="#611" id="611">611</a>
+<a href="#612" id="612">612</a>
+<a href="#613" id="613">613</a>
+<a href="#614" id="614">614</a>
+<a href="#615" id="615">615</a>
+<a href="#616" id="616">616</a>
+<a href="#617" id="617">617</a>
+<a href="#618" id="618">618</a>
+<a href="#619" id="619">619</a>
+<a href="#620" id="620">620</a>
+<a href="#621" id="621">621</a>
+<a href="#622" id="622">622</a>
+<a href="#623" id="623">623</a>
+<a href="#624" id="624">624</a>
+<a href="#625" id="625">625</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
 <span class="kw">use </span><span class="kw">crate</span>::events::EventMeta;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -614,8 +632,8 @@
 <span class="kw">use </span>instant::{Duration, Instant};
 <span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>vizia_id::GenerationalId;
-<span class="kw">use </span>vizia_storage::TreeExt;
 <span class="kw">use </span>vizia_storage::TreeIterator;
+<span class="kw">use </span>vizia_storage::{LayoutParentIterator, TreeExt};
 
 <span class="kw">const </span>DOUBLE_CLICK_INTERVAL: Duration = Duration::from_millis(<span class="number">500</span>);
 
@@ -1184,6 +1202,24 @@
         WindowEvent::FocusIn =&gt; {
             context.focused = meta.target;
             context.set_focus_pseudo_classes(context.focused, <span class="bool-val">true</span>, <span class="bool-val">true</span>);
+        }
+        WindowEvent::MouseEnter =&gt; {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_class) = context.style.pseudo_classes.get_mut(Entity::root()) {
+                pseudo_class.set(PseudoClassFlags::OVER, <span class="bool-val">true</span>);
+            }
+        }
+        WindowEvent::MouseLeave =&gt; {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_class) = context.style.pseudo_classes.get_mut(Entity::root()) {
+                pseudo_class.set(PseudoClassFlags::OVER, <span class="bool-val">false</span>);
+            }
+
+            <span class="kw">let </span>parent_iter = LayoutParentIterator::new(<span class="kw-2">&amp;</span>context.tree, <span class="prelude-val">Some</span>(context.hovered));
+            <span class="kw">for </span>ancestor <span class="kw">in </span>parent_iter {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = context.style.pseudo_classes.get_mut(ancestor) {
+                    pseudo_classes.set(PseudoClassFlags::HOVER, <span class="bool-val">false</span>);
+                    context.style.needs_restyle();
+                }
+            }
         }
         <span class="kw">_ </span>=&gt; {}
     }

@@ -182,6 +182,34 @@
 <a href="#182" id="182">182</a>
 <a href="#183" id="183">183</a>
 <a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+<a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{cmp::Ordering, collections::BinaryHeap};
 
 <span class="kw">use crate</span>::{
@@ -190,12 +218,20 @@
 };
 <span class="kw">use </span>femtovg::Transform2D;
 <span class="kw">use </span>vizia_id::GenerationalId;
-<span class="kw">use </span>vizia_storage::LayoutChildIterator;
+<span class="kw">use </span>vizia_storage::{LayoutChildIterator, LayoutParentIterator};
 
 <span class="comment">// Determines the hovered entity based on the mouse cursor position.
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>hover_system(cx: <span class="kw-2">&amp;mut </span>Context) {
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get(Entity::root()) {
+        <span class="kw">if </span>!pseudo_classes.contains(PseudoClassFlags::OVER) {
+            <span class="kw">return</span>;
+        }
+    }
+
     <span class="kw">let </span><span class="kw-2">mut </span>queue = BinaryHeap::new();
-    queue.push(ZEntity { index: <span class="number">0</span>, entity: Entity::root() });
+    <span class="kw">let </span>pointer_events: bool =
+        cx.style.pointer_events.get(Entity::root()).copied().unwrap_or_default().into();
+    queue.push(ZEntity { index: <span class="number">0</span>, pointer_events, entity: Entity::root() });
     <span class="kw">let </span><span class="kw-2">mut </span>hovered = Entity::root();
     <span class="kw">let </span>transform = Transform2D::identity();
     <span class="comment">// let clip_bounds = cx.cache.get_bounds(Entity::root());
@@ -207,12 +243,26 @@
             hover_entity(
                 <span class="kw-2">&amp;mut </span>EventContext::new(cx),
                 zentity.index,
+                zentity.pointer_events,
                 <span class="kw-2">&amp;mut </span>queue,
                 <span class="kw-2">&amp;mut </span>hovered,
                 transform,
                 <span class="kw-2">&amp;</span>clip_bounds,
             );
         });
+    }
+
+    <span class="comment">// Set hover state for hovered view and ancestors
+    </span><span class="kw">let </span>parent_iter = LayoutParentIterator::new(<span class="kw-2">&amp;</span>cx.tree, <span class="prelude-val">Some</span>(hovered));
+    <span class="kw">for </span>ancestor <span class="kw">in </span>parent_iter {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(ancestor) {
+            <span class="kw">if </span>pseudo_classes.contains(PseudoClassFlags::OVER)
+                &amp;&amp; !pseudo_classes.contains(PseudoClassFlags::HOVER)
+            {
+                pseudo_classes.set(PseudoClassFlags::HOVER, <span class="bool-val">true</span>);
+                cx.style.needs_restyle();
+            }
+        }
     }
 
     <span class="kw">if </span>hovered != cx.hovered {
@@ -235,16 +285,6 @@
             cx.emit(WindowEvent::SetCursor(cursor));
         }
 
-        <span class="comment">// Set current hovered pseudoclass to true
-        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(hovered) {
-            pseudo_classes.set(PseudoClassFlags::HOVER, <span class="bool-val">true</span>);
-        }
-
-        <span class="comment">// Set previous hovered pseudoclass to false
-        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(cx.hovered) {
-            pseudo_classes.set(PseudoClassFlags::HOVER, <span class="bool-val">false</span>);
-        }
-
         <span class="comment">// Send mouse enter/leave events directly to entity.
         </span>cx.event_queue.push_back(Event::new(WindowEvent::MouseEnter).direct(hovered));
         cx.event_queue.push_back(Event::new(WindowEvent::MouseLeave).direct(cx.hovered));
@@ -262,6 +302,7 @@
 <span class="kw">fn </span>hover_entity(
     cx: <span class="kw-2">&amp;mut </span>EventContext,
     current_z: i32,
+    parent_pointer_events: bool,
     queue: <span class="kw-2">&amp;mut </span>BinaryHeap&lt;ZEntity&gt;,
     hovered: <span class="kw-2">&amp;mut </span>Entity,
     parent_transform: Transform2D,
@@ -285,10 +326,18 @@
         <span class="kw">return</span>;
     }
 
+    <span class="kw">let </span>pointer_events = cx
+        .style
+        .pointer_events
+        .get(cx.current)
+        .copied()
+        .map(|pointer_events| pointer_events.into())
+        .unwrap_or(parent_pointer_events);
+
     <span class="comment">// Push to queue if the z-index is higher than the current z-index.
     </span><span class="kw">let </span>z_index = cx.tree.z_index(cx.current);
     <span class="kw">if </span>z_index &gt; current_z {
-        queue.push(ZEntity { index: z_index, entity: cx.current });
+        queue.push(ZEntity { index: z_index, entity: cx.current, pointer_events });
         <span class="kw">return</span>;
     }
 
@@ -309,10 +358,27 @@
 
     <span class="kw">let </span>b = bounds.intersection(<span class="kw-2">&amp;</span>clipping);
 
-    <span class="kw">if </span>tx &gt;= b.left() &amp;&amp; tx &lt; b.right() &amp;&amp; ty &gt;= b.top() &amp;&amp; ty &lt; b.bottom() {
-        <span class="kw-2">*</span>hovered = cx.current;
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(cx.current) {
+        pseudo_classes.set(PseudoClassFlags::HOVER, <span class="bool-val">false</span>);
+    }
 
-        <span class="kw">if </span>!cx
+    <span class="kw">if </span>pointer_events {
+        <span class="kw">if </span>tx &gt;= b.left() &amp;&amp; tx &lt; b.right() &amp;&amp; ty &gt;= b.top() &amp;&amp; ty &lt; b.bottom() {
+            <span class="kw-2">*</span>hovered = cx.current;
+
+            <span class="kw">if </span>!cx
+                .style
+                .pseudo_classes
+                .get(cx.current)
+                .copied()
+                .unwrap_or_default()
+                .contains(PseudoClassFlags::OVER)
+            {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_class) = cx.style.pseudo_classes.get_mut(cx.current) {
+                    pseudo_class.set(PseudoClassFlags::OVER, <span class="bool-val">true</span>);
+                }
+            }
+        } <span class="kw">else if </span>cx
             .style
             .pseudo_classes
             .get(cx.current)
@@ -321,31 +387,21 @@
             .contains(PseudoClassFlags::OVER)
         {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_class) = cx.style.pseudo_classes.get_mut(cx.current) {
-                pseudo_class.set(PseudoClassFlags::OVER, <span class="bool-val">true</span>);
+                pseudo_class.set(PseudoClassFlags::OVER, <span class="bool-val">false</span>);
             }
-        }
-    } <span class="kw">else if </span>cx
-        .style
-        .pseudo_classes
-        .get(cx.current)
-        .copied()
-        .unwrap_or_default()
-        .contains(PseudoClassFlags::OVER)
-    {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_class) = cx.style.pseudo_classes.get_mut(cx.current) {
-            pseudo_class.set(PseudoClassFlags::OVER, <span class="bool-val">false</span>);
         }
     }
 
     <span class="kw">let </span>child_iter = LayoutChildIterator::new(cx.tree, cx.current);
     <span class="kw">for </span>child <span class="kw">in </span>child_iter {
         cx.current = child;
-        hover_entity(cx, current_z, queue, hovered, transform, <span class="kw-2">&amp;</span>clipping);
+        hover_entity(cx, current_z, pointer_events, queue, hovered, transform, <span class="kw-2">&amp;</span>clipping);
     }
 }
 
 <span class="kw">struct </span>ZEntity {
     <span class="kw">pub </span>index: i32,
+    <span class="kw">pub </span>pointer_events: bool,
     <span class="kw">pub </span>entity: Entity,
 }
 

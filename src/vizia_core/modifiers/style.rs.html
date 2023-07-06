@@ -607,7 +607,22 @@
 <a href="#607" id="607">607</a>
 <a href="#608" id="608">608</a>
 <a href="#609" id="609">609</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>vizia_style::{BorderRadius, BoxShadow, ColorStop, Gradient, Position, Rect, Scale, Translate};
+<a href="#610" id="610">610</a>
+<a href="#611" id="611">611</a>
+<a href="#612" id="612">612</a>
+<a href="#613" id="613">613</a>
+<a href="#614" id="614">614</a>
+<a href="#615" id="615">615</a>
+<a href="#616" id="616">616</a>
+<a href="#617" id="617">617</a>
+<a href="#618" id="618">618</a>
+<a href="#619" id="619">619</a>
+<a href="#620" id="620">620</a>
+<a href="#621" id="621">621</a>
+<a href="#622" id="622">622</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>vizia_style::{
+    BorderRadius, BoxShadow, ColorStop, Gradient, PointerEvents, Position, Rect, Scale, Translate,
+};
 
 <span class="kw">use </span><span class="kw">super</span>::internal;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -1056,6 +1071,17 @@
         CursorIcon,
         SystemFlags::empty()
     );
+
+    <span class="doccomment">/// Sets whether the view can be become the target of pointer events.
+    </span><span class="kw">fn </span>pointer_events&lt;U: Into&lt;PointerEvents&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
+            <span class="kw">let </span>value = v.into();
+            cx.style.pointer_events.insert(cx.current, value);
+        });
+
+        <span class="self">self
+    </span>}
 
     <span class="doccomment">/// Sets the transform of the view with a list of transform functions.
     </span><span class="kw">fn </span>transform&lt;U: Into&lt;Vec&lt;Transform&gt;&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{

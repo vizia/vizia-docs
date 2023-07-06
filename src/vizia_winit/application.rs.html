@@ -609,6 +609,14 @@
 <a href="#609" id="609">609</a>
 <a href="#610" id="610">610</a>
 <a href="#611" id="611">611</a>
+<a href="#612" id="612">612</a>
+<a href="#613" id="613">613</a>
+<a href="#614" id="614">614</a>
+<a href="#615" id="615">615</a>
+<a href="#616" id="616">616</a>
+<a href="#617" id="617">617</a>
+<a href="#618" id="618">618</a>
+<a href="#619" id="619">619</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
     convert::{scan_code_to_code, virtual_key_code_to_code, virtual_key_code_to_key},
     window::Window,
@@ -1113,6 +1121,14 @@
                             cx.modifiers().set(Modifiers::ALT, modifiers_state.alt());
                             cx.modifiers().set(Modifiers::CTRL, modifiers_state.ctrl());
                             cx.modifiers().set(Modifiers::LOGO, modifiers_state.logo());
+                        }
+
+                        winit::event::WindowEvent::CursorEntered { device_id: <span class="kw">_ </span>} =&gt; {
+                            cx.emit_origin(WindowEvent::MouseEnter);
+                        }
+
+                        winit::event::WindowEvent::CursorLeft { device_id: <span class="kw">_ </span>} =&gt; {
+                            cx.emit_origin(WindowEvent::MouseLeave);
                         }
 
                         <span class="kw">_ </span>=&gt; {}

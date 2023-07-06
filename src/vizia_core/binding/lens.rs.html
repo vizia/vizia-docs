@@ -726,7 +726,7 @@
 
 <span class="kw">impl</span>&lt;G: Clone, I, O&gt; Clone <span class="kw">for </span>Map&lt;G, I, O&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-        Map { get: <span class="self">self</span>.get.clone(), i: PhantomData::default(), o: PhantomData::default() }
+        Map { get: <span class="self">self</span>.get.clone(), i: PhantomData, o: PhantomData }
     }
 }
 
@@ -735,7 +735,7 @@
     </span><span class="kw">where
         </span>G: Fn(<span class="kw-2">&amp;</span>I) -&gt; O,
     {
-        <span class="self">Self </span>{ get, i: PhantomData::default(), o: PhantomData::default() }
+        <span class="self">Self </span>{ get, i: PhantomData, o: PhantomData }
     }
 }
 
@@ -803,7 +803,7 @@
 
 <span class="kw">impl</span>&lt;A, T&gt; Index&lt;A, T&gt; {
     <span class="kw">pub fn </span>new(index: usize) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{ index, pa: PhantomData::default(), pt: PhantomData::default() }
+        <span class="self">Self </span>{ index, pa: PhantomData, pt: PhantomData }
     }
 
     <span class="kw">pub fn </span>idx(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
@@ -813,8 +813,8 @@
 
 <span class="kw">impl</span>&lt;A, T&gt; Clone <span class="kw">for </span>Index&lt;A, T&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{ index: <span class="self">self</span>.index, pa: PhantomData::default(), pt: PhantomData::default() }
-    }
+        <span class="kw-2">*</span><span class="self">self
+    </span>}
 }
 
 <span class="kw">impl</span>&lt;A, T&gt; Copy <span class="kw">for </span>Index&lt;A, T&gt; {}
@@ -844,8 +844,8 @@
 
 <span class="kw">impl</span>&lt;T&gt; Clone <span class="kw">for </span>StaticLens&lt;T&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-        StaticLens { data: <span class="self">self</span>.data }
-    }
+        <span class="kw-2">*</span><span class="self">self
+    </span>}
 }
 
 <span class="kw">impl</span>&lt;T&gt; Copy <span class="kw">for </span>StaticLens&lt;T&gt; {}
@@ -880,13 +880,13 @@
 
 <span class="kw">impl</span>&lt;T&gt; Clone <span class="kw">for </span>UnwrapLens&lt;T&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-        UnwrapLens::new()
-    }
+        <span class="kw-2">*</span><span class="self">self
+    </span>}
 }
 
 <span class="kw">impl</span>&lt;T&gt; UnwrapLens&lt;T&gt; {
     <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{ t: PhantomData::default() }
+        <span class="self">Self </span>{ t: PhantomData }
     }
 }
 
@@ -915,8 +915,8 @@
 
 <span class="kw">impl</span>&lt;T, U&gt; Clone <span class="kw">for </span>IntoLens&lt;T, U&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>::new()
-    }
+        <span class="kw-2">*</span><span class="self">self
+    </span>}
 }
 
 <span class="kw">impl</span>&lt;T, U&gt; Copy <span class="kw">for </span>IntoLens&lt;T, U&gt; {}

@@ -461,15 +461,12 @@
 <a href="#461" id="461">461</a>
 <a href="#462" id="462">462</a>
 <a href="#463" id="463">463</a>
-<a href="#464" id="464">464</a>
-<a href="#465" id="465">465</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::window::ViziaWindow;
 <span class="kw">use </span>baseview::{Window, WindowHandle, WindowScalePolicy};
 <span class="kw">use </span>raw_window_handle::HasRawWindowHandle;
 
 <span class="kw">use </span><span class="kw">crate</span>::proxy::queue_get;
 <span class="kw">use </span>vizia_core::backend::<span class="kw-2">*</span>;
-<span class="kw">use </span>vizia_core::layout::BoundingBox;
 <span class="kw">use </span>vizia_core::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>vizia_id::GenerationalId;
 
@@ -700,9 +697,9 @@
             //       to a function
             </span>cx.set_scale_factor(<span class="self">self</span>.window_scale_factor * <span class="self">self</span>.current_user_scale_factor);
             <span class="kw">let </span>new_physical_width =
-                <span class="self">self</span>.current_window_size.width <span class="kw">as </span>f32 * cx.style().scale_factor() <span class="kw">as </span>f32;
+                <span class="self">self</span>.current_window_size.width <span class="kw">as </span>f32 * cx.style().scale_factor();
             <span class="kw">let </span>new_physical_height =
-                <span class="self">self</span>.current_window_size.height <span class="kw">as </span>f32 * cx.style().scale_factor() <span class="kw">as </span>f32;
+                <span class="self">self</span>.current_window_size.height <span class="kw">as </span>f32 * cx.style().scale_factor();
 
             cx.set_window_size(new_physical_width, new_physical_height);
 
@@ -874,11 +871,11 @@
 
                     cx.set_window_size(physical_size.<span class="number">0 </span><span class="kw">as </span>f32, physical_size.<span class="number">1 </span><span class="kw">as </span>f32);
 
-                    <span class="kw">let </span><span class="kw-2">mut </span>bounding_box = BoundingBox::default();
-                    bounding_box.w = physical_size.<span class="number">0 </span><span class="kw">as </span>f32;
-                    bounding_box.h = physical_size.<span class="number">1 </span><span class="kw">as </span>f32;
+                    <span class="comment">// let mut bounding_box = BoundingBox::default();
+                    // bounding_box.w = physical_size.0 as f32;
+                    // bounding_box.h = physical_size.1 as f32;
 
-                    cx.needs_refresh();
+                    </span>cx.needs_refresh();
                 }
                 baseview::WindowEvent::WillClose =&gt; {
                     cx.send_event(Event::new(WindowEvent::WindowClose));
@@ -904,12 +901,11 @@
         baseview::Event::Window(baseview::WindowEvent::WillClose) =&gt; <span class="bool-val">true</span>,
         <span class="attr">#[cfg(target_os = <span class="string">&quot;macos&quot;</span>)]
         </span>baseview::Event::Keyboard(event) =&gt; {
-            <span class="kw">if </span>event.code == vizia_input::Code::KeyQ {
-                <span class="kw">if </span>event.modifiers == vizia_input::KeyboardModifiers::META {
-                    <span class="kw">if </span>event.state == vizia_input::KeyState::Down {
-                        <span class="kw">return </span><span class="bool-val">true</span>;
-                    }
-                }
+            <span class="kw">if </span>event.code == vizia_input::Code::KeyQ
+                &amp;&amp; event.modifiers == vizia_input::KeyboardModifiers::META
+                &amp;&amp; event.state == vizia_input::KeyState::Down
+            {
+                <span class="kw">return </span><span class="bool-val">true</span>;
             }
 
             <span class="bool-val">false

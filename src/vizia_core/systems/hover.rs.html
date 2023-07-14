@@ -210,6 +210,13 @@
 <a href="#210" id="210">210</a>
 <a href="#211" id="211">211</a>
 <a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{cmp::Ordering, collections::BinaryHeap};
 
 <span class="kw">use crate</span>::{
@@ -260,7 +267,6 @@
                 &amp;&amp; !pseudo_classes.contains(PseudoClassFlags::HOVER)
             {
                 pseudo_classes.set(PseudoClassFlags::HOVER, <span class="bool-val">true</span>);
-                cx.style.needs_restyle();
             }
         }
     }
@@ -346,6 +352,10 @@
     <span class="kw">let </span>cursorx = cx.mouse.cursorx;
     <span class="kw">let </span>cursory = cx.mouse.cursory;
 
+    <span class="kw">if </span>cursorx &lt; <span class="number">0.0 </span>|| cursory &lt; <span class="number">0.0 </span>{
+        <span class="kw">return</span>;
+    }
+
     <span class="kw">let </span><span class="kw-2">mut </span>transform = parent_transform;
 
     transform.premultiply(<span class="kw-2">&amp;</span>cx.transform());
@@ -376,6 +386,8 @@
             {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_class) = cx.style.pseudo_classes.get_mut(cx.current) {
                     pseudo_class.set(PseudoClassFlags::OVER, <span class="bool-val">true</span>);
+
+                    cx.needs_restyle();
                 }
             }
         } <span class="kw">else if </span>cx
@@ -388,6 +400,8 @@
         {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_class) = cx.style.pseudo_classes.get_mut(cx.current) {
                 pseudo_class.set(PseudoClassFlags::OVER, <span class="bool-val">false</span>);
+
+                cx.needs_restyle();
             }
         }
     }

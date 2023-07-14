@@ -147,6 +147,7 @@
 <a href="#147" id="147">147</a>
 <a href="#148" id="148">148</a>
 <a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>morphorm::PositionType;
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -205,13 +206,14 @@
                     }
 
                     <span class="kw">if </span>lens.get(cx) {
-                        <span class="kw">if </span>capture_focus {
-                            VStack::new(cx, <span class="kw-2">&amp;</span>content).lock_focus_to_within();
-                        } <span class="kw">else </span>{
-                            (content)(cx);
-                        }
+                        (content)(cx);
                     }
                 });
+            })
+            .bind(lens, <span class="kw">move </span>|handle, val| {
+                <span class="kw">if </span>val.get(<span class="kw-2">&amp;</span>handle) &amp;&amp; capture_focus {
+                    handle.lock_focus_to_within();
+                }
             })
             .role(Role::Dialog)
             .checked(lens)

@@ -128,6 +128,24 @@
 <a href="#128" id="128">128</a>
 <a href="#129" id="129">129</a>
 <a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="attr">#[derive(Lens)]
@@ -179,13 +197,34 @@
                         }
                     });
                 })
-                .height(Pixels(num_items <span class="kw">as </span>f32 * height));
+                .height(list.map(<span class="kw">move </span>|l| Pixels(l.len() <span class="kw">as </span>f32 * height)));
             })
             .scroll_to_cursor(<span class="bool-val">true</span>)
             .on_scroll(|cx, <span class="kw">_</span>, y| {
                 cx.emit(VirtualListEvent::SetScrollY(y));
             });
         })
+        .bind(list.map(|list| list.len()), |<span class="kw-2">mut </span>handle, len| {
+            <span class="kw">let </span>len = len.get(<span class="kw-2">&amp;</span>handle);
+            handle.context().emit(VirtualListEvent::SetNumItems(len));
+        })
+    }
+
+    <span class="kw">fn </span>recalc(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
+        <span class="kw">let </span>current = cx.current();
+        <span class="kw">let </span>dpi = cx.scale_factor();
+        <span class="kw">let </span>container_height = cx.cache.get_height(current) / dpi;
+        <span class="kw">let </span>num_items = ((container_height + <span class="self">self</span>.item_height) / <span class="self">self</span>.item_height).ceil() <span class="kw">as </span>usize;
+
+        <span class="kw">let </span>total_height = <span class="self">self</span>.num_items <span class="kw">as </span>f32 * <span class="self">self</span>.item_height;
+        <span class="kw">let </span>offsety = ((total_height - container_height) * <span class="self">self</span>.scrolly).round() * dpi;
+        <span class="self">self</span>.offset = (offsety / <span class="self">self</span>.item_height / dpi).ceil() <span class="kw">as </span>usize;
+        <span class="self">self</span>.offset = <span class="self">self</span>.offset.saturating_sub(<span class="number">1</span>);
+
+        <span class="self">self</span>.visible_items.clear();
+        <span class="kw">for </span>i <span class="kw">in </span><span class="self">self</span>.offset..(<span class="self">self</span>.offset + num_items) {
+            <span class="self">self</span>.visible_items.push(i);
+        }
     }
 }
 
@@ -197,11 +236,22 @@
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
         event.map(|virtual_list_event, <span class="kw">_</span>| <span class="kw">match </span>virtual_list_event {
             VirtualListEvent::SetNumItems(num_items) =&gt; {
-                <span class="self">self</span>.visible_items.clear();
-                <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="kw-2">*</span>num_items {
-                    <span class="self">self</span>.visible_items.push(i);
+                <span class="kw">if </span><span class="self">self</span>.num_items != <span class="kw-2">*</span>num_items {
+                    <span class="self">self</span>.num_items = <span class="kw-2">*</span>num_items;
+                    <span class="self">self</span>.recalc(cx);
+                    <span class="comment">// Bit of a hack until scrollview is changed to take a lens for x/y
+                    </span>cx.emit_custom(
+                        Event::new(ScrollEvent::SetY(<span class="number">0.0</span>))
+                            .propagate(Propagation::Subtree)
+                            .origin(cx.current)
+                            .target(cx.current),
+                    );
                 }
-            }
+                <span class="comment">// self.visible_items.clear();
+                // for i in 0..*num_items {
+                //     self.visible_items.push(i);
+                // }
+            </span>}
 
             VirtualListEvent::SetScrollY(scrolly) =&gt; {
                 <span class="self">self</span>.scrolly = <span class="kw-2">*</span>scrolly;
@@ -228,21 +278,7 @@
                 <span class="kw">if </span>geo.contains(GeoChanged::WIDTH_CHANGED)
                     || geo.contains(GeoChanged::HEIGHT_CHANGED)
                 {
-                    <span class="kw">let </span>current = cx.current();
-                    <span class="kw">let </span>dpi = cx.scale_factor();
-                    <span class="kw">let </span>container_height = cx.cache.get_height(current) / dpi;
-                    <span class="kw">let </span>num_items =
-                        ((container_height + <span class="self">self</span>.item_height) / <span class="self">self</span>.item_height).ceil() <span class="kw">as </span>usize;
-
-                    <span class="kw">let </span>total_height = <span class="self">self</span>.num_items <span class="kw">as </span>f32 * <span class="self">self</span>.item_height;
-                    <span class="kw">let </span>offsety = ((total_height - container_height) * <span class="self">self</span>.scrolly).round() * dpi;
-                    <span class="self">self</span>.offset = (offsety / <span class="self">self</span>.item_height / dpi).ceil() <span class="kw">as </span>usize;
-                    <span class="self">self</span>.offset = <span class="self">self</span>.offset.saturating_sub(<span class="number">1</span>);
-
-                    <span class="self">self</span>.visible_items.clear();
-                    <span class="kw">for </span>i <span class="kw">in </span><span class="self">self</span>.offset..(<span class="self">self</span>.offset + num_items) {
-                        <span class="self">self</span>.visible_items.push(i);
-                    }
+                    <span class="self">self</span>.recalc(cx);
                 }
             }
 

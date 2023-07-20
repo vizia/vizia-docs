@@ -1086,7 +1086,6 @@
 <a href="#1086" id="1086">1086</a>
 <a href="#1087" id="1087">1087</a>
 <a href="#1088" id="1088">1088</a>
-<a href="#1089" id="1089">1089</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::collections::{HashMap, HashSet, VecDeque};
 <span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
@@ -1108,7 +1107,6 @@
 <span class="kw">use </span><span class="kw">crate</span>::window::DropData;
 <span class="kw">use </span>vizia_id::GenerationalId;
 <span class="kw">use </span>vizia_input::{Modifiers, MouseState};
-<span class="kw">use </span>vizia_storage::SparseSet;
 
 <span class="kw">use </span><span class="kw">crate</span>::context::EmitContext;
 <span class="kw">use </span><span class="kw">crate</span>::text::TextContext;
@@ -1158,7 +1156,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) entity_identifiers: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>HashMap&lt;String, Entity&gt;,
     <span class="kw">pub </span>cache: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>CachedData,
     <span class="kw">pub</span>(<span class="kw">crate</span>) tree: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Tree&lt;Entity&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>SparseSet&lt;ModelDataStore&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>FnvHashMap&lt;Entity, ModelDataStore&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) views: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) listeners:
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>ViewHandler, <span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event)&gt;&gt;,
@@ -1482,7 +1480,7 @@
 
     <span class="doccomment">/// Sets the language used by the application for localization.
     </span><span class="kw">pub fn </span>set_language(<span class="kw-2">&amp;mut </span><span class="self">self</span>, lang: LanguageIdentifier) {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>model_data_store) = <span class="self">self</span>.data.remove(Entity::root()) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>model_data_store) = <span class="self">self</span>.data.remove(<span class="kw-2">&amp;</span>Entity::root()) {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(model) = model_data_store.models.get_mut(<span class="kw-2">&amp;</span>TypeId::of::&lt;Environment&gt;()) {
                 model.event(<span class="self">self</span>, <span class="kw-2">&amp;mut </span>Event::new(EnvironmentEvent::SetLocale(lang)));
             }
@@ -2120,7 +2118,7 @@
 
         <span class="kw">for </span>entity <span class="kw">in </span><span class="self">self</span>.current.parent_iter(<span class="self">self</span>.tree) {
             <span class="comment">// Return model data.
-            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = <span class="self">self</span>.data.get(entity) {
+            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = <span class="self">self</span>.data.get(<span class="kw-2">&amp;</span>entity) {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(model) = model_data_store.models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;T&gt;()) {
                     <span class="kw">return </span>model.downcast_ref::&lt;T&gt;();
                 }

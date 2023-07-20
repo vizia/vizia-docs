@@ -66,12 +66,12 @@
     <span class="kw">let </span><span class="kw-2">mut </span>observers: HashSet&lt;Entity&gt; = HashSet::new();
 
     <span class="comment">// Loop through all model data and check for changes.
-    </span><span class="kw">for </span>entry <span class="kw">in </span>cx.data.dense.iter_mut() {
+    </span><span class="kw">for </span>(entity, model_data_store) <span class="kw">in </span>cx.data.iter_mut() {
         <span class="comment">// Determine observers of model data.
-        </span><span class="kw">for </span>(<span class="kw">_</span>, model) <span class="kw">in </span>entry.value.models.iter() {
+        </span><span class="kw">for </span>(<span class="kw">_</span>, model) <span class="kw">in </span>model_data_store.models.iter() {
             <span class="kw">let </span>model = ModelOrView::Model(model.as_ref());
 
-            <span class="kw">for </span>(<span class="kw">_</span>, store) <span class="kw">in </span>entry.value.stores.iter_mut() {
+            <span class="kw">for </span>(<span class="kw">_</span>, store) <span class="kw">in </span>model_data_store.stores.iter_mut() {
                 <span class="kw">if </span>store.update(model) {
                     observers.extend(store.observers().iter())
                 }
@@ -79,8 +79,8 @@
         }
 
         <span class="comment">// Determine observers of view data.
-        </span><span class="kw">for </span>(<span class="kw">_</span>, store) <span class="kw">in </span>entry.value.stores.iter_mut() {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = cx.views.get(<span class="kw-2">&amp;</span>Entity::new(entry.key <span class="kw">as </span>u32, <span class="number">0</span>)) {
+        </span><span class="kw">for </span>(<span class="kw">_</span>, store) <span class="kw">in </span>model_data_store.stores.iter_mut() {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = cx.views.get(entity) {
                 <span class="kw">let </span>view = ModelOrView::View(view_handler.as_ref());
 
                 <span class="kw">if </span>store.update(view) {

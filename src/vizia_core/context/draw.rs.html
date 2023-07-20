@@ -1484,7 +1484,6 @@
 <a href="#1484" id="1484">1484</a>
 <a href="#1485" id="1485">1485</a>
 <a href="#1486" id="1486">1486</a>
-<a href="#1487" id="1487">1487</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>cosmic_text::FamilyOwned;
 <span class="kw">use </span>femtovg::{ImageId, Transform2D};
 <span class="kw">use </span>std::any::{Any, TypeId};
@@ -1502,7 +1501,6 @@
 <span class="kw">use </span><span class="kw">crate</span>::text::{TextConfig, TextContext};
 <span class="kw">use </span><span class="kw">crate</span>::vg::{Paint, Path};
 <span class="kw">use </span>vizia_input::{Modifiers, MouseState};
-<span class="kw">use </span>vizia_storage::SparseSet;
 <span class="kw">use </span>vizia_style::{
     BackgroundSize, BoxShadow, ClipPath, Filter, Gradient, HorizontalPositionKeyword,
     LengthPercentageOrAuto, LineDirection, VerticalPositionKeyword,
@@ -1543,7 +1541,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) style: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Style,
     <span class="kw">pub</span>(<span class="kw">crate</span>) cache: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>CachedData,
     <span class="kw">pub</span>(<span class="kw">crate</span>) tree: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Tree&lt;Entity&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>SparseSet&lt;ModelDataStore&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FnvHashMap&lt;Entity, ModelDataStore&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) views: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) resource_manager: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ResourceManager,
     <span class="kw">pub</span>(<span class="kw">crate</span>) text_context: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>TextContext,
@@ -2870,7 +2868,7 @@
 
         <span class="kw">for </span>entity <span class="kw">in </span><span class="self">self</span>.current.parent_iter(<span class="self">self</span>.tree) {
             <span class="comment">// Return model data.
-            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = <span class="self">self</span>.data.get(entity) {
+            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = <span class="self">self</span>.data.get(<span class="kw-2">&amp;</span>entity) {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(model) = model_data_store.models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;T&gt;()) {
                     <span class="kw">return </span>model.downcast_ref::&lt;T&gt;();
                 }

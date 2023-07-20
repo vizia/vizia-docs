@@ -347,13 +347,13 @@
     <span class="comment">// Send event to models attached to the entity
     </span><span class="kw">if let </span><span class="prelude-val">Some</span>(ids) = cx
         .data
-        .get(entity)
+        .get(<span class="kw-2">&amp;</span>entity)
         .map(|model_data_store| model_data_store.models.keys().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;())
     {
         <span class="kw">for </span>id <span class="kw">in </span>ids {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>model) = cx
                 .data
-                .get_mut(entity)
+                .get_mut(<span class="kw-2">&amp;</span>entity)
                 .and_then(|model_data_store| model_data_store.models.remove(<span class="kw-2">&amp;</span>id))
             {
                 cx.current = entity;
@@ -361,7 +361,7 @@
                 model.event(cx, event);
 
                 cx.data
-                    .get_mut(entity)
+                    .get_mut(<span class="kw-2">&amp;</span>entity)
                     .and_then(|model_data_store| model_data_store.models.insert(id, model));
             }
         }

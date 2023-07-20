@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["log"],"macro":["include_style"],"mod":["binding","context","environment","events","fonts","icons","image","input","layout","localization","model","modifiers","resource","style","util","vg","view","views","window"]};
+window.SIDEBAR_ITEMS = {"macro":["include_style"],"mod":["binding","context","environment","events","fonts","icons","image","input","layout","localization","model","modifiers","resource","style","util","vg","view","views","window"]};

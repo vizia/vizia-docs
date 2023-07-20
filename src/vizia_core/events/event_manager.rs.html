@@ -641,6 +641,7 @@
 <a href="#641" id="641">641</a>
 <a href="#642" id="642">642</a>
 <a href="#643" id="643">643</a>
+<a href="#644" id="644">644</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
 <span class="kw">use </span><span class="kw">crate</span>::events::EventMeta;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -648,6 +649,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::systems::{compute_matched_rules, hover_system};
 <span class="kw">use </span><span class="kw">crate</span>::tree::{focus_backward, focus_forward, is_navigatable};
 <span class="kw">use </span>instant::{Duration, Instant};
+<span class="kw">use </span>log::debug;
 <span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>vizia_id::GenerationalId;
 <span class="kw">use </span>vizia_storage::TreeIterator;
@@ -1015,7 +1017,7 @@
 
             <span class="attr">#[cfg(debug_assertions)]
             </span><span class="kw">if </span><span class="kw-2">*</span>code == Code::KeyI &amp;&amp; context.modifiers.contains(Modifiers::CTRL) {
-                <span class="macro">println!</span>(<span class="string">&quot;Entity tree&quot;</span>);
+                <span class="macro">debug!</span>(<span class="string">&quot;Entity tree&quot;</span>);
                 <span class="kw">let </span>(tree, views, cache) = (<span class="kw-2">&amp;</span>context.tree, <span class="kw-2">&amp;</span>context.views, <span class="kw-2">&amp;</span>context.cache);
                 <span class="kw">let </span>has_next_sibling = |entity| tree.get_next_sibling(entity).is_some();
                 <span class="kw">let </span>root_indents = |entity: Entity| {
@@ -1044,7 +1046,7 @@
                                 class_names += <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;.{}&quot;</span>, class);
                             }
                         }
-                        <span class="macro">println!</span>(
+                        <span class="macro">debug!</span>(
                             <span class="string">&quot;{}{} {}{} [x: {} y: {} w: {} h: {}]&quot;</span>,
                             indents(entity),
                             entity,
@@ -1088,7 +1090,7 @@
                 compute_matched_rules(context, context.hovered, <span class="kw-2">&amp;mut </span>result);
 
                 <span class="kw">let </span>entity = context.hovered;
-                <span class="macro">println!</span>(<span class="string">&quot;/* Matched rules for Entity: {} Parent: {:?} View: {} posx: {} posy: {} width: {} height: {}&quot;</span>,
+                <span class="macro">debug!</span>(<span class="string">&quot;/* Matched rules for Entity: {} Parent: {:?} View: {} posx: {} posy: {} width: {} height: {}&quot;</span>,
                     entity,
                     entity.parent(<span class="kw-2">&amp;</span>context.tree),
                     context
@@ -1103,7 +1105,7 @@
                 <span class="kw">for </span>rule <span class="kw">in </span>result.into_iter() {
                     <span class="kw">for </span>selectors <span class="kw">in </span>context.style.rules.iter() {
                         <span class="kw">if </span>selectors.<span class="number">0 </span>== rule.<span class="number">0 </span>{
-                            <span class="macro">println!</span>(<span class="string">&quot;{:?}&quot;</span>, selectors.<span class="number">1</span>);
+                            <span class="macro">debug!</span>(<span class="string">&quot;{:?}&quot;</span>, selectors.<span class="number">1</span>);
                         }
                     }
                 }
@@ -1113,9 +1115,9 @@
             </span><span class="kw">if </span><span class="kw-2">*</span>code == Code::KeyT
                 &amp;&amp; context.modifiers == Modifiers::CTRL | Modifiers::SHIFT | Modifiers::ALT
             {
-                <span class="macro">println!</span>(<span class="string">&quot;Loaded font face info:&quot;</span>);
+                <span class="macro">debug!</span>(<span class="string">&quot;Loaded font face info:&quot;</span>);
                 <span class="kw">for </span>face <span class="kw">in </span>context.text_context.font_system().db().faces() {
-                    <span class="macro">println!</span>(
+                    <span class="macro">debug!</span>(
                         <span class="string">&quot;family: {:?}\npost_script_name: {:?}\nstyle: {:?}\nweight: {:?}\nstretch: {:?}\nmonospaced: {:?}\n&quot;</span>,
                         face.families,
                         face.post_script_name,

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["Propagation"],"struct":["Event","EventMeta"]};
+window.SIDEBAR_ITEMS = {"enum":["Propagation","TimerAction"],"struct":["Event","EventMeta","TimedEventHandle","Timer"]};

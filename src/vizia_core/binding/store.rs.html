@@ -72,22 +72,20 @@
 <a href="#72" id="72">72</a>
 <a href="#73" id="73">73</a>
 <a href="#74" id="74">74</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>std::{any::TypeId, collections::HashSet};
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::{hash_map::DefaultHasher, HashSet};
+<span class="kw">use </span>std::hash::{Hash, Hasher};
 
 <span class="kw">use crate</span>::{model::ModelOrView, prelude::<span class="kw-2">*</span>};
 
-<span class="kw">use </span>std::sync::atomic::{AtomicU64, Ordering};
-
-<span class="comment">// Generates a unique ID.
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>next_uuid() -&gt; u64 {
-    <span class="kw">static </span>UUID: AtomicU64 = AtomicU64::new(<span class="number">0</span>);
-    UUID.fetch_add(<span class="number">1</span>, Ordering::Relaxed)
-}
-
 <span class="attr">#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
-</span><span class="kw">pub enum </span>StoreId {
-    Type(TypeId),
-    Uuid(u64),
+</span><span class="kw">pub struct </span>StoreId(<span class="kw">pub </span>u64);
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_storeid&lt;T: Hash&gt;(t: <span class="kw-2">&amp;</span>T) -&gt; StoreId {
+    <span class="kw">let </span><span class="kw-2">mut </span>s = DefaultHasher::new();
+    t.hash(<span class="kw-2">&amp;mut </span>s);
+    StoreId(s.finish())
 }
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>Store {
@@ -101,6 +99,8 @@
     </span><span class="kw">fn </span>remove_observer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, observer: <span class="kw-2">&amp;</span>Entity);
     <span class="doccomment">/// Returns the number of obersers for the store.
     </span><span class="kw">fn </span>num_observers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize;
+
+    <span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String;
 }
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>BasicStore&lt;L: Lens, T&gt; {
@@ -144,6 +144,10 @@
 
     <span class="kw">fn </span>num_observers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.observers.len()
+    }
+
+    <span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
+        <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="self">self</span>.lens)
     }
 }
 </code></pre></div></section></main></body></html>

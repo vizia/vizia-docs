@@ -632,16 +632,6 @@
 <a href="#632" id="632">632</a>
 <a href="#633" id="633">633</a>
 <a href="#634" id="634">634</a>
-<a href="#635" id="635">635</a>
-<a href="#636" id="636">636</a>
-<a href="#637" id="637">637</a>
-<a href="#638" id="638">638</a>
-<a href="#639" id="639">639</a>
-<a href="#640" id="640">640</a>
-<a href="#641" id="641">641</a>
-<a href="#642" id="642">642</a>
-<a href="#643" id="643">643</a>
-<a href="#644" id="644">644</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
 <span class="kw">use </span><span class="kw">crate</span>::events::EventMeta;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -982,42 +972,33 @@
             meta.target = context.focused;
 
             <span class="attr">#[cfg(debug_assertions)]
-            </span><span class="kw">if </span><span class="kw-2">*</span>code == Code::KeyH {
-                <span class="kw">for </span>entity <span class="kw">in </span>context.tree.into_iter() {
-                    <span class="macro">println!</span>(
-                        <span class="string">&quot;Entity: {} Parent: {:?} View: {} posx: {} posy: {} width: {} height: {}&quot;</span>,
-                        entity,
-                        entity.parent(<span class="kw-2">&amp;</span>context.tree),
-                        context
-                            .views
-                            .get(<span class="kw-2">&amp;</span>entity)
-                            .map_or(<span class="string">&quot;&lt;None&gt;&quot;</span>, |view| view.element().unwrap_or(<span class="string">&quot;&lt;Unnamed&gt;&quot;</span>)),
-                        context.cache.get_posx(entity),
-                        context.cache.get_posy(entity),
-                        context.cache.get_width(entity),
-                        context.cache.get_height(entity)
-                    );
-                }
-            }
-
-            <span class="attr">#[cfg(debug_assertions)]
             </span><span class="kw">if </span><span class="kw-2">*</span>code == Code::KeyP &amp;&amp; context.modifiers.contains(Modifiers::CTRL) {
                 <span class="kw">for </span>entity <span class="kw">in </span>TreeIterator::full(<span class="kw-2">&amp;</span>context.tree) {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = context.data.get(<span class="kw-2">&amp;</span>entity) {
-                        <span class="macro">print!</span>(
-                            <span class="string">&quot;{}{:?}&quot;</span>,
-                            entity,
-                            model_data_store.models.keys().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
-                        );
-                        <span class="macro">print!</span>(<span class="string">&quot;{:?}&quot;</span>, model_data_store.stores.keys().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;());
-                        <span class="macro">println!</span>();
+                        <span class="kw">if </span>!model_data_store.models.is_empty() {
+                            <span class="macro">println!</span>(<span class="string">&quot;Models for {}&quot;</span>, entity);
+                            <span class="kw">for </span>(<span class="kw">_</span>, model) <span class="kw">in </span>model_data_store.models.iter() {
+                                <span class="macro">println!</span>(<span class="string">&quot;M: {:?}&quot;</span>, model.name())
+                            }
+                        }
+
+                        <span class="kw">if </span>!model_data_store.stores.is_empty() {
+                            <span class="macro">println!</span>(<span class="string">&quot;Stores for {}&quot;</span>, entity);
+                            <span class="kw">for </span>(<span class="kw">_</span>, store) <span class="kw">in </span>model_data_store.stores.iter() {
+                                <span class="macro">println!</span>(
+                                    <span class="string">&quot;S: [{}] - Observers {:?}&quot;</span>,
+                                    store.name(),
+                                    store.observers()
+                                )
+                            }
+                        }
                     }
                 }
             }
 
             <span class="attr">#[cfg(debug_assertions)]
             </span><span class="kw">if </span><span class="kw-2">*</span>code == Code::KeyI &amp;&amp; context.modifiers.contains(Modifiers::CTRL) {
-                <span class="macro">debug!</span>(<span class="string">&quot;Entity tree&quot;</span>);
+                <span class="macro">println!</span>(<span class="string">&quot;Entity tree&quot;</span>);
                 <span class="kw">let </span>(tree, views, cache) = (<span class="kw-2">&amp;</span>context.tree, <span class="kw-2">&amp;</span>context.views, <span class="kw-2">&amp;</span>context.cache);
                 <span class="kw">let </span>has_next_sibling = |entity| tree.get_next_sibling(entity).is_some();
                 <span class="kw">let </span>root_indents = |entity: Entity| {
@@ -1046,7 +1027,7 @@
                                 class_names += <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;.{}&quot;</span>, class);
                             }
                         }
-                        <span class="macro">debug!</span>(
+                        <span class="macro">println!</span>(
                             <span class="string">&quot;{}{} {}{} [x: {} y: {} w: {} h: {}]&quot;</span>,
                             indents(entity),
                             entity,
@@ -1057,29 +1038,28 @@
                             <span class="kw">if </span>w == f32::MAX { <span class="string">&quot;inf&quot;</span>.to_string() } <span class="kw">else </span>{ w.to_string() },
                             <span class="kw">if </span>h == f32::MAX { <span class="string">&quot;inf&quot;</span>.to_string() } <span class="kw">else </span>{ h.to_string() },
                         );
+                    } <span class="kw">else if let </span><span class="prelude-val">Some</span>(binding_name) =
+                        context.bindings.get(<span class="kw-2">&amp;</span>entity).map(|binding| <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, binding))
+                    {
+                        <span class="macro">println!</span>(
+                            <span class="string">&quot;{}{} binding observing {}&quot;</span>,
+                            indents(entity),
+                            entity,
+                            binding_name
+                        );
+                    } <span class="kw">else </span>{
+                        <span class="macro">println!</span>(
+                            <span class="string">&quot;{}{} {}&quot;</span>,
+                            indents(entity),
+                            entity,
+                            <span class="kw">if </span>views.get(<span class="kw-2">&amp;</span>entity).is_some() {
+                                <span class="string">&quot;unnamed view&quot;
+                            </span>} <span class="kw">else </span>{
+                                <span class="string">&quot;no binding or view&quot;
+                            </span>}
+                        );
                     }
-                    <span class="comment">// else if let Some(binding_name) =
-                    //     context.bindings.get(&amp;entity).and_then(|binding| binding.name())
-                    // {
-                    //     println!(
-                    //         &quot;{}{} binding observing {}&quot;,
-                    //         indents(entity),
-                    //         entity,
-                    //         binding_name
-                    //     );
-                    // } else {
-                    //     println!(
-                    //         &quot;{}{} {}&quot;,
-                    //         indents(entity),
-                    //         entity,
-                    //         if views.get(&amp;entity).is_some() {
-                    //             &quot;unnamed view&quot;
-                    //         } else {
-                    //             &quot;no binding or view&quot;
-                    //         }
-                    //     );
-                    // }
-                </span>}
+                }
             }
 
             <span class="attr">#[cfg(debug_assertions)]

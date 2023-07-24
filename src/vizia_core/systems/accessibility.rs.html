@@ -202,60 +202,60 @@
     <span class="kw">let </span>iterator = LayoutTreeIterator::full(<span class="kw-2">&amp;</span>cx.tree);
 
     <span class="kw">for </span>entity <span class="kw">in </span>iterator {
-        <span class="kw">if </span>cx.style.needs_access_update.get(entity).filter(|flag| <span class="kw-2">**</span>flag).is_some() {
-            <span class="kw">let </span><span class="kw-2">mut </span>access_context = AccessContext {
-                current: entity,
-                tree: <span class="kw-2">&amp;</span>cx.tree,
-                cache: <span class="kw-2">&amp;</span>cx.cache,
-                style: <span class="kw-2">&amp;</span>cx.style,
-                text_context: <span class="kw-2">&amp;mut </span>cx.text_context,
-            };
+        <span class="comment">// if cx.style.needs_access_update.get(entity).filter(|flag| **flag).is_some() {
+        </span><span class="kw">let </span><span class="kw-2">mut </span>access_context = AccessContext {
+            current: entity,
+            tree: <span class="kw-2">&amp;</span>cx.tree,
+            cache: <span class="kw-2">&amp;</span>cx.cache,
+            style: <span class="kw-2">&amp;</span>cx.style,
+            text_context: <span class="kw-2">&amp;mut </span>cx.text_context,
+        };
 
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>node) = get_access_node(<span class="kw-2">&amp;mut </span>access_context, <span class="kw-2">&amp;mut </span>cx.views, entity) {
-                <span class="kw">let </span>navigable = cx
-                    .style
-                    .abilities
-                    .get(entity)
-                    .copied()
-                    .unwrap_or_default()
-                    .contains(Abilities::NAVIGABLE);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>node) = get_access_node(<span class="kw-2">&amp;mut </span>access_context, <span class="kw-2">&amp;mut </span>cx.views, entity) {
+            <span class="kw">let </span>navigable = cx
+                .style
+                .abilities
+                .get(entity)
+                .copied()
+                .unwrap_or_default()
+                .contains(Abilities::NAVIGABLE);
 
-                <span class="kw">if </span>node.node_builder.role() == Role::Unknown &amp;&amp; !navigable {
-                    <span class="kw">continue</span>;
-                }
-
-                <span class="kw">let </span>child_ids =
-                    node.children.iter().map(|child_node| child_node.node_id()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-
-                <span class="kw">if </span>!child_ids.is_empty() {
-                    node.node_builder.set_children(child_ids);
-                }
-
-                <span class="kw">let </span><span class="kw-2">mut </span>nodes = <span class="macro">vec!</span>[(
-                    node.node_id(),
-                    node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes),
-                )];
-
-                <span class="comment">// If child nodes were generated then append them to the nodes list
-                </span><span class="kw">if </span>!node.children.is_empty() {
-                    nodes.extend(node.children.into_iter().map(|child_node| {
-                        (
-                            child_node.node_id(),
-                            child_node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes),
-                        )
-                    }));
-                }
-
-                cx.tree_updates.push(TreeUpdate {
-                    nodes,
-                    tree: <span class="prelude-val">None</span>,
-                    focus: cx.window_has_focus.then_some(cx.focused.accesskit_id()),
-                });
+            <span class="kw">if </span>node.node_builder.role() == Role::Unknown &amp;&amp; !navigable {
+                <span class="kw">continue</span>;
             }
 
-            cx.style.needs_access_update.insert(entity, <span class="bool-val">false</span>);
+            <span class="kw">let </span>child_ids =
+                node.children.iter().map(|child_node| child_node.node_id()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+
+            <span class="kw">if </span>!child_ids.is_empty() {
+                node.node_builder.set_children(child_ids);
+            }
+
+            <span class="kw">let </span><span class="kw-2">mut </span>nodes = <span class="macro">vec!</span>[(
+                node.node_id(),
+                node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes),
+            )];
+
+            <span class="comment">// If child nodes were generated then append them to the nodes list
+            </span><span class="kw">if </span>!node.children.is_empty() {
+                nodes.extend(node.children.into_iter().map(|child_node| {
+                    (
+                        child_node.node_id(),
+                        child_node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes),
+                    )
+                }));
+            }
+
+            cx.tree_updates.push(TreeUpdate {
+                nodes,
+                tree: <span class="prelude-val">None</span>,
+                focus: cx.window_has_focus.then_some(cx.focused.accesskit_id()),
+            });
         }
-    }
+
+        cx.style.needs_access_update.insert(entity, <span class="bool-val">false</span>);
+        <span class="comment">// }
+    </span>}
 }
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_access_node(

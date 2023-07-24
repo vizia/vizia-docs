@@ -989,6 +989,11 @@
 <a href="#989" id="989">989</a>
 <a href="#990" id="990">990</a>
 <a href="#991" id="991">991</a>
+<a href="#992" id="992">992</a>
+<a href="#993" id="993">993</a>
+<a href="#994" id="994">994</a>
+<a href="#995" id="995">995</a>
+<a href="#996" id="996">996</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Context types for retained state, used during view building, event handling, and drawing.
 
 </span><span class="kw">mod </span>access;
@@ -1670,15 +1675,19 @@
     ///
     /// Any events emitted in response to the timer stopping, as determined by the callback provided in `add_timer()`, will target the view which called `start_timer()`.
     </span><span class="kw">pub fn </span>stop_timer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, timer: Timer) {
-        <span class="kw">while let </span><span class="prelude-val">Some</span>(next_timer_state) = <span class="self">self</span>.running_timers.peek() {
-            <span class="kw">if </span>next_timer_state.id == timer {
-                <span class="kw">let </span>timer_state = <span class="self">self</span>.running_timers.pop().unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>running_timers = <span class="self">self</span>.running_timers.clone();
+
+        <span class="kw">for </span>timer_state <span class="kw">in </span>running_timers.iter() {
+            <span class="kw">if </span>timer_state.id == timer {
                 (timer_state.callback)(
                     <span class="kw-2">&amp;mut </span>EventContext::new_with_current(<span class="self">self</span>, timer_state.entity),
                     TimerAction::Stop,
                 );
             }
         }
+
+        <span class="self">self</span>.running_timers =
+            running_timers.drain().filter(|timer_state| timer_state.id != timer).collect();
     }
 
     <span class="comment">// Tick all timers.
@@ -1695,11 +1704,12 @@
                             TimerAction::Start,
                         );
                         timer_state.ticking = <span class="bool-val">true</span>;
+                    } <span class="kw">else </span>{
+                        (timer_state.callback)(
+                            <span class="kw-2">&amp;mut </span>EventContext::new_with_current(<span class="self">self</span>, timer_state.entity),
+                            TimerAction::Tick(now - timer_state.time),
+                        );
                     }
-                    (timer_state.callback)(
-                        <span class="kw-2">&amp;mut </span>EventContext::new_with_current(<span class="self">self</span>, timer_state.entity),
-                        TimerAction::Tick(now - timer_state.time),
-                    );
                     timer_state.time = now + timer_state.interval - (now - timer_state.time);
                     <span class="self">self</span>.running_timers.push(timer_state);
                 } <span class="kw">else </span>{

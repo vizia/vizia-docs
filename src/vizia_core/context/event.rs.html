@@ -1249,6 +1249,27 @@
 <a href="#1249" id="1249">1249</a>
 <a href="#1250" id="1250">1250</a>
 <a href="#1251" id="1251">1251</a>
+<a href="#1252" id="1252">1252</a>
+<a href="#1253" id="1253">1253</a>
+<a href="#1254" id="1254">1254</a>
+<a href="#1255" id="1255">1255</a>
+<a href="#1256" id="1256">1256</a>
+<a href="#1257" id="1257">1257</a>
+<a href="#1258" id="1258">1258</a>
+<a href="#1259" id="1259">1259</a>
+<a href="#1260" id="1260">1260</a>
+<a href="#1261" id="1261">1261</a>
+<a href="#1262" id="1262">1262</a>
+<a href="#1263" id="1263">1263</a>
+<a href="#1264" id="1264">1264</a>
+<a href="#1265" id="1265">1265</a>
+<a href="#1266" id="1266">1266</a>
+<a href="#1267" id="1267">1267</a>
+<a href="#1268" id="1268">1268</a>
+<a href="#1269" id="1269">1269</a>
+<a href="#1270" id="1270">1270</a>
+<a href="#1271" id="1271">1271</a>
+<a href="#1272" id="1272">1272</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::collections::{BinaryHeap, HashMap, HashSet, VecDeque};
 <span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
@@ -2089,12 +2110,29 @@
         <span class="self">self</span>.style.needs_restyle();
     }
 
+    <span class="kw">pub fn </span>set_placeholder_shown(<span class="kw-2">&amp;mut </span><span class="self">self</span>, flag: bool) {
+        <span class="kw">let </span>current = <span class="self">self</span>.current();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = <span class="self">self</span>.style.pseudo_classes.get_mut(current) {
+            pseudo_classes.set(PseudoClassFlags::PLACEHOLDER_SHOWN, flag);
+        }
+
+        <span class="self">self</span>.style.needs_restyle();
+    }
+
     <span class="comment">// TODO: Move me
     </span><span class="kw">pub fn </span>is_valid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="self">self</span>.style
             .pseudo_classes
             .get(<span class="self">self</span>.current)
             .map(|pseudo_classes| pseudo_classes.contains(PseudoClassFlags::VALID))
+            .unwrap_or_default()
+    }
+
+    <span class="kw">pub fn </span>is_placeholder_shown(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.style
+            .pseudo_classes
+            .get(<span class="self">self</span>.current)
+            .map(|pseudo_classes| pseudo_classes.contains(PseudoClassFlags::PLACEHOLDER_SHOWN))
             .unwrap_or_default()
     }
 
@@ -2393,14 +2431,18 @@
     ///
     /// Any events emitted in response to the timer stopping, as determined by the callback provided in `add_timer()`, will target the view which called `start_timer()`.
     </span><span class="kw">pub fn </span>stop_timer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, timer: Timer) {
-        <span class="kw">while let </span><span class="prelude-val">Some</span>(next_timer_state) = <span class="self">self</span>.running_timers.peek() {
-            <span class="kw">if </span>next_timer_state.id == timer {
-                <span class="kw">let </span>timer_state = <span class="self">self</span>.running_timers.pop().unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>running_timers = <span class="self">self</span>.running_timers.clone();
+
+        <span class="kw">for </span>timer_state <span class="kw">in </span>running_timers.iter() {
+            <span class="kw">if </span>timer_state.id == timer {
                 <span class="self">self</span>.with_current(timer_state.entity, |cx| {
                     (timer_state.callback)(cx, TimerAction::Stop);
                 });
             }
         }
+
+        <span class="kw-2">*</span><span class="self">self</span>.running_timers =
+            running_timers.drain().filter(|timer_state| timer_state.id != timer).collect();
     }
 }
 

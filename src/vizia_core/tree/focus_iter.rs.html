@@ -57,60 +57,40 @@
 <a href="#57" id="57">57</a>
 <a href="#58" id="58">58</a>
 <a href="#59" id="59">59</a>
-<a href="#60" id="60">60</a>
-<a href="#61" id="61">61</a>
-<a href="#62" id="62">62</a>
-<a href="#63" id="63">63</a>
-<a href="#64" id="64">64</a>
-<a href="#65" id="65">65</a>
-<a href="#66" id="66">66</a>
-<a href="#67" id="67">67</a>
-<a href="#68" id="68">68</a>
-<a href="#69" id="69">69</a>
-<a href="#70" id="70">70</a>
-<a href="#71" id="71">71</a>
-<a href="#72" id="72">72</a>
-<a href="#73" id="73">73</a>
-<a href="#74" id="74">74</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::entity::Entity;
-<span class="kw">use </span><span class="kw">crate</span>::prelude::Style;
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::Context;
+<span class="kw">use </span><span class="kw">crate</span>::entity::Entity;
 <span class="kw">use </span><span class="kw">crate</span>::style::{Abilities, Display};
 <span class="kw">use </span>vizia_id::GenerationalId;
-<span class="kw">use </span>vizia_storage::{DoubleEndedTreeTour, TourDirection, Tree, TreeExt, TreeIterator, TreeTour};
+<span class="kw">use </span>vizia_storage::{DoubleEndedTreeTour, TourDirection, TreeExt, TreeIterator, TreeTour};
 
 <span class="doccomment">/// Should the user be able to navigate to the entity with tab?
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_navigatable(
-    tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;,
-    style: <span class="kw-2">&amp;</span>Style,
-    node: Entity,
-    lock_focus_to: Entity,
-) -&gt; bool {
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_navigatable(cx: <span class="kw-2">&amp;</span>Context, node: Entity, lock_focus_to: Entity) -&gt; bool {
     <span class="comment">// Skip invisible widgets
     // if cx.cache.get_visibility(node) == Visibility::Hidden {
     //     return false;
     // }
 
     // Skip disabled widgets
-    </span><span class="kw">if </span>style.disabled.get(node).cloned().unwrap_or_default() {
+    </span><span class="kw">if </span>cx.style.disabled.get(node).cloned().unwrap_or_default() {
         <span class="kw">return </span><span class="bool-val">false</span>;
     }
 
     <span class="comment">// Skip non-displayed widgets
-    </span><span class="kw">if </span>style.display.get(node).copied().unwrap_or_default() == Display::None {
+    </span><span class="kw">if </span>cx.style.display.get(node).copied().unwrap_or_default() == Display::None {
         <span class="kw">return </span><span class="bool-val">false</span>;
     }
 
     <span class="comment">// Skip nodes outside of the subtree
-    </span><span class="kw">if </span>!node.is_descendant_of(tree, lock_focus_to) {
+    </span><span class="kw">if </span>!node.is_descendant_of(<span class="kw-2">&amp;</span>cx.tree, lock_focus_to) {
         <span class="kw">return </span><span class="bool-val">false</span>;
     }
 
     <span class="comment">// Skip ignored widgets
-    </span><span class="kw">if </span>tree.is_ignored(node) {
+    </span><span class="kw">if </span>cx.tree.is_ignored(node) {
         <span class="kw">return </span><span class="bool-val">false</span>;
     }
 
-    style
+    cx.style
         .abilities
         .get(node)
         .map(|abilities| abilities.contains(Abilities::NAVIGABLE))
@@ -118,32 +98,22 @@
 }
 
 <span class="doccomment">/// Get the next entity to be focused during forward keyboard navigation.
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>focus_forward(
-    tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;,
-    style: <span class="kw-2">&amp;</span>Style,
-    node: Entity,
-    lock_focus_to: Entity,
-) -&gt; <span class="prelude-ty">Option</span>&lt;Entity&gt; {
-    TreeIterator::new(tree, DoubleEndedTreeTour::new(<span class="prelude-val">Some</span>(node), <span class="prelude-val">Some</span>(Entity::root())))
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>focus_forward(cx: <span class="kw-2">&amp;</span>Context, node: Entity, lock_focus_to: Entity) -&gt; <span class="prelude-ty">Option</span>&lt;Entity&gt; {
+    TreeIterator::new(<span class="kw-2">&amp;</span>cx.tree, DoubleEndedTreeTour::new(<span class="prelude-val">Some</span>(node), <span class="prelude-val">Some</span>(Entity::root())))
         .skip(<span class="number">1</span>)
-        .find(|node| is_navigatable(tree, style, <span class="kw-2">*</span>node, lock_focus_to))
+        .find(|node| is_navigatable(cx, <span class="kw-2">*</span>node, lock_focus_to))
 }
 
 <span class="doccomment">/// Get the next entity to be focused during backward keybaord navigation.
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>focus_backward(
-    tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;,
-    style: <span class="kw-2">&amp;</span>Style,
-    node: Entity,
-    lock_focus_to: Entity,
-) -&gt; <span class="prelude-ty">Option</span>&lt;Entity&gt; {
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>focus_backward(cx: <span class="kw-2">&amp;</span>Context, node: Entity, lock_focus_to: Entity) -&gt; <span class="prelude-ty">Option</span>&lt;Entity&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>iter = TreeIterator::new(
-        tree,
+        <span class="kw-2">&amp;</span>cx.tree,
         DoubleEndedTreeTour::new_raw(
             TreeTour::new(<span class="prelude-val">Some</span>(Entity::root())),
             TreeTour::with_direction(<span class="prelude-val">Some</span>(node), TourDirection::Leaving),
         ),
     );
     iter.next_back();
-    iter.filter(|node| is_navigatable(tree, style, <span class="kw-2">*</span>node, lock_focus_to)).next_back()
+    iter.filter(|node| is_navigatable(cx, <span class="kw-2">*</span>node, lock_focus_to)).next_back()
 }
 </code></pre></div></section></main></body></html>

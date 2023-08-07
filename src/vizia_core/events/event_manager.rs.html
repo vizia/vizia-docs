@@ -639,6 +639,14 @@
 <a href="#639" id="639">639</a>
 <a href="#640" id="640">640</a>
 <a href="#641" id="641">641</a>
+<a href="#642" id="642">642</a>
+<a href="#643" id="643">643</a>
+<a href="#644" id="644">644</a>
+<a href="#645" id="645">645</a>
+<a href="#646" id="646">646</a>
+<a href="#647" id="647">647</a>
+<a href="#648" id="648">648</a>
+<a href="#649" id="649">649</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
 <span class="kw">use </span><span class="kw">crate</span>::events::EventMeta;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -1130,13 +1138,18 @@
             <span class="kw">if </span><span class="kw-2">*</span>code == Code::Tab {
                 <span class="kw">let </span>lock_focus_to = context.tree.lock_focus_within(context.focused);
                 <span class="kw">if </span>context.modifiers.contains(Modifiers::SHIFT) {
-                    <span class="kw">let </span>prev_focused = <span class="kw">if let </span><span class="prelude-val">Some</span>(prev_focused) =
-                        focus_backward(context, context.focused, lock_focus_to)
-                    {
+                    <span class="kw">let </span>prev_focused = <span class="kw">if let </span><span class="prelude-val">Some</span>(prev_focused) = focus_backward(
+                        <span class="kw-2">&amp;</span>context.tree,
+                        <span class="kw-2">&amp;</span>context.style,
+                        context.focused,
+                        lock_focus_to,
+                    ) {
                         prev_focused
                     } <span class="kw">else </span>{
                         TreeIterator::full(<span class="kw-2">&amp;</span>context.tree)
-                            .filter(|node| is_navigatable(context, <span class="kw-2">*</span>node, lock_focus_to))
+                            .filter(|node| {
+                                is_navigatable(<span class="kw-2">&amp;</span>context.tree, <span class="kw-2">&amp;</span>context.style, <span class="kw-2">*</span>node, lock_focus_to)
+                            })
                             .next_back()
                             .unwrap_or(Entity::root())
                     };
@@ -1163,12 +1176,14 @@
                     }
                 } <span class="kw">else </span>{
                     <span class="kw">let </span>next_focused = <span class="kw">if let </span><span class="prelude-val">Some</span>(next_focused) =
-                        focus_forward(context, context.focused, lock_focus_to)
+                        focus_forward(<span class="kw-2">&amp;</span>context.tree, <span class="kw-2">&amp;</span>context.style, context.focused, lock_focus_to)
                     {
                         next_focused
                     } <span class="kw">else </span>{
                         TreeIterator::full(<span class="kw-2">&amp;</span>context.tree)
-                            .find(|node| is_navigatable(context, <span class="kw-2">*</span>node, lock_focus_to))
+                            .find(|node| {
+                                is_navigatable(<span class="kw-2">&amp;</span>context.tree, <span class="kw-2">&amp;</span>context.style, <span class="kw-2">*</span>node, lock_focus_to)
+                            })
                             .unwrap_or(Entity::root())
                     };
 
@@ -1253,6 +1268,7 @@
                 }
             }
         }
+
         <span class="kw">_ </span>=&gt; {}
     }
 }

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["item_height","num_items","offset","root","scroll_to_cursor","scrolly","visible_items"]};
+window.SIDEBAR_ITEMS = {"struct":["item_height","num_items","offset","on_change","root","scroll_to_cursor","scrolly","visible_items"]};

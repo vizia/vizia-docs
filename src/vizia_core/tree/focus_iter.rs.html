@@ -72,11 +72,33 @@
 <a href="#72" id="72">72</a>
 <a href="#73" id="73">73</a>
 <a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
+<a href="#81" id="81">81</a>
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
+<a href="#87" id="87">87</a>
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::entity::Entity;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::Style;
 <span class="kw">use </span><span class="kw">crate</span>::style::{Abilities, Display};
 <span class="kw">use </span>vizia_id::GenerationalId;
-<span class="kw">use </span>vizia_storage::{DoubleEndedTreeTour, TourDirection, Tree, TreeExt, TreeIterator, TreeTour};
+<span class="kw">use </span>vizia_storage::{
+    DoubleEndedTreeTour, FocusTreeIterator, TourDirection, Tree, TreeExt, TreeTour,
+};
 
 <span class="doccomment">/// Should the user be able to navigate to the entity with tab?
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_navigatable(
@@ -124,9 +146,16 @@
     node: Entity,
     lock_focus_to: Entity,
 ) -&gt; <span class="prelude-ty">Option</span>&lt;Entity&gt; {
-    TreeIterator::new(tree, DoubleEndedTreeTour::new(<span class="prelude-val">Some</span>(node), <span class="prelude-val">Some</span>(Entity::root())))
-        .skip(<span class="number">1</span>)
-        .find(|node| is_navigatable(tree, style, <span class="kw-2">*</span>node, lock_focus_to))
+    FocusTreeIterator::new(
+        tree,
+        DoubleEndedTreeTour::new(<span class="prelude-val">Some</span>(node), <span class="prelude-val">Some</span>(Entity::root())),
+        |node| {
+            style.display.get(node).copied().unwrap_or_default() == Display::None
+            <span class="comment">// false
+        </span>},
+    )
+    .skip(<span class="number">1</span>)
+    .find(|node| is_navigatable(tree, style, <span class="kw-2">*</span>node, lock_focus_to))
 }
 
 <span class="doccomment">/// Get the next entity to be focused during backward keybaord navigation.
@@ -136,12 +165,23 @@
     node: Entity,
     lock_focus_to: Entity,
 ) -&gt; <span class="prelude-ty">Option</span>&lt;Entity&gt; {
-    <span class="kw">let </span><span class="kw-2">mut </span>iter = TreeIterator::new(
+    <span class="kw">let </span><span class="kw-2">mut </span>iter = FocusTreeIterator::new(
         tree,
         DoubleEndedTreeTour::new_raw(
             TreeTour::new(<span class="prelude-val">Some</span>(Entity::root())),
             TreeTour::with_direction(<span class="prelude-val">Some</span>(node), TourDirection::Leaving),
         ),
+        |node| {
+            <span class="comment">// Check if any ancestors are not displayed.
+            // TODO: Think of a better way to do thus.
+            </span><span class="kw">for </span>ancestor <span class="kw">in </span>node.parent_iter(tree) {
+                <span class="kw">if </span>style.display.get(ancestor).copied().unwrap_or_default() == Display::None {
+                    <span class="kw">return </span><span class="bool-val">true</span>;
+                }
+            }
+
+            <span class="bool-val">false
+        </span>},
     );
     iter.next_back();
     iter.filter(|node| is_navigatable(tree, style, <span class="kw-2">*</span>node, lock_focus_to)).next_back()

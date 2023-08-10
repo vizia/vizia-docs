@@ -217,6 +217,9 @@
 <a href="#217" id="217">217</a>
 <a href="#218" id="218">218</a>
 <a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{cmp::Ordering, collections::BinaryHeap};
 
 <span class="kw">use crate</span>::{
@@ -337,7 +340,10 @@
         .pointer_events
         .get(cx.current)
         .copied()
-        .map(|pointer_events| pointer_events.into())
+        .map(|pointer_events| <span class="kw">match </span>pointer_events {
+            PointerEvents::Auto =&gt; parent_pointer_events,
+            PointerEvents::None =&gt; <span class="bool-val">false</span>,
+        })
         .unwrap_or(parent_pointer_events);
 
     <span class="comment">// Push to queue if the z-index is higher than the current z-index.

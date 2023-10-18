@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["locale","root","theme_mode"]};
+window.SIDEBAR_ITEMS = {"struct":["locale","root","theme"]};

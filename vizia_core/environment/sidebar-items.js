@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["EnvironmentEvent","ThemeMode"],"mod":["environment_derived_lenses"],"struct":["Environment"]};
+window.SIDEBAR_ITEMS = {"enum":["AppTheme","EnvironmentEvent","ThemeMode"],"mod":["environment_derived_lenses","theme_derived_lenses"],"struct":["Environment","Theme"]};

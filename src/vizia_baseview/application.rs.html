@@ -461,6 +461,15 @@
 <a href="#461" id="461">461</a>
 <a href="#462" id="462">462</a>
 <a href="#463" id="463">463</a>
+<a href="#464" id="464">464</a>
+<a href="#465" id="465">465</a>
+<a href="#466" id="466">466</a>
+<a href="#467" id="467">467</a>
+<a href="#468" id="468">468</a>
+<a href="#469" id="469">469</a>
+<a href="#470" id="470">470</a>
+<a href="#471" id="471">471</a>
+<a href="#472" id="472">472</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::window::ViziaWindow;
 <span class="kw">use </span>baseview::{Window, WindowHandle, WindowScalePolicy};
 <span class="kw">use </span>raw_window_handle::HasRawWindowHandle;
@@ -710,8 +719,8 @@
         </span>}
 
         <span class="comment">// Force restyle on every frame for baseview backend to avoid style inheritance issues
-        </span>cx.style().needs_restyle();
-        cx.process_data_updates();
+        // cx.style().needs_restyle();
+        </span>cx.process_data_updates();
 
         <span class="kw">let </span>context = window.gl_context().expect(<span class="string">&quot;Window was created without OpenGL support&quot;</span>);
         <span class="kw">unsafe </span>{ context.make_current() };
@@ -806,6 +815,15 @@
 
                     cx.emit_origin(WindowEvent::MouseScroll(lines_x, lines_y));
                 }
+
+                baseview::MouseEvent::CursorEntered =&gt; {
+                    cx.emit_origin(WindowEvent::MouseEnter);
+                }
+
+                baseview::MouseEvent::CursorLeft =&gt; {
+                    cx.emit_origin(WindowEvent::MouseLeave);
+                }
+
                 <span class="kw">_ </span>=&gt; {}
             },
             baseview::Event::Keyboard(event) =&gt; {

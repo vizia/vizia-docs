@@ -1,8 +1,8 @@
-var sourcesIndex = JSON.parse('{\
+var srcIndex = JSON.parse('{\
 "vizia":["",[],["lib.rs"]],\
 "vizia_baseview":["",[],["application.rs","lib.rs","parent_window.rs","proxy.rs","window.rs"]],\
 "vizia_core":["",[["accessibility",[],["mod.rs"]],["animation",[],["animation_builder.rs","animation_id.rs","animation_state.rs","interpolator.rs","mod.rs","timing_function.rs"]],["binding",[],["binding_view.rs","data.rs","lens.rs","map.rs","mod.rs","ray.rs","res.rs","store.rs"]],["context",[],["access.rs","backend.rs","draw.rs","event.rs","mod.rs","proxy.rs","resource.rs"]],["events",[],["event.rs","event_handler.rs","event_manager.rs","mod.rs","timer.rs"]],["input",[],["entry.rs","keymap.rs","mod.rs"]],["layout",[],["bounds.rs","cache.rs","mod.rs","node.rs"]],["localization",[],["mod.rs"]],["modifiers",[],["abilities.rs","accessibility.rs","actions.rs","layout.rs","mod.rs","style.rs","text.rs"]],["storage",[],["animatable_set.rs","mod.rs","style_set.rs"]],["style",[],["mod.rs","pseudoclass.rs","rule.rs","transform.rs"]],["systems",[],["accessibility.rs","animation.rs","binding.rs","draw.rs","hover.rs","image.rs","layout.rs","mod.rs","style.rs"]],["text",[],["cosmic.rs","mod.rs","movement.rs","scrolling.rs"]],["tree",[],["focus_iter.rs","mod.rs"]],["util",[],["mod.rs"]],["view",[],["handle.rs"]],["views",[],["button.rs","checkbox.rs","chip.rs","combobox.rs","datepicker.rs","dropdown.rs","element.rs","image.rs","knob.rs","label.rs","list.rs","menu.rs","mod.rs","normalized_map.rs","notification.rs","picklist.rs","popup.rs","progressbar.rs","radio.rs","rating.rs","scrollbar.rs","scrollview.rs","slider.rs","spinbox.rs","stack.rs","switch.rs","tabview.rs","textbox.rs","timepicker.rs","tooltip.rs","virtual_list.rs"]],["window",[],["mod.rs","window_event.rs","window_modifiers.rs"]]],["cache.rs","entity.rs","environment.rs","fonts.rs","icons.rs","lib.rs","model.rs","resource.rs","view.rs"]],\
 "vizia_derive":["",[],["attr.rs","data.rs","lens.rs","lib.rs","model.rs","ray.rs"]],\
 "vizia_winit":["",[],["application.rs","convert.rs","lib.rs","window.rs"]]\
 }');
-createSourceSidebar();
+createSrcSidebar();

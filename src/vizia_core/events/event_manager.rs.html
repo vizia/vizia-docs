@@ -651,6 +651,7 @@
 <a href="#651" id="651">651</a>
 <a href="#652" id="652">652</a>
 <a href="#653" id="653">653</a>
+<a href="#654" id="654">654</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
 <span class="kw">use </span><span class="kw">crate</span>::events::EventMeta;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -841,11 +842,13 @@
         }
 
         WindowEvent::MouseMove(x, y) =&gt; {
-            context.mouse.previous_cursorx = context.mouse.cursorx;
-            context.mouse.previous_cursory = context.mouse.cursory;
             <span class="kw">if </span>!x.is_nan() &amp;&amp; !y.is_nan() {
+                context.mouse.previous_cursorx = context.mouse.cursorx;
+                context.mouse.previous_cursory = context.mouse.cursory;
                 context.mouse.cursorx = <span class="kw-2">*</span>x;
                 context.mouse.cursory = <span class="kw-2">*</span>y;
+
+                mutate_direct_or_up(meta, context.captured, context.hovered, <span class="bool-val">false</span>);
             }
 
             <span class="comment">// if context.mouse.cursorx != context.mouse.previous_cursorx
@@ -854,7 +857,6 @@
             // }
 
             </span>hover_system(context);
-            mutate_direct_or_up(meta, context.captured, context.hovered, <span class="bool-val">false</span>);
             <span class="comment">// if let Some(dropped_file) = context.dropped_file.take() {
             //     emit_direct_or_up(
             //         context,

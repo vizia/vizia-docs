@@ -295,6 +295,13 @@
 <a href="#295" id="295">295</a>
 <a href="#296" id="296">296</a>
 <a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 
 <span class="kw">use </span>femtovg::{renderer::OpenGl, Canvas};
@@ -458,6 +465,8 @@
 
         <span class="kw">let </span>logical_width = <span class="self">self</span>.<span class="number">0</span>.style.physical_to_logical(physical_width);
         <span class="kw">let </span>logical_height = <span class="self">self</span>.<span class="number">0</span>.style.physical_to_logical(physical_height);
+        <span class="self">self</span>.<span class="number">0</span>.window_size.width = logical_width <span class="kw">as </span>u32;
+        <span class="self">self</span>.<span class="number">0</span>.window_size.height = logical_height <span class="kw">as </span>u32;
         <span class="self">self</span>.<span class="number">0</span>.style.width.insert(Entity::root(), Units::Pixels(logical_width));
         <span class="self">self</span>.<span class="number">0</span>.style.height.insert(Entity::root(), Units::Pixels(logical_height));
     }
@@ -468,6 +477,11 @@
         <span class="self">self</span>.<span class="number">0</span>.current = e;
         f(<span class="self">self</span>.<span class="number">0</span>);
         <span class="self">self</span>.<span class="number">0</span>.current = prev;
+    }
+
+    <span class="doccomment">/// Returns the scale factor.
+    </span><span class="kw">pub fn </span>scale_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.<span class="number">0</span>.scale_factor()
     }
 
     <span class="doccomment">/// You should not call this method unless you are writing a windowing backend, in which case

@@ -696,6 +696,13 @@
 <a href="#696" id="696">696</a>
 <a href="#697" id="697">697</a>
 <a href="#698" id="698">698</a>
+<a href="#699" id="699">699</a>
+<a href="#700" id="700">700</a>
+<a href="#701" id="701">701</a>
+<a href="#702" id="702">702</a>
+<a href="#703" id="703">703</a>
+<a href="#704" id="704">704</a>
+<a href="#705" id="705">705</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
     convert::{scan_code_to_code, virtual_key_code_to_code, virtual_key_code_to_key},
     window::Window,
@@ -1148,12 +1155,19 @@
                             <span class="comment">// Temporary fix for windows platform until winit merge #3154
                             </span><span class="attr">#[cfg(target_os = <span class="string">&quot;windows&quot;</span>)]
                             </span>{
-                                <span class="kw">let </span>size = <span class="self">self</span>.window_description.inner_size;
+                                <span class="kw">let </span>(width, height) = {
+                                    <span class="kw">let </span>scale_factor = cx.scale_factor();
+                                    <span class="kw">let </span>size = cx.window_size();
+                                    (
+                                        (size.width <span class="kw">as </span>f32 * scale_factor).round() <span class="kw">as </span>u32,
+                                        (size.height <span class="kw">as </span>f32 * scale_factor).round() <span class="kw">as </span>u32,
+                                    )
+                                };
 
                                 <span class="kw">let </span>x = position.x.is_positive()
-                                    &amp;&amp; (<span class="number">0</span>..size.width).contains(<span class="kw-2">&amp;</span>(position.x <span class="kw">as </span>u32));
+                                    &amp;&amp; (<span class="number">0</span>..width).contains(<span class="kw-2">&amp;</span>(position.x <span class="kw">as </span>u32));
                                 <span class="kw">let </span>y = position.y.is_positive()
-                                    &amp;&amp; (<span class="number">0</span>..size.height).contains(<span class="kw-2">&amp;</span>(position.y <span class="kw">as </span>u32));
+                                    &amp;&amp; (<span class="number">0</span>..height).contains(<span class="kw-2">&amp;</span>(position.y <span class="kw">as </span>u32));
 
                                 <span class="kw">if </span>!inside_window &amp;&amp; x &amp;&amp; y {
                                     inside_window = <span class="bool-val">true</span>;

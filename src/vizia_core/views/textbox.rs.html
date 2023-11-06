@@ -1278,10 +1278,6 @@
 <a href="#1278" id="1278">1278</a>
 <a href="#1279" id="1279">1279</a>
 <a href="#1280" id="1280">1280</a>
-<a href="#1281" id="1281">1281</a>
-<a href="#1282" id="1282">1282</a>
-<a href="#1283" id="1283">1283</a>
-<a href="#1284" id="1284">1284</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::accessibility::IntoNode;
 <span class="kw">use </span><span class="kw">crate</span>::context::AccessNode;
 <span class="kw">use </span><span class="kw">crate</span>::layout::BoundingBox;
@@ -1428,11 +1424,7 @@
     }
 
     <span class="kw">fn </span>new_core(cx: <span class="kw-2">&amp;mut </span>Context, lens: L, kind: TextboxKind) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">let </span>caret_timer = cx.add_timer(Duration::from_millis(<span class="number">530</span>), <span class="prelude-val">None</span>, |cx, action| {
-            <span class="kw">if </span><span class="macro">matches!</span>(action, TimerAction::Tick(<span class="kw">_</span>)) {
-                cx.emit(TextEvent::ToggleCaret);
-            }
-        });
+        <span class="kw">let </span>caret_timer = cx.environment().caret_timer;
 
         <span class="self">Self </span>{
             lens,

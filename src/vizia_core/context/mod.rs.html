@@ -994,6 +994,18 @@
 <a href="#994" id="994">994</a>
 <a href="#995" id="995">995</a>
 <a href="#996" id="996">996</a>
+<a href="#997" id="997">997</a>
+<a href="#998" id="998">998</a>
+<a href="#999" id="999">999</a>
+<a href="#1000" id="1000">1000</a>
+<a href="#1001" id="1001">1001</a>
+<a href="#1002" id="1002">1002</a>
+<a href="#1003" id="1003">1003</a>
+<a href="#1004" id="1004">1004</a>
+<a href="#1005" id="1005">1005</a>
+<a href="#1006" id="1006">1006</a>
+<a href="#1007" id="1007">1007</a>
+<a href="#1008" id="1008">1008</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Context types for retained state, used during view building, event handling, and drawing.
 
 </span><span class="kw">mod </span>access;
@@ -1219,7 +1231,7 @@
         result.style.needs_redraw();
 
         <span class="comment">// Build the environment model at the root.
-        </span>Environment::new().build(<span class="kw-2">&amp;mut </span>result);
+        </span>Environment::new(<span class="kw-2">&amp;mut </span>result).build(<span class="kw-2">&amp;mut </span>result);
 
         result.entity_manager.create();
         result.set_default_font(<span class="kw-2">&amp;</span>[<span class="string">&quot;Roboto&quot;</span>]);
@@ -1456,6 +1468,18 @@
 
             <span class="kw">if let </span><span class="prelude-val">Some</span>(parent) = <span class="self">self</span>.tree.get_layout_parent(<span class="kw-2">*</span>entity) {
                 <span class="self">self</span>.style.needs_access_update(parent);
+            }
+
+            <span class="kw">let </span><span class="kw-2">mut </span>stopped_timers = Vec::new();
+
+            <span class="kw">for </span>timer <span class="kw">in </span><span class="self">self</span>.running_timers.iter() {
+                <span class="kw">if </span>timer.entity == <span class="kw-2">*</span>entity {
+                    stopped_timers.push(timer.id);
+                }
+            }
+
+            <span class="kw">for </span>timer <span class="kw">in </span>stopped_timers {
+                <span class="self">self</span>.stop_timer(timer);
             }
 
             <span class="self">self</span>.tree.remove(<span class="kw-2">*</span>entity).expect(<span class="string">&quot;&quot;</span>);

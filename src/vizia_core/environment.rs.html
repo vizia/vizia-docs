@@ -125,8 +125,24 @@
 <a href="#125" id="125">125</a>
 <a href="#126" id="126">126</a>
 <a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! A model for system specific state which can be accessed by any model or view.
-</span><span class="kw">use crate</span>::{model::Model, prelude::Wrapper, window::WindowEvent};
+</span><span class="kw">use crate</span>::{
+    context::{Context, EmitContext},
+    events::{Timer, TimerAction},
+    model::Model,
+    prelude::Wrapper,
+    views::TextEvent,
+    window::WindowEvent,
+};
+<span class="kw">use </span>instant::Duration;
 <span class="kw">use </span>unic_langid::LanguageIdentifier;
 <span class="kw">use </span>vizia_derive::Lens;
 
@@ -179,19 +195,19 @@
     </span><span class="kw">pub </span>locale: LanguageIdentifier,
     <span class="doccomment">/// Current application and system theme.
     </span><span class="kw">pub </span>theme: Theme,
-}
 
-<span class="kw">impl </span>Default <span class="kw">for </span>Environment {
-    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-        Environment::new()
-    }
+    <span class="kw">pub</span>(<span class="kw">crate</span>) caret_timer: Timer,
 }
 
 <span class="kw">impl </span>Environment {
-    <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;mut </span>Context) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>locale = sys_locale::get_locale().and_then(|l| l.parse().ok()).unwrap_or_default();
-
-        <span class="self">Self </span>{ locale, theme: Theme::default() }
+        <span class="kw">let </span>caret_timer = cx.add_timer(Duration::from_millis(<span class="number">530</span>), <span class="prelude-val">None</span>, |cx, action| {
+            <span class="kw">if </span><span class="macro">matches!</span>(action, TimerAction::Tick(<span class="kw">_</span>)) {
+                cx.emit(TextEvent::ToggleCaret);
+            }
+        });
+        <span class="self">Self </span>{ locale, theme: Theme::default(), caret_timer }
     }
 }
 

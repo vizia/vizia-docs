@@ -116,6 +116,8 @@ happens when all strides are <code>0</code>, i.e. the image is an arbitrarily la
 <p>Assumes that the image is backed by some sufficiently large buffer. Then computation can
 not overflow as we could represent the maximum coordinate. Since overflow is defined either
 way, this method can not be unsafe.</p>
+<p>Behavior is <em>unspecified</em> if the index is out of bounds or this sample layout would require
+a buffer larger than <code>isize::MAX</code> bytes.</p>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.shrink_to" class="method"><h4 class="code-header">pub fn <a href="#method.shrink_to" class="fn">shrink_to</a>(&amp;mut self, channels: <a class="primitive" href="https://doc.rust-lang.org/1.75.0/std/primitive.u8.html">u8</a>, width: <a class="primitive" href="https://doc.rust-lang.org/1.75.0/std/primitive.u32.html">u32</a>, height: <a class="primitive" href="https://doc.rust-lang.org/1.75.0/std/primitive.u32.html">u32</a>)</h4></section></summary><div class="docblock"><p>Shrink the image to the minimum of current and given extents.</p>
 <p>This does not modify the strides, so that the resulting sample buffer may have holes
 created by the shrinking operation. Shrinking could also lead to an non-aliasing image when

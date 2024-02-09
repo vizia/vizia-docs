@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/timepicker.rs`."><title>timepicker.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/timepicker.rs`."><title>timepicker.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ac92e1bbe349e143.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0 (07dca489a 2024-02-04)" data-channel="1.76.0" data-search-js="search-2b6ce74ff89ae146.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../../static.files/src-script-39ed315d46fb705f.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-305769736d49e732.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-feafe1bb7466e4bd.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -736,8 +737,8 @@
 }
 
 <span class="kw">impl </span>View <span class="kw">for </span>Timepicker {
-    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
-        <span class="prelude-val">Some</span>(<span class="string">&quot;timepicker&quot;</span>)
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+        <span class="prelude-val">Some</span>(<span class="string">"timepicker"</span>)
     }
 
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
@@ -759,10 +760,10 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Handle&lt;<span class="lifetime">&#39;a</span>, Timepicker&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Handle&lt;<span class="lifetime">'a</span>, Timepicker&gt; {
     <span class="kw">pub fn </span>on_change&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, NaiveTime),
+        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, NaiveTime),
     {
         <span class="self">self</span>.modify(|timepicker: <span class="kw-2">&amp;mut </span>Timepicker| timepicker.on_change = <span class="prelude-val">Some</span>(Box::new(callback)))
     }
@@ -796,7 +797,7 @@
                 Spinbox::custom(
                     cx,
                     |cx| {
-                        Textbox::new(cx, lens.map(|time| <span class="macro">format!</span>(<span class="string">&quot;{:#02}&quot;</span>, time.hour12().<span class="number">1</span>)))
+                        Textbox::new(cx, lens.map(|time| <span class="macro">format!</span>(<span class="string">"{:#02}"</span>, time.hour12().<span class="number">1</span>)))
                             .on_submit(|cx, text, <span class="kw">_</span>| {
                                 <span class="kw">if let </span><span class="prelude-val">Ok</span>(parsed) = text.parse::&lt;u32&gt;() {
                                     <span class="kw">if </span>parsed &lt; <span class="number">24 </span>{
@@ -816,14 +817,14 @@
                     cx.emit(TimepickerEvent::ChangePage(AnalogTimepickerPage::Hours))
                 });
                 VStack::new(cx, |cx| {
-                    Element::new(cx).class(<span class="string">&quot;digitaltimepicker-dot&quot;</span>);
-                    Element::new(cx).class(<span class="string">&quot;digitaltimepicker-dot&quot;</span>);
+                    Element::new(cx).class(<span class="string">"digitaltimepicker-dot"</span>);
+                    Element::new(cx).class(<span class="string">"digitaltimepicker-dot"</span>);
                 })
-                .class(<span class="string">&quot;digitaltimepicker-dots-wrapper&quot;</span>);
+                .class(<span class="string">"digitaltimepicker-dots-wrapper"</span>);
                 Spinbox::custom(
                     cx,
                     |cx| {
-                        Textbox::new(cx, lens.map(|time| <span class="macro">format!</span>(<span class="string">&quot;{:#02}&quot;</span>, time.minute())))
+                        Textbox::new(cx, lens.map(|time| <span class="macro">format!</span>(<span class="string">"{:#02}"</span>, time.minute())))
                             .on_submit(|cx, text, <span class="kw">_</span>| {
                                 <span class="kw">if let </span><span class="prelude-val">Ok</span>(parsed) = text.parse::&lt;u32&gt;() {
                                     <span class="kw">if </span>parsed &lt; <span class="number">60 </span>{
@@ -850,27 +851,27 @@
                             Label::new(
                                 cx,
                                 lens.map(|time| <span class="kw">match </span>time.hour12().<span class="number">0 </span>{
-                                    <span class="bool-val">false </span>=&gt; <span class="string">&quot;AM&quot;</span>,
-                                    <span class="bool-val">true </span>=&gt; <span class="string">&quot;PM&quot;</span>,
+                                    <span class="bool-val">false </span>=&gt; <span class="string">"AM"</span>,
+                                    <span class="bool-val">true </span>=&gt; <span class="string">"PM"</span>,
                                 }),
                             )
                         },
                     );
                 })
-                .class(<span class="string">&quot;digitaltimepicker-button-wrapper&quot;</span>);
+                .class(<span class="string">"digitaltimepicker-button-wrapper"</span>);
             })
             .layout_type(LayoutType::Row)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, L, T&gt; Handle&lt;<span class="lifetime">&#39;a</span>, DigitalTimepicker&lt;L, T&gt;&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, L, T&gt; Handle&lt;<span class="lifetime">'a</span>, DigitalTimepicker&lt;L, T&gt;&gt;
 <span class="kw">where
     </span>L: Lens&lt;Target = T&gt;,
     T: Timelike + Data,
 {
     <span class="kw">pub fn </span>on_change&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, NaiveTime),
+        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, NaiveTime),
     {
         <span class="self">self</span>.modify(|timepicker: <span class="kw-2">&amp;mut </span>DigitalTimepicker&lt;L, T&gt;| {
             timepicker.on_change = <span class="prelude-val">Some</span>(Box::new(callback))
@@ -883,8 +884,8 @@
     </span>L: Lens&lt;Target = T&gt;,
     T: Timelike + Data,
 {
-    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
-        <span class="prelude-val">Some</span>(<span class="string">&quot;digitaltimepicker&quot;</span>)
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+        <span class="prelude-val">Some</span>(<span class="string">"digitaltimepicker"</span>)
     }
 
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
@@ -1086,7 +1087,7 @@
                                 // ])
                                 </span>.rotate(Angle::Deg(angle))
                                 .position_type(PositionType::SelfDirected)
-                                .class(<span class="string">&quot;clock-hand&quot;</span>);
+                                .class(<span class="string">"clock-hand"</span>);
                         });
 
                         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">12 </span>{
@@ -1105,7 +1106,7 @@
                                 </span>.rotate(Angle::Deg(<span class="number">30.0 </span>* (i + <span class="number">1</span>) <span class="kw">as </span>f32))
                                 .position_type(PositionType::SelfDirected)
                                 .on_press(<span class="kw">move </span>|ex| ex.emit(AnalogTimepickerEvent::SetHours(i + <span class="number">1</span>)))
-                                .class(<span class="string">&quot;marker&quot;</span>)
+                                .class(<span class="string">"marker"</span>)
                                 .checked(lens.map(<span class="kw">move </span>|time| time.hour12().<span class="number">1 </span>== (i + <span class="number">1</span>) <span class="kw">as </span>u32));
                         }
                     }
@@ -1122,7 +1123,7 @@
                             </span>Element::new(cx)
                                 .rotate(Angle::Deg(angle))
                                 .position_type(PositionType::SelfDirected)
-                                .class(<span class="string">&quot;clock-hand&quot;</span>);
+                                .class(<span class="string">"clock-hand"</span>);
                         });
 
                         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">12 </span>{
@@ -1132,13 +1133,13 @@
                             // transform
                             //     .premultiply(&amp;Transform2D::identity().rotate(-30.0 * i as f32));
 
-                            </span>Label::new(cx, <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{:#02}&quot;</span>, i * <span class="number">5</span>))
+                            </span>Label::new(cx, <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"{:#02}"</span>, i * <span class="number">5</span>))
                                 .rotate(Angle::Deg(<span class="number">30.0 </span>* i <span class="kw">as </span>f32))
                                 .position_type(PositionType::SelfDirected)
                                 .on_press(<span class="kw">move </span>|ex| {
                                     ex.emit(AnalogTimepickerEvent::SetMinutes(i * <span class="number">5</span>))
                                 })
-                                .class(<span class="string">&quot;marker&quot;</span>)
+                                .class(<span class="string">"marker"</span>)
                                 .checked(lens.map(<span class="kw">move </span>|time| time.minute() / <span class="number">5 </span>== i <span class="kw">as </span>u32));
                         }
                     }
@@ -1152,25 +1153,25 @@
                             Element::new(cx)
                                 .rotate(Angle::Deg(angle))
                                 .position_type(PositionType::SelfDirected)
-                                .class(<span class="string">&quot;clock-hand&quot;</span>);
+                                .class(<span class="string">"clock-hand"</span>);
                         });
 
                         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">12 </span>{
-                            Label::new(cx, <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{:#02}&quot;</span>, i * <span class="number">5</span>))
+                            Label::new(cx, <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"{:#02}"</span>, i * <span class="number">5</span>))
                                 .rotate(Angle::Deg(<span class="number">30.0 </span>* i <span class="kw">as </span>f32))
                                 .position_type(PositionType::SelfDirected)
                                 .on_press(<span class="kw">move </span>|ex| {
                                     ex.emit(AnalogTimepickerEvent::SetSeconds(i * <span class="number">5</span>))
                                 })
-                                .class(<span class="string">&quot;marker&quot;</span>)
+                                .class(<span class="string">"marker"</span>)
                                 .checked(lens.map(<span class="kw">move </span>|time| time.second() / <span class="number">5 </span>== i <span class="kw">as </span>u32));
                         }
                     }
                 });
 
-                Element::new(cx).position_type(PositionType::SelfDirected).class(<span class="string">&quot;center-dot&quot;</span>);
+                Element::new(cx).position_type(PositionType::SelfDirected).class(<span class="string">"center-dot"</span>);
             })
-            .class(<span class="string">&quot;clock-face&quot;</span>);
+            .class(<span class="string">"clock-face"</span>);
 
             <span class="comment">// Binding::new(cx, Self::show_controls, move |cx, show_controls| {
             //     if show_controls.get(cx) {
@@ -1189,7 +1190,7 @@
             //                         },
             //                         |cx| {
             //                             Label::new(cx, hour).hoverable(false);
-            //                             Element::new(cx).class(&quot;indicator&quot;)
+            //                             Element::new(cx).class("indicator")
             //                         },
             //                     )
             //                     .checked(
@@ -1204,7 +1205,7 @@
             //                         },
             //                         |cx| {
             //                             Label::new(cx, minute).hoverable(false);
-            //                             Element::new(cx).class(&quot;indicator&quot;)
+            //                             Element::new(cx).class("indicator")
             //                         },
             //                     )
             //                     .checked(
@@ -1219,33 +1220,33 @@
             //                         },
             //                         |cx| {
             //                             Label::new(cx, second).hoverable(false);
-            //                             Element::new(cx).class(&quot;indicator&quot;)
+            //                             Element::new(cx).class("indicator")
             //                         },
             //                     )
             //                     .checked(
             //                         Self::page.map(|page| page == &amp;AnalogTimepickerPage::Seconds),
             //                     );
             //                 })
-            //                 .class(&quot;time-selector-wrapper&quot;);
+            //                 .class("time-selector-wrapper");
 
             //                 Button::new(
             //                     cx,
             //                     |ex| ex.emit(AnalogTimepickerEvent::ToggleAMOrPM),
             //                     |cx| {
-            //                         Label::new(cx, &quot;AM&quot;).bind(lens, |h, lens| {
+            //                         Label::new(cx, "AM").bind(lens, |h, lens| {
             //                             if lens.get(h.cx).hour12().0 {
-            //                                 h.text(&quot;PM&quot;);
+            //                                 h.text("PM");
             //                             } else {
-            //                                 h.text(&quot;AM&quot;);
+            //                                 h.text("AM");
             //                             }
             //                         })
             //                     },
             //                 )
-            //                 .class(&quot;accent&quot;);
+            //                 .class("accent");
             //             })
             //         })
             //         .position_type(PositionType::SelfDirected)
-            //         .class(&quot;controls-wrapper&quot;);
+            //         .class("controls-wrapper");
             //     }
             // })
         </span>})
@@ -1257,8 +1258,8 @@
     </span>L: Lens&lt;Target = T&gt;,
     T: Timelike + Data + Copy,
 {
-    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
-        <span class="prelude-val">Some</span>(<span class="string">&quot;analogtimepicker&quot;</span>)
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+        <span class="prelude-val">Some</span>(<span class="string">"analogtimepicker"</span>)
     }
 
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
@@ -1352,14 +1353,14 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;v</span>, L, T&gt; Handle&lt;<span class="lifetime">&#39;v</span>, AnalogTimepicker&lt;L, T&gt;&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'v</span>, L, T&gt; Handle&lt;<span class="lifetime">'v</span>, AnalogTimepicker&lt;L, T&gt;&gt;
 <span class="kw">where
     </span>L: Lens&lt;Target = T&gt;,
     T: Timelike + Data + Copy,
 {
     <span class="kw">pub fn </span>on_change&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, NaiveTime),
+        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, NaiveTime),
     {
         <span class="self">self</span>.modify(|timepicker: <span class="kw-2">&amp;mut </span>AnalogTimepicker&lt;L, T&gt;| {
             timepicker.on_change = <span class="prelude-val">Some</span>(Box::new(callback))

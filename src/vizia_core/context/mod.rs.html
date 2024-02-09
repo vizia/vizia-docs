@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ac92e1bbe349e143.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0 (07dca489a 2024-02-04)" data-channel="1.76.0" data-search-js="search-2b6ce74ff89ae146.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../../static.files/src-script-39ed315d46fb705f.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-305769736d49e732.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-feafe1bb7466e4bd.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1026,9 +1027,9 @@
 <span class="kw">use </span>std::sync::Mutex;
 <span class="kw">use </span>vizia_id::IdManager;
 
-<span class="attr">#[cfg(all(feature = <span class="string">&quot;clipboard&quot;</span>, feature = <span class="string">&quot;x11&quot;</span>))]
+<span class="attr">#[cfg(all(feature = <span class="string">"clipboard"</span>, feature = <span class="string">"x11"</span>))]
 </span><span class="kw">use </span>copypasta::ClipboardContext;
-<span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
 </span><span class="kw">use </span>copypasta::{nop_clipboard::NopClipboardContext, ClipboardProvider};
 <span class="kw">use </span>cosmic_text::{fontdb::Database, FamilyOwned};
 <span class="kw">use </span>fnv::FnvHashMap;
@@ -1045,7 +1046,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::cache::CachedData;
 <span class="kw">use </span><span class="kw">crate</span>::environment::{Environment, ThemeMode};
 <span class="kw">use </span><span class="kw">crate</span>::events::{TimedEvent, TimedEventHandle, Timer, TimerState, ViewHandler};
-<span class="attr">#[cfg(feature = <span class="string">&quot;embedded_fonts&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"embedded_fonts"</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::fonts;
 
 <span class="kw">use </span><span class="kw">crate</span>::fonts::TABLER_ICONS;
@@ -1058,9 +1059,9 @@
 <span class="kw">use </span>vizia_storage::ChildIterator;
 <span class="kw">use </span>vizia_storage::TreeExt;
 
-<span class="kw">static </span>DEFAULT_LAYOUT: <span class="kw-2">&amp;</span>str = <span class="macro">include_str!</span>(<span class="string">&quot;../../resources/themes/default_layout.css&quot;</span>);
-<span class="kw">static </span>DARK_THEME: <span class="kw-2">&amp;</span>str = <span class="macro">include_str!</span>(<span class="string">&quot;../../resources/themes/dark_theme.css&quot;</span>);
-<span class="kw">static </span>LIGHT_THEME: <span class="kw-2">&amp;</span>str = <span class="macro">include_str!</span>(<span class="string">&quot;../../resources/themes/light_theme.css&quot;</span>);
+<span class="kw">static </span>DEFAULT_LAYOUT: <span class="kw-2">&amp;</span>str = <span class="macro">include_str!</span>(<span class="string">"../../resources/themes/default_layout.css"</span>);
+<span class="kw">static </span>DARK_THEME: <span class="kw-2">&amp;</span>str = <span class="macro">include_str!</span>(<span class="string">"../../resources/themes/dark_theme.css"</span>);
+<span class="kw">static </span>LIGHT_THEME: <span class="kw-2">&amp;</span>str = <span class="macro">include_str!</span>(<span class="string">"../../resources/themes/light_theme.css"</span>);
 
 <span class="kw">type </span>Views = FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;;
 <span class="kw">type </span>Models = FnvHashMap&lt;Entity, ModelDataStore&gt;;
@@ -1070,7 +1071,7 @@
     <span class="kw">pub static </span>MAP_MANAGER: RefCell&lt;IdManager&lt;MapId&gt;&gt; = RefCell::new(IdManager::new());
     <span class="comment">// Store of mapping functions used for lens maps.
     </span><span class="kw">pub static </span>MAPS: RefCell&lt;HashMap&lt;MapId, (Entity, Box&lt;<span class="kw">dyn </span>Any&gt;)&gt;&gt; = RefCell::new(HashMap::new());
-    <span class="comment">// The &#39;current&#39; entity which is used for storing lens map mapping functions as per above.
+    <span class="comment">// The 'current' entity which is used for storing lens map mapping functions as per above.
     </span><span class="kw">pub static </span>CURRENT: RefCell&lt;Entity&gt; = RefCell::new(Entity::root());
 }
 
@@ -1113,7 +1114,7 @@
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) event_proxy: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>EventProxy&gt;&gt;,
 
-    <span class="doccomment">/// The window&#39;s size in logical pixels, before `user_scale_factor` gets applied to it. If this
+    <span class="doccomment">/// The window's size in logical pixels, before `user_scale_factor` gets applied to it. If this
     /// value changed during a frame then the window will be resized and a
     /// [`WindowEvent::GeometryChanged`] will be emitted.
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) window_size: WindowSize,
@@ -1124,7 +1125,7 @@
     /// [`WindowDescription::user_scale_factor`](vizia_window::WindowDescription::user_scale_factor).
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) user_scale_factor: f64,
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) clipboard: Box&lt;<span class="kw">dyn </span>ClipboardProvider&gt;,
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) click_time: Instant,
@@ -1154,7 +1155,7 @@
         db.load_system_fonts();
 
         <span class="comment">// Add default fonts if the feature is enabled.
-        </span><span class="attr">#[cfg(feature = <span class="string">&quot;embedded_fonts&quot;</span>)]
+        </span><span class="attr">#[cfg(feature = <span class="string">"embedded_fonts"</span>)]
         </span>{
             db.load_font_data(Vec::from(fonts::ROBOTO_REGULAR));
             db.load_font_data(Vec::from(fonts::ROBOTO_BOLD));
@@ -1193,7 +1194,7 @@
             cursor_icon_locked: <span class="bool-val">false</span>,
             resource_manager: ResourceManager::new(),
             text_context: TextContext::new_from_locale_and_db(
-                sys_locale::get_locale().unwrap_or_else(|| <span class="string">&quot;en-US&quot;</span>.to_owned()),
+                sys_locale::get_locale().unwrap_or_else(|| <span class="string">"en-US"</span>.to_owned()),
                 db,
             ),
 
@@ -1204,15 +1205,15 @@
             window_size,
             user_scale_factor,
 
-            <span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+            <span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
             </span>clipboard: {
-                <span class="attr">#[cfg(feature = <span class="string">&quot;x11&quot;</span>)]
+                <span class="attr">#[cfg(feature = <span class="string">"x11"</span>)]
                 </span><span class="kw">if let </span><span class="prelude-val">Ok</span>(context) = ClipboardContext::new() {
                     Box::new(context)
                 } <span class="kw">else </span>{
                     Box::new(NopClipboardContext::new().unwrap())
                 }
-                <span class="attr">#[cfg(not(feature = <span class="string">&quot;x11&quot;</span>))]
+                <span class="attr">#[cfg(not(feature = <span class="string">"x11"</span>))]
                 </span>Box::new(NopClipboardContext::new().unwrap())
             },
             click_time: Instant::now(),
@@ -1234,21 +1235,21 @@
         </span>Environment::new(<span class="kw-2">&amp;mut </span>result).build(<span class="kw-2">&amp;mut </span>result);
 
         result.entity_manager.create();
-        result.set_default_font(<span class="kw-2">&amp;</span>[<span class="string">&quot;Roboto&quot;</span>]);
+        result.set_default_font(<span class="kw-2">&amp;</span>[<span class="string">"Roboto"</span>]);
 
         result.style.role.insert(Entity::root(), Role::Window);
 
         result
     }
 
-    <span class="doccomment">/// The &quot;current&quot; entity, generally the entity which is currently being built or the entity
+    <span class="doccomment">/// The "current" entity, generally the entity which is currently being built or the entity
     /// which is currently having an event dispatched to it.
     </span><span class="kw">pub fn </span>current(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
         <span class="self">self</span>.current
     }
 
-    <span class="doccomment">/// Set the current entity. This is useful in user code when you&#39;re performing black magic and
-    /// want to trick other parts of the code into thinking you&#39;re processing some other part of the
+    <span class="doccomment">/// Set the current entity. This is useful in user code when you're performing black magic and
+    /// want to trick other parts of the code into thinking you're processing some other part of the
     /// tree.
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_current(<span class="kw-2">&amp;mut </span><span class="self">self</span>, e: Entity) {
         <span class="self">self</span>.current = e;
@@ -1270,7 +1271,7 @@
         <span class="self">self</span>.data::&lt;Environment&gt;().unwrap()
     }
 
-    <span class="doccomment">/// The window&#39;s size in logical pixels, before
+    <span class="doccomment">/// The window's size in logical pixels, before
     /// [`user_scale_factor()`][Self::user_scale_factor()] gets applied to it. If this value changed
     /// during a frame then the window will be resized and a [`WindowEvent::GeometryChanged`] will be
     /// emitted.
@@ -1316,12 +1317,12 @@
     ) {
         <span class="kw">if </span>enabled {
             <span class="macro">debug!</span>(
-            <span class="string">&quot;Focus changed to {:?} parent: {:?}, view: {}, posx: {}, posy: {} width: {} height: {}&quot;</span>,
+            <span class="string">"Focus changed to {:?} parent: {:?}, view: {}, posx: {}, posy: {} width: {} height: {}"</span>,
             focused,
             <span class="self">self</span>.tree.get_parent(focused),
             <span class="self">self</span>.views
                 .get(<span class="kw-2">&amp;</span>focused)
-                .map_or(<span class="string">&quot;&lt;None&gt;&quot;</span>, |view| view.element().unwrap_or(<span class="string">&quot;&lt;Unnamed&gt;&quot;</span>)),
+                .map_or(<span class="string">"&lt;None&gt;"</span>, |view| view.element().unwrap_or(<span class="string">"&lt;Unnamed&gt;"</span>)),
             <span class="self">self</span>.cache.get_posx(focused),
             <span class="self">self</span>.cache.get_posy(focused),
             <span class="self">self</span>.cache.get_width(focused),
@@ -1482,7 +1483,7 @@
                 <span class="self">self</span>.stop_timer(timer);
             }
 
-            <span class="self">self</span>.tree.remove(<span class="kw-2">*</span>entity).expect(<span class="string">&quot;&quot;</span>);
+            <span class="self">self</span>.tree.remove(<span class="kw-2">*</span>entity).expect(<span class="string">""</span>);
             <span class="self">self</span>.cache.remove(<span class="kw-2">*</span>entity);
             <span class="self">self</span>.style.remove(<span class="kw-2">*</span>entity);
             <span class="self">self</span>.data.remove(entity);
@@ -1500,7 +1501,7 @@
     </span><span class="kw">pub fn </span>add_listener&lt;F, W&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, listener: F)
     <span class="kw">where
         </span>W: View,
-        F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>W, <span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event),
+        F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>W, <span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event),
     {
         <span class="self">self</span>.listeners.insert(
             <span class="self">self</span>.current,
@@ -1519,7 +1520,7 @@
     /// view, use `add_listener`.
     </span><span class="kw">pub fn </span>add_global_listener&lt;F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, listener: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event),
+        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event),
     {
         <span class="self">self</span>.global_listeners.push(Box::new(listener));
     }
@@ -1553,13 +1554,13 @@
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>add_theme(<span class="kw-2">&amp;mut </span><span class="self">self</span>, theme: <span class="kw-2">&amp;</span>str) {
         <span class="self">self</span>.resource_manager.themes.push(theme.to_owned());
 
-        EventContext::new(<span class="self">self</span>).reload_styles().expect(<span class="string">&quot;Failed to reload styles&quot;</span>);
+        EventContext::new(<span class="self">self</span>).reload_styles().expect(<span class="string">"Failed to reload styles"</span>);
     }
 
     <span class="kw">pub fn </span>add_stylesheet(<span class="kw-2">&amp;mut </span><span class="self">self</span>, style: <span class="kw">impl </span>IntoCssStr) -&gt; <span class="prelude-ty">Result</span>&lt;(), std::io::Error&gt; {
         <span class="self">self</span>.resource_manager.styles.push(Box::new(style));
 
-        EventContext::new(<span class="self">self</span>).reload_styles().expect(<span class="string">&quot;Failed to reload styles&quot;</span>);
+        EventContext::new(<span class="self">self</span>).reload_styles().expect(<span class="string">"Failed to reload styles"</span>);
 
         <span class="prelude-val">Ok</span>(())
     }
@@ -1570,7 +1571,7 @@
 
         <span class="self">self</span>.add_theme(DEFAULT_LAYOUT);
         <span class="kw">if </span>!<span class="self">self</span>.ignore_default_theme {
-            <span class="kw">let </span>environment = <span class="self">self</span>.data::&lt;Environment&gt;().expect(<span class="string">&quot;Failed to get environment&quot;</span>);
+            <span class="kw">let </span>environment = <span class="self">self</span>.data::&lt;Environment&gt;().expect(<span class="string">"Failed to get environment"</span>);
             <span class="kw">match </span>environment.theme.get_current_theme() {
                 ThemeMode::LightMode =&gt; <span class="self">self</span>.add_theme(LIGHT_THEME),
                 ThemeMode::DarkMode =&gt; <span class="self">self</span>.add_theme(DARK_THEME),
@@ -1582,7 +1583,7 @@
         <span class="self">self</span>.style.add_animation(animation)
     }
 
-    <span class="kw">pub fn </span>set_image_loader&lt;F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>ResourceContext, <span class="kw-2">&amp;</span>str)&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, loader: F) {
+    <span class="kw">pub fn </span>set_image_loader&lt;F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>ResourceContext, <span class="kw-2">&amp;</span>str)&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, loader: F) {
         <span class="self">self</span>.resource_manager.image_loader = <span class="prelude-val">Some</span>(Box::new(loader));
     }
 
@@ -1607,15 +1608,15 @@
     /// let timer = cx.add_timer(Duration::from_secs(1), Some(Duration::from_secs(5)), |cx, reason|{
     ///     match reason {
     ///         TimerAction::Start =&gt; {
-    ///             println!(&quot;Start timer&quot;);
+    ///             println!("Start timer");
     ///         }
     ///     
     ///         TimerAction::Tick(delta) =&gt; {
-    ///             println!(&quot;Tick timer: {:?}&quot;, delta);
+    ///             println!("Tick timer: {:?}", delta);
     ///         }
     ///
     ///         TimerAction::Stop =&gt; {
-    ///             println!(&quot;Stop timer&quot;);
+    ///             println!("Stop timer");
     ///         }
     ///     }
     /// });
@@ -1624,7 +1625,7 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         interval: Duration,
         duration: <span class="prelude-ty">Option</span>&lt;Duration&gt;,
-        callback: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, TimerAction) + <span class="lifetime">&#39;static</span>,
+        callback: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, TimerAction) + <span class="lifetime">'static</span>,
     ) -&gt; Timer {
         <span class="kw">let </span>id = Timer(<span class="self">self</span>.timers.len());
         <span class="self">self</span>.timers.push(TimerState {
@@ -1781,7 +1782,7 @@
 
     <span class="kw">pub fn </span>spawn&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, target: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Send + FnOnce(<span class="kw-2">&amp;mut </span>ContextProxy),
+        </span>F: <span class="lifetime">'static </span>+ Send + FnOnce(<span class="kw-2">&amp;mut </span>ContextProxy),
     {
         <span class="kw">let </span><span class="kw-2">mut </span>cxp = ContextProxy {
             current: <span class="self">self</span>.current,
@@ -1818,7 +1819,7 @@
 /// This lets e.g Lens::get be generic over any of these types.
 </span><span class="kw">pub trait </span>DataContext {
     <span class="doccomment">/// Get model/view data from the context. Returns `None` if the data does not exist.
-    </span><span class="kw">fn </span>data&lt;T: <span class="lifetime">&#39;static</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt;;
+    </span><span class="kw">fn </span>data&lt;T: <span class="lifetime">'static</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt;;
 }
 
 <span class="kw">pub trait </span>EmitContext {
@@ -1934,7 +1935,7 @@
 }
 
 <span class="kw">impl </span>DataContext <span class="kw">for </span>Context {
-    <span class="kw">fn </span>data&lt;T: <span class="lifetime">&#39;static</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
+    <span class="kw">fn </span>data&lt;T: <span class="lifetime">'static</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
         <span class="comment">// return data for the static model.
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(t) = &lt;<span class="kw">dyn </span>Any&gt;::downcast_ref::&lt;T&gt;(<span class="kw-2">&amp;</span>()) {
             <span class="kw">return </span><span class="prelude-val">Some</span>(t);

@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/knob.rs`."><title>knob.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/knob.rs`."><title>knob.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ac92e1bbe349e143.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0 (07dca489a 2024-02-04)" data-channel="1.76.0" data-search-js="search-2b6ce74ff89ae146.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../../static.files/src-script-39ed315d46fb705f.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-305769736d49e732.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-feafe1bb7466e4bd.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -603,13 +604,13 @@
                     KnobMode::Continuous,
                 )
                 .value(lens)
-                .class(<span class="string">&quot;knob-track&quot;</span>);
+                .class(<span class="string">"knob-track"</span>);
 
                 HStack::new(cx, |cx| {
-                    Element::new(cx).class(<span class="string">&quot;knob-tick&quot;</span>);
+                    Element::new(cx).class(<span class="string">"knob-tick"</span>);
                 })
                 .rotate(lens.map(|v| Angle::Deg(<span class="kw-2">*</span>v * <span class="number">300.0 </span>- <span class="number">150.0</span>)))
-                .class(<span class="string">&quot;knob-head&quot;</span>);
+                .class(<span class="string">"knob-head"</span>);
             });
         })
         .navigable(<span class="bool-val">true</span>)
@@ -620,9 +621,9 @@
         default_normal: f32,
         lens: L,
         content: F,
-    ) -&gt; Handle&lt;<span class="lifetime">&#39;_</span>, <span class="self">Self</span>&gt;
+    ) -&gt; Handle&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>&gt;
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, L) -&gt; Handle&lt;V&gt;,
+        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, L) -&gt; Handle&lt;V&gt;,
     {
         <span class="self">Self </span>{
             lens,
@@ -647,10 +648,10 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, L: Lens&lt;Target = f32&gt;&gt; Handle&lt;<span class="lifetime">&#39;a</span>, Knob&lt;L&gt;&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, L: Lens&lt;Target = f32&gt;&gt; Handle&lt;<span class="lifetime">'a</span>, Knob&lt;L&gt;&gt; {
     <span class="kw">pub fn </span>on_changing&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, f32),
+        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, f32),
     {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(view) = <span class="self">self</span>.cx.views.get_mut(<span class="kw-2">&amp;</span><span class="self">self</span>.entity) {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(knob) = view.downcast_mut::&lt;Knob&lt;L&gt;&gt;() {
@@ -663,8 +664,8 @@
 }
 
 <span class="kw">impl</span>&lt;L: Lens&lt;Target = f32&gt;&gt; View <span class="kw">for </span>Knob&lt;L&gt; {
-    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
-        <span class="prelude-val">Some</span>(<span class="string">&quot;knob&quot;</span>)
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+        <span class="prelude-val">Some</span>(<span class="string">"knob"</span>)
     }
 
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
@@ -782,8 +783,8 @@
 }
 
 <span class="kw">impl </span>View <span class="kw">for </span>ArcTrack {
-    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
-        <span class="prelude-val">Some</span>(<span class="string">&quot;arctrack&quot;</span>)
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+        <span class="prelude-val">Some</span>(<span class="string">"arctrack"</span>)
     }
 
     <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
@@ -853,7 +854,7 @@
     }
 }
 
-<span class="kw">impl </span>Handle&lt;<span class="lifetime">&#39;_</span>, ArcTrack&gt; {
+<span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, ArcTrack&gt; {
     <span class="kw">pub fn </span>value&lt;L: Lens&lt;Target = f32&gt;&gt;(<span class="self">self</span>, lens: L) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity;
         Binding::new(<span class="self">self</span>.cx, lens, <span class="kw">move </span>|cx, value| {
@@ -883,7 +884,7 @@
 
 <span class="doccomment">/// Adds tickmarks to a knob to show the steps that a knob can be set to.
 /// When added to a knob, the knob should be made smaller (depending on span),
-/// so the knob doesn&#39;t overlap with the tick marks
+/// so the knob doesn't overlap with the tick marks
 </span><span class="kw">pub struct </span>Ticks {
     angle_start: f32,
     angle_end: f32,
@@ -918,8 +919,8 @@
 }
 
 <span class="kw">impl </span>View <span class="kw">for </span>Ticks {
-    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
-        <span class="prelude-val">Some</span>(<span class="string">&quot;ticks&quot;</span>)
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+        <span class="prelude-val">Some</span>(<span class="string">"ticks"</span>)
     }
     <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
         <span class="kw">let </span>opacity = cx.opacity();
@@ -945,7 +946,7 @@
         <span class="comment">// Draw ticks
         </span><span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
         <span class="kw">match </span><span class="self">self</span>.mode {
-            <span class="comment">// can&#39;t really make ticks for a continuous knob
+            <span class="comment">// can't really make ticks for a continuous knob
             </span>KnobMode::Continuous =&gt; <span class="kw">return</span>,
             KnobMode::Discrete(steps) =&gt; {
                 <span class="kw">for </span>n <span class="kw">in </span><span class="number">0</span>..steps {
@@ -1005,8 +1006,8 @@
 }
 
 <span class="kw">impl </span>View <span class="kw">for </span>TickKnob {
-    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
-        <span class="prelude-val">Some</span>(<span class="string">&quot;tickknob&quot;</span>)
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+        <span class="prelude-val">Some</span>(<span class="string">"tickknob"</span>)
     }
     <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
         <span class="kw">let </span>opacity = cx.opacity();
@@ -1063,7 +1064,7 @@
     }
 }
 
-<span class="kw">impl </span>Handle&lt;<span class="lifetime">&#39;_</span>, TickKnob&gt; {
+<span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, TickKnob&gt; {
     <span class="kw">pub fn </span>value&lt;L: Lens&lt;Target = f32&gt;&gt;(<span class="self">self</span>, lens: L) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity;
         Binding::new(<span class="self">self</span>.cx, lens, <span class="kw">move </span>|cx, value| {

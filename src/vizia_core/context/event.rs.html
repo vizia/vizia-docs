@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/event.rs`."><title>event.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/event.rs`."><title>event.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ac92e1bbe349e143.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0 (07dca489a 2024-02-04)" data-channel="1.76.0" data-search-js="search-2b6ce74ff89ae146.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../../static.files/src-script-39ed315d46fb705f.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-305769736d49e732.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-feafe1bb7466e4bd.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1335,7 +1336,7 @@
 <a href="#1335" id="1335">1335</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::collections::{BinaryHeap, HashMap, HashSet, VecDeque};
-<span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
 </span><span class="kw">use </span>std::error::Error;
 <span class="kw">use </span>std::rc::Rc;
 
@@ -1360,7 +1361,7 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::context::EmitContext;
 <span class="kw">use </span><span class="kw">crate</span>::text::TextContext;
-<span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
 </span><span class="kw">use </span>copypasta::ClipboardProvider;
 
 <span class="kw">use super</span>::{DARK_THEME, LIGHT_THEME};
@@ -1397,37 +1398,37 @@
 ///     }
 /// }
 /// ```
-</span><span class="kw">pub struct </span>EventContext&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>EventContext&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub</span>(<span class="kw">crate</span>) current: Entity,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) captured: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Entity,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) focused: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Entity,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) hovered: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Entity,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) triggered: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Entity,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) style: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Style,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) entity_identifiers: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>HashMap&lt;String, Entity&gt;,
-    <span class="kw">pub </span>cache: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>CachedData,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) tree: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Tree&lt;Entity&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>FnvHashMap&lt;Entity, ModelDataStore&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) views: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) captured: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Entity,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) focused: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Entity,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) hovered: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Entity,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) triggered: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Entity,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) style: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Style,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) entity_identifiers: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HashMap&lt;String, Entity&gt;,
+    <span class="kw">pub </span>cache: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>CachedData,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) tree: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Tree&lt;Entity&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) data: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>FnvHashMap&lt;Entity, ModelDataStore&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) views: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) listeners:
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>ViewHandler, <span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event)&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) resource_manager: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>ResourceManager,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) text_context: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>TextContext,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) modifiers: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Modifiers,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) mouse: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>MouseState&lt;Entity&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) event_queue: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>VecDeque&lt;Event&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) event_schedule: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>BinaryHeap&lt;TimedEvent&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) next_event_id: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>usize,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) timers: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Vec&lt;TimerState&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) running_timers: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>BinaryHeap&lt;TimerState&gt;,
-    cursor_icon_locked: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>bool,
-    window_size: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>WindowSize,
-    user_scale_factor: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>f64,
-    <span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
-    </span>clipboard: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Box&lt;<span class="kw">dyn </span>ClipboardProvider&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) event_proxy: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span><span class="kw">crate</span>::context::EventProxy&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) ignore_default_theme: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>bool,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) drop_data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="prelude-ty">Option</span>&lt;DropData&gt;,
+        <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>ViewHandler, <span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event)&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) resource_manager: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>ResourceManager,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) text_context: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>TextContext,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) modifiers: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Modifiers,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) mouse: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>MouseState&lt;Entity&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) event_queue: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>VecDeque&lt;Event&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) event_schedule: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>BinaryHeap&lt;TimedEvent&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) next_event_id: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>usize,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) timers: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Vec&lt;TimerState&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) running_timers: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>BinaryHeap&lt;TimerState&gt;,
+    cursor_icon_locked: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>bool,
+    window_size: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>WindowSize,
+    user_scale_factor: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>f64,
+    <span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
+    </span>clipboard: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Box&lt;<span class="kw">dyn </span>ClipboardProvider&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) event_proxy: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span><span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span><span class="kw">crate</span>::context::EventProxy&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) ignore_default_theme: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>bool,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) drop_data: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span><span class="prelude-ty">Option</span>&lt;DropData&gt;,
 }
 
 <span class="macro">macro_rules! </span>get_length_property {
@@ -1449,8 +1450,8 @@
     };
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; EventContext&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; EventContext&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Context) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             current: cx.current,
             captured: <span class="kw-2">&amp;mut </span>cx.captured,
@@ -1476,7 +1477,7 @@
             cursor_icon_locked: <span class="kw-2">&amp;mut </span>cx.cursor_icon_locked,
             window_size: <span class="kw-2">&amp;mut </span>cx.window_size,
             user_scale_factor: <span class="kw-2">&amp;mut </span>cx.user_scale_factor,
-            <span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+            <span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
             </span>clipboard: <span class="kw-2">&amp;mut </span>cx.clipboard,
             event_proxy: <span class="kw-2">&amp;mut </span>cx.event_proxy,
             ignore_default_theme: <span class="kw-2">&amp;</span>cx.ignore_default_theme,
@@ -1484,7 +1485,7 @@
         }
     }
 
-    <span class="kw">pub fn </span>new_with_current(cx: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Context, current: Entity) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>new_with_current(cx: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Context, current: Entity) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             current,
             captured: <span class="kw-2">&amp;mut </span>cx.captured,
@@ -1510,7 +1511,7 @@
             cursor_icon_locked: <span class="kw-2">&amp;mut </span>cx.cursor_icon_locked,
             window_size: <span class="kw-2">&amp;mut </span>cx.window_size,
             user_scale_factor: <span class="kw-2">&amp;mut </span>cx.user_scale_factor,
-            <span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+            <span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
             </span>clipboard: <span class="kw-2">&amp;mut </span>cx.clipboard,
             event_proxy: <span class="kw-2">&amp;mut </span>cx.event_proxy,
             ignore_default_theme: <span class="kw-2">&amp;</span>cx.ignore_default_theme,
@@ -1731,7 +1732,7 @@
     </span><span class="kw">pub fn </span>add_listener&lt;F, W&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, listener: F)
     <span class="kw">where
         </span>W: View,
-        F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>W, <span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event),
+        F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>W, <span class="kw-2">&amp;mut </span>EventContext, <span class="kw-2">&amp;mut </span>Event),
     {
         <span class="self">self</span>.listeners.insert(
             <span class="self">self</span>.current,
@@ -1968,19 +1969,19 @@
     <span class="doccomment">/// Get the contents of the system clipboard.
     ///
     /// This may fail for a variety of backend-specific reasons.
-    </span><span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
-    </span><span class="kw">pub fn </span>get_clipboard(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;String, Box&lt;<span class="kw">dyn </span>Error + Send + Sync + <span class="lifetime">&#39;static</span>&gt;&gt; {
+    </span><span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
+    </span><span class="kw">pub fn </span>get_clipboard(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;String, Box&lt;<span class="kw">dyn </span>Error + Send + Sync + <span class="lifetime">'static</span>&gt;&gt; {
         <span class="self">self</span>.clipboard.get_contents()
     }
 
     <span class="doccomment">/// Set the contents of the system clipboard.
     ///
     /// This may fail for a variety of backend-specific reasons.
-    </span><span class="attr">#[cfg(feature = <span class="string">&quot;clipboard&quot;</span>)]
+    </span><span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
     </span><span class="kw">pub fn </span>set_clipboard(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         text: String,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error + Send + Sync + <span class="lifetime">&#39;static</span>&gt;&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error + Send + Sync + <span class="lifetime">'static</span>&gt;&gt; {
         <span class="self">self</span>.clipboard.set_contents(text)
     }
 
@@ -1991,7 +1992,7 @@
     /// # use vizia_core::prelude::*;
     /// # let context = &amp;mut Context::default();
     /// # let mut cx = &amp;mut EventContext::new(context);
-    /// cx.toggle_class(&quot;foo&quot;, true);
+    /// cx.toggle_class("foo", true);
     /// ```
     </span><span class="kw">pub fn </span>toggle_class(<span class="kw-2">&amp;mut </span><span class="self">self</span>, class_name: <span class="kw-2">&amp;</span>str, applied: bool) {
         <span class="kw">let </span>current = <span class="self">self</span>.current();
@@ -2079,7 +2080,7 @@
     <span class="doccomment">/// Spawns a thread and provides a [ContextProxy] for sending events back to the main thread.
     </span><span class="kw">pub fn </span>spawn&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, target: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Send + FnOnce(<span class="kw-2">&amp;mut </span>ContextProxy),
+        </span>F: <span class="lifetime">'static </span>+ Send + FnOnce(<span class="kw-2">&amp;mut </span>ContextProxy),
     {
         <span class="kw">let </span><span class="kw-2">mut </span>cxp = ContextProxy {
             current: <span class="self">self</span>.current,
@@ -2099,7 +2100,7 @@
         }
     }
 
-    <span class="doccomment">/// Returns the window&#39;s size in logical pixels, before
+    <span class="doccomment">/// Returns the window's size in logical pixels, before
     /// [`user_scale_factor()`][Self::user_scale_factor()] gets applied to it. If this value changed
     /// during a frame then the window will be resized and a [`WindowEvent::GeometryChanged`] will
     /// be emitted.
@@ -2465,15 +2466,15 @@
     /// let timer = cx.add_timer(Duration::from_secs(1), Some(Duration::from_secs(5)), |cx, reason|{
     ///     match reason {
     ///         TimerAction::Start =&gt; {
-    ///             println!(&quot;Start timer&quot;);
+    ///             println!("Start timer");
     ///         }
     ///     
     ///         TimerAction::Tick(delta) =&gt; {
-    ///             println!(&quot;Tick timer: {:?}&quot;, delta);
+    ///             println!("Tick timer: {:?}", delta);
     ///         }
     ///
     ///         TimerAction::Stop =&gt; {
-    ///             println!(&quot;Stop timer&quot;);
+    ///             println!("Stop timer");
     ///         }
     ///     }
     /// });
@@ -2482,7 +2483,7 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         interval: Duration,
         duration: <span class="prelude-ty">Option</span>&lt;Duration&gt;,
-        callback: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, TimerAction) + <span class="lifetime">&#39;static</span>,
+        callback: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, TimerAction) + <span class="lifetime">'static</span>,
     ) -&gt; Timer {
         <span class="kw">let </span>id = Timer(<span class="self">self</span>.timers.len());
         <span class="self">self</span>.timers.push(TimerState {
@@ -2572,8 +2573,8 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DataContext <span class="kw">for </span>EventContext&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">fn </span>data&lt;T: <span class="lifetime">&#39;static</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DataContext <span class="kw">for </span>EventContext&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">fn </span>data&lt;T: <span class="lifetime">'static</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
         <span class="comment">// Return data for the static model.
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(t) = &lt;<span class="kw">dyn </span>Any&gt;::downcast_ref::&lt;T&gt;(<span class="kw-2">&amp;</span>()) {
             <span class="kw">return </span><span class="prelude-val">Some</span>(t);
@@ -2599,7 +2600,7 @@
     </span>}
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; EmitContext <span class="kw">for </span>EventContext&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; EmitContext <span class="kw">for </span>EventContext&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">fn </span>emit&lt;M: Any + Send&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M) {
         <span class="self">self</span>.event_queue.push_back(
             Event::new(message)
@@ -2659,7 +2660,7 @@
     </span><span class="kw">fn </span>first_child(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity;
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TreeProps <span class="kw">for </span>EventContext&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TreeProps <span class="kw">for </span>EventContext&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
         <span class="self">self</span>.tree.get_layout_parent(<span class="self">self</span>.current).unwrap()
     }

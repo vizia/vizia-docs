@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_winit/src/application.rs`."><title>application.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vizia_winit" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_winit/src/application.rs`."><title>application.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-ac92e1bbe349e143.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vizia_winit" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0 (07dca489a 2024-02-04)" data-channel="1.76.0" data-search-js="search-2b6ce74ff89ae146.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-39ed315d46fb705f.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-305769736d49e732.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-feafe1bb7466e4bd.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -707,27 +708,27 @@
     convert::{scan_code_to_code, virtual_key_code_to_code, virtual_key_code_to_key},
     window::Window,
 };
-<span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+<span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
 </span><span class="kw">use </span>accesskit::{Action, NodeBuilder, TreeUpdate};
-<span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+<span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
 </span><span class="kw">use </span>accesskit_winit;
 <span class="kw">use </span>std::cell::RefCell;
 <span class="kw">use </span>vizia_core::backend::<span class="kw-2">*</span>;
-<span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+<span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
 </span><span class="kw">use </span>vizia_core::context::EventProxy;
 <span class="kw">use </span>vizia_core::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>vizia_id::GenerationalId;
 <span class="kw">use </span>vizia_window::Position;
 <span class="kw">use </span>winit::event_loop::EventLoopBuilder;
 <span class="attr">#[cfg(all(
-    feature = <span class="string">&quot;clipboard&quot;</span>,
-    feature = <span class="string">&quot;wayland&quot;</span>,
+    feature = <span class="string">"clipboard"</span>,
+    feature = <span class="string">"wayland"</span>,
     any(
-        target_os = <span class="string">&quot;linux&quot;</span>,
-        target_os = <span class="string">&quot;dragonfly&quot;</span>,
-        target_os = <span class="string">&quot;freebsd&quot;</span>,
-        target_os = <span class="string">&quot;netbsd&quot;</span>,
-        target_os = <span class="string">&quot;openbsd&quot;
+        target_os = <span class="string">"linux"</span>,
+        target_os = <span class="string">"dragonfly"</span>,
+        target_os = <span class="string">"freebsd"</span>,
+        target_os = <span class="string">"netbsd"</span>,
+        target_os = <span class="string">"openbsd"
     </span>)
 ))]
 </span><span class="kw">use </span>winit::platform::wayland::WindowExtWayland;
@@ -736,17 +737,17 @@
     event_loop::{ControlFlow, EventLoop},
 };
 
-<span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+<span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
 </span><span class="kw">use </span>winit::event_loop::EventLoopProxy;
 
 <span class="attr">#[derive(Debug)]
 </span><span class="kw">pub enum </span>UserEvent {
     Event(Event),
-    <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+    <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
     </span>AccessKitActionRequest(accesskit_winit::ActionRequestEvent),
 }
 
-<span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+<span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
 </span><span class="kw">impl </span>From&lt;accesskit_winit::ActionRequestEvent&gt; <span class="kw">for </span>UserEvent {
     <span class="kw">fn </span>from(action_request_event: accesskit_winit::ActionRequestEvent) -&gt; <span class="self">Self </span>{
         UserEvent::AccessKitActionRequest(action_request_event)
@@ -783,10 +784,10 @@
     should_poll: bool,
 }
 
-<span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+<span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
 </span><span class="kw">pub struct </span>WinitEventProxy(EventLoopProxy&lt;UserEvent&gt;);
 
-<span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+<span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
 </span><span class="kw">impl </span>EventProxy <span class="kw">for </span>WinitEventProxy {
     <span class="kw">fn </span>send(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Event) -&gt; <span class="prelude-ty">Result</span>&lt;(), ()&gt; {
         <span class="self">self</span>.<span class="number">0</span>.send_event(UserEvent::Event(event)).map_err(|<span class="kw">_</span>| ())
@@ -800,20 +801,20 @@
 <span class="kw">impl </span>Application {
     <span class="kw">pub fn </span>new&lt;F&gt;(content: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ FnOnce(<span class="kw-2">&amp;mut </span>Context),
+        </span>F: <span class="lifetime">'static </span>+ FnOnce(<span class="kw-2">&amp;mut </span>Context),
     {
         <span class="comment">// wasm + debug: send panics to console
-        </span><span class="attr">#[cfg(all(debug_assertions, target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+        </span><span class="attr">#[cfg(all(debug_assertions, target_arch = <span class="string">"wasm32"</span>))]
         </span>console_error_panic_hook::set_once();
 
         <span class="comment">// TODO: User scale factors and window resizing has not been implement for winit
-        // TODO: Changing the scale factor doesn&#39;t work for winit anyways since winit doesn&#39;t let
-        //       you resize the window, so there&#39;s no mutator for that at he moment
+        // TODO: Changing the scale factor doesn't work for winit anyways since winit doesn't let
+        //       you resize the window, so there's no mutator for that at he moment
         </span><span class="attr">#[allow(unused_mut)]
         </span><span class="kw">let </span><span class="kw-2">mut </span>context = Context::new(WindowSize::new(<span class="number">1</span>, <span class="number">1</span>), <span class="number">1.0</span>);
 
         <span class="kw">let </span>event_loop = EventLoopBuilder::with_user_event().build();
-        <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+        <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
         </span>{
             <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(<span class="kw-2">&amp;mut </span>context);
             <span class="kw">let </span>event_proxy_obj = event_loop.create_proxy();
@@ -849,7 +850,7 @@
 
     <span class="doccomment">/// Takes a closure which will be called at the end of every loop of the application.
     ///
-    /// The callback provides a place to run &#39;idle&#39; processing and happens at the end of each loop but before drawing.
+    /// The callback provides a place to run 'idle' processing and happens at the end of each loop but before drawing.
     /// If the callback pushes events into the queue in state then the event loop will re-run. Care must be taken not to
     /// push events into the queue every time the callback runs unless this is intended.
     ///
@@ -867,7 +868,7 @@
     /// })
     /// .run();
     /// ```
-    </span><span class="kw">pub fn </span>on_idle&lt;F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context)&gt;(<span class="kw-2">mut </span><span class="self">self</span>, callback: F) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub fn </span>on_idle&lt;F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context)&gt;(<span class="kw-2">mut </span><span class="self">self</span>, callback: F) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.on_idle = <span class="prelude-val">Some</span>(Box::new(callback));
 
         <span class="self">self
@@ -887,11 +888,11 @@
         <span class="kw">let </span>(window, canvas) = Window::new(<span class="kw-2">&amp;</span>event_loop, <span class="kw-2">&amp;</span><span class="self">self</span>.window_description);
 
         <span class="comment">// On windows cloak (hide) the window initially, we later reveal it after the first draw.
-        // This is a workaround to hide the &quot;white flash&quot; that occurs during application startup.
-        </span><span class="attr">#[cfg(target_os = <span class="string">&quot;windows&quot;</span>)]
+        // This is a workaround to hide the "white flash" that occurs during application startup.
+        </span><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
         </span><span class="kw">let </span><span class="kw-2">mut </span>is_initially_cloaked = window.set_cloak(<span class="bool-val">true</span>);
 
-        <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+        <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
         </span><span class="kw">let </span>event_loop_proxy = event_loop.create_proxy();
 
         <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(<span class="kw-2">&amp;mut </span>context);
@@ -905,9 +906,9 @@
             cx.emit_origin(WindowEvent::ThemeChanged(theme));
         }
 
-        <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+        <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
         </span><span class="kw">let </span>root_node = NodeBuilder::new(Role::Window).build(cx.accesskit_node_classes());
-        <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+        <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
         </span><span class="kw">let </span>accesskit = accesskit_winit::Adapter::new(
             window.window(),
             <span class="kw">move </span>|| {
@@ -930,14 +931,14 @@
         </span>window.window().set_visible(<span class="self">self</span>.window_description.visible);
 
         <span class="attr">#[cfg(all(
-            feature = <span class="string">&quot;clipboard&quot;</span>,
-            feature = <span class="string">&quot;wayland&quot;</span>,
+            feature = <span class="string">"clipboard"</span>,
+            feature = <span class="string">"wayland"</span>,
             any(
-                target_os = <span class="string">&quot;linux&quot;</span>,
-                target_os = <span class="string">&quot;dragonfly&quot;</span>,
-                target_os = <span class="string">&quot;freebsd&quot;</span>,
-                target_os = <span class="string">&quot;netbsd&quot;</span>,
-                target_os = <span class="string">&quot;openbsd&quot;
+                target_os = <span class="string">"linux"</span>,
+                target_os = <span class="string">"dragonfly"</span>,
+                target_os = <span class="string">"freebsd"</span>,
+                target_os = <span class="string">"netbsd"</span>,
+                target_os = <span class="string">"openbsd"
             </span>)
         ))]
         </span><span class="kw">unsafe </span>{
@@ -965,7 +966,7 @@
         <span class="kw">let </span>default_should_poll = <span class="self">self</span>.should_poll;
         <span class="kw">let </span>stored_control_flow = RefCell::new(ControlFlow::Poll);
 
-        <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+        <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
         </span>cx.process_tree_updates(|tree_updates| {
             <span class="kw">for </span>update <span class="kw">in </span>tree_updates.iter() {
                 accesskit.update(update.clone());
@@ -974,7 +975,7 @@
 
         <span class="kw">let </span><span class="kw-2">mut </span>cursor_moved = <span class="bool-val">false</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>cursor = (<span class="number">0.0f32</span>, <span class="number">0.0f32</span>);
-        <span class="attr">#[cfg(target_os = <span class="string">&quot;windows&quot;</span>)]
+        <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
         </span><span class="kw">let </span><span class="kw-2">mut </span>inside_window = <span class="bool-val">false</span>;
 
         <span class="comment">// cx.process_events();
@@ -998,7 +999,7 @@
                         cx.send_event(event);
                     }
 
-                    <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+                    <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
                     </span>UserEvent::AccessKitActionRequest(action_request_event) =&gt; {
                         <span class="kw">let </span>node_id = action_request_event.request.target;
 
@@ -1044,7 +1045,7 @@
 
                         event_loop_proxy
                             .send_event(UserEvent::Event(Event::new(WindowEvent::Redraw)))
-                            .expect(<span class="string">&quot;Failed to send redraw event&quot;</span>);
+                            .expect(<span class="string">"Failed to send redraw event"</span>);
 
                         cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
                             window.window().request_redraw();
@@ -1053,7 +1054,7 @@
 
                     cx.process_visual_updates();
 
-                    <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+                    <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
                     </span>cx.process_tree_updates(|tree_updates| {
                         <span class="kw">for </span>update <span class="kw">in </span>tree_updates.iter() {
                             accesskit.update(update.clone());
@@ -1075,7 +1076,7 @@
                         <span class="kw-2">*</span>stored_control_flow.borrow_mut() = ControlFlow::Poll;
                         event_loop_proxy
                             .send_event(UserEvent::Event(Event::new(())))
-                            .expect(<span class="string">&quot;Failed to send event&quot;</span>);
+                            .expect(<span class="string">"Failed to send event"</span>);
                     }
 
                     cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
@@ -1094,7 +1095,7 @@
                         });
 
                         <span class="comment">// Un-cloak
-                        </span><span class="attr">#[cfg(target_os = <span class="string">&quot;windows&quot;</span>)]
+                        </span><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
                         </span><span class="kw">if </span>is_initially_cloaked {
                             is_initially_cloaked = <span class="bool-val">false</span>;
                             cx.draw();
@@ -1114,7 +1115,7 @@
 
                         winit::event::WindowEvent::Focused(is_focused) =&gt; {
                             cx.<span class="number">0</span>.window_has_focus = is_focused;
-                            <span class="attr">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]
+                            <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
                             </span>accesskit.update_if_active(|| TreeUpdate {
                                 nodes: <span class="macro">vec!</span>[],
                                 tree: <span class="prelude-val">None</span>,
@@ -1153,7 +1154,7 @@
                             }
 
                             <span class="comment">// Temporary fix for windows platform until winit merge #3154
-                            </span><span class="attr">#[cfg(target_os = <span class="string">&quot;windows&quot;</span>)]
+                            </span><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
                             </span>{
                                 <span class="kw">let </span>(width, height) = {
                                     <span class="kw">let </span>scale_factor = cx.scale_factor();
@@ -1226,7 +1227,7 @@
                             input,
                             is_synthetic: <span class="kw">_</span>,
                         } =&gt; {
-                            <span class="comment">// Prefer virtual keycodes to scancodes, as scancodes aren&#39;t uniform between platforms
+                            <span class="comment">// Prefer virtual keycodes to scancodes, as scancodes aren't uniform between platforms
                             </span><span class="kw">let </span>code = <span class="kw">if let </span><span class="prelude-val">Some</span>(vkey) = input.virtual_keycode {
                                 virtual_key_code_to_code(vkey)
                             } <span class="kw">else </span>{
@@ -1282,7 +1283,7 @@
                         }
 
                         winit::event::WindowEvent::CursorEntered { device_id: <span class="kw">_ </span>} =&gt; {
-                            <span class="attr">#[cfg(target_os = <span class="string">&quot;windows&quot;</span>)]
+                            <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
                             </span>{
                                 inside_window = <span class="bool-val">true</span>;
                             }
@@ -1290,7 +1291,7 @@
                         }
 
                         winit::event::WindowEvent::CursorLeft { device_id: <span class="kw">_ </span>} =&gt; {
-                            <span class="attr">#[cfg(target_os = <span class="string">&quot;windows&quot;</span>)]
+                            <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
                             </span>{
                                 inside_window = <span class="bool-val">false</span>;
                             }
@@ -1401,7 +1402,7 @@
         <span class="self">self
     </span>}
 
-    <span class="attr">#[cfg(target_arch = <span class="string">&quot;wasm32&quot;</span>)]
+    <span class="attr">#[cfg(target_arch = <span class="string">"wasm32"</span>)]
     </span><span class="kw">fn </span>canvas(<span class="kw-2">mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.window_description.target_canvas = <span class="prelude-val">Some</span>(canvas.to_owned());
 

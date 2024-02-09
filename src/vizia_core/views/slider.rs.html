@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/slider.rs`."><title>slider.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/slider.rs`."><title>slider.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-ac92e1bbe349e143.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0 (07dca489a 2024-02-04)" data-channel="1.76.0" data-search-js="search-2b6ce74ff89ae146.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../../static.files/src-script-39ed315d46fb705f.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-305769736d49e732.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-feafe1bb7466e4bd.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -668,7 +669,7 @@
 /// # AppData::default().build(cx);
 /// Slider::new(cx, AppData::value)
 ///     .on_changing(|cx, value| {
-///         println!(&quot;Slider on_changing: {}&quot;, value);
+///         println!("Slider on_changing: {}", value);
 ///     });
 /// ```
 ///
@@ -686,9 +687,9 @@
 /// HStack::new(cx, |cx|{
 ///     Slider::new(cx, AppData::value)
 ///         .on_changing(|cx, value| {
-///             println!(&quot;Slider on_changing: {}&quot;, value);
+///             println!("Slider on_changing: {}", value);
 ///         });
-///     Label::new(cx, AppData::value.map(|val| format!(&quot;{:.2}&quot;, val)));
+///     Label::new(cx, AppData::value.map(|val| format!("{:.2}", val)));
 /// });
 /// ```
 </span><span class="attr">#[derive(Lens)]
@@ -718,7 +719,7 @@
     /// # AppData::default().build(cx);
     /// Slider::new(cx, AppData::value)
     ///     .on_changing(|cx, value| {
-    ///         println!(&quot;Slider on_changing: {}&quot;, value);
+    ///         println!("Slider on_changing: {}", value);
     ///     });
     /// ```
     </span><span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;mut </span>Context, lens: L) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
@@ -747,7 +748,7 @@
                     <span class="kw">let </span>range = slider_data.range;
 
                     <span class="comment">// Active track
-                    </span>Element::new(cx).class(<span class="string">&quot;active&quot;</span>).bind(lens, <span class="kw">move </span>|handle, value| {
+                    </span>Element::new(cx).class(<span class="string">"active"</span>).bind(lens, <span class="kw">move </span>|handle, value| {
                         <span class="kw">let </span>val = value.get(handle.cx);
 
                         <span class="kw">let </span>normal_val = (val - range.start) / (range.end - range.start);
@@ -772,7 +773,7 @@
 
                     <span class="comment">// Thumb
                     </span>Element::new(cx)
-                        .class(<span class="string">&quot;thumb&quot;</span>)
+                        .class(<span class="string">"thumb"</span>)
                         .on_geo_changed(|cx, geo| {
                             <span class="kw">if </span>geo.contains(GeoChanged::WIDTH_CHANGED)
                                 || geo.contains(GeoChanged::HEIGHT_CHANGED)
@@ -806,7 +807,7 @@
         .numeric_value(lens.map(|val| (<span class="kw-2">*</span>val <span class="kw">as </span>f64 * <span class="number">100.0</span>).round() / <span class="number">100.0</span>))
         .text_value(lens.map(|val| {
             <span class="kw">let </span>v = (<span class="kw-2">*</span>val <span class="kw">as </span>f64 * <span class="number">100.0</span>).round() / <span class="number">100.0</span>;
-            <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, v)
+            <span class="macro">format!</span>(<span class="string">"{}"</span>, v)
         }))
         .navigable(<span class="bool-val">true</span>)
     }
@@ -838,8 +839,8 @@
 }
 
 <span class="kw">impl</span>&lt;L: Lens&lt;Target = f32&gt;&gt; View <span class="kw">for </span>Slider&lt;L&gt; {
-    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
-        <span class="prelude-val">Some</span>(<span class="string">&quot;slider&quot;</span>)
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+        <span class="prelude-val">Some</span>(<span class="string">"slider"</span>)
     }
 
     <span class="kw">fn </span>accessibility(<span class="kw-2">&amp;</span><span class="self">self</span>, _cx: <span class="kw-2">&amp;mut </span>AccessContext, node: <span class="kw-2">&amp;mut </span>AccessNode) {
@@ -1046,7 +1047,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;L: Lens&gt; Handle&lt;<span class="lifetime">&#39;_</span>, Slider&lt;L&gt;&gt; {
+<span class="kw">impl</span>&lt;L: Lens&gt; Handle&lt;<span class="lifetime">'_</span>, Slider&lt;L&gt;&gt; {
     <span class="doccomment">/// Sets the callback triggered when the slider value is changing (dragging).
     ///
     /// Takes a closure which triggers when the slider value is changing,
@@ -1066,12 +1067,12 @@
     /// # AppData::default().build(cx);
     /// Slider::new(cx, AppData::value)
     ///     .on_changing(|cx, value| {
-    ///         println!(&quot;Slider on_changing: {}&quot;, value);
+    ///         println!("Slider on_changing: {}", value);
     ///     });
     /// ```
     </span><span class="kw">pub fn </span>on_changing&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, f32),
+        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, f32),
     {
         <span class="self">self</span>.modify(|slider| slider.on_changing = <span class="prelude-val">Some</span>(Box::new(callback)))
     }
@@ -1094,7 +1095,7 @@
     /// Slider::new(cx, AppData::value)
     ///     .range(-20.0..50.0)
     ///     .on_changing(|cx, value| {
-    ///         println!(&quot;Slider on_changing: {}&quot;, value);
+    ///         println!("Slider on_changing: {}", value);
     ///     });
     /// ```
     </span><span class="kw">pub fn </span>range(<span class="self">self</span>, range: Range&lt;f32&gt;) -&gt; <span class="self">Self </span>{
@@ -1123,7 +1124,7 @@
     /// Slider::new(cx, AppData::value)
     ///     .keyboard_fraction(0.05)
     ///     .on_changing(|cx, value| {
-    ///         println!(&quot;Slider on_changing: {}&quot;, value);
+    ///         println!("Slider on_changing: {}", value);
     ///     });
     /// ```
     </span><span class="kw">pub fn </span>keyboard_fraction(<span class="self">self</span>, keyboard_fraction: f32) -&gt; <span class="self">Self </span>{
@@ -1152,7 +1153,7 @@
         <span class="self">Self </span>{ on_changing: <span class="prelude-val">None </span>}
             .build(cx, <span class="kw">move </span>|cx| {
                 Binding::new(cx, lens, <span class="kw">move </span>|cx, lens| {
-                    Textbox::new(cx, lens.map(|v| <span class="macro">format!</span>(<span class="string">&quot;{:.2}&quot;</span>, v))).on_submit(|cx, txt, <span class="kw">_</span>| {
+                    Textbox::new(cx, lens.map(|v| <span class="macro">format!</span>(<span class="string">"{:.2}"</span>, v))).on_submit(|cx, txt, <span class="kw">_</span>| {
                         <span class="kw">if let </span><span class="prelude-val">Ok</span>(val) = txt.parse() {
                             cx.emit(NamedSliderEvent::Change(val));
                         }
@@ -1167,7 +1168,7 @@
                             <span class="kw">let </span>range = slider_data.range;
 
                             <span class="comment">// Active track
-                            </span>Element::new(cx).class(<span class="string">&quot;active&quot;</span>).bind(lens, <span class="kw">move </span>|handle, value| {
+                            </span>Element::new(cx).class(<span class="string">"active"</span>).bind(lens, <span class="kw">move </span>|handle, value| {
                                 <span class="kw">let </span>val = value.get(handle.cx);
                                 <span class="kw">let </span>normal_val = (val - range.start) / (range.end - range.start);
                                 <span class="kw">let </span>min = thumb_size / size;
@@ -1192,8 +1193,8 @@
 }
 
 <span class="kw">impl </span>View <span class="kw">for </span>NamedSlider {
-    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
-        <span class="prelude-val">Some</span>(<span class="string">&quot;namedslider&quot;</span>)
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+        <span class="prelude-val">Some</span>(<span class="string">"namedslider"</span>)
     }
 
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
@@ -1209,10 +1210,10 @@
     }
 }
 
-<span class="kw">impl </span>Handle&lt;<span class="lifetime">&#39;_</span>, NamedSlider&gt; {
+<span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, NamedSlider&gt; {
     <span class="kw">pub fn </span>on_changing&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: <span class="lifetime">&#39;static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, f32),
+        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, f32),
     {
         <span class="self">self</span>.modify(|slider| slider.on_changing = <span class="prelude-val">Some</span>(Box::new(callback)))
     }

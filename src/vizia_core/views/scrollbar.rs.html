@@ -251,7 +251,6 @@
 <a href="#250" id="250">250</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::TreeProps;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::views::Orientation;
 
 <span class="kw">pub struct </span>Scrollbar&lt;L1&gt; {
     value: L1,
@@ -293,7 +292,7 @@
                 .class(<span class="string">"thumb"</span>)
                 .focusable(<span class="bool-val">true</span>)
                 .bind(value, <span class="kw">move </span>|handle, value| {
-                    <span class="kw">let </span>value = value.get(handle.cx);
+                    <span class="kw">let </span>value = value.get(<span class="kw-2">&amp;</span>handle);
                     <span class="kw">match </span>orientation {
                         Orientation::Horizontal =&gt; {
                             handle.left(Units::Stretch(value)).right(Units::Stretch(<span class="number">1.0 </span>- value))
@@ -304,7 +303,7 @@
                     };
                 })
                 .bind(ratio, <span class="kw">move </span>|handle, ratio| {
-                    <span class="kw">let </span>ratio = ratio.get(handle.cx);
+                    <span class="kw">let </span>ratio = ratio.get(<span class="kw-2">&amp;</span>handle);
                     <span class="kw">match </span>orientation {
                         Orientation::Horizontal =&gt; handle.width(Units::Percentage(ratio * <span class="number">100.0</span>)),
                         Orientation::Vertical =&gt; handle.height(Units::Percentage(ratio * <span class="number">100.0</span>)),
@@ -493,7 +492,8 @@
     <span class="kw">pub fn </span>scroll_to_cursor(<span class="kw-2">mut </span><span class="self">self</span>, scroll_to_cursor: <span class="kw">impl </span>Res&lt;bool&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
         scroll_to_cursor.set_or_bind(<span class="self">self</span>.context(), entity, |cx, val| {
-            cx.emit(ScrollBarEvent::SetScrollToCursor(val));
+            <span class="kw">let </span>v = val.get(cx);
+            cx.emit(ScrollBarEvent::SetScrollToCursor(v));
         });
 
         <span class="self">self

@@ -217,19 +217,11 @@
 <a href="#216" id="216">216</a>
 <a href="#217" id="217">217</a>
 <a href="#218" id="218">218</a>
-<a href="#219" id="219">219</a>
-<a href="#220" id="220">220</a>
-<a href="#221" id="221">221</a>
-<a href="#222" id="222">222</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{cmp::Ordering, collections::BinaryHeap};
 
-<span class="kw">use crate</span>::{
-    prelude::<span class="kw-2">*</span>,
-    style::{Abilities, PseudoClassFlags},
-};
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>femtovg::Transform2D;
 <span class="kw">use </span>log::debug;
-<span class="kw">use </span>vizia_id::GenerationalId;
 <span class="kw">use </span>vizia_storage::{LayoutChildIterator, LayoutParentIterator};
 
 <span class="comment">// Determines the hovered entity based on the mouse cursor position.
@@ -348,7 +340,7 @@
         .unwrap_or(parent_pointer_events);
 
     <span class="comment">// Push to queue if the z-index is higher than the current z-index.
-    </span><span class="kw">let </span>z_index = cx.tree.z_index(cx.current);
+    </span><span class="kw">let </span>z_index = cx.style.z_index.get(cx.current).copied().unwrap_or_default();
     <span class="kw">if </span>z_index &gt; current_z {
         queue.push(ZEntity { index: z_index, entity: cx.current, pointer_events });
         <span class="kw">return</span>;

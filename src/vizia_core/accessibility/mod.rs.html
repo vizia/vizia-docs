@@ -15,18 +15,18 @@
 <a href="#14" id="14">14</a>
 <a href="#15" id="15">15</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::entity::Entity;
+<span class="kw">use </span>accesskit::NodeId;
 <span class="kw">use </span>vizia_id::GenerationalId;
 
-<span class="doccomment">/// Trait for converting between an id and an accesskit node.
+<span class="doccomment">/// Trait for converting between an `Entity`` and an accesskit `NodeId`.
 </span><span class="kw">pub trait </span>IntoNode {
     <span class="kw">fn </span>accesskit_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; accesskit::NodeId;
 }
 
 <span class="kw">impl </span>IntoNode <span class="kw">for </span>Entity {
-    <span class="doccomment">/// Converts an Entity into the corresponding accesskit NodeId.
+    <span class="doccomment">/// Converts an `Entity`` into the corresponding accesskit `NodeId``.
     </span><span class="kw">fn </span>accesskit_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; accesskit::NodeId {
-        <span class="comment">// Add 1 because the root node has an index of 0 but accesskit uses a `NonZeroU64`.
-        </span>std::num::NonZeroU64::new(<span class="self">self</span>.index() <span class="kw">as </span>u64 + <span class="number">1</span>).unwrap().into()
+        NodeId(<span class="self">self</span>.index() <span class="kw">as </span>u64)
     }
 }
 </code></pre></div></section></main></body></html>

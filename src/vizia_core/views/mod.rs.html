@@ -80,15 +80,23 @@
 <a href="#79" id="79">79</a>
 <a href="#80" id="80">80</a>
 <a href="#81" id="81">81</a>
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Built-in views provided by vizia.
 
-</span><span class="kw">mod </span>button;
+</span><span class="kw">mod </span>avatar;
+<span class="kw">mod </span>badge;
+<span class="kw">mod </span>button;
 <span class="kw">mod </span>checkbox;
 <span class="kw">mod </span>chip;
 <span class="kw">mod </span>combobox;
 <span class="kw">mod </span>datepicker;
+<span class="kw">mod </span>dialog;
+<span class="kw">mod </span>divider;
 <span class="kw">mod </span>dropdown;
 <span class="kw">mod </span>element;
+<span class="kw">mod </span>form;
 <span class="kw">mod </span>image;
 <span class="kw">mod </span>knob;
 <span class="kw">mod </span>label;
@@ -109,22 +117,28 @@
 <span class="kw">mod </span>switch;
 <span class="kw">mod </span>tabview;
 <span class="kw">mod </span>textbox;
-<span class="kw">mod </span>timepicker;
+<span class="kw">mod </span>toggle_button;
 <span class="kw">mod </span>tooltip;
 <span class="kw">mod </span>virtual_list;
 
 <span class="kw">pub use </span><span class="self">self</span>::image::Image;
 <span class="kw">pub use </span><span class="kw">crate</span>::binding::Binding;
-<span class="kw">pub use </span>button::Button;
+<span class="kw">pub use </span>avatar::<span class="kw-2">*</span>;
+<span class="kw">pub use </span>badge::<span class="kw-2">*</span>;
+<span class="kw">pub use </span>button::{Button, ButtonGroup, ButtonModifiers, ButtonVariant, IconButton};
 <span class="kw">pub use </span>checkbox::Checkbox;
-<span class="kw">pub use </span>chip::Chip;
+<span class="kw">pub use </span>chip::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>combobox::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>datepicker::Datepicker;
+<span class="kw">pub use </span>dialog::<span class="kw-2">*</span>;
+<span class="kw">pub use </span>divider::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>dropdown::Dropdown;
 <span class="kw">pub use </span>element::Element;
-<span class="kw">pub use </span>knob::{ArcTrack, Knob, KnobMode, TickKnob, Ticks};
+<span class="kw">pub use </span>form::{FormControl, FormGroup, FormPlacement};
+<span class="comment">// pub use keybind::*;
+</span><span class="kw">pub use </span>knob::{ArcTrack, Knob, KnobMode, TickKnob, Ticks};
 <span class="kw">pub use </span>label::{Icon, Label};
-<span class="kw">pub use </span>list::List;
+<span class="kw">pub use </span>list::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>menu::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>notification::Notification;
 <span class="kw">pub use </span>picklist::PickList;
@@ -133,32 +147,24 @@
 <span class="kw">pub use </span>radio::RadioButton;
 <span class="kw">pub use </span>rating::Rating;
 <span class="kw">pub use </span>scrollbar::Scrollbar;
-<span class="kw">pub use </span>scrollview::{ScrollData, ScrollEvent, ScrollView};
+<span class="kw">pub use </span>scrollview::{ScrollEvent, ScrollView};
 <span class="kw">pub use </span>slider::{NamedSlider, Slider};
-<span class="kw">pub use </span>spinbox::{Spinbox, SpinboxEvent, SpinboxIcons, SpinboxKind};
+<span class="kw">pub use </span>spinbox::{Spinbox, SpinboxEvent, SpinboxIcons};
 <span class="kw">pub use </span>stack::{HStack, VStack, ZStack};
 <span class="kw">pub use </span>switch::Switch;
-<span class="kw">pub use </span>tabview::{TabPair, TabView};
+<span class="kw">pub use </span>tabview::{TabEvent, TabPair, TabView};
 <span class="kw">pub use </span>textbox::{TextEvent, Textbox};
-<span class="kw">pub use </span>timepicker::{
-    AMOrPM, AnalogTimepicker, AnalogTimepickerEvent, AnalogTimepickerPage, DayTime,
-    DigitalTimepicker, DigitalTimepickerEvent, Timepicker,
-};
+<span class="kw">pub use </span>toggle_button::{ToggleButton, ToggleButtonModifiers};
 <span class="kw">pub use </span>tooltip::Tooltip;
 <span class="kw">pub use </span>virtual_list::<span class="kw-2">*</span>;
 
-<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::Data;
 
 <span class="doccomment">/// The orientation of a widget, such as a slider or scrollbar
-</span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq, Data)]
+</span><span class="attr">#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Data)]
 </span><span class="kw">pub enum </span>Orientation {
-    Horizontal,
+    <span class="attr">#[default]
+    </span>Horizontal,
     Vertical,
-}
-
-<span class="kw">impl </span>Default <span class="kw">for </span>Orientation {
-    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-        Orientation::Horizontal
-    }
 }
 </code></pre></div></section></main></body></html>

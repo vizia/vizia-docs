@@ -400,9 +400,28 @@
 <a href="#399" id="399">399</a>
 <a href="#400" id="400">400</a>
 <a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+<a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+<a href="#410" id="410">410</a>
+<a href="#411" id="411">411</a>
+<a href="#412" id="412">412</a>
+<a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
+<a href="#415" id="415">415</a>
+<a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::internal;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::style::SystemFlags;
 
 <span class="doccomment">/// Modifiers for changing the layout properties of a view.
 </span><span class="kw">pub trait </span>LayoutModifiers: internal::Modifiable {
@@ -546,14 +565,17 @@
     <span class="doccomment">/// Sets the space for all sides of the view.
     </span><span class="kw">fn </span>space&lt;U: Into&lt;Units&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
-            <span class="kw">let </span>value = v.into();
-            cx.style.left.insert(cx.current, value);
-            cx.style.right.insert(cx.current, value);
-            cx.style.top.insert(cx.current, value);
-            cx.style.bottom.insert(cx.current, value);
+        <span class="kw">let </span>current = <span class="self">self</span>.current();
+        <span class="self">self</span>.context().with_current(current, |cx| {
+            value.set_or_bind(cx, entity, |cx, v| {
+                <span class="kw">let </span>value = v.get(cx).into();
+                cx.style.left.insert(cx.current, value);
+                cx.style.right.insert(cx.current, value);
+                cx.style.top.insert(cx.current, value);
+                cx.style.bottom.insert(cx.current, value);
 
-            cx.style.needs_relayout();
+                cx.style.needs_relayout();
+            });
         });
 
         <span class="self">self
@@ -576,12 +598,15 @@
     <span class="doccomment">/// Sets the width and height of the view.
     </span><span class="kw">fn </span>size&lt;U: Into&lt;Units&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
-            <span class="kw">let </span>value = v.into();
-            cx.style.width.insert(cx.current, value);
-            cx.style.height.insert(cx.current, value);
+        <span class="kw">let </span>current = <span class="self">self</span>.current();
+        <span class="self">self</span>.context().with_current(current, |cx| {
+            value.set_or_bind(cx, entity, <span class="kw">move </span>|cx, v| {
+                <span class="kw">let </span>value = v.get(cx).into();
+                cx.style.width.insert(cx.current, value);
+                cx.style.height.insert(cx.current, value);
 
-            cx.style.needs_relayout();
+                cx.style.needs_relayout();
+            });
         });
 
         <span class="self">self
@@ -628,14 +653,17 @@
     /// The child_space works by overriding the `Auto` space properties of its children.
     </span><span class="kw">fn </span>child_space&lt;U: Into&lt;Units&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
-            <span class="kw">let </span>value = v.into();
-            cx.style.child_left.insert(cx.current, value);
-            cx.style.child_right.insert(cx.current, value);
-            cx.style.child_top.insert(cx.current, value);
-            cx.style.child_bottom.insert(cx.current, value);
+        <span class="kw">let </span>current = <span class="self">self</span>.current();
+        <span class="self">self</span>.context().with_current(current, |cx| {
+            value.set_or_bind(cx, entity, <span class="kw">move </span>|cx, v| {
+                <span class="kw">let </span>value = v.get(cx).into();
+                cx.style.child_left.insert(cx.current, value);
+                cx.style.child_right.insert(cx.current, value);
+                cx.style.child_top.insert(cx.current, value);
+                cx.style.child_bottom.insert(cx.current, value);
 
-            cx.style.needs_relayout();
+                cx.style.needs_relayout();
+            });
         });
 
         <span class="self">self
@@ -672,12 +700,15 @@
     <span class="doccomment">/// Sets the minimum width and minimum height of the view.
     </span><span class="kw">fn </span>min_size&lt;U: Into&lt;Units&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
-            <span class="kw">let </span>value = v.into();
-            cx.style.min_width.insert(cx.current, value);
-            cx.style.min_height.insert(cx.current, value);
+        <span class="kw">let </span>current = <span class="self">self</span>.current();
+        <span class="self">self</span>.context().with_current(current, |cx| {
+            value.set_or_bind(cx, entity, <span class="kw">move </span>|cx, v| {
+                <span class="kw">let </span>value = v.get(cx).into();
+                cx.style.min_width.insert(cx.current, value);
+                cx.style.min_height.insert(cx.current, value);
 
-            cx.needs_relayout();
+                cx.needs_relayout();
+            });
         });
 
         <span class="self">self
@@ -700,12 +731,15 @@
     <span class="doccomment">/// Sets the maximum width and maximum height of the view.
     </span><span class="kw">fn </span>max_size&lt;U: Into&lt;Units&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
-            <span class="kw">let </span>value = v.into();
-            cx.style.max_width.insert(cx.current, value);
-            cx.style.max_height.insert(cx.current, value);
+        <span class="kw">let </span>current = <span class="self">self</span>.current();
+        <span class="self">self</span>.context().with_current(entity, |cx| {
+            value.set_or_bind(cx, current, <span class="kw">move </span>|cx, v| {
+                <span class="kw">let </span>value = v.get(cx).into();
+                cx.style.max_width.insert(cx.current, value);
+                cx.style.max_height.insert(cx.current, value);
 
-            cx.needs_relayout();
+                cx.needs_relayout();
+            });
         });
 
         <span class="self">self
@@ -742,14 +776,17 @@
     <span class="doccomment">/// Sets the minimum space for all sides of the view.
     </span><span class="kw">fn </span>min_space&lt;U: Into&lt;Units&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
-            <span class="kw">let </span>value = v.into();
-            cx.style.min_left.insert(cx.current, value);
-            cx.style.min_right.insert(cx.current, value);
-            cx.style.min_top.insert(cx.current, value);
-            cx.style.min_bottom.insert(cx.current, value);
+        <span class="kw">let </span>current = <span class="self">self</span>.current();
+        <span class="self">self</span>.context().with_current(current, |cx| {
+            value.set_or_bind(cx, entity, <span class="kw">move </span>|cx, v| {
+                <span class="kw">let </span>value = v.get(cx).into();
+                cx.style.min_left.insert(cx.current, value);
+                cx.style.min_right.insert(cx.current, value);
+                cx.style.min_top.insert(cx.current, value);
+                cx.style.min_bottom.insert(cx.current, value);
 
-            cx.style.needs_relayout();
+                cx.style.needs_relayout();
+            });
         });
 
         <span class="self">self
@@ -786,14 +823,17 @@
     <span class="doccomment">/// Sets the maximum space for all sides of the view.
     </span><span class="kw">fn </span>max_space&lt;U: Into&lt;Units&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
-            <span class="kw">let </span>value = v.into();
-            cx.style.max_left.insert(cx.current, value);
-            cx.style.max_right.insert(cx.current, value);
-            cx.style.max_top.insert(cx.current, value);
-            cx.style.max_bottom.insert(cx.current, value);
+        <span class="kw">let </span>current = <span class="self">self</span>.current();
+        <span class="self">self</span>.context().with_current(current, |cx| {
+            value.set_or_bind(cx, entity, <span class="kw">move </span>|cx, v| {
+                <span class="kw">let </span>value = v.get(cx).into();
+                cx.style.max_left.insert(cx.current, value);
+                cx.style.max_right.insert(cx.current, value);
+                cx.style.max_top.insert(cx.current, value);
+                cx.style.max_bottom.insert(cx.current, value);
 
-            cx.style.needs_relayout();
+                cx.style.needs_relayout();
+            });
         });
 
         <span class="self">self

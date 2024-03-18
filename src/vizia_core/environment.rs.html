@@ -134,8 +134,11 @@
 <a href="#133" id="133">133</a>
 <a href="#134" id="134">134</a>
 <a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! A model for system specific state which can be accessed by any model or view.
-</span><span class="kw">use crate</span>::{
+</span><span class="kw">use </span><span class="kw">crate</span>::prelude::LensValue;
+<span class="kw">use crate</span>::{
     context::{Context, EmitContext},
     events::{Timer, TimerAction},
     model::Model,
@@ -143,9 +146,10 @@
     views::TextEvent,
     window::WindowEvent,
 };
-<span class="kw">use </span>instant::Duration;
+
 <span class="kw">use </span>unic_langid::LanguageIdentifier;
 <span class="kw">use </span>vizia_derive::Lens;
+<span class="kw">use </span>web_time::Duration;
 
 <span class="attr">#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 </span><span class="kw">pub enum </span>ThemeMode {
@@ -227,13 +231,13 @@
 
 <span class="kw">impl </span>Model <span class="kw">for </span>Environment {
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
-        event.map(|event, <span class="kw">_</span>| <span class="kw">match </span>event {
+        event.take(|event, <span class="kw">_</span>| <span class="kw">match </span>event {
             EnvironmentEvent::SetLocale(locale) =&gt; {
-                <span class="self">self</span>.locale = locale.clone();
+                <span class="self">self</span>.locale = locale;
             }
 
             EnvironmentEvent::SetThemeMode(theme) =&gt; {
-                <span class="self">self</span>.theme.app_theme = theme.to_owned();
+                theme.clone_into(<span class="kw-2">&amp;mut </span><span class="self">self</span>.theme.app_theme);
 
                 cx.set_theme_mode(<span class="self">self</span>.theme.get_current_theme());
                 cx.reload_styles().unwrap();

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"constant":["CURRENT","MAPS","MAP_MANAGER"],"enum":["ProxyEmitError"],"struct":["AccessContext","AccessNode","Context","ContextProxy","DrawContext","EventContext","ResourceContext"],"trait":["DataContext","EmitContext","EventProxy","TreeProps"]};
+window.SIDEBAR_ITEMS = {"constant":["CURRENT","MAPS","MAP_MANAGER"],"enum":["ProxyEmitError"],"struct":["AccessContext","AccessNode","Context","ContextProxy","DrawContext","EventContext","LocalizationContext","ResourceContext"],"trait":["DataContext","EmitContext","EventProxy","TreeProps"]};

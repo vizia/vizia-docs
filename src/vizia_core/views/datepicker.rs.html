@@ -306,12 +306,9 @@
 <a href="#305" id="305">305</a>
 <a href="#306" id="306">306</a>
 <a href="#307" id="307">307</a>
-<a href="#308" id="308">308</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>chrono::{Datelike, NaiveDate, Weekday};
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-
-<span class="kw">use </span><span class="kw">super</span>::spinbox::SpinboxIcons;
 
 <span class="doccomment">/// A control used to select a date.
 </span><span class="attr">#[derive(Lens)]
@@ -434,35 +431,26 @@
         }
         .build(cx, <span class="kw">move </span>|cx| {
             HStack::new(cx, |cx| {
-                Spinbox::custom(
-                    cx,
-                    |cx| {
-                        PickList::new(cx, Datepicker::months, Datepicker::selected_month, <span class="bool-val">false</span>)
-                            .on_select(|ex, index| ex.emit(DatepickerEvent::SelectMonth(index)))
-                    },
-                    SpinboxKind::Horizontal,
-                    SpinboxIcons::Chevrons,
-                )
+                Spinbox::custom(cx, |cx| {
+                    PickList::new(cx, Datepicker::months, Datepicker::selected_month, <span class="bool-val">false</span>)
+                        .on_select(|ex, index| ex.emit(DatepickerEvent::SelectMonth(index)))
+                })
                 .width(Pixels(<span class="number">131.0</span>))
                 .on_increment(|ex| ex.emit(DatepickerEvent::IncrementMonth))
                 .on_decrement(|ex| ex.emit(DatepickerEvent::DecrementMonth));
-                Spinbox::custom(
-                    cx,
-                    |cx| {
-                        Textbox::new(cx, Datepicker::view_date.map(|date| date.year()))
-                            .on_edit(|ex, v| ex.emit(DatepickerEvent::SelectYear(v)))
-                            .width(Stretch(<span class="number">1.0</span>))
-                    },
-                    SpinboxKind::Horizontal,
-                    SpinboxIcons::PlusMinus,
-                )
+                Spinbox::custom(cx, |cx| {
+                    Textbox::new(cx, Datepicker::view_date.map(|date| date.year()))
+                        .on_edit(|ex, v| ex.emit(DatepickerEvent::SelectYear(v)))
+                        .width(Stretch(<span class="number">1.0</span>))
+                })
+                .icons(SpinboxIcons::PlusMinus)
                 .width(Stretch(<span class="number">1.0</span>))
                 .on_increment(|ex| ex.emit(DatepickerEvent::IncrementYear))
                 .on_decrement(|ex| ex.emit(DatepickerEvent::DecrementYear));
             })
             .class(<span class="string">"datepicker-header"</span>);
 
-            Element::new(cx).class(<span class="string">"datepicker-divisor"</span>);
+            Divider::new(cx);
 
             VStack::new(cx, <span class="kw">move </span>|cx| {
                 <span class="comment">// Days of the week
@@ -482,17 +470,18 @@
                                 Label::new(cx, <span class="string">""</span>).bind(
                                     Datepicker::view_date,
                                     <span class="kw">move </span>|handle, view_date| {
-                                        <span class="kw">let </span>view_date = view_date.get(handle.cx);
+                                        <span class="kw">let </span>view_date = view_date.get(<span class="kw-2">&amp;</span>handle);
 
                                         <span class="kw">let </span>(day_number, disabled) =
                                             <span class="self">Self</span>::get_day_number(y, x, <span class="kw-2">&amp;</span>view_date);
 
                                         handle.bind(lens, <span class="kw">move </span>|handle, selected_date| {
-                                            <span class="kw">let </span>selected_date = selected_date.get(handle.cx);
+                                            <span class="kw">let </span>selected_date = selected_date.get(<span class="kw-2">&amp;</span>handle);
 
                                             handle
                                                 .text(<span class="kw-2">&amp;</span>day_number.to_string())
                                                 .class(<span class="string">"datepicker-calendar-day"</span>)
+                                                .navigable(!disabled)
                                                 .toggle_class(
                                                     <span class="string">"datepicker-calendar-day-disabled"</span>,
                                                     disabled,
@@ -529,7 +518,6 @@
             })
             .class(<span class="string">"datepicker-calendar"</span>);
         })
-        .navigable(<span class="bool-val">true</span>)
     }
 }
 
@@ -553,7 +541,7 @@
                     )
                     .unwrap();
                 }
-                <span class="self">self</span>.selected_month = <span class="self">self</span>.view_date.month() <span class="kw">as </span>usize;
+                <span class="self">self</span>.selected_month = <span class="self">self</span>.view_date.month() <span class="kw">as </span>usize - <span class="number">1</span>;
             }
 
             DatepickerEvent::DecrementMonth =&gt; {
@@ -572,7 +560,7 @@
                     )
                     .unwrap();
                 }
-                <span class="self">self</span>.selected_month = <span class="self">self</span>.view_date.month() <span class="kw">as </span>usize;
+                <span class="self">self</span>.selected_month = <span class="self">self</span>.view_date.month() <span class="kw">as </span>usize - <span class="number">1</span>;
             }
 
             DatepickerEvent::SelectMonth(month) =&gt; {
@@ -586,11 +574,21 @@
             }
 
             DatepickerEvent::IncrementYear =&gt; {
-                <span class="self">self</span>.view_date += chrono::Duration::days(<span class="number">365</span>);
+                <span class="self">self</span>.view_date = NaiveDate::from_ymd_opt(
+                    <span class="self">self</span>.view_date.year() + <span class="number">1</span>,
+                    <span class="self">self</span>.view_date.month(),
+                    <span class="self">self</span>.view_date.day(),
+                )
+                .unwrap();
             }
 
             DatepickerEvent::DecrementYear =&gt; {
-                <span class="self">self</span>.view_date -= chrono::Duration::days(<span class="number">365</span>);
+                <span class="self">self</span>.view_date = NaiveDate::from_ymd_opt(
+                    <span class="self">self</span>.view_date.year() - <span class="number">1</span>,
+                    <span class="self">self</span>.view_date.month(),
+                    <span class="self">self</span>.view_date.day(),
+                )
+                .unwrap();
             }
 
             DatepickerEvent::SelectYear(year) =&gt; {

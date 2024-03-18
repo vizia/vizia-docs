@@ -169,17 +169,89 @@
 <a href="#168" id="168">168</a>
 <a href="#169" id="169">169</a>
 <a href="#170" id="170">170</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::Range;
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
+<a href="#181" id="181">181</a>
+<a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
+<a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+<a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a>
+<a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
+<a href="#240" id="240">240</a>
+<a href="#241" id="241">241</a>
+<a href="#242" id="242">242</a>
+<a href="#243" id="243">243</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::{Deref, Range};
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="attr">#[derive(Lens)]
 </span><span class="kw">pub struct </span>VirtualList {
-    offset: usize,
     num_items: usize,
     item_height: f32,
-    visible_items: Vec&lt;usize&gt;,
-    scrolly: f32,
+    visible_range: Range&lt;usize&gt;,
+    scroll_y: f32,
     scroll_to_cursor: bool,
     on_change: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, Range&lt;usize&gt;)&gt;&gt;,
 }
@@ -190,82 +262,143 @@
 }
 
 <span class="kw">impl </span>VirtualList {
-    <span class="kw">pub fn </span>new&lt;V: View, L, T&gt;(
+    <span class="kw">pub fn </span>new&lt;V: View, L: Lens, T: <span class="lifetime">'static</span>&gt;(
         cx: <span class="kw-2">&amp;mut </span>Context,
         list: L,
-        height: f32,
-        item: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>Context, usize, Index&lt;L, T&gt;) -&gt; Handle&lt;V&gt; + <span class="lifetime">'static</span>,
+        item_height: f32,
+        item_content: <span class="kw">impl </span><span class="lifetime">'static </span>+ Copy + Fn(<span class="kw-2">&amp;mut </span>Context, usize, MapRef&lt;L, T&gt;) -&gt; Handle&lt;V&gt;,
     ) -&gt; Handle&lt;<span class="self">Self</span>&gt;
     <span class="kw">where
-        </span>L: Lens,
-        &lt;L <span class="kw">as </span>Lens&gt;::Target: std::ops::Deref&lt;Target = [T]&gt;,
-        T: Data + <span class="lifetime">'static</span>,
+        </span>L::Target: Deref&lt;Target = [T]&gt;,
     {
-        <span class="kw">let </span>num_items = list.map(|l| l.len()).get(cx);
+        <span class="self">Self</span>::new_generic(
+            cx,
+            list,
+            |list| list.len(),
+            |list, index| <span class="kw-2">&amp;</span>list[index],
+            item_height,
+            item_content,
+        )
+    }
 
+    <span class="kw">pub fn </span>new_generic&lt;V: View, L: Lens, T: <span class="lifetime">'static</span>&gt;(
+        cx: <span class="kw-2">&amp;mut </span>Context,
+        list: L,
+        list_len: <span class="kw">impl </span><span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;</span>L::Target) -&gt; usize,
+        list_index: <span class="kw">impl </span><span class="lifetime">'static </span>+ Copy + Fn(<span class="kw-2">&amp;</span>L::Target, usize) -&gt; <span class="kw-2">&amp;</span>T,
+        item_height: f32,
+        item_content: <span class="kw">impl </span><span class="lifetime">'static </span>+ Copy + Fn(<span class="kw-2">&amp;mut </span>Context, usize, MapRef&lt;L, T&gt;) -&gt; Handle&lt;V&gt;,
+    ) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>num_items = list.map(list_len);
         <span class="self">Self </span>{
-            offset: <span class="number">0</span>,
-            num_items,
-            item_height: height,
-            visible_items: (<span class="number">0</span>..<span class="number">10</span>).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
-            scrolly: <span class="number">0.0</span>,
+            num_items: num_items.get(cx),
+            item_height,
+            visible_range: <span class="number">0</span>..<span class="number">0</span>,
+            scroll_y: <span class="number">0.0</span>,
             scroll_to_cursor: <span class="bool-val">true</span>,
             on_change: <span class="prelude-val">None</span>,
         }
         .build(cx, |cx| {
             ScrollView::new(cx, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="kw">move </span>|cx| {
-                VStack::new(cx, |cx| {
-                    Binding::new(cx, VirtualList::visible_items, <span class="kw">move </span>|cx, visible_list| {
-                        <span class="kw">for </span>i <span class="kw">in </span>visible_list.get(cx) {
-                            <span class="kw">let </span>ptr = list.index(i);
-                            (item)(cx, i, ptr)
-                                .top(Pixels(i <span class="kw">as </span>f32 * height))
-                                .height(Pixels(height))
-                                .position_type(PositionType::SelfDirected);
-                        }
-                    });
+                Binding::new(cx, num_items, <span class="kw">move </span>|cx, lens| {
+                    <span class="kw">let </span>num_items = lens.get(cx);
+                    cx.emit(VirtualListEvent::SetNumItems(num_items));
+                    <span class="comment">// The ScrollView contains a VStack which is sized to the total height
+                    // needed to fit all items. This ensures we have a correct scroll bar.
+                    </span>VStack::new(cx, |cx| {
+                        <span class="comment">// Within the VStack we create a view for each visible item.
+                        // This binding ensures the amount of views stay up to date.
+                        </span><span class="kw">let </span>num_visible_items = <span class="self">Self</span>::visible_range.map(Range::len);
+                        Binding::new(cx, num_visible_items, <span class="kw">move </span>|cx, lens| {
+                            <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..lens.get(cx).min(num_items) {
+                                <span class="comment">// Each item of the range maps to an index into the backing list.
+                                // As we scroll the index may change, representing an item going in/out of visibility.
+                                // Wrap `item_content` in a binding to said index, so it rebuilds only when necessary.
+                                </span><span class="kw">let </span>item_index = <span class="self">Self</span>::visible_item_index(i);
+                                Binding::new(cx, item_index, <span class="kw">move </span>|cx, lens| {
+                                    <span class="kw">let </span>index = lens.get(cx);
+                                    HStack::new(cx, <span class="kw">move </span>|cx| {
+                                        <span class="kw">let </span>item =
+                                            list.map_ref(<span class="kw">move </span>|list| list_index(list, index));
+                                        item_content(cx, index, item).height(Percentage(<span class="number">100.0</span>));
+                                    })
+                                    .height(Pixels(item_height))
+                                    .position_type(PositionType::SelfDirected)
+                                    .bind(
+                                        item_index,
+                                        <span class="kw">move </span>|handle, lens| {
+                                            <span class="kw">let </span>index = lens.get(<span class="kw-2">&amp;</span>handle);
+                                            handle.top(Pixels(index <span class="kw">as </span>f32 * item_height));
+                                        },
+                                    );
+                                });
+                            }
+                        });
+                    })
+                    .height(Pixels(num_items <span class="kw">as </span>f32 * item_height));
                 })
-                .height(list.map(<span class="kw">move </span>|l| Pixels(l.len() <span class="kw">as </span>f32 * height)));
             })
             .scroll_to_cursor(<span class="bool-val">true</span>)
             .on_scroll(|cx, <span class="kw">_</span>, y| {
-                cx.emit(VirtualListEvent::SetScrollY(y));
+                <span class="kw">if </span>y.is_finite() {
+                    cx.emit(VirtualListEvent::SetScrollY(y));
+                }
             });
-        })
-        .bind(list.map(|list| list.len()), |<span class="kw-2">mut </span>handle, len| {
-            <span class="kw">let </span>len = len.get(<span class="kw-2">&amp;</span>handle);
-            handle.context().emit(VirtualListEvent::SetNumItems(len));
         })
     }
 
+    <span class="kw">fn </span>evaluate_index(index: usize, start: usize, end: usize) -&gt; usize {
+        <span class="kw">match </span>end - start {
+            <span class="number">0 </span>=&gt; <span class="number">0</span>,
+            len =&gt; start + (len - (start % len) + index) % len,
+        }
+    }
+
+    <span class="kw">fn </span>visible_item_index(index: usize) -&gt; <span class="kw">impl </span>Lens&lt;Target = usize&gt; {
+        <span class="self">Self</span>::visible_range.map(<span class="kw">move </span>|range| <span class="self">Self</span>::evaluate_index(index, range.start, range.end))
+    }
+
     <span class="kw">fn </span>recalc(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
-        <span class="kw">let </span>current = cx.current();
-        <span class="kw">let </span>dpi = cx.scale_factor();
-        <span class="kw">let </span>container_height = cx.cache.get_height(current) / dpi;
-        <span class="kw">let </span>num_items = ((container_height + <span class="self">self</span>.item_height) / <span class="self">self</span>.item_height).ceil() <span class="kw">as </span>usize;
-
-        <span class="kw">let </span>total_height = <span class="self">self</span>.num_items <span class="kw">as </span>f32 * <span class="self">self</span>.item_height;
-        <span class="kw">let </span>offsety = ((total_height - container_height) * <span class="self">self</span>.scrolly).round() * dpi;
-        <span class="self">self</span>.offset = (offsety / <span class="self">self</span>.item_height / dpi).ceil() <span class="kw">as </span>usize;
-        <span class="self">self</span>.offset = <span class="self">self</span>.offset.saturating_sub(<span class="number">1</span>);
-
-        <span class="kw">let </span>start = <span class="self">self</span>.offset;
-        <span class="kw">let </span>end = (<span class="self">self</span>.offset + num_items).clamp(<span class="number">0</span>, <span class="self">self</span>.num_items);
-
-        <span class="self">self</span>.visible_items.clear();
-        <span class="kw">for </span>i <span class="kw">in </span>start..end {
-            <span class="self">self</span>.visible_items.push(i);
+        <span class="kw">if </span><span class="self">self</span>.num_items == <span class="number">0 </span>{
+            <span class="self">self</span>.visible_range = <span class="number">0</span>..<span class="number">0</span>;
+            <span class="kw">return</span>;
         }
 
+        <span class="kw">let </span>current = cx.current();
+        <span class="kw">let </span>current_height = cx.cache.get_height(current);
+        <span class="kw">if </span>current_height == f32::MAX {
+            <span class="kw">return</span>;
+        }
+
+        <span class="kw">let </span>item_height = <span class="self">self</span>.item_height;
+        <span class="kw">let </span>total_height = item_height * (<span class="self">self</span>.num_items <span class="kw">as </span>f32);
+        <span class="kw">let </span>visible_height = current_height / cx.scale_factor();
+
+        <span class="kw">let </span><span class="kw-2">mut </span>num_visible_items = (visible_height / item_height).ceil();
+        num_visible_items += <span class="number">1.0</span>; <span class="comment">// To account for partially-visible items.
+
+        </span><span class="kw">let </span>visible_items_height = item_height * num_visible_items;
+        <span class="kw">let </span>empty_height = (total_height - visible_items_height).max(<span class="number">0.0</span>);
+
+        <span class="comment">// The pixel offsets within the container to the visible area.
+        </span><span class="kw">let </span>visible_start = empty_height * <span class="self">self</span>.scroll_y;
+        <span class="kw">let </span>visible_end = visible_start + visible_items_height;
+
+        <span class="comment">// The indices of the first and last item of the visible area.
+        </span><span class="kw">let </span>start_index = (visible_start / item_height).trunc() <span class="kw">as </span>usize;
+        <span class="kw">let </span>end_index = <span class="number">1 </span>+ (visible_end / item_height).trunc() <span class="kw">as </span>usize;
+
+        <span class="self">self</span>.visible_range = start_index..end_index.min(<span class="self">self</span>.num_items);
+
         <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_change {
-            (callback)(cx, start..end)
+            (callback)(cx, <span class="self">self</span>.visible_range.clone())
         }
     }
 }
 
 <span class="kw">impl </span>View <span class="kw">for </span>VirtualList {
     <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
-        <span class="prelude-val">Some</span>(<span class="string">"virtual_list"</span>)
+        <span class="prelude-val">Some</span>(<span class="string">"virtual-list"</span>)
     }
 
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
@@ -282,43 +415,21 @@
                             .target(cx.current),
                     );
                 }
-                <span class="comment">// self.visible_items.clear();
-                // for i in 0..*num_items {
-                //     self.visible_items.push(i);
-                // }
-            </span>}
+            }
 
-            VirtualListEvent::SetScrollY(scrolly) =&gt; {
-                <span class="self">self</span>.scrolly = <span class="kw-2">*</span>scrolly;
-                <span class="kw">let </span>current = cx.current();
-                <span class="kw">let </span>dpi = cx.scale_factor();
-                <span class="kw">let </span>container_height = cx.cache.get_height(current) / dpi;
-                <span class="kw">let </span>total_height = <span class="self">self</span>.num_items <span class="kw">as </span>f32 * <span class="self">self</span>.item_height;
-                <span class="kw">let </span>offsety = ((total_height - container_height) * <span class="kw-2">*</span>scrolly).round() * dpi;
-                <span class="self">self</span>.offset = (offsety / <span class="self">self</span>.item_height / dpi).ceil() <span class="kw">as </span>usize;
-                <span class="self">self</span>.offset = <span class="self">self</span>.offset.saturating_sub(<span class="number">1</span>);
-
-                <span class="kw">let </span>num_items =
-                    ((container_height + <span class="self">self</span>.item_height) / <span class="self">self</span>.item_height).ceil() <span class="kw">as </span>usize;
-
-                <span class="kw">let </span>start = <span class="self">self</span>.offset;
-                <span class="kw">let </span>end = (<span class="self">self</span>.offset + num_items).clamp(<span class="number">0</span>, <span class="self">self</span>.num_items);
-                <span class="self">self</span>.visible_items.clear();
-                <span class="kw">for </span>i <span class="kw">in </span>start..end {
-                    <span class="self">self</span>.visible_items.push(i);
-                }
+            VirtualListEvent::SetScrollY(scroll_y) =&gt; {
+                <span class="self">self</span>.scroll_y = <span class="kw-2">*</span>scroll_y;
+                <span class="self">self</span>.recalc(cx);
 
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_change {
-                    (callback)(cx, start..end)
+                    (callback)(cx, <span class="self">self</span>.visible_range.clone())
                 }
             }
         });
 
         event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
             WindowEvent::GeometryChanged(geo) =&gt; {
-                <span class="kw">if </span>geo.contains(GeoChanged::WIDTH_CHANGED)
-                    || geo.contains(GeoChanged::HEIGHT_CHANGED)
-                {
+                <span class="kw">if </span>geo.intersects(GeoChanged::WIDTH_CHANGED | GeoChanged::HEIGHT_CHANGED) {
                     <span class="self">self</span>.recalc(cx);
                 }
             }
@@ -337,6 +448,41 @@
 
     <span class="kw">pub fn </span>on_change(<span class="self">self</span>, callback: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, Range&lt;usize&gt;) + <span class="lifetime">'static</span>) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.modify(|virtual_list| virtual_list.on_change = <span class="prelude-val">Some</span>(Box::new(callback)))
+    }
+}
+
+<span class="attr">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+
+    <span class="kw">fn </span>evaluate_indices(range: Range&lt;usize&gt;) -&gt; Vec&lt;usize&gt; {
+        (<span class="number">0</span>..range.len())
+            .map(|index| VirtualList::evaluate_index(index, range.start, range.end))
+            .collect()
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_evaluate_index() {
+        <span class="comment">// Move forward by 0
+        </span><span class="macro">assert_eq!</span>(evaluate_indices(<span class="number">0</span>..<span class="number">4</span>), [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
+        <span class="comment">// Move forward by 1
+        </span><span class="macro">assert_eq!</span>(evaluate_indices(<span class="number">1</span>..<span class="number">5</span>), [<span class="number">4</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
+        <span class="comment">// Move forward by 2
+        </span><span class="macro">assert_eq!</span>(evaluate_indices(<span class="number">2</span>..<span class="number">6</span>), [<span class="number">4</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">3</span>]);
+        <span class="comment">// Move forward by 3
+        </span><span class="macro">assert_eq!</span>(evaluate_indices(<span class="number">3</span>..<span class="number">7</span>), [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">3</span>]);
+        <span class="comment">// Move forward by 4
+        </span><span class="macro">assert_eq!</span>(evaluate_indices(<span class="number">4</span>..<span class="number">8</span>), [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>]);
+        <span class="comment">// Move forward by 5
+        </span><span class="macro">assert_eq!</span>(evaluate_indices(<span class="number">5</span>..<span class="number">9</span>), [<span class="number">8</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>]);
+        <span class="comment">// Move forward by 6
+        </span><span class="macro">assert_eq!</span>(evaluate_indices(<span class="number">6</span>..<span class="number">10</span>), [<span class="number">8</span>, <span class="number">9</span>, <span class="number">6</span>, <span class="number">7</span>]);
+        <span class="comment">// Move forward by 7
+        </span><span class="macro">assert_eq!</span>(evaluate_indices(<span class="number">7</span>..<span class="number">11</span>), [<span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">7</span>]);
+        <span class="comment">// Move forward by 8
+        </span><span class="macro">assert_eq!</span>(evaluate_indices(<span class="number">8</span>..<span class="number">12</span>), [<span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>]);
+        <span class="comment">// Move forward by 9
+        </span><span class="macro">assert_eq!</span>(evaluate_indices(<span class="number">9</span>..<span class="number">13</span>), [<span class="number">12</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>]);
     }
 }
 </code></pre></div></section></main></body></html>

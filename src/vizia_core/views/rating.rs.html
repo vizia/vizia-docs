@@ -93,6 +93,7 @@
 <a href="#92" id="92">92</a>
 <a href="#93" id="93">93</a>
 <a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{icons::ICON_STAR_FILLED, prelude::<span class="kw-2">*</span>};
 
 <span class="attr">#[derive(Lens)]
@@ -131,7 +132,7 @@
             .navigable(<span class="bool-val">true</span>)
             .role(Role::RadioGroup)
             .bind(lens, |handle, lens| {
-                <span class="kw">let </span>val = lens.get(handle.cx);
+                <span class="kw">let </span>val = lens.get(<span class="kw-2">&amp;</span>handle);
                 handle.modify(|rating| rating.rating = val);
             })
     }
@@ -152,11 +153,12 @@
             }
             RatingEvent::Increment =&gt; {
                 <span class="self">self</span>.rating += <span class="number">1</span>;
-                <span class="self">self</span>.rating %= <span class="number">6</span>;
+                <span class="self">self</span>.rating %= <span class="self">self</span>.max_rating + <span class="number">1</span>;
                 cx.emit(RatingEvent::EmitRating);
             }
             RatingEvent::Decrement =&gt; {
-                <span class="self">self</span>.rating = <span class="kw">if </span><span class="self">self</span>.rating == <span class="number">0 </span>{ <span class="number">5 </span>} <span class="kw">else </span>{ <span class="self">self</span>.rating.saturating_sub(<span class="number">1</span>) };
+                <span class="self">self</span>.rating =
+                    <span class="kw">if </span><span class="self">self</span>.rating == <span class="number">0 </span>{ <span class="self">self</span>.max_rating } <span class="kw">else </span>{ <span class="self">self</span>.rating.saturating_sub(<span class="number">1</span>) };
                 cx.emit(RatingEvent::EmitRating);
             }
         });

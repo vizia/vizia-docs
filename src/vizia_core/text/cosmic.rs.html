@@ -561,19 +561,6 @@
 <a href="#560" id="560">560</a>
 <a href="#561" id="561">561</a>
 <a href="#562" id="562">562</a>
-<a href="#563" id="563">563</a>
-<a href="#564" id="564">564</a>
-<a href="#565" id="565">565</a>
-<a href="#566" id="566">566</a>
-<a href="#567" id="567">567</a>
-<a href="#568" id="568">568</a>
-<a href="#569" id="569">569</a>
-<a href="#570" id="570">570</a>
-<a href="#571" id="571">571</a>
-<a href="#572" id="572">572</a>
-<a href="#573" id="573">573</a>
-<a href="#574" id="574">574</a>
-<a href="#575" id="575">575</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::entity::Entity;
 <span class="kw">use </span><span class="kw">crate</span>::layout::BoundingBox;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::Color;
@@ -581,19 +568,18 @@
 <span class="kw">use </span>cosmic_text::fontdb::Query;
 <span class="kw">use </span>cosmic_text::{
     fontdb::Database, Attrs, AttrsList, Buffer, CacheKey, Color <span class="kw">as </span>FontColor, Edit, Editor,
-    FontSystem, Metrics, SubpixelBin, Weight, Wrap,
+    FontSystem, Metrics, Weight, Wrap,
 };
-<span class="kw">use </span>cosmic_text::{Align, Cursor, FamilyOwned, Shaping};
+<span class="kw">use </span>cosmic_text::{Align, Cursor, FamilyOwned, Selection, Shaping};
 <span class="kw">use </span>femtovg::imgref::{Img, ImgRef};
 <span class="kw">use </span>femtovg::rgb::RGBA8;
 <span class="kw">use </span>femtovg::{
     Atlas, Canvas, DrawCommand, ErrorKind, GlyphDrawCommands, ImageFlags, ImageId, ImageSource,
     Quad, Renderer,
 };
-<span class="kw">use </span>fnv::FnvHashMap;
+<span class="kw">use </span>hashbrown::HashMap;
 <span class="kw">use </span>morphorm::Units;
 <span class="kw">use </span>std::cmp::Ordering;
-<span class="kw">use </span>std::collections::HashMap;
 <span class="kw">use </span>swash::scale::image::Content;
 <span class="kw">use </span>swash::scale::{Render, ScaleContext, Source, StrikeWith};
 <span class="kw">use </span>swash::zeno::{Format, Vector};
@@ -605,22 +591,16 @@
 <span class="kw">const </span>GLYPH_MARGIN: u32 = <span class="number">1</span>;
 <span class="kw">const </span>TEXTURE_SIZE: usize = <span class="number">512</span>;
 
-<span class="attr">#[derive(Debug, Clone, Copy)]
+<span class="attr">#[derive(Default, Debug, Clone, Copy)]
 </span><span class="kw">pub struct </span>TextConfig {
     <span class="kw">pub </span>hint: bool,
     <span class="kw">pub </span>subpixel: bool,
 }
 
-<span class="kw">impl </span>Default <span class="kw">for </span>TextConfig {
-    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{ hint: <span class="bool-val">true</span>, subpixel: <span class="bool-val">false </span>}
-    }
-}
-
 <span class="kw">pub struct </span>TextContext {
     font_system: FontSystem,
     scale_context: ScaleContext,
-    rendered_glyphs: FnvHashMap&lt;CacheKey, <span class="prelude-ty">Option</span>&lt;RenderedGlyph&gt;&gt;,
+    rendered_glyphs: HashMap&lt;CacheKey, <span class="prelude-ty">Option</span>&lt;RenderedGlyph&gt;&gt;,
     glyph_textures: Vec&lt;FontTexture&gt;,
     buffers: HashMap&lt;Entity, Editor&gt;,
     bounds: SparseSet&lt;BoundingBox&gt;,
@@ -672,6 +652,12 @@
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_bounds(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; <span class="prelude-ty">Option</span>&lt;BoundingBox&gt; {
         <span class="self">self</span>.bounds.get(entity).copied()
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>clear_bounds(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
+        <span class="kw">if </span><span class="self">self</span>.bounds.contains(entity) {
+            <span class="self">self</span>.bounds.remove(entity).unwrap();
+        }
     }
 
     <span class="doccomment">/// Sync the style data from vizia with the style attribites stored in cosmic-text buffers.
@@ -783,7 +769,7 @@
             <span class="kw">let </span>font_size = style.font_size.get(entity).copied().map(|f| f.<span class="number">0</span>).unwrap_or(<span class="number">16.0</span>)
                 * style.dpi_factor <span class="kw">as </span>f32;
             <span class="comment">// TODO configurable line spacing
-            </span>buf.set_metrics(fs, Metrics::new(font_size, font_size * <span class="number">1.25</span>));
+            </span>buf.set_metrics(fs, Metrics::new(font_size, font_size * <span class="number">1.2</span>));
             <span class="comment">// buf.set_size(fs, 200.0, 200.0);
             // buf.shape_until_scroll(fs);
             </span>buf.shape_until(fs, i32::MAX);
@@ -805,22 +791,19 @@
 
         <span class="kw">let </span>buffer = <span class="self">self</span>.buffers.get_mut(<span class="kw-2">&amp;</span>entity).unwrap().buffer_mut();
 
-        <span class="kw">let </span><span class="kw-2">mut </span>alpha_cmd_map = FnvHashMap::default();
-        <span class="kw">let </span><span class="kw-2">mut </span>color_cmd_map = FnvHashMap::default();
+        <span class="kw">let </span><span class="kw-2">mut </span>alpha_cmd_map = HashMap::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>color_cmd_map = HashMap::new();
 
-        <span class="kw">let </span>total_height = buffer.layout_runs().len() <span class="kw">as </span>f32 * buffer.metrics().line_height;
+        <span class="kw">let </span>lines = buffer.layout_runs().filter(|run| run.line_w != <span class="number">0.0</span>).count();
+        <span class="kw">let </span>total_height = lines <span class="kw">as </span>f32 * buffer.metrics().line_height;
         <span class="kw">for </span>run <span class="kw">in </span>buffer.layout_runs() {
-            <span class="kw">for </span>glyph <span class="kw">in </span>run.glyphs.iter() {
-                <span class="kw">let </span><span class="kw-2">mut </span>cache_key = glyph.cache_key;
-                <span class="kw">let </span>position_x = bounds.x + cache_key.x_bin.as_float();
-                <span class="kw">let </span>position_y = bounds.y + cache_key.y_bin.as_float();
+            <span class="kw">for </span>glyph <span class="kw">in </span>run.glyphs {
+                <span class="kw">let </span>physical_glyph = glyph.physical(
+                    (bounds.x, bounds.y + bounds.h * justify.<span class="number">1 </span>- total_height * justify.<span class="number">1</span>),
+                    <span class="number">1.0</span>,
+                );
+                <span class="kw">let </span>cache_key = physical_glyph.cache_key;
 
-                <span class="kw">let </span>position_y = position_y + bounds.h * justify.<span class="number">1 </span>- total_height * justify.<span class="number">1</span>;
-
-                <span class="kw">let </span>(position_x, subpixel_x) = SubpixelBin::new(position_x);
-                <span class="kw">let </span>(position_y, subpixel_y) = SubpixelBin::new(position_y);
-                cache_key.x_bin = subpixel_x;
-                cache_key.y_bin = subpixel_y;
                 <span class="comment">// perform cache lookup for rendered glyph
                 </span><span class="kw">let </span><span class="prelude-val">Some</span>(rendered) = <span class="self">self</span>.rendered_glyphs.entry(cache_key).or_insert_with(|| {
                     <span class="comment">// ...or insert it
@@ -838,7 +821,7 @@
                         .build();
                     <span class="kw">let </span>offset =
                         Vector::new(cache_key.x_bin.as_float(), cache_key.y_bin.as_float());
-                    <span class="kw">let </span>rendered = Render::new(<span class="kw-2">&amp;</span>[
+                    <span class="kw">let </span>image = Render::new(<span class="kw-2">&amp;</span>[
                         Source::ColorOutline(<span class="number">0</span>),
                         Source::ColorBitmap(StrikeWith::BestFit),
                         Source::Outline,
@@ -848,15 +831,14 @@
                     .render(<span class="kw-2">&amp;mut </span>scaler, cache_key.glyph_id);
 
                     <span class="comment">// upload it to the GPU
-                    </span>rendered.map(|rendered| {
+                    </span>image.map(|image| {
                         <span class="comment">// pick an atlas texture for our glyph
-                        </span><span class="kw">let </span>content_w = rendered.placement.width <span class="kw">as </span>usize;
-                        <span class="kw">let </span>content_h = rendered.placement.height <span class="kw">as </span>usize;
-                        <span class="kw">let </span>alloc_w = rendered.placement.width + (GLYPH_MARGIN + GLYPH_PADDING) * <span class="number">2</span>;
-                        <span class="kw">let </span>alloc_h =
-                            rendered.placement.height + (GLYPH_MARGIN + GLYPH_PADDING) * <span class="number">2</span>;
-                        <span class="kw">let </span>used_w = rendered.placement.width + GLYPH_PADDING * <span class="number">2</span>;
-                        <span class="kw">let </span>used_h = rendered.placement.height + GLYPH_PADDING * <span class="number">2</span>;
+                        </span><span class="kw">let </span>content_w = image.placement.width <span class="kw">as </span>usize;
+                        <span class="kw">let </span>content_h = image.placement.height <span class="kw">as </span>usize;
+                        <span class="kw">let </span>alloc_w = image.placement.width + (GLYPH_MARGIN + GLYPH_PADDING) * <span class="number">2</span>;
+                        <span class="kw">let </span>alloc_h = image.placement.height + (GLYPH_MARGIN + GLYPH_PADDING) * <span class="number">2</span>;
+                        <span class="kw">let </span>used_w = image.placement.width + GLYPH_PADDING * <span class="number">2</span>;
+                        <span class="kw">let </span>used_h = image.placement.height + GLYPH_PADDING * <span class="number">2</span>;
                         <span class="kw">let </span><span class="kw-2">mut </span>found = <span class="prelude-val">None</span>;
                         <span class="kw">for </span>(texture_index, glyph_atlas) <span class="kw">in
                             </span><span class="self">self</span>.glyph_textures.iter_mut().enumerate()
@@ -900,14 +882,14 @@
                         <span class="kw">let </span>atlas_content_y = atlas_alloc_y <span class="kw">as </span>u32 + GLYPH_MARGIN + GLYPH_PADDING;
 
                         <span class="kw">let </span><span class="kw-2">mut </span>src_buf = Vec::with_capacity(content_w * content_h);
-                        <span class="kw">match </span>rendered.content {
+                        <span class="kw">match </span>image.content {
                             Content::Mask =&gt; {
-                                <span class="kw">for </span>chunk <span class="kw">in </span>rendered.data.chunks_exact(<span class="number">1</span>) {
+                                <span class="kw">for </span>chunk <span class="kw">in </span>image.data.chunks_exact(<span class="number">1</span>) {
                                     src_buf.push(RGBA8::new(chunk[<span class="number">0</span>], <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>));
                                 }
                             }
                             Content::Color | Content::SubpixelMask =&gt; {
-                                <span class="kw">for </span>chunk <span class="kw">in </span>rendered.data.chunks_exact(<span class="number">4</span>) {
+                                <span class="kw">for </span>chunk <span class="kw">in </span>image.data.chunks_exact(<span class="number">4</span>) {
                                     src_buf
                                         .push(RGBA8::new(chunk[<span class="number">0</span>], chunk[<span class="number">1</span>], chunk[<span class="number">2</span>], chunk[<span class="number">3</span>]));
                                 }
@@ -925,11 +907,11 @@
                             texture_index,
                             width: used_w,
                             height: used_h,
-                            offset_x: rendered.placement.left,
-                            offset_y: rendered.placement.top,
+                            offset_x: image.placement.left,
+                            offset_y: image.placement.top,
                             atlas_x: atlas_used_x,
                             atlas_y: atlas_used_y,
-                            color_glyph: <span class="macro">matches!</span>(rendered.content, Content::Color),
+                            color_glyph: <span class="macro">matches!</span>(image.content, Content::Color),
                         }
                     })
                 }) <span class="kw">else </span>{
@@ -941,7 +923,7 @@
                 } <span class="kw">else </span>{
                     alpha_cmd_map
                         .entry(glyph.color_opt.unwrap_or(FontColor::rgb(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)))
-                        .or_insert_with(FnvHashMap::default)
+                        .or_insert_with(HashMap::default)
                 };
 
                 <span class="kw">let </span>cmd = cmd_map.entry(rendered.texture_index).or_insert_with(|| DrawCommand {
@@ -951,10 +933,9 @@
 
                 <span class="kw">let </span><span class="kw-2">mut </span>q = Quad::default();
                 <span class="kw">let </span>it = <span class="number">1.0 </span>/ TEXTURE_SIZE <span class="kw">as </span>f32;
-                q.x0 = (position_x + glyph.x_int + rendered.offset_x - GLYPH_PADDING <span class="kw">as </span>i32) <span class="kw">as </span>f32;
-                q.y0 = (position_y + run.line_y <span class="kw">as </span>i32 + glyph.y_int
-                    - rendered.offset_y
-                    - GLYPH_PADDING <span class="kw">as </span>i32) <span class="kw">as </span>f32;
+                q.x0 = (physical_glyph.x + rendered.offset_x - GLYPH_PADDING <span class="kw">as </span>i32) <span class="kw">as </span>f32;
+                q.y0 = (physical_glyph.y - rendered.offset_y - GLYPH_PADDING <span class="kw">as </span>i32
+                    + run.line_y.round() <span class="kw">as </span>i32) <span class="kw">as </span>f32;
                 q.x1 = q.x0 + rendered.width <span class="kw">as </span>f32;
                 q.y1 = q.y0 + rendered.height <span class="kw">as </span>f32;
 
@@ -999,7 +980,7 @@
     ) -&gt; Vec&lt;(f32, f32, f32, f32)&gt; {
         <span class="self">self</span>.with_editor(entity, |<span class="kw">_</span>, buf| {
             <span class="kw">let </span><span class="kw-2">mut </span>result = <span class="macro">vec!</span>[];
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(cursor_end) = buf.select_opt() {
+            <span class="kw">if let </span>Selection::Normal(cursor_end) = buf.selection() {
                 <span class="kw">let </span>(cursor_start, cursor_end) = <span class="kw">match </span>buf.cursor().cmp(<span class="kw-2">&amp;</span>cursor_end) {
                     Ordering::Less =&gt; (buf.cursor(), cursor_end),
                     Ordering::Greater =&gt; (cursor_end, buf.cursor()),
@@ -1036,12 +1017,10 @@
 
             <span class="kw">let </span>position_y = bounds.y + bounds.h * justify.<span class="number">1 </span>- total_height * justify.<span class="number">1</span>;
 
-            <span class="kw">let </span>font_size = buffer.metrics().font_size;
             <span class="kw">let </span>line_height = buffer.metrics().line_height;
 
             <span class="kw">for </span>run <span class="kw">in </span>buffer.layout_runs() {
                 <span class="kw">let </span>line_i = run.line_i;
-                <span class="kw">let </span>line_y = run.line_y;
 
                 <span class="kw">let </span>position_x = bounds.x;
 
@@ -1086,33 +1065,28 @@
                         <span class="prelude-val">Some</span>(glyph) =&gt; {
                             <span class="comment">// Start of detected glyph
                             </span><span class="kw">if </span>glyph.level.is_rtl() {
-                                (glyph.x + glyph.w - cursor_glyph_offset) <span class="kw">as </span>i32
+                                glyph.x + glyph.w - cursor_glyph_offset
                             } <span class="kw">else </span>{
-                                (glyph.x + cursor_glyph_offset) <span class="kw">as </span>i32
+                                glyph.x + cursor_glyph_offset
                             }
                         }
                         <span class="prelude-val">None </span>=&gt; <span class="kw">match </span>run.glyphs.last() {
                             <span class="prelude-val">Some</span>(glyph) =&gt; {
                                 <span class="comment">// End of last glyph
                                 </span><span class="kw">if </span>glyph.level.is_rtl() {
-                                    glyph.x <span class="kw">as </span>i32
+                                    glyph.x
                                 } <span class="kw">else </span>{
-                                    (glyph.x + glyph.w) <span class="kw">as </span>i32
+                                    glyph.x + glyph.w
                                 }
                             }
                             <span class="prelude-val">None </span>=&gt; {
                                 <span class="comment">// Start of empty line
-                                </span><span class="number">0
+                                </span><span class="number">0.0
                             </span>}
                         },
                     };
 
-                    <span class="kw">return </span><span class="prelude-val">Some</span>((
-                        x <span class="kw">as </span>f32 + position_x,
-                        (line_y - font_size) + position_y,
-                        width,
-                        line_height,
-                    ));
+                    <span class="kw">return </span><span class="prelude-val">Some</span>((position_x + x, position_y + run.line_top, width, line_height));
                 }
             }
             <span class="prelude-val">None
@@ -1125,7 +1099,7 @@
         <span class="self">Self </span>{
             font_system: FontSystem::new_with_locale_and_db(locale, font_db),
             scale_context: Default::default(),
-            rendered_glyphs: FnvHashMap::default(),
+            rendered_glyphs: HashMap::default(),
             glyph_textures: <span class="macro">vec!</span>[],
             buffers: HashMap::new(),
             bounds: SparseSet::new(),

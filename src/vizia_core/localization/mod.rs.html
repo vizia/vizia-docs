@@ -349,23 +349,6 @@
 <a href="#348" id="348">348</a>
 <a href="#349" id="349">349</a>
 <a href="#350" id="350">350</a>
-<a href="#351" id="351">351</a>
-<a href="#352" id="352">352</a>
-<a href="#353" id="353">353</a>
-<a href="#354" id="354">354</a>
-<a href="#355" id="355">355</a>
-<a href="#356" id="356">356</a>
-<a href="#357" id="357">357</a>
-<a href="#358" id="358">358</a>
-<a href="#359" id="359">359</a>
-<a href="#360" id="360">360</a>
-<a href="#361" id="361">361</a>
-<a href="#362" id="362">362</a>
-<a href="#363" id="363">363</a>
-<a href="#364" id="364">364</a>
-<a href="#365" id="365">365</a>
-<a href="#366" id="366">366</a>
-<a href="#367" id="367">367</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Provides types for adapting an application to a particular language or regional peculiarities.
 //!
 //! # Language Translation
@@ -436,16 +419,15 @@
 //! # }
 //! Label::new(cx, Localized::new("welcome").arg("user", AppData::user));
 //! ```
-
-</span><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+</span><span class="kw">use </span><span class="kw">crate</span>::context::LocalizationContext;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>fluent_bundle::FluentArgs;
 <span class="kw">use </span>fluent_bundle::FluentValue;
-<span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>hashbrown::HashMap;
 <span class="kw">use </span>std::rc::Rc;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>FluentStore {
-    <span class="kw">fn </span>get_val(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>EventContext) -&gt; FluentValue&lt;<span class="lifetime">'static</span>&gt;;
-    <span class="kw">fn </span>get_val2(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>Context) -&gt; FluentValue&lt;<span class="lifetime">'static</span>&gt;;
+    <span class="kw">fn </span>get_val(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>LocalizationContext) -&gt; FluentValue&lt;<span class="lifetime">'static</span>&gt;;
     <span class="kw">fn </span>make_clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Box&lt;<span class="kw">dyn </span>FluentStore&gt;;
     <span class="kw">fn </span>bind(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, closure: Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context)&gt;);
 }
@@ -465,24 +447,15 @@
     </span>L: Lens,
     &lt;L <span class="kw">as </span>Lens&gt;::Target: Into&lt;FluentValue&lt;<span class="lifetime">'static</span>&gt;&gt; + Data,
 {
-    <span class="kw">fn </span>get_val(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>EventContext) -&gt; FluentValue&lt;<span class="lifetime">'static</span>&gt; {
-        <span class="self">self</span>.lens.view(
-            cx.data().expect(<span class="string">"Failed to get data from context. Has it been built into the tree?"</span>),
-            |data| <span class="kw">match </span>data {
-                <span class="prelude-val">Some</span>(x) =&gt; x.clone().into(),
-                <span class="prelude-val">None </span>=&gt; <span class="string">""</span>.into(),
-            },
-        )
-    }
-
-    <span class="kw">fn </span>get_val2(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>Context) -&gt; FluentValue&lt;<span class="lifetime">'static</span>&gt; {
-        <span class="self">self</span>.lens.view(
-            cx.data().expect(<span class="string">"Failed to get data from context. Has it been built into the tree?"</span>),
-            |data| <span class="kw">match </span>data {
-                <span class="prelude-val">Some</span>(x) =&gt; x.clone().into(),
-                <span class="prelude-val">None </span>=&gt; <span class="string">""</span>.into(),
-            },
-        )
+    <span class="kw">fn </span>get_val(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>LocalizationContext) -&gt; FluentValue&lt;<span class="lifetime">'static</span>&gt; {
+        <span class="self">self</span>.lens
+            .view(
+                cx.data()
+                    .expect(<span class="string">"Failed to get data from context. Has it been built into the tree?"</span>),
+            )
+            .unwrap()
+            .into_owned()
+            .into()
     }
 
     <span class="kw">fn </span>make_clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Box&lt;<span class="kw">dyn </span>FluentStore&gt; {
@@ -498,11 +471,7 @@
 <span class="kw">where
     </span>T: <span class="lifetime">'static </span>+ Clone + Into&lt;FluentValue&lt;<span class="lifetime">'static</span>&gt;&gt;,
 {
-    <span class="kw">fn </span>get_val(<span class="kw-2">&amp;</span><span class="self">self</span>, _cx: <span class="kw-2">&amp;</span>EventContext) -&gt; FluentValue&lt;<span class="lifetime">'static</span>&gt; {
-        <span class="self">self</span>.val.clone().into()
-    }
-
-    <span class="kw">fn </span>get_val2(<span class="kw-2">&amp;</span><span class="self">self</span>, _cx: <span class="kw-2">&amp;</span>Context) -&gt; FluentValue&lt;<span class="lifetime">'static</span>&gt; {
+    <span class="kw">fn </span>get_val(<span class="kw-2">&amp;</span><span class="self">self</span>, _cx: <span class="kw-2">&amp;</span>LocalizationContext) -&gt; FluentValue&lt;<span class="lifetime">'static</span>&gt; {
         <span class="self">self</span>.val.clone().into()
     }
 
@@ -539,18 +508,10 @@
 }
 
 <span class="kw">impl </span>Localized {
-    <span class="kw">fn </span>get_args(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>EventContext) -&gt; FluentArgs {
+    <span class="kw">fn </span>get_args(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>LocalizationContext) -&gt; FluentArgs {
         <span class="kw">let </span><span class="kw-2">mut </span>res = FluentArgs::new();
         <span class="kw">for </span>(name, arg) <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.args {
             res.set(name.to_owned(), arg.get_val(cx));
-        }
-        res
-    }
-
-    <span class="kw">fn </span>get_args2(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>Context) -&gt; FluentArgs {
-        <span class="kw">let </span><span class="kw-2">mut </span>res = FluentArgs::new();
-        <span class="kw">for </span>(name, arg) <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.args {
-            res.set(name.to_owned(), arg.get_val2(cx));
         }
         res
     }
@@ -631,7 +592,12 @@
 }
 
 <span class="kw">impl </span>Res&lt;String&gt; <span class="kw">for </span>Localized {
-    <span class="kw">fn </span>get_val(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>Context) -&gt; String {
+    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, String&gt;&gt; {
+        <span class="prelude-val">Some</span>(LensValue::Owned(<span class="self">self</span>.get(cx)))
+    }
+
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; String {
+        <span class="kw">let </span>cx = cx.as_context().expect(<span class="string">"Failed to get context"</span>);
         <span class="kw">let </span>locale = <span class="kw-2">&amp;</span>cx.environment().locale;
         <span class="kw">let </span>bundle = cx.resource_manager.current_translation(locale);
         <span class="kw">let </span>message = <span class="kw">if let </span><span class="prelude-val">Some</span>(msg) = bundle.get_message(<span class="kw-2">&amp;</span><span class="self">self</span>.key) {
@@ -647,7 +613,7 @@
         };
 
         <span class="kw">let </span><span class="kw-2">mut </span>err = <span class="macro">vec!</span>[];
-        <span class="kw">let </span>args = <span class="self">self</span>.get_args2(cx);
+        <span class="kw">let </span>args = <span class="self">self</span>.get_args(<span class="kw-2">&amp;</span>cx);
         <span class="kw">let </span>res = bundle.format_pattern(value, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>args), <span class="kw-2">&amp;mut </span>err);
 
         <span class="kw">if </span>err.is_empty() {
@@ -657,20 +623,18 @@
         }
     }
 
-    <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
+    <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">'static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>EventContext, String),
+        </span>F: <span class="lifetime">'static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Localized),
     {
         <span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-        cx.with_current(entity, <span class="kw">move </span>|cx| {
-            Binding::new(cx, Environment::locale, <span class="kw">move </span>|cx, <span class="kw">_</span>| {
+        Binding::new(cx, Environment::locale, <span class="kw">move </span>|cx, <span class="kw">_</span>| {
+            cx.with_current(entity, |cx| {
                 <span class="kw">let </span>lenses = self2.args.values().map(|x| x.make_clone()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
                 <span class="kw">let </span>self3 = self2.clone();
                 <span class="kw">let </span>closure = closure.clone();
                 bind_recursive(cx, <span class="kw-2">&amp;</span>lenses, <span class="kw">move </span>|cx| {
-                    <span class="kw">let </span>val = self3.get_val(cx);
-                    <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new_with_current(cx, entity);
-                    closure(cx, val);
+                    closure(cx, self3.clone());
                 });
             });
         });
@@ -695,17 +659,19 @@
 }
 
 <span class="kw">impl</span>&lt;T: ToString&gt; ToStringLocalized <span class="kw">for </span>T {
-    <span class="kw">fn </span>to_string_local(<span class="kw-2">&amp;</span><span class="self">self</span>, _cx: <span class="kw-2">&amp;</span>EventContext) -&gt; String {
+    <span class="kw">fn </span>to_string_local(<span class="kw-2">&amp;</span><span class="self">self</span>, _cx: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; String {
         <span class="self">self</span>.to_string()
     }
 }
 
 <span class="kw">pub trait </span>ToStringLocalized {
-    <span class="kw">fn </span>to_string_local(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>EventContext) -&gt; String;
+    <span class="kw">fn </span>to_string_local(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; String;
 }
 
 <span class="kw">impl </span>ToStringLocalized <span class="kw">for </span>Localized {
-    <span class="kw">fn </span>to_string_local(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>EventContext) -&gt; String {
+    <span class="kw">fn </span>to_string_local(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; String {
+        <span class="kw">let </span>cx = cx.as_context().expect(<span class="string">"Failed to get context"</span>);
+
         <span class="kw">let </span>locale = <span class="kw-2">&amp;</span>cx.environment().locale;
         <span class="kw">let </span>bundle = cx.resource_manager.current_translation(locale);
         <span class="kw">let </span>message = <span class="kw">if let </span><span class="prelude-val">Some</span>(msg) = bundle.get_message(<span class="kw-2">&amp;</span><span class="self">self</span>.key) {
@@ -723,7 +689,7 @@
         };
 
         <span class="kw">let </span><span class="kw-2">mut </span>err = <span class="macro">vec!</span>[];
-        <span class="kw">let </span>args = <span class="self">self</span>.get_args(cx);
+        <span class="kw">let </span>args = <span class="self">self</span>.get_args(<span class="kw-2">&amp;</span>cx);
         <span class="kw">let </span>res = bundle.format_pattern(value, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>args), <span class="kw-2">&amp;mut </span>err);
 
         <span class="kw">if </span>err.is_empty() {

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["is_open","open_on_hover","root"]};
+window.SIDEBAR_ITEMS = {"struct":["is_open","is_submenu","open_on_hover","root"]};

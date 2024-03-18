@@ -704,23 +704,123 @@
 <a href="#703" id="703">703</a>
 <a href="#704" id="704">704</a>
 <a href="#705" id="705">705</a>
+<a href="#706" id="706">706</a>
+<a href="#707" id="707">707</a>
+<a href="#708" id="708">708</a>
+<a href="#709" id="709">709</a>
+<a href="#710" id="710">710</a>
+<a href="#711" id="711">711</a>
+<a href="#712" id="712">712</a>
+<a href="#713" id="713">713</a>
+<a href="#714" id="714">714</a>
+<a href="#715" id="715">715</a>
+<a href="#716" id="716">716</a>
+<a href="#717" id="717">717</a>
+<a href="#718" id="718">718</a>
+<a href="#719" id="719">719</a>
+<a href="#720" id="720">720</a>
+<a href="#721" id="721">721</a>
+<a href="#722" id="722">722</a>
+<a href="#723" id="723">723</a>
+<a href="#724" id="724">724</a>
+<a href="#725" id="725">725</a>
+<a href="#726" id="726">726</a>
+<a href="#727" id="727">727</a>
+<a href="#728" id="728">728</a>
+<a href="#729" id="729">729</a>
+<a href="#730" id="730">730</a>
+<a href="#731" id="731">731</a>
+<a href="#732" id="732">732</a>
+<a href="#733" id="733">733</a>
+<a href="#734" id="734">734</a>
+<a href="#735" id="735">735</a>
+<a href="#736" id="736">736</a>
+<a href="#737" id="737">737</a>
+<a href="#738" id="738">738</a>
+<a href="#739" id="739">739</a>
+<a href="#740" id="740">740</a>
+<a href="#741" id="741">741</a>
+<a href="#742" id="742">742</a>
+<a href="#743" id="743">743</a>
+<a href="#744" id="744">744</a>
+<a href="#745" id="745">745</a>
+<a href="#746" id="746">746</a>
+<a href="#747" id="747">747</a>
+<a href="#748" id="748">748</a>
+<a href="#749" id="749">749</a>
+<a href="#750" id="750">750</a>
+<a href="#751" id="751">751</a>
+<a href="#752" id="752">752</a>
+<a href="#753" id="753">753</a>
+<a href="#754" id="754">754</a>
+<a href="#755" id="755">755</a>
+<a href="#756" id="756">756</a>
+<a href="#757" id="757">757</a>
+<a href="#758" id="758">758</a>
+<a href="#759" id="759">759</a>
+<a href="#760" id="760">760</a>
+<a href="#761" id="761">761</a>
+<a href="#762" id="762">762</a>
+<a href="#763" id="763">763</a>
+<a href="#764" id="764">764</a>
+<a href="#765" id="765">765</a>
+<a href="#766" id="766">766</a>
+<a href="#767" id="767">767</a>
+<a href="#768" id="768">768</a>
+<a href="#769" id="769">769</a>
+<a href="#770" id="770">770</a>
+<a href="#771" id="771">771</a>
+<a href="#772" id="772">772</a>
+<a href="#773" id="773">773</a>
+<a href="#774" id="774">774</a>
+<a href="#775" id="775">775</a>
+<a href="#776" id="776">776</a>
+<a href="#777" id="777">777</a>
+<a href="#778" id="778">778</a>
+<a href="#779" id="779">779</a>
+<a href="#780" id="780">780</a>
+<a href="#781" id="781">781</a>
+<a href="#782" id="782">782</a>
+<a href="#783" id="783">783</a>
+<a href="#784" id="784">784</a>
+<a href="#785" id="785">785</a>
+<a href="#786" id="786">786</a>
+<a href="#787" id="787">787</a>
+<a href="#788" id="788">788</a>
+<a href="#789" id="789">789</a>
+<a href="#790" id="790">790</a>
+<a href="#791" id="791">791</a>
+<a href="#792" id="792">792</a>
+<a href="#793" id="793">793</a>
+<a href="#794" id="794">794</a>
+<a href="#795" id="795">795</a>
+<a href="#796" id="796">796</a>
+<a href="#797" id="797">797</a>
+<a href="#798" id="798">798</a>
+<a href="#799" id="799">799</a>
+<a href="#800" id="800">800</a>
+<a href="#801" id="801">801</a>
+<a href="#802" id="802">802</a>
+<a href="#803" id="803">803</a>
+<a href="#804" id="804">804</a>
+<a href="#805" id="805">805</a>
+<a href="#806" id="806">806</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
-    convert::{scan_code_to_code, virtual_key_code_to_code, virtual_key_code_to_key},
+    convert::{winit_key_code_to_code, winit_key_to_key},
     window::Window,
 };
-<span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
-</span><span class="kw">use </span>accesskit::{Action, NodeBuilder, TreeUpdate};
-<span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
+
+<span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+</span><span class="kw">use </span>accesskit::{Action, NodeBuilder, NodeId, TreeUpdate};
+<span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
 </span><span class="kw">use </span>accesskit_winit;
 <span class="kw">use </span>std::cell::RefCell;
 <span class="kw">use </span>vizia_core::backend::<span class="kw-2">*</span>;
 <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
 </span><span class="kw">use </span>vizia_core::context::EventProxy;
 <span class="kw">use </span>vizia_core::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span>vizia_id::GenerationalId;
-<span class="kw">use </span>vizia_window::Position;
-<span class="kw">use </span>winit::event_loop::EventLoopBuilder;
-<span class="attr">#[cfg(all(
+<span class="comment">// use vizia_input::KeyState;
+</span><span class="attr">#[cfg(all(
     feature = <span class="string">"clipboard"</span>,
     feature = <span class="string">"wayland"</span>,
     any(
@@ -731,10 +831,15 @@
         target_os = <span class="string">"openbsd"
     </span>)
 ))]
-</span><span class="kw">use </span>winit::platform::wayland::WindowExtWayland;
+</span><span class="kw">use </span>raw_window_handle::{HasRawDisplayHandle, RawDisplayHandle};
+<span class="kw">use </span>vizia_window::Position;
+
 <span class="kw">use </span>winit::{
-    event::VirtualKeyCode,
+    error::EventLoopError, event::ElementState, event_loop::EventLoopBuilder, keyboard::PhysicalKey,
+};
+<span class="kw">use </span>winit::{
     event_loop::{ControlFlow, EventLoop},
+    keyboard::NativeKeyCode,
 };
 
 <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
@@ -743,11 +848,11 @@
 <span class="attr">#[derive(Debug)]
 </span><span class="kw">pub enum </span>UserEvent {
     Event(Event),
-    <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
+    <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
     </span>AccessKitActionRequest(accesskit_winit::ActionRequestEvent),
 }
 
-<span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
+<span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
 </span><span class="kw">impl </span>From&lt;accesskit_winit::ActionRequestEvent&gt; <span class="kw">for </span>UserEvent {
     <span class="kw">fn </span>from(action_request_event: accesskit_winit::ActionRequestEvent) -&gt; <span class="self">Self </span>{
         UserEvent::AccessKitActionRequest(action_request_event)
@@ -760,8 +865,13 @@
     }
 }
 
-<span class="kw">type </span>AppBuilder = <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnOnce(<span class="kw-2">&amp;mut </span>Context)&gt;&gt;;
 <span class="kw">type </span>IdleCallback = <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context)&gt;&gt;;
+
+<span class="attr">#[derive(Debug)]
+</span><span class="kw">pub enum </span>ApplicationError {
+    EventLoopError(EventLoopError),
+    LogError,
+}
 
 <span class="doccomment">///Creating a new application creates a root `Window` and a `Context`. Views declared within the closure passed to `Application::new()` are added to the context and rendered into the root window.
 ///
@@ -778,7 +888,6 @@
 </span><span class="kw">pub struct </span>Application {
     context: Context,
     event_loop: EventLoop&lt;UserEvent&gt;,
-    builder: AppBuilder,
     on_idle: IdleCallback,
     window_description: WindowDescription,
     should_poll: bool,
@@ -810,10 +919,10 @@
         <span class="comment">// TODO: User scale factors and window resizing has not been implement for winit
         // TODO: Changing the scale factor doesn't work for winit anyways since winit doesn't let
         //       you resize the window, so there's no mutator for that at he moment
-        </span><span class="attr">#[allow(unused_mut)]
         </span><span class="kw">let </span><span class="kw-2">mut </span>context = Context::new(WindowSize::new(<span class="number">1</span>, <span class="number">1</span>), <span class="number">1.0</span>);
 
-        <span class="kw">let </span>event_loop = EventLoopBuilder::with_user_event().build();
+        <span class="kw">let </span>event_loop =
+            EventLoopBuilder::with_user_event().build().expect(<span class="string">"Failed to create event loop"</span>);
         <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
         </span>{
             <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(<span class="kw-2">&amp;mut </span>context);
@@ -821,10 +930,14 @@
             cx.set_event_proxy(Box::new(WinitEventProxy(event_proxy_obj)));
         }
 
+        <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(<span class="kw-2">&amp;mut </span>context);
+        cx.renegotiate_language();
+        cx.<span class="number">0</span>.remove_user_themes();
+        (content)(cx.<span class="number">0</span>);
+
         <span class="self">Self </span>{
             context,
             event_loop,
-            builder: <span class="prelude-val">Some</span>(Box::new(content)),
             on_idle: <span class="prelude-val">None</span>,
             window_description: WindowDescription::new(),
             should_poll: <span class="bool-val">false</span>,
@@ -880,7 +993,7 @@
     }
 
     <span class="doccomment">/// Starts the application and enters the main event loop.
-    </span><span class="kw">pub fn </span>run(<span class="kw-2">mut </span><span class="self">self</span>) {
+    </span><span class="kw">pub fn </span>run(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ApplicationError&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>context = <span class="self">self</span>.context;
 
         <span class="kw">let </span>event_loop = <span class="self">self</span>.event_loop;
@@ -892,7 +1005,7 @@
         </span><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
         </span><span class="kw">let </span><span class="kw-2">mut </span>is_initially_cloaked = window.set_cloak(<span class="bool-val">true</span>);
 
-        <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
+        <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
         </span><span class="kw">let </span>event_loop_proxy = event_loop.create_proxy();
 
         <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(<span class="kw-2">&amp;mut </span>context);
@@ -906,9 +1019,9 @@
             cx.emit_origin(WindowEvent::ThemeChanged(theme));
         }
 
-        <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
+        <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
         </span><span class="kw">let </span>root_node = NodeBuilder::new(Role::Window).build(cx.accesskit_node_classes());
-        <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
+        <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
         </span><span class="kw">let </span>accesskit = accesskit_winit::Adapter::new(
             window.window(),
             <span class="kw">move </span>|| {
@@ -917,10 +1030,12 @@
 
                 <span class="kw">let </span>root_id = Entity::root().accesskit_id();
 
-                TreeUpdate {
+                <span class="comment">// Build initial tree here
+
+                </span>TreeUpdate {
                     nodes: <span class="macro">vec!</span>[(root_id, root_node)],
                     tree: <span class="prelude-val">Some</span>(Tree::new(root_id)),
-                    focus: <span class="prelude-val">Some</span>(Entity::root().accesskit_id()),
+                    focus: Entity::root().accesskit_id(),
                 }
             },
             event_loop_proxy,
@@ -942,9 +1057,11 @@
             </span>)
         ))]
         </span><span class="kw">unsafe </span>{
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(display) = window.window().wayland_display() {
-                <span class="kw">let </span>(<span class="kw">_</span>, clipboard) =
-                    copypasta::wayland_clipboard::create_clipboards_from_external(display);
+            <span class="kw">let </span>display = window.window().raw_display_handle();
+            <span class="kw">if let </span>RawDisplayHandle::Wayland(display_handle) = display {
+                <span class="kw">let </span>(<span class="kw">_</span>, clipboard) = copypasta::wayland_clipboard::create_clipboards_from_external(
+                    display_handle.display,
+                );
                 cx.set_clipboard_provider(Box::new(clipboard));
             }
         }
@@ -954,10 +1071,6 @@
         cx.add_window(window);
 
         cx.<span class="number">0</span>.remove_user_themes();
-        cx.renegotiate_language();
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(builder) = <span class="self">self</span>.builder.take() {
-            (builder)(cx.<span class="number">0</span>);
-        }
 
         <span class="kw">let </span>on_idle = <span class="self">self</span>.on_idle.take();
 
@@ -966,14 +1079,14 @@
         <span class="kw">let </span>default_should_poll = <span class="self">self</span>.should_poll;
         <span class="kw">let </span>stored_control_flow = RefCell::new(ControlFlow::Poll);
 
-        <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
-        </span>cx.process_tree_updates(|tree_updates| {
-            <span class="kw">for </span>update <span class="kw">in </span>tree_updates.iter() {
-                accesskit.update(update.clone());
-            }
-        });
+        <span class="comment">// #[cfg(all(not(target_arch = "wasm32"), feature = "accesskit"))]
+        // cx.process_tree_updates(|tree_updates| {
+        //     for update in tree_updates.iter_mut() {
+        //         accesskit.update_if_active(|| update.take().unwrap());
+        //     }
+        // });
 
-        <span class="kw">let </span><span class="kw-2">mut </span>cursor_moved = <span class="bool-val">false</span>;
+        </span><span class="kw">let </span><span class="kw-2">mut </span>cursor_moved = <span class="bool-val">false</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>cursor = (<span class="number">0.0f32</span>, <span class="number">0.0f32</span>);
         <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
         </span><span class="kw">let </span><span class="kw-2">mut </span>inside_window = <span class="bool-val">false</span>;
@@ -985,382 +1098,471 @@
         cx.process_visual_updates();
 
         <span class="kw">let </span><span class="kw-2">mut </span>main_events = <span class="bool-val">false</span>;
-        event_loop.run(<span class="kw">move </span>|event, <span class="kw">_</span>, control_flow| {
-            <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new_with_event_manager(<span class="kw-2">&amp;mut </span>context);
+        event_loop
+            .run(<span class="kw">move </span>|event, elwt| {
+                <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new_with_event_manager(<span class="kw-2">&amp;mut </span>context);
 
-            <span class="kw">match </span>event {
-                winit::event::Event::NewEvents(<span class="kw">_</span>) =&gt; {
-                    cx.process_timers();
-                    cx.emit_scheduled_events();
-                }
-
-                winit::event::Event::UserEvent(user_event) =&gt; <span class="kw">match </span>user_event {
-                    UserEvent::Event(event) =&gt; {
-                        cx.send_event(event);
+                <span class="kw">match </span>event {
+                    winit::event::Event::NewEvents(<span class="kw">_</span>) =&gt; {
+                        cx.process_timers();
+                        cx.emit_scheduled_events();
                     }
 
-                    <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
-                    </span>UserEvent::AccessKitActionRequest(action_request_event) =&gt; {
-                        <span class="kw">let </span>node_id = action_request_event.request.target;
+                    winit::event::Event::UserEvent(user_event) =&gt; <span class="kw">match </span>user_event {
+                        UserEvent::Event(event) =&gt; {
+                            cx.send_event(event);
+                        }
 
-                        <span class="kw">if </span>action_request_event.request.action != Action::ScrollIntoView {
-                            <span class="kw">let </span>entity = Entity::new(node_id.<span class="number">0</span>.get() <span class="kw">as </span>u64 - <span class="number">1</span>, <span class="number">0</span>);
+                        <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+                        </span>UserEvent::AccessKitActionRequest(action_request_event) =&gt; {
+                            <span class="kw">let </span>node_id = action_request_event.request.target;
 
-                            <span class="comment">// Handle focus action from screen reader
-                            </span><span class="kw">if </span>action_request_event.request.action == Action::Focus {
-                                cx.<span class="number">0</span>.with_current(entity, |cx| {
-                                    cx.focus();
+                            <span class="kw">if </span>action_request_event.request.action != Action::ScrollIntoView {
+                                <span class="kw">let </span>entity = Entity::new(node_id.<span class="number">0 </span><span class="kw">as </span>u64, <span class="number">0</span>);
+
+                                <span class="comment">// Handle focus action from screen reader
+                                </span><span class="kw">if </span>action_request_event.request.action == Action::Focus {
+                                    cx.<span class="number">0</span>.with_current(entity, |cx| {
+                                        cx.focus();
+                                    });
+                                }
+
+                                cx.send_event(
+                                    Event::new(WindowEvent::ActionRequest(
+                                        action_request_event.request,
+                                    ))
+                                    .direct(entity),
+                                );
+                            }
+                        }
+                    },
+
+                    winit::event::Event::AboutToWait =&gt; {
+                        main_events = <span class="bool-val">true</span>;
+
+                        <span class="kw-2">*</span>stored_control_flow.borrow_mut() =
+                            <span class="kw">if </span>default_should_poll { ControlFlow::Poll } <span class="kw">else </span>{ ControlFlow::Wait };
+
+                        <span class="kw">if </span>cursor_moved {
+                            cx.emit_origin(WindowEvent::MouseMove(cursor.<span class="number">0</span>, cursor.<span class="number">1</span>));
+                            cursor_moved = <span class="bool-val">false</span>;
+                        }
+
+                        cx.process_events();
+
+                        cx.process_style_updates();
+
+                        <span class="kw">if </span>cx.process_animations() {
+                            <span class="kw-2">*</span>stored_control_flow.borrow_mut() = ControlFlow::Poll;
+
+                            event_loop_proxy
+                                .send_event(UserEvent::Event(Event::new(WindowEvent::Redraw)))
+                                .expect(<span class="string">"Failed to send redraw event"</span>);
+
+                            cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
+                                window.window().request_redraw();
+                            });
+                        }
+
+                        cx.process_visual_updates();
+
+                        <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+                        </span>cx.process_tree_updates(|tree_updates| {
+                            <span class="kw">for </span>update <span class="kw">in </span>tree_updates.iter_mut() {
+                                accesskit.update_if_active(|| update.take().unwrap());
+                            }
+                        });
+
+                        cx.mutate_window(|cx, window: <span class="kw-2">&amp;</span>Window| {
+                            cx.style().should_redraw(|| {
+                                window.window().request_redraw();
+                            });
+                        });
+
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(idle_callback) = <span class="kw-2">&amp;</span>on_idle {
+                            cx.set_current(Entity::root());
+                            (idle_callback)(cx.context());
+                        }
+
+                        <span class="kw">if </span>cx.has_queued_events() {
+                            <span class="kw-2">*</span>stored_control_flow.borrow_mut() = ControlFlow::Poll;
+                            event_loop_proxy
+                                .send_event(UserEvent::Event(Event::new(())))
+                                .expect(<span class="string">"Failed to send event"</span>);
+                        }
+
+                        cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
+                            <span class="kw">if </span>window.should_close {
+                                elwt.exit();
+                            }
+                        });
+                    }
+
+                    winit::event::Event::WindowEvent { window_id: <span class="kw">_</span>, event } =&gt; {
+                        <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+                        </span>cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
+                            accesskit.process_event(window.window(), <span class="kw-2">&amp;</span>event);
+                        });
+
+                        <span class="kw">match </span>event {
+                            winit::event::WindowEvent::RedrawRequested =&gt; {
+                                <span class="kw">if </span>main_events {
+                                    <span class="comment">// Redraw
+                                    </span>cx.draw();
+                                    cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
+                                        <span class="comment">// window.window().pre_present_notify();
+                                        </span>window.swap_buffers();
+                                    });
+
+                                    <span class="comment">// Un-cloak
+                                    </span><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
+                                    </span><span class="kw">if </span>is_initially_cloaked {
+                                        is_initially_cloaked = <span class="bool-val">false</span>;
+                                        cx.draw();
+                                        cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
+                                            window.swap_buffers();
+                                            window.set_cloak(<span class="bool-val">false</span>);
+                                        });
+                                    }
+                                }
+                            }
+
+                            winit::event::WindowEvent::CloseRequested =&gt; {
+                                cx.emit_origin(WindowEvent::WindowClose);
+                            }
+
+                            winit::event::WindowEvent::Focused(is_focused) =&gt; {
+                                cx.<span class="number">0</span>.window_has_focus = is_focused;
+                                <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+                                </span>accesskit.update_if_active(|| TreeUpdate {
+                                    nodes: <span class="macro">vec!</span>[],
+                                    tree: <span class="prelude-val">None</span>,
+                                    focus: is_focused
+                                        .then_some(cx.focused().accesskit_id())
+                                        .unwrap_or(NodeId(<span class="number">0</span>)),
                                 });
                             }
 
-                            cx.send_event(
-                                Event::new(WindowEvent::ActionRequest(
-                                    action_request_event.request,
-                                ))
-                                .direct(entity),
-                            );
-                        }
-                    }
-                },
-
-                winit::event::Event::MainEventsCleared =&gt; {
-                    main_events = <span class="bool-val">true</span>;
-
-                    <span class="kw-2">*</span>stored_control_flow.borrow_mut() =
-                        <span class="kw">if </span>default_should_poll { ControlFlow::Poll } <span class="kw">else </span>{ ControlFlow::Wait };
-
-                    <span class="kw">if </span>cursor_moved {
-                        cx.emit_origin(WindowEvent::MouseMove(cursor.<span class="number">0</span>, cursor.<span class="number">1</span>));
-                        cursor_moved = <span class="bool-val">false</span>;
-                    }
-
-                    cx.process_events();
-
-                    cx.process_data_updates();
-
-                    cx.process_style_updates();
-
-                    <span class="kw">if </span>cx.process_animations() {
-                        <span class="kw-2">*</span>stored_control_flow.borrow_mut() = ControlFlow::Poll;
-
-                        event_loop_proxy
-                            .send_event(UserEvent::Event(Event::new(WindowEvent::Redraw)))
-                            .expect(<span class="string">"Failed to send redraw event"</span>);
-
-                        cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
-                            window.window().request_redraw();
-                        });
-                    }
-
-                    cx.process_visual_updates();
-
-                    <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
-                    </span>cx.process_tree_updates(|tree_updates| {
-                        <span class="kw">for </span>update <span class="kw">in </span>tree_updates.iter() {
-                            accesskit.update(update.clone());
-                        }
-                    });
-
-                    cx.mutate_window(|cx, window: <span class="kw-2">&amp;</span>Window| {
-                        cx.style().should_redraw(|| {
-                            window.window().request_redraw();
-                        });
-                    });
-
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(idle_callback) = <span class="kw-2">&amp;</span>on_idle {
-                        cx.set_current(Entity::root());
-                        (idle_callback)(cx.context());
-                    }
-
-                    <span class="kw">if </span>cx.has_queued_events() {
-                        <span class="kw-2">*</span>stored_control_flow.borrow_mut() = ControlFlow::Poll;
-                        event_loop_proxy
-                            .send_event(UserEvent::Event(Event::new(())))
-                            .expect(<span class="string">"Failed to send event"</span>);
-                    }
-
-                    cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
-                        <span class="kw">if </span>window.should_close {
-                            <span class="kw-2">*</span>stored_control_flow.borrow_mut() = ControlFlow::Exit;
-                        }
-                    });
-                }
-
-                winit::event::Event::RedrawRequested(<span class="kw">_</span>) =&gt; {
-                    <span class="kw">if </span>main_events {
-                        <span class="comment">// Redraw
-                        </span>cx.draw();
-                        cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
-                            window.swap_buffers();
-                        });
-
-                        <span class="comment">// Un-cloak
-                        </span><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
-                        </span><span class="kw">if </span>is_initially_cloaked {
-                            is_initially_cloaked = <span class="bool-val">false</span>;
-                            cx.draw();
-                            cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
-                                window.swap_buffers();
-                                window.set_cloak(<span class="bool-val">false</span>);
-                            });
-                        }
-                    }
-                }
-
-                winit::event::Event::WindowEvent { window_id: <span class="kw">_</span>, event } =&gt; {
-                    <span class="kw">match </span>event {
-                        winit::event::WindowEvent::CloseRequested =&gt; {
-                            cx.emit_origin(WindowEvent::WindowClose);
-                        }
-
-                        winit::event::WindowEvent::Focused(is_focused) =&gt; {
-                            cx.<span class="number">0</span>.window_has_focus = is_focused;
-                            <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
-                            </span>accesskit.update_if_active(|| TreeUpdate {
-                                nodes: <span class="macro">vec!</span>[],
-                                tree: <span class="prelude-val">None</span>,
-                                focus: is_focused.then_some(cx.focused().accesskit_id()),
-                            });
-                        }
-
-                        winit::event::WindowEvent::ScaleFactorChanged {
-                            scale_factor,
-                            new_inner_size,
-                        } =&gt; {
-                            cx.set_scale_factor(scale_factor);
-                            cx.set_window_size(
-                                new_inner_size.width <span class="kw">as </span>f32,
-                                new_inner_size.height <span class="kw">as </span>f32,
-                            );
-                            cx.needs_refresh();
-                        }
-
-                        winit::event::WindowEvent::DroppedFile(path) =&gt; {
-                            cx.emit_origin(WindowEvent::Drop(DropData::File(path)));
-                        }
-
-                        <span class="attr">#[allow(deprecated)]
-                        </span>winit::event::WindowEvent::CursorMoved {
-                            device_id: <span class="kw">_</span>,
-                            position,
-                            modifiers: <span class="kw">_</span>,
-                        } =&gt; {
-                            <span class="comment">// To avoid calling the hover system multiple times in one frame when multiple cursor moved
-                            // events are received, instead we set a flag here and emit the MouseMove event during MainEventsCleared.
-                            </span><span class="kw">if </span>!cursor_moved {
-                                cursor_moved = <span class="bool-val">true</span>;
-                                cursor.<span class="number">0 </span>= position.x <span class="kw">as </span>f32;
-                                cursor.<span class="number">1 </span>= position.y <span class="kw">as </span>f32;
+                            winit::event::WindowEvent::ScaleFactorChanged {
+                                scale_factor,
+                                inner_size_writer: <span class="kw">_</span>,
+                            } =&gt; {
+                                cx.set_scale_factor(scale_factor);
+                                <span class="comment">// cx.set_window_size(
+                                //     new_inner_size.width as f32,
+                                //     new_inner_size.height as f32,
+                                // );
+                                </span>cx.needs_refresh();
                             }
 
-                            <span class="comment">// Temporary fix for windows platform until winit merge #3154
-                            </span><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
-                            </span>{
-                                <span class="kw">let </span>(width, height) = {
-                                    <span class="kw">let </span>scale_factor = cx.scale_factor();
-                                    <span class="kw">let </span>size = cx.window_size();
-                                    (
-                                        (size.width <span class="kw">as </span>f32 * scale_factor).round() <span class="kw">as </span>u32,
-                                        (size.height <span class="kw">as </span>f32 * scale_factor).round() <span class="kw">as </span>u32,
-                                    )
+                            winit::event::WindowEvent::DroppedFile(path) =&gt; {
+                                cx.emit_origin(WindowEvent::Drop(DropData::File(path)));
+                            }
+
+                            <span class="attr">#[allow(deprecated)]
+                            </span>winit::event::WindowEvent::CursorMoved { device_id: <span class="kw">_</span>, position } =&gt; {
+                                <span class="comment">// To avoid calling the hover system multiple times in one frame when multiple cursor moved
+                                // events are received, instead we set a flag here and emit the MouseMove event during MainEventsCleared.
+                                </span><span class="kw">if </span>!cursor_moved {
+                                    cursor_moved = <span class="bool-val">true</span>;
+                                    cursor.<span class="number">0 </span>= position.x <span class="kw">as </span>f32;
+                                    cursor.<span class="number">1 </span>= position.y <span class="kw">as </span>f32;
+                                }
+
+                                <span class="comment">// Temporary fix for windows platform until winit merge #3154
+                                </span><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
+                                </span>{
+                                    <span class="kw">let </span>(width, height) = {
+                                        <span class="kw">let </span>scale_factor = cx.scale_factor();
+                                        <span class="kw">let </span>size = cx.window_size();
+                                        (
+                                            (size.width <span class="kw">as </span>f32 * scale_factor).round() <span class="kw">as </span>u32,
+                                            (size.height <span class="kw">as </span>f32 * scale_factor).round() <span class="kw">as </span>u32,
+                                        )
+                                    };
+
+                                    <span class="kw">let </span>x = position.x.is_positive()
+                                        &amp;&amp; (<span class="number">0</span>..width).contains(<span class="kw-2">&amp;</span>(position.x <span class="kw">as </span>u32));
+                                    <span class="kw">let </span>y = position.y.is_positive()
+                                        &amp;&amp; (<span class="number">0</span>..height).contains(<span class="kw-2">&amp;</span>(position.y <span class="kw">as </span>u32));
+
+                                    <span class="kw">if </span>!inside_window &amp;&amp; x &amp;&amp; y {
+                                        inside_window = <span class="bool-val">true</span>;
+                                        cx.emit_origin(WindowEvent::MouseEnter);
+                                    } <span class="kw">else if </span>inside_window &amp;&amp; !(x &amp;&amp; y) {
+                                        inside_window = <span class="bool-val">false</span>;
+                                        cx.emit_origin(WindowEvent::MouseLeave);
+                                    }
+                                }
+                            }
+
+                            <span class="attr">#[allow(deprecated)]
+                            </span>winit::event::WindowEvent::MouseInput {
+                                device_id: <span class="kw">_</span>,
+                                button,
+                                state,
+                            } =&gt; {
+                                <span class="kw">let </span>button = <span class="kw">match </span>button {
+                                    winit::event::MouseButton::Left =&gt; MouseButton::Left,
+                                    winit::event::MouseButton::Right =&gt; MouseButton::Right,
+                                    winit::event::MouseButton::Middle =&gt; MouseButton::Middle,
+                                    winit::event::MouseButton::Other(val) =&gt; {
+                                        MouseButton::Other(val)
+                                    }
+                                    winit::event::MouseButton::Back =&gt; MouseButton::Back,
+                                    winit::event::MouseButton::Forward =&gt; MouseButton::Forward,
                                 };
 
-                                <span class="kw">let </span>x = position.x.is_positive()
-                                    &amp;&amp; (<span class="number">0</span>..width).contains(<span class="kw-2">&amp;</span>(position.x <span class="kw">as </span>u32));
-                                <span class="kw">let </span>y = position.y.is_positive()
-                                    &amp;&amp; (<span class="number">0</span>..height).contains(<span class="kw-2">&amp;</span>(position.y <span class="kw">as </span>u32));
+                                <span class="kw">let </span>event = <span class="kw">match </span>state {
+                                    winit::event::ElementState::Pressed =&gt; {
+                                        WindowEvent::MouseDown(button)
+                                    }
+                                    winit::event::ElementState::Released =&gt; {
+                                        WindowEvent::MouseUp(button)
+                                    }
+                                };
 
-                                <span class="kw">if </span>!inside_window &amp;&amp; x &amp;&amp; y {
+                                cx.emit_origin(event);
+                            }
+
+                            winit::event::WindowEvent::MouseWheel { delta, phase: <span class="kw">_</span>, .. } =&gt; {
+                                <span class="kw">let </span>out_event = <span class="kw">match </span>delta {
+                                    winit::event::MouseScrollDelta::LineDelta(x, y) =&gt; {
+                                        WindowEvent::MouseScroll(x, y)
+                                    }
+                                    winit::event::MouseScrollDelta::PixelDelta(pos) =&gt; {
+                                        WindowEvent::MouseScroll(
+                                            pos.x <span class="kw">as </span>f32 / <span class="number">20.0</span>,
+                                            pos.y <span class="kw">as </span>f32 / <span class="number">20.0</span>, <span class="comment">// this number calibrated for wayland
+                                        </span>)
+                                    }
+                                };
+
+                                cx.emit_origin(out_event);
+                            }
+
+                            winit::event::WindowEvent::KeyboardInput {
+                                device_id: <span class="kw">_</span>,
+                                event,
+                                is_synthetic: <span class="kw">_</span>,
+                            } =&gt; {
+                                <span class="kw">let </span>code = <span class="kw">match </span>event.physical_key {
+                                    PhysicalKey::Code(code) =&gt; winit_key_code_to_code(code),
+                                    PhysicalKey::Unidentified(native) =&gt; <span class="kw">match </span>native {
+                                        NativeKeyCode::Windows(_scancode) =&gt; <span class="kw">return</span>,
+                                        <span class="kw">_ </span>=&gt; <span class="kw">return</span>,
+                                    },
+                                };
+
+                                <span class="kw">let </span>key = <span class="kw">match </span>event.logical_key {
+                                    winit::keyboard::Key::Named(named_key) =&gt; {
+                                        winit_key_to_key(named_key)
+                                    }
+                                    <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+                                };
+
+                                <span class="kw">if let </span>winit::keyboard::Key::Character(character) =
+                                    event.logical_key
+                                {
+                                    <span class="kw">if </span>event.state == ElementState::Pressed {
+                                        cx.emit_origin(WindowEvent::CharInput(
+                                            character.as_str().chars().next().unwrap(),
+                                        ));
+                                    }
+                                }
+
+                                <span class="kw">let </span>event = <span class="kw">match </span>event.state {
+                                    winit::event::ElementState::Pressed =&gt; {
+                                        WindowEvent::KeyDown(code, key)
+                                    }
+                                    winit::event::ElementState::Released =&gt; {
+                                        WindowEvent::KeyUp(code, key)
+                                    }
+                                };
+
+                                cx.emit_origin(event);
+                            }
+
+                            winit::event::WindowEvent::Resized(physical_size) =&gt; {
+                                cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
+                                    window.resize(physical_size);
+                                });
+
+                                cx.set_window_size(
+                                    physical_size.width <span class="kw">as </span>f32,
+                                    physical_size.height <span class="kw">as </span>f32,
+                                );
+
+                                cx.needs_refresh();
+
+                                <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
+                                </span>{
+                                    cx.process_events();
+
+                                    cx.process_style_updates();
+
+                                    <span class="kw">if </span>cx.process_animations() {
+                                        <span class="kw-2">*</span>stored_control_flow.borrow_mut() = ControlFlow::Poll;
+
+                                        event_loop_proxy
+                                            .send_event(UserEvent::Event(Event::new(
+                                                WindowEvent::Redraw,
+                                            )))
+                                            .expect(<span class="string">"Failed to send redraw event"</span>);
+
+                                        cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
+                                            window.window().request_redraw();
+                                        });
+                                    }
+
+                                    cx.process_visual_updates();
+
+                                    <span class="attr">#[cfg(all(
+                                        not(target_arch = <span class="string">"wasm32"</span>),
+                                        feature = <span class="string">"accesskit"
+                                    </span>))]
+                                    </span>cx.process_tree_updates(|tree_updates| {
+                                        <span class="kw">for </span>update <span class="kw">in </span>tree_updates.iter_mut() {
+                                            accesskit.update_if_active(|| update.take().unwrap());
+                                        }
+                                    });
+
+                                    cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
+                                        window.window().request_redraw();
+                                    });
+                                }
+                            }
+
+                            winit::event::WindowEvent::ThemeChanged(theme) =&gt; {
+                                <span class="kw">let </span>theme = <span class="kw">match </span>theme {
+                                    winit::window::Theme::Light =&gt; ThemeMode::LightMode,
+                                    winit::window::Theme::Dark =&gt; ThemeMode::DarkMode,
+                                };
+                                cx.emit_origin(WindowEvent::ThemeChanged(theme));
+                            }
+
+                            winit::event::WindowEvent::ModifiersChanged(modifiers_state) =&gt; {
+                                cx.modifiers()
+                                    .set(Modifiers::SHIFT, modifiers_state.state().shift_key());
+
+                                cx.modifiers()
+                                    .set(Modifiers::ALT, modifiers_state.state().alt_key());
+
+                                cx.modifiers()
+                                    .set(Modifiers::CTRL, modifiers_state.state().control_key());
+
+                                cx.modifiers()
+                                    .set(Modifiers::SUPER, modifiers_state.state().super_key());
+                            }
+
+                            winit::event::WindowEvent::CursorEntered { device_id: <span class="kw">_ </span>} =&gt; {
+                                <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
+                                </span>{
                                     inside_window = <span class="bool-val">true</span>;
-                                    cx.emit_origin(WindowEvent::MouseEnter);
-                                } <span class="kw">else if </span>inside_window &amp;&amp; !(x &amp;&amp; y) {
+                                }
+                                cx.emit_origin(WindowEvent::MouseEnter);
+                            }
+
+                            winit::event::WindowEvent::CursorLeft { device_id: <span class="kw">_ </span>} =&gt; {
+                                <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
+                                </span>{
                                     inside_window = <span class="bool-val">false</span>;
-                                    cx.emit_origin(WindowEvent::MouseLeave);
                                 }
+                                cx.emit_origin(WindowEvent::MouseLeave);
                             }
+
+                            <span class="kw">_ </span>=&gt; {}
                         }
-
-                        <span class="attr">#[allow(deprecated)]
-                        </span>winit::event::WindowEvent::MouseInput {
-                            device_id: <span class="kw">_</span>,
-                            button,
-                            state,
-                            modifiers: <span class="kw">_</span>,
-                        } =&gt; {
-                            <span class="kw">let </span>button = <span class="kw">match </span>button {
-                                winit::event::MouseButton::Left =&gt; MouseButton::Left,
-                                winit::event::MouseButton::Right =&gt; MouseButton::Right,
-                                winit::event::MouseButton::Middle =&gt; MouseButton::Middle,
-                                winit::event::MouseButton::Other(val) =&gt; MouseButton::Other(val),
-                            };
-
-                            <span class="kw">let </span>event = <span class="kw">match </span>state {
-                                winit::event::ElementState::Pressed =&gt; {
-                                    WindowEvent::MouseDown(button)
-                                }
-                                winit::event::ElementState::Released =&gt; {
-                                    WindowEvent::MouseUp(button)
-                                }
-                            };
-
-                            cx.emit_origin(event);
-                        }
-
-                        winit::event::WindowEvent::MouseWheel { delta, phase: <span class="kw">_</span>, .. } =&gt; {
-                            <span class="kw">let </span>out_event = <span class="kw">match </span>delta {
-                                winit::event::MouseScrollDelta::LineDelta(x, y) =&gt; {
-                                    WindowEvent::MouseScroll(x, y)
-                                }
-                                winit::event::MouseScrollDelta::PixelDelta(pos) =&gt; {
-                                    WindowEvent::MouseScroll(
-                                        pos.x <span class="kw">as </span>f32 / <span class="number">20.0</span>,
-                                        pos.y <span class="kw">as </span>f32 / <span class="number">20.0</span>, <span class="comment">// this number calibrated for wayland
-                                    </span>)
-                                }
-                            };
-
-                            cx.emit_origin(out_event);
-                        }
-
-                        winit::event::WindowEvent::KeyboardInput {
-                            device_id: <span class="kw">_</span>,
-                            input,
-                            is_synthetic: <span class="kw">_</span>,
-                        } =&gt; {
-                            <span class="comment">// Prefer virtual keycodes to scancodes, as scancodes aren't uniform between platforms
-                            </span><span class="kw">let </span>code = <span class="kw">if let </span><span class="prelude-val">Some</span>(vkey) = input.virtual_keycode {
-                                virtual_key_code_to_code(vkey)
-                            } <span class="kw">else </span>{
-                                scan_code_to_code(input.scancode)
-                            };
-
-                            <span class="kw">let </span>key = virtual_key_code_to_key(
-                                input.virtual_keycode.unwrap_or(VirtualKeyCode::NoConvert),
-                            );
-
-                            <span class="kw">let </span>event = <span class="kw">match </span>input.state {
-                                winit::event::ElementState::Pressed =&gt; {
-                                    WindowEvent::KeyDown(code, key)
-                                }
-                                winit::event::ElementState::Released =&gt; {
-                                    WindowEvent::KeyUp(code, key)
-                                }
-                            };
-
-                            cx.emit_origin(event);
-                        }
-
-                        winit::event::WindowEvent::ReceivedCharacter(character) =&gt; {
-                            cx.emit_origin(WindowEvent::CharInput(character));
-                        }
-
-                        winit::event::WindowEvent::Resized(physical_size) =&gt; {
-                            cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
-                                window.resize(physical_size);
-                            });
-
-                            cx.set_window_size(
-                                physical_size.width <span class="kw">as </span>f32,
-                                physical_size.height <span class="kw">as </span>f32,
-                            );
-
-                            cx.needs_refresh();
-                        }
-
-                        winit::event::WindowEvent::ThemeChanged(theme) =&gt; {
-                            <span class="kw">let </span>theme = <span class="kw">match </span>theme {
-                                winit::window::Theme::Light =&gt; ThemeMode::LightMode,
-                                winit::window::Theme::Dark =&gt; ThemeMode::DarkMode,
-                            };
-                            cx.emit_origin(WindowEvent::ThemeChanged(theme));
-                        }
-
-                        winit::event::WindowEvent::ModifiersChanged(modifiers_state) =&gt; {
-                            cx.modifiers().set(Modifiers::SHIFT, modifiers_state.shift());
-                            cx.modifiers().set(Modifiers::ALT, modifiers_state.alt());
-                            cx.modifiers().set(Modifiers::CTRL, modifiers_state.ctrl());
-                            cx.modifiers().set(Modifiers::LOGO, modifiers_state.logo());
-                        }
-
-                        winit::event::WindowEvent::CursorEntered { device_id: <span class="kw">_ </span>} =&gt; {
-                            <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
-                            </span>{
-                                inside_window = <span class="bool-val">true</span>;
-                            }
-                            cx.emit_origin(WindowEvent::MouseEnter);
-                        }
-
-                        winit::event::WindowEvent::CursorLeft { device_id: <span class="kw">_ </span>} =&gt; {
-                            <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
-                            </span>{
-                                inside_window = <span class="bool-val">false</span>;
-                            }
-                            cx.emit_origin(WindowEvent::MouseLeave);
-                        }
-
-                        <span class="kw">_ </span>=&gt; {}
                     }
+
+                    <span class="kw">_ </span>=&gt; {}
                 }
 
-                <span class="kw">_ </span>=&gt; {}
-            }
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(timer_time) = cx.get_next_timer_time() {
+                    elwt.set_control_flow(ControlFlow::WaitUntil(timer_time));
+                } <span class="kw">else </span>{
+                    elwt.set_control_flow(<span class="kw-2">*</span>stored_control_flow.borrow());
+                }
+            })
+            .map_err(ApplicationError::EventLoopError)<span class="question-mark">?</span>;
 
-            <span class="kw">if </span><span class="kw-2">*</span>stored_control_flow.borrow() == ControlFlow::Exit {
-                <span class="kw-2">*</span>control_flow = ControlFlow::Exit;
-            } <span class="kw">else if let </span><span class="prelude-val">Some</span>(timer_time) = cx.get_next_timer_time() {
-                <span class="kw-2">*</span>control_flow = ControlFlow::WaitUntil(timer_time);
-            } <span class="kw">else </span>{
-                <span class="kw-2">*</span>control_flow = <span class="kw-2">*</span>stored_control_flow.borrow();
-            }
-        });
+        <span class="prelude-val">Ok</span>(())
     }
 }
 
 <span class="kw">impl </span>WindowModifiers <span class="kw">for </span>Application {
-    <span class="kw">fn </span>title&lt;T: ToString&gt;(<span class="kw-2">mut </span><span class="self">self</span>, title: T) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.window_description.title = title.to_string();
+    <span class="kw">fn </span>title&lt;T: ToString&gt;(<span class="kw-2">mut </span><span class="self">self</span>, title: <span class="kw">impl </span>Res&lt;T&gt;) -&gt; <span class="self">Self </span>{
+        title.set_or_bind(<span class="kw-2">&amp;mut </span><span class="self">self</span>.context, Entity::root(), |cx, title| {
+            cx.emit(WindowEvent::SetTitle(title.get(cx).to_string()));
+        });
 
         <span class="self">self
     </span>}
 
-    <span class="kw">fn </span>inner_size&lt;S: Into&lt;WindowSize&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, size: S) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.window_description.inner_size = size.into();
+    <span class="kw">fn </span>inner_size&lt;S: Into&lt;WindowSize&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, size: <span class="kw">impl </span>Res&lt;S&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.window_description.inner_size = size.get(<span class="kw-2">&amp;</span><span class="self">self</span>.context).into();
+
+        size.set_or_bind(<span class="kw-2">&amp;mut </span><span class="self">self</span>.context, Entity::root(), |cx, size| {
+            cx.emit(WindowEvent::SetSize(size.get(cx).into()));
+        });
 
         <span class="self">self
     </span>}
 
-    <span class="kw">fn </span>min_inner_size&lt;S: Into&lt;WindowSize&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, size: <span class="prelude-ty">Option</span>&lt;S&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.window_description.min_inner_size = size.map(|size| size.into());
+    <span class="kw">fn </span>min_inner_size&lt;S: Into&lt;WindowSize&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, size: <span class="kw">impl </span>Res&lt;<span class="prelude-ty">Option</span>&lt;S&gt;&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.window_description.min_inner_size = size.get(<span class="kw-2">&amp;</span><span class="self">self</span>.context).map(|s| s.into());
+
+        size.set_or_bind(<span class="kw-2">&amp;mut </span><span class="self">self</span>.context, Entity::root(), |cx, size| {
+            cx.emit(WindowEvent::SetMinSize(size.get(cx).map(|s| s.into())));
+        });
 
         <span class="self">self
     </span>}
 
-    <span class="kw">fn </span>max_inner_size&lt;S: Into&lt;WindowSize&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, size: <span class="prelude-ty">Option</span>&lt;S&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.window_description.max_inner_size = size.map(|size| size.into());
+    <span class="kw">fn </span>max_inner_size&lt;S: Into&lt;WindowSize&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, size: <span class="kw">impl </span>Res&lt;<span class="prelude-ty">Option</span>&lt;S&gt;&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.window_description.max_inner_size = size.get(<span class="kw-2">&amp;</span><span class="self">self</span>.context).map(|s| s.into());
+
+        size.set_or_bind(<span class="kw-2">&amp;mut </span><span class="self">self</span>.context, Entity::root(), |cx, size| {
+            cx.emit(WindowEvent::SetMaxSize(size.get(cx).map(|s| s.into())));
+        });
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>position&lt;P: Into&lt;Position&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, position: <span class="kw">impl </span>Res&lt;P&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.window_description.position = <span class="prelude-val">Some</span>(position.get(<span class="kw-2">&amp;</span><span class="self">self</span>.context).into());
+
+        position.set_or_bind(<span class="kw-2">&amp;mut </span><span class="self">self</span>.context, Entity::root(), |cx, size| {
+            cx.emit(WindowEvent::SetPosition(size.get(cx).into()));
+        });
 
         <span class="self">self
     </span>}
 
-    <span class="kw">fn </span>position&lt;P: Into&lt;Position&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, position: P) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.window_description.position = <span class="prelude-val">Some</span>(position.into());
+    <span class="kw">fn </span>resizable(<span class="kw-2">mut </span><span class="self">self</span>, flag: <span class="kw">impl </span>Res&lt;bool&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.window_description.resizable = flag.get(<span class="kw-2">&amp;</span><span class="self">self</span>.context);
+
+        flag.set_or_bind(<span class="kw-2">&amp;mut </span><span class="self">self</span>.context, Entity::root(), |cx, flag| {
+            cx.emit(WindowEvent::SetResizable(flag.get(cx)));
+        });
 
         <span class="self">self
     </span>}
 
-    <span class="kw">fn </span>resizable(<span class="kw-2">mut </span><span class="self">self</span>, flag: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.window_description.resizable = flag;
+    <span class="kw">fn </span>minimized(<span class="kw-2">mut </span><span class="self">self</span>, flag: <span class="kw">impl </span>Res&lt;bool&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.window_description.minimized = flag.get(<span class="kw-2">&amp;</span><span class="self">self</span>.context);
 
+        flag.set_or_bind(<span class="kw-2">&amp;mut </span><span class="self">self</span>.context, Entity::root(), |cx, flag| {
+            cx.emit(WindowEvent::SetMinimized(flag.get(cx)));
+        });
         <span class="self">self
     </span>}
 
-    <span class="kw">fn </span>minimized(<span class="kw-2">mut </span><span class="self">self</span>, flag: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.window_description.minimized = flag;
+    <span class="kw">fn </span>maximized(<span class="kw-2">mut </span><span class="self">self</span>, flag: <span class="kw">impl </span>Res&lt;bool&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.window_description.maximized = flag.get(<span class="kw-2">&amp;</span><span class="self">self</span>.context);
 
-        <span class="self">self
-    </span>}
-
-    <span class="kw">fn </span>maximized(<span class="kw-2">mut </span><span class="self">self</span>, flag: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.window_description.maximized = flag;
+        flag.set_or_bind(<span class="kw-2">&amp;mut </span><span class="self">self</span>.context, Entity::root(), |cx, flag| {
+            cx.emit(WindowEvent::SetMaximized(flag.get(cx)));
+        });
 
         <span class="self">self
     </span>}

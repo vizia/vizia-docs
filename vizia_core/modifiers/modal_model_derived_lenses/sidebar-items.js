@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["menu_visible","root","tooltip_visible"]};

@@ -148,6 +148,12 @@
 <a href="#147" id="147">147</a>
 <a href="#148" id="148">148</a>
 <a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::icons::{
     ICON_CHEVRON_DOWN, ICON_CHEVRON_LEFT, ICON_CHEVRON_RIGHT, ICON_CHEVRON_UP, ICON_MINUS,
     ICON_PLUS,
@@ -161,102 +167,94 @@
 
 <span class="attr">#[derive(Lens)]
 </span><span class="kw">pub struct </span>Spinbox {
-    kind: SpinboxKind,
+    orientation: Orientation,
+    icons: SpinboxIcons,
 
     on_decrement: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;&gt;,
     on_increment: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;&gt;,
 }
 
-<span class="attr">#[derive(Clone, Copy, Debug, PartialEq, Eq, Data)]
-</span><span class="kw">pub enum </span>SpinboxKind {
-    Horizontal,
-    Vertical,
-}
-
-<span class="attr">#[derive(Clone, Copy, Debug, PartialEq)]
+<span class="attr">#[derive(Clone, Copy, Debug, PartialEq, Data)]
 </span><span class="kw">pub enum </span>SpinboxIcons {
     PlusMinus,
     Chevrons,
 }
 
+<span class="macro">impl_res_simple!</span>(SpinboxIcons);
+
 <span class="kw">impl </span>Spinbox {
-    <span class="kw">pub fn </span>new&lt;L: Lens&gt;(
-        cx: <span class="kw-2">&amp;mut </span>Context,
-        lens: L,
-        kind: SpinboxKind,
-        icons: SpinboxIcons,
-    ) -&gt; Handle&lt;Spinbox&gt;
+    <span class="kw">pub fn </span>new&lt;L: Lens&gt;(cx: <span class="kw-2">&amp;mut </span>Context, lens: L) -&gt; Handle&lt;Spinbox&gt;
     <span class="kw">where
         </span>&lt;L <span class="kw">as </span>Lens&gt;::Target: Data + ToStringLocalized,
     {
-        <span class="self">Self</span>::custom(cx, <span class="kw">move </span>|cx| Label::new(cx, lens), kind, icons)
+        <span class="self">Self</span>::custom(cx, <span class="kw">move </span>|cx| Label::new(cx, lens))
     }
 
-    <span class="kw">pub fn </span>custom&lt;F, V&gt;(
-        cx: <span class="kw-2">&amp;mut </span>Context,
-        content: F,
-        kind: SpinboxKind,
-        icons: SpinboxIcons,
-    ) -&gt; Handle&lt;Spinbox&gt;
+    <span class="kw">pub fn </span>custom&lt;F, V&gt;(cx: <span class="kw-2">&amp;mut </span>Context, content: F) -&gt; Handle&lt;Spinbox&gt;
     <span class="kw">where
         </span>F: Fn(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;V&gt;,
         V: <span class="lifetime">'static </span>+ View,
     {
-        <span class="self">Self </span>{ kind, on_decrement: <span class="prelude-val">None</span>, on_increment: <span class="prelude-val">None </span>}
-            .build(cx, <span class="kw">move </span>|cx| {
-                Label::new(cx, <span class="string">""</span>)
-                    .class(<span class="string">"icon"</span>)
-                    .bind(Spinbox::kind, <span class="kw">move </span>|handle, spinbox_kind| {
-                        <span class="kw">match </span>spinbox_kind.get(handle.cx) {
-                            SpinboxKind::Horizontal =&gt; {
-                                handle
-                                    .text(<span class="kw">match </span>icons {
-                                        SpinboxIcons::PlusMinus =&gt; ICON_MINUS,
-                                        SpinboxIcons::Chevrons =&gt; ICON_CHEVRON_LEFT,
-                                    })
-                                    .on_press(|ex| ex.emit(SpinboxEvent::Decrement));
-                            }
-
-                            SpinboxKind::Vertical =&gt; {
-                                handle
-                                    .text(<span class="kw">match </span>icons {
-                                        SpinboxIcons::PlusMinus =&gt; ICON_PLUS,
-                                        SpinboxIcons::Chevrons =&gt; ICON_CHEVRON_UP,
-                                    })
-                                    .on_press(|ex| ex.emit(SpinboxEvent::Increment));
-                            }
+        <span class="self">Self </span>{
+            orientation: Orientation::Horizontal,
+            icons: SpinboxIcons::Chevrons,
+            on_decrement: <span class="prelude-val">None</span>,
+            on_increment: <span class="prelude-val">None</span>,
+        }
+        .build(cx, <span class="kw">move </span>|cx| {
+            Icon::new(cx, <span class="string">""</span>)
+                .bind(Spinbox::orientation, <span class="kw">move </span>|handle, spinbox_kind| {
+                    <span class="kw">match </span>spinbox_kind.get(<span class="kw-2">&amp;</span>handle) {
+                        Orientation::Horizontal =&gt; {
+                            handle
+                                .text(Spinbox::icons.map(|icons| <span class="kw">match </span>icons {
+                                    SpinboxIcons::PlusMinus =&gt; ICON_MINUS,
+                                    SpinboxIcons::Chevrons =&gt; ICON_CHEVRON_LEFT,
+                                }))
+                                .on_press(|ex| ex.emit(SpinboxEvent::Decrement));
                         }
-                    })
-                    .class(<span class="string">"spinbox-button"</span>);
-                (content)(cx).class(<span class="string">"spinbox-value"</span>).width(Stretch(<span class="number">1.0</span>));
-                Label::new(cx, <span class="string">""</span>)
-                    .class(<span class="string">"icon"</span>)
-                    .bind(Spinbox::kind, <span class="kw">move </span>|handle, spinbox_kind| {
-                        <span class="kw">match </span>spinbox_kind.get(handle.cx) {
-                            SpinboxKind::Horizontal =&gt; {
-                                handle
-                                    .text(<span class="kw">match </span>icons {
-                                        SpinboxIcons::PlusMinus =&gt; ICON_PLUS,
-                                        SpinboxIcons::Chevrons =&gt; ICON_CHEVRON_RIGHT,
-                                    })
-                                    .on_press(|ex| ex.emit(SpinboxEvent::Increment));
-                            }
 
-                            SpinboxKind::Vertical =&gt; {
-                                handle
-                                    .text(<span class="kw">match </span>icons {
-                                        SpinboxIcons::PlusMinus =&gt; ICON_MINUS,
-                                        SpinboxIcons::Chevrons =&gt; ICON_CHEVRON_DOWN,
-                                    })
-                                    .on_press(|ex| ex.emit(SpinboxEvent::Decrement));
-                            }
+                        Orientation::Vertical =&gt; {
+                            handle
+                                .text(Spinbox::icons.map(|icons| <span class="kw">match </span>icons {
+                                    SpinboxIcons::PlusMinus =&gt; ICON_PLUS,
+                                    SpinboxIcons::Chevrons =&gt; ICON_CHEVRON_UP,
+                                }))
+                                .on_press(|ex| ex.emit(SpinboxEvent::Increment));
                         }
-                    })
-                    .class(<span class="string">"spinbox-button"</span>);
-            })
-            .toggle_class(<span class="string">"horizontal"</span>, Spinbox::kind.map(|kind| kind == <span class="kw-2">&amp;</span>SpinboxKind::Horizontal))
-            .toggle_class(<span class="string">"vertical"</span>, Spinbox::kind.map(|kind| kind == <span class="kw-2">&amp;</span>SpinboxKind::Vertical))
-            .navigable(<span class="bool-val">true</span>)
+                    }
+                })
+                .navigable(<span class="bool-val">true</span>)
+                .class(<span class="string">"spinbox-button"</span>);
+            (content)(cx).class(<span class="string">"spinbox-value"</span>).width(Stretch(<span class="number">1.0</span>));
+            Icon::new(cx, <span class="string">""</span>)
+                .bind(Spinbox::orientation, <span class="kw">move </span>|handle, spinbox_kind| {
+                    <span class="kw">match </span>spinbox_kind.get(<span class="kw-2">&amp;</span>handle) {
+                        Orientation::Horizontal =&gt; {
+                            handle
+                                .text(Spinbox::icons.map(|icons| <span class="kw">match </span>icons {
+                                    SpinboxIcons::PlusMinus =&gt; ICON_PLUS,
+                                    SpinboxIcons::Chevrons =&gt; ICON_CHEVRON_RIGHT,
+                                }))
+                                .on_press(|ex| ex.emit(SpinboxEvent::Increment));
+                        }
+
+                        Orientation::Vertical =&gt; {
+                            handle
+                                .text(Spinbox::icons.map(|icons| <span class="kw">match </span>icons {
+                                    SpinboxIcons::PlusMinus =&gt; ICON_MINUS,
+                                    SpinboxIcons::Chevrons =&gt; ICON_CHEVRON_DOWN,
+                                }))
+                                .on_press(|ex| ex.emit(SpinboxEvent::Decrement));
+                        }
+                    }
+                })
+                .navigable(<span class="bool-val">true</span>)
+                .class(<span class="string">"spinbox-button"</span>);
+        })
+        .toggle_class(<span class="string">"horizontal"</span>, Spinbox::orientation.map(|o| o == <span class="kw-2">&amp;</span>Orientation::Horizontal))
+        .toggle_class(<span class="string">"vertical"</span>, Spinbox::orientation.map(|o| o == <span class="kw-2">&amp;</span>Orientation::Vertical))
+        .navigable(<span class="bool-val">true</span>)
     }
 }
 
@@ -273,6 +271,20 @@
         </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync,
     {
         <span class="self">self</span>.modify(|spinbox: <span class="kw-2">&amp;mut </span>Spinbox| spinbox.on_decrement = <span class="prelude-val">Some</span>(Box::new(callback)))
+    }
+
+    <span class="kw">pub fn </span>orientation(<span class="self">self</span>, orientation: <span class="kw">impl </span>Res&lt;Orientation&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(orientation, <span class="kw">move </span>|handle, orientation| {
+            <span class="kw">let </span>orientation = orientation.get(<span class="kw-2">&amp;</span>handle);
+            handle.modify(<span class="kw">move </span>|spinbox| spinbox.orientation = orientation);
+        })
+    }
+
+    <span class="kw">pub fn </span>icons(<span class="self">self</span>, icons: <span class="kw">impl </span>Res&lt;SpinboxIcons&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(icons, <span class="kw">move </span>|handle, icons| {
+            <span class="kw">let </span>icons = icons.get(<span class="kw-2">&amp;</span>handle);
+            handle.modify(<span class="kw">move </span>|spinbox| spinbox.icons = icons);
+        })
     }
 }
 

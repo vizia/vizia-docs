@@ -420,6 +420,18 @@
 <a href="#419" id="419">419</a>
 <a href="#420" id="420">420</a>
 <a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomData;
 <span class="kw">use </span>std::usize;
 
@@ -449,8 +461,7 @@
 }
 
 <span class="kw">pub enum </span>ComboBoxEvent {
-    <span class="doccomment">///
-    </span>SetOption(usize),
+    SetOption(usize),
     SetFilterText(String),
     SetHovered(usize),
     Close,
@@ -502,10 +513,13 @@
                 .on_edit(|cx, txt| cx.emit(ComboBoxEvent::SetFilterText(txt)))
                 <span class="comment">// Prevent the textbox from losing focus on blur. We control that with the listener instead.
                 </span>.on_blur(|<span class="kw">_</span>| {})
+                <span class="comment">// Prevent the textbox from losing focus on cancel (escape key press).
+                </span>.on_cancel(|<span class="kw">_</span>| {})
                 .width(Stretch(<span class="number">1.0</span>))
                 .height(Pixels(<span class="number">32.0</span>))
                 .space(Pixels(<span class="number">0.0</span>))
-                .placeholder(<span class="self">Self</span>::placeholder);
+                .placeholder(<span class="self">Self</span>::placeholder)
+                .class(<span class="string">"title"</span>);
 
             ComboPopup::new(cx, <span class="self">Self</span>::is_open, <span class="bool-val">false</span>, <span class="kw">move </span>|cx: <span class="kw-2">&amp;mut </span>Context| {
                 <span class="comment">// Binding to the filter text.
@@ -518,8 +532,11 @@
                             <span class="kw">let </span>f = <span class="self">Self</span>::filter_text.get(cx);
                             <span class="comment">// List view doesn't have an option for filtering (yet) so we do it manually instead.
                             </span>VStack::new(cx, |cx| {
-                                <span class="kw">for </span>(index, item) <span class="kw">in
-                                    </span>list.get(cx).iter().enumerate().filter(|(<span class="kw">_</span>, item)| {
+                                <span class="kw">let </span>ll = list
+                                    .get(cx)
+                                    .iter()
+                                    .enumerate()
+                                    .filter(|(<span class="kw">_</span>, item)| {
                                         <span class="kw">if </span>f.is_empty() {
                                             <span class="bool-val">true
                                         </span>} <span class="kw">else </span>{
@@ -528,8 +545,12 @@
                                                 .contains(<span class="kw-2">&amp;</span>f.to_ascii_lowercase())
                                         }
                                     })
-                                {
-                                    Label::new(cx, <span class="kw-2">&amp;</span>item.to_string())
+                                    .map(|(idx, <span class="kw">_</span>)| idx)
+                                    .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+
+                                <span class="kw">for </span>index <span class="kw">in </span>ll.into_iter() {
+                                    <span class="kw">let </span>item = list.index(index);
+                                    Label::new(cx, item)
                                         .child_top(Stretch(<span class="number">1.0</span>))
                                         .child_bottom(Stretch(<span class="number">1.0</span>))
                                         .checked(selected.map(<span class="kw">move </span>|selected| <span class="kw-2">*</span>selected == index))
@@ -555,7 +576,6 @@
             })
             .top(Percentage(<span class="number">100.0</span>))
             .translate((Pixels(<span class="number">0.0</span>), Pixels(<span class="number">4.0</span>)))
-            .width(Percentage(<span class="number">100.0</span>))
             .height(Auto);
         })
         .bind(selected, <span class="kw">move </span>|handle, selected| {
@@ -572,7 +592,7 @@
     L2: Lens&lt;Target = usize&gt;,
 {
     <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
-        <span class="prelude-val">Some</span>(<span class="string">"dropdown"</span>)
+        <span class="prelude-val">Some</span>(<span class="string">"combobox"</span>)
     }
 
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
@@ -590,25 +610,27 @@
                 <span class="comment">// Close the popup.
                 </span><span class="self">self</span>.is_open = <span class="bool-val">false</span>;
 
+                <span class="comment">// Set the hovered index to the selected index.
+                </span><span class="self">self</span>.hovered = <span class="kw-2">*</span>index;
+
                 <span class="comment">// Reset the filter text.
                 </span><span class="self">self</span>.filter_text = String::new();
 
                 <span class="comment">// Set the textbox to non-edit state.
+                // TODO: Add a modifier to textbox and bind to some state in combobox.
                 </span>cx.emit_custom(
                     Event::new(TextEvent::EndEdit)
                         .target(cx.current)
                         .propagate(Propagation::Subtree),
                 );
-
-                <span class="comment">// cx.needs_redraw();
-            </span>}
+            }
 
             ComboBoxEvent::SetHovered(index) =&gt; {
                 <span class="self">self</span>.hovered = <span class="kw-2">*</span>index;
             }
 
             ComboBoxEvent::SetFilterText(text) =&gt; {
-                <span class="self">self</span>.filter_text = text.clone();
+                <span class="self">self</span>.placeholder.clone_from(text);
 
                 <span class="comment">// Reopen the popup in case it was closed with the ESC key.
                 </span><span class="self">self</span>.is_open = <span class="bool-val">true</span>;
@@ -624,7 +646,6 @@
                 };
 
                 <span class="kw">let </span>list = <span class="self">self</span>.list_lens.get(cx);
-
                 <span class="kw">if let </span><span class="prelude-val">Some</span>((next_index, <span class="kw">_</span>)) =
                     list.iter().enumerate().skip_while(|(idx, <span class="kw">_</span>)| <span class="kw-2">*</span>idx != <span class="self">self</span>.hovered).find(filter)
                 {
@@ -646,7 +667,7 @@
         });
 
         event.map(|textbox_event, <span class="kw">_</span>| <span class="kw">match </span>textbox_event {
-            <span class="comment">// User pressed on the textbox or focused it
+            <span class="comment">// User pressed on the textbox or focused it.
             </span>TextEvent::StartEdit =&gt; {
                 <span class="self">self</span>.is_open = <span class="bool-val">true</span>;
                 <span class="self">self</span>.hovered = <span class="self">self</span>.selected.get(cx);
@@ -655,10 +676,10 @@
             TextEvent::Submit(enter) =&gt; {
                 <span class="kw">let </span>selected = <span class="self">self</span>.selected.get(cx);
                 <span class="kw">if </span><span class="kw-2">*</span>enter &amp;&amp; <span class="self">self</span>.hovered &lt; <span class="self">self</span>.list_lens.get(cx).len() {
-                    <span class="comment">// User pressed the enter key
+                    <span class="comment">// User pressed the enter key.
                     </span>cx.emit(ComboBoxEvent::SetOption(<span class="self">self</span>.hovered));
                 } <span class="kw">else </span>{
-                    <span class="comment">// User clicked outside the combobox
+                    <span class="comment">// User clicked outside the textbox.
                     </span>cx.emit(ComboBoxEvent::SetOption(selected));
                 }
             }
@@ -667,9 +688,18 @@
         });
 
         event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
+            WindowEvent::MouseDown(button) <span class="kw">if </span><span class="kw-2">*</span>button == MouseButton::Left =&gt; {
+                <span class="kw">if </span>!<span class="self">self</span>.is_open {
+                    <span class="self">self</span>.is_open = <span class="bool-val">true</span>;
+                    <span class="self">self</span>.hovered = <span class="self">self</span>.selected.get(cx);
+                }
+            }
+
             WindowEvent::KeyDown(code, <span class="kw">_</span>) =&gt; <span class="kw">match </span>code {
                 Code::ArrowDown =&gt; {
-                    <span class="kw">if </span><span class="self">self</span>.is_open {
+                    <span class="kw">if </span>!<span class="self">self</span>.is_open {
+                        <span class="self">self</span>.is_open = <span class="bool-val">true</span>;
+                    } <span class="kw">else </span>{
                         <span class="kw">let </span>filter = |(<span class="kw">_</span>, txt): <span class="kw-2">&amp;</span>(usize, <span class="kw-2">&amp;</span>T)| {
                             <span class="kw">if </span><span class="self">self</span>.filter_text.is_empty() {
                                 <span class="bool-val">true
@@ -681,7 +711,6 @@
                         };
 
                         <span class="kw">let </span>list = <span class="self">self</span>.list_lens.get(cx);
-
                         <span class="kw">if let </span><span class="prelude-val">Some</span>((next_index, <span class="kw">_</span>)) = list
                             .iter()
                             .enumerate()
@@ -697,7 +726,9 @@
                 }
 
                 Code::ArrowUp =&gt; {
-                    <span class="kw">if </span><span class="self">self</span>.is_open {
+                    <span class="kw">if </span>!<span class="self">self</span>.is_open {
+                        <span class="self">self</span>.is_open = <span class="bool-val">true</span>;
+                    } <span class="kw">else </span>{
                         <span class="kw">let </span>filter = |(<span class="kw">_</span>, txt): <span class="kw-2">&amp;</span>(usize, <span class="kw-2">&amp;</span>T)| {
                             <span class="kw">if </span><span class="self">self</span>.filter_text.is_empty() {
                                 <span class="bool-val">true
@@ -709,7 +740,6 @@
                         };
 
                         <span class="kw">let </span>list = <span class="self">self</span>.list_lens.get(cx);
-
                         <span class="kw">if let </span><span class="prelude-val">Some</span>((next_index, <span class="kw">_</span>)) = list
                             .iter()
                             .enumerate()
@@ -727,15 +757,8 @@
 
                 Code::Escape =&gt; {
                     <span class="kw">if </span><span class="self">self</span>.is_open {
-                        <span class="comment">// The textbox will receive the key event first and defocus so send an event to refocus the textbox
-                        </span>cx.emit_custom(
-                            Event::new(TextEvent::StartEdit)
-                                .target(cx.current)
-                                .propagate(Propagation::Subtree),
-                        );
-
-                        <span class="comment">// Emit an event instead of setting is_open because the StartEdit will cause the popup to reopen
-                        </span>cx.emit(ComboBoxEvent::Close);
+                        <span class="self">self</span>.is_open = <span class="bool-val">false</span>;
+                        <span class="self">self</span>.hovered = <span class="self">self</span>.selected.get(cx);
                     } <span class="kw">else </span>{
                         cx.emit(TextEvent::Submit(<span class="bool-val">false</span>));
                     }
@@ -815,7 +838,8 @@
                 <span class="kw">let </span>parent_bounds = cx.cache.get_bounds(parent);
                 <span class="kw">let </span>window_bounds = cx.cache.get_bounds(Entity::root());
 
-                <span class="kw">let </span>space_below = window_bounds.bottom() - bounds.bottom();
+                <span class="kw">let </span>space_below =
+                    window_bounds.bottom() - bounds.bottom() - <span class="number">4.0 </span>* cx.scale_factor();
                 <span class="kw">let </span>space_above = parent_bounds.top() - window_bounds.top();
 
                 <span class="kw">let </span>scale = cx.scale_factor();

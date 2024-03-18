@@ -151,6 +151,34 @@
 <a href="#150" id="150">150</a>
 <a href="#151" id="151">151</a>
 <a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
+<a href="#162" id="162">162</a>
+<a href="#163" id="163">163</a>
+<a href="#164" id="164">164</a>
+<a href="#165" id="165">165</a>
+<a href="#166" id="166">166</a>
+<a href="#167" id="167">167</a>
+<a href="#168" id="168">168</a>
+<a href="#169" id="169">169</a>
+<a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>std::{
     any::{Any, TypeId},
@@ -159,6 +187,7 @@
 
 <span class="doccomment">/// A handle to a view which has been already built into the tree.
 </span><span class="kw">pub struct </span>Handle&lt;<span class="lifetime">'a</span>, V&gt; {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) current: Entity,
     <span class="kw">pub</span>(<span class="kw">crate</span>) entity: Entity,
     <span class="kw">pub</span>(<span class="kw">crate</span>) p: PhantomData&lt;V&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) cx: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Context,
@@ -195,6 +224,10 @@
     <span class="doccomment">/// Returns the [`Entity`] id of the view.
     </span><span class="kw">pub fn </span>entity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
         <span class="self">self</span>.entity
+    }
+
+    <span class="kw">pub fn </span>current(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
+        <span class="self">self</span>.current
     }
 
     <span class="doccomment">/// Returns a mutable reference to the context.
@@ -262,30 +295,47 @@
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>bind&lt;L, F&gt;(<span class="self">self</span>, lens: L, closure: F) -&gt; <span class="self">Self
+    <span class="kw">pub fn </span>bind&lt;R, T, F&gt;(<span class="self">self</span>, res: R, closure: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>L: Lens,
-        &lt;L <span class="kw">as </span>Lens&gt;::Target: Data,
-        F: <span class="lifetime">'static </span>+ Fn(Handle&lt;<span class="lifetime">'_</span>, V&gt;, L),
+        </span>R: Res&lt;T&gt;,
+        F: <span class="lifetime">'static </span>+ Clone + Fn(Handle&lt;<span class="lifetime">'_</span>, V&gt;, R),
     {
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        Binding::new(<span class="self">self</span>.cx, lens, <span class="kw">move </span>|cx, data| {
-            <span class="kw">let </span>new_handle = Handle { entity, p: Default::default(), cx };
-
-            new_handle.cx.set_current(new_handle.entity);
-            (closure)(new_handle, data);
+        <span class="kw">let </span>current = <span class="self">self</span>.current();
+        <span class="self">self</span>.cx.with_current(current, |cx| {
+            res.set_or_bind(cx, entity, <span class="kw">move </span>|cx, r| {
+                <span class="kw">let </span>new_handle = Handle { entity, current: cx.current, p: Default::default(), cx };
+                <span class="comment">// new_handle.cx.set_current(new_handle.entity);
+                </span>(closure)(new_handle, r);
+            });
         });
         <span class="self">self
     </span>}
 
-    <span class="doccomment">/// Marks the view as needing a relayout.
+    <span class="comment">// pub fn subbind&lt;L, F&gt;(self, lens: L, closure: F) -&gt; Self
+    // where
+    //     L: Lens,
+    //     &lt;L as Lens&gt;::Target: Data,
+    //     F: 'static + Fn(Handle&lt;'_, V&gt;, L),
+    // {
+    //     let entity = self.entity();
+    //     Binding::new(self.cx, lens, move |cx, data| {
+    //         let new_handle = Handle { entity, p: Default::default(), cx };
+    //         // new_handle.cx.set_current(new_handle.entity);
+    //         (closure)(new_handle, data);
+    //     });
+
+    //     self
+    // }
+
+    </span><span class="doccomment">/// Marks the view as needing a relayout.
     </span><span class="kw">pub fn </span>needs_relayout(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.cx.needs_relayout();
     }
 
     <span class="doccomment">/// Marks the view as needing a restyle.
     </span><span class="kw">pub fn </span>needs_restyle(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="self">self</span>.cx.needs_restyle();
+        <span class="self">self</span>.cx.needs_restyle(<span class="self">self</span>.entity);
     }
 
     <span class="doccomment">/// Marks the view as needing a redraw.
@@ -301,6 +351,12 @@
     <span class="doccomment">/// Returns the scale factor of the device.
     </span><span class="kw">pub fn </span>scale_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
         <span class="self">self</span>.cx.scale_factor()
+    }
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, V&gt; AsMut&lt;Context&gt; <span class="kw">for </span>Handle&lt;<span class="lifetime">'a</span>, V&gt; {
+    <span class="kw">fn </span>as_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Context {
+        <span class="self">self</span>.context()
     }
 }
 </code></pre></div></section></main></body></html>

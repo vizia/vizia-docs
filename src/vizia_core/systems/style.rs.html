@@ -644,18 +644,124 @@
 <a href="#643" id="643">643</a>
 <a href="#644" id="644">644</a>
 <a href="#645" id="645">645</a>
-</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
-    events::ViewHandler,
-    prelude::<span class="kw-2">*</span>,
-    style::{PseudoClassFlags, Rule, Style, SystemFlags},
-};
-<span class="kw">use </span>fnv::FnvHashMap;
-<span class="kw">use </span>vizia_id::GenerationalId;
-<span class="kw">use </span>vizia_storage::LayoutTreeIterator;
+<a href="#646" id="646">646</a>
+<a href="#647" id="647">647</a>
+<a href="#648" id="648">648</a>
+<a href="#649" id="649">649</a>
+<a href="#650" id="650">650</a>
+<a href="#651" id="651">651</a>
+<a href="#652" id="652">652</a>
+<a href="#653" id="653">653</a>
+<a href="#654" id="654">654</a>
+<a href="#655" id="655">655</a>
+<a href="#656" id="656">656</a>
+<a href="#657" id="657">657</a>
+<a href="#658" id="658">658</a>
+<a href="#659" id="659">659</a>
+<a href="#660" id="660">660</a>
+<a href="#661" id="661">661</a>
+<a href="#662" id="662">662</a>
+<a href="#663" id="663">663</a>
+<a href="#664" id="664">664</a>
+<a href="#665" id="665">665</a>
+<a href="#666" id="666">666</a>
+<a href="#667" id="667">667</a>
+<a href="#668" id="668">668</a>
+<a href="#669" id="669">669</a>
+<a href="#670" id="670">670</a>
+<a href="#671" id="671">671</a>
+<a href="#672" id="672">672</a>
+<a href="#673" id="673">673</a>
+<a href="#674" id="674">674</a>
+<a href="#675" id="675">675</a>
+<a href="#676" id="676">676</a>
+<a href="#677" id="677">677</a>
+<a href="#678" id="678">678</a>
+<a href="#679" id="679">679</a>
+<a href="#680" id="680">680</a>
+<a href="#681" id="681">681</a>
+<a href="#682" id="682">682</a>
+<a href="#683" id="683">683</a>
+<a href="#684" id="684">684</a>
+<a href="#685" id="685">685</a>
+<a href="#686" id="686">686</a>
+<a href="#687" id="687">687</a>
+<a href="#688" id="688">688</a>
+<a href="#689" id="689">689</a>
+<a href="#690" id="690">690</a>
+<a href="#691" id="691">691</a>
+<a href="#692" id="692">692</a>
+<a href="#693" id="693">693</a>
+<a href="#694" id="694">694</a>
+<a href="#695" id="695">695</a>
+<a href="#696" id="696">696</a>
+<a href="#697" id="697">697</a>
+<a href="#698" id="698">698</a>
+<a href="#699" id="699">699</a>
+<a href="#700" id="700">700</a>
+<a href="#701" id="701">701</a>
+<a href="#702" id="702">702</a>
+<a href="#703" id="703">703</a>
+<a href="#704" id="704">704</a>
+<a href="#705" id="705">705</a>
+<a href="#706" id="706">706</a>
+<a href="#707" id="707">707</a>
+<a href="#708" id="708">708</a>
+<a href="#709" id="709">709</a>
+<a href="#710" id="710">710</a>
+<a href="#711" id="711">711</a>
+<a href="#712" id="712">712</a>
+<a href="#713" id="713">713</a>
+<a href="#714" id="714">714</a>
+<a href="#715" id="715">715</a>
+<a href="#716" id="716">716</a>
+<a href="#717" id="717">717</a>
+<a href="#718" id="718">718</a>
+<a href="#719" id="719">719</a>
+<a href="#720" id="720">720</a>
+<a href="#721" id="721">721</a>
+<a href="#722" id="722">722</a>
+<a href="#723" id="723">723</a>
+<a href="#724" id="724">724</a>
+<a href="#725" id="725">725</a>
+<a href="#726" id="726">726</a>
+<a href="#727" id="727">727</a>
+<a href="#728" id="728">728</a>
+<a href="#729" id="729">729</a>
+<a href="#730" id="730">730</a>
+<a href="#731" id="731">731</a>
+<a href="#732" id="732">732</a>
+<a href="#733" id="733">733</a>
+<a href="#734" id="734">734</a>
+<a href="#735" id="735">735</a>
+<a href="#736" id="736">736</a>
+<a href="#737" id="737">737</a>
+<a href="#738" id="738">738</a>
+<a href="#739" id="739">739</a>
+<a href="#740" id="740">740</a>
+<a href="#741" id="741">741</a>
+<a href="#742" id="742">742</a>
+<a href="#743" id="743">743</a>
+<a href="#744" id="744">744</a>
+<a href="#745" id="745">745</a>
+<a href="#746" id="746">746</a>
+<a href="#747" id="747">747</a>
+<a href="#748" id="748">748</a>
+<a href="#749" id="749">749</a>
+<a href="#750" id="750">750</a>
+<a href="#751" id="751">751</a>
+<a href="#752" id="752">752</a>
+<a href="#753" id="753">753</a>
+<a href="#754" id="754">754</a>
+<a href="#755" id="755">755</a>
+</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{events::ViewHandler, prelude::<span class="kw-2">*</span>};
+<span class="kw">use </span>hashbrown::HashMap;
+<span class="kw">use </span>vizia_storage::TreeBreadthIterator;
 <span class="kw">use </span>vizia_style::{
     matches_selector_list,
     selectors::{
         attr::{AttrSelectorOperation, CaseSensitivity, NamespaceConstraint},
+        parser::Component,
         SelectorImpl,
     },
     selectors::{matching::ElementSelectorFlags, OpaqueElement},
@@ -668,7 +774,7 @@
     entity: Entity,
     store: <span class="kw-2">&amp;</span><span class="lifetime">'s </span>Style,
     tree: <span class="kw-2">&amp;</span><span class="lifetime">'t </span>Tree&lt;Entity&gt;,
-    views: <span class="kw-2">&amp;</span><span class="lifetime">'v </span>FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
+    views: <span class="kw-2">&amp;</span><span class="lifetime">'v </span>HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'s</span>, <span class="lifetime">'t</span>, <span class="lifetime">'v</span>&gt; std::fmt::Debug <span class="kw">for </span>Node&lt;<span class="lifetime">'s</span>, <span class="lifetime">'t</span>, <span class="lifetime">'v</span>&gt; {
@@ -1266,16 +1372,131 @@
     matched_rules.reverse();
 }
 
+<span class="kw">fn </span>has_same_selector(cx: <span class="kw-2">&amp;</span>Context, entity1: Entity, entity2: Entity) -&gt; bool {
+    <span class="kw">let </span>element1 = <span class="kw">if let </span><span class="prelude-val">Some</span>(element1) = cx.views.get(<span class="kw-2">&amp;</span>entity1).and_then(|view| view.element()) {
+        element1
+    } <span class="kw">else </span>{
+        <span class="string">""
+    </span>};
+
+    <span class="kw">let </span>element2 = <span class="kw">if let </span><span class="prelude-val">Some</span>(element2) = cx.views.get(<span class="kw-2">&amp;</span>entity2).and_then(|view| view.element()) {
+        element2
+    } <span class="kw">else </span>{
+        <span class="string">""
+    </span>};
+
+    <span class="kw">if </span>element1 != element2 {
+        <span class="kw">return </span><span class="bool-val">false</span>;
+    };
+
+    <span class="kw">let </span>id1 = <span class="kw">if let </span><span class="prelude-val">Some</span>(id) = cx.style.ids.get(entity1) { id } <span class="kw">else </span>{ <span class="string">"" </span>};
+    <span class="kw">let </span>id2 = <span class="kw">if let </span><span class="prelude-val">Some</span>(id) = cx.style.ids.get(entity2) { id } <span class="kw">else </span>{ <span class="string">"" </span>};
+
+    <span class="kw">if </span>id1 != id2 {
+        <span class="kw">return </span><span class="bool-val">false</span>;
+    }
+
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(classes1) = cx.style.classes.get(entity1) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(classes2) = cx.style.classes.get(entity2) {
+            <span class="kw">if </span>!classes2.is_subset(classes1) || !classes1.is_subset(classes2) {
+                <span class="kw">return </span><span class="bool-val">false</span>;
+            }
+        }
+    }
+
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(psudeo_class_flag1) = cx.style.pseudo_classes.get(entity1) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(psudeo_class_flag2) = cx.style.pseudo_classes.get(entity2) {
+            <span class="kw">if </span>psudeo_class_flag2.bits() != psudeo_class_flag1.bits() {
+                <span class="kw">return </span><span class="bool-val">false</span>;
+            }
+        }
+    }
+
+    <span class="bool-val">true
+</span>}
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>MatchedRulesCache {
+    <span class="kw">pub </span>entity: Entity,
+    <span class="kw">pub </span>rules: Vec&lt;(Rule, u32)&gt;,
+}
+
 <span class="comment">// Iterates the tree and determines the matching style rules for each entity, then links the entity to the corresponding style rule data.
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>style_system(cx: <span class="kw-2">&amp;mut </span>Context) {
-    <span class="kw">if </span>cx.style.system_flags.contains(SystemFlags::RESTYLE) {
-        <span class="kw">let </span>iterator = LayoutTreeIterator::full(<span class="kw-2">&amp;</span>cx.tree);
+    <span class="kw">if </span>!cx.style.restyle.is_empty() {
+        <span class="comment">// println!("RESTYLE");
+        </span><span class="kw">let </span>iterator = TreeBreadthIterator::full(<span class="kw-2">&amp;</span>cx.tree);
+
+        <span class="kw">let </span><span class="kw-2">mut </span>parent = <span class="prelude-val">None</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>cache: Vec&lt;MatchedRulesCache&gt; = Vec::with_capacity(<span class="number">50</span>);
 
         <span class="comment">// Restyle the entire application.
         // TODO: Make this incremental.
         </span><span class="kw">for </span>entity <span class="kw">in </span>iterator {
-            <span class="kw">let </span><span class="kw-2">mut </span>matched_rules = Vec::with_capacity(<span class="number">5</span>);
-            compute_matched_rules(cx, entity, <span class="kw-2">&amp;mut </span>matched_rules);
+            <span class="kw">if </span>!cx.style.restyle.contains(entity) {
+                <span class="comment">// println!("SKIP {}", entity);
+                </span><span class="kw">continue</span>;
+            }
+
+            <span class="comment">// println!("Style: {}", entity);
+            </span><span class="kw">let </span><span class="kw-2">mut </span>matched_rules = Vec::with_capacity(<span class="number">50</span>);
+
+            <span class="kw">let </span>current_parent = cx.tree.get_layout_parent(entity);
+
+            <span class="kw">let </span><span class="kw-2">mut </span>compute_match = <span class="bool-val">true</span>;
+
+            <span class="kw">if </span>current_parent == parent
+                &amp;&amp; !cx.tree.is_first_child(entity)
+                &amp;&amp; !cx.tree.is_last_child(entity)
+            {
+                <span class="comment">// if has same selector look up rules
+                </span><span class="lifetime">'cache</span>: <span class="kw">for </span>entry <span class="kw">in </span><span class="kw-2">&amp;</span>cache {
+                    <span class="kw">if </span>has_same_selector(cx, entry.entity, entity) {
+                        matched_rules.clone_from(<span class="kw-2">&amp;</span>entry.rules);
+                        compute_match = <span class="bool-val">false</span>;
+
+                        <span class="kw">for </span>rule <span class="kw">in </span>entry.rules.iter() {
+                            <span class="kw">if let </span><span class="prelude-val">Some</span>(selectors) = cx.style.rules.get(<span class="kw-2">&amp;</span>rule.<span class="number">0</span>) {
+                                <span class="kw">for </span>selector <span class="kw">in </span>selectors.<span class="number">0</span>.iter() {
+                                    <span class="kw">for </span>component <span class="kw">in </span>selector.iter() {
+                                        <span class="kw">match </span><span class="kw-2">*</span>component {
+                                            Component::FirstChild
+                                            | Component::LastChild
+                                            | Component::NthChild(<span class="kw">_</span>, <span class="kw">_</span>)
+                                            | Component::FirstOfType
+                                            | Component::LastOfType
+                                            | Component::NthLastChild(<span class="kw">_</span>, <span class="kw">_</span>)
+                                            | Component::NthOfType(<span class="kw">_</span>, <span class="kw">_</span>)
+                                            | Component::NthLastOfType(<span class="kw">_</span>, <span class="kw">_</span>)
+                                            | Component::OnlyChild
+                                            | Component::OnlyOfType =&gt; {
+                                                matched_rules.clear();
+                                                compute_match = <span class="bool-val">true</span>;
+                                                <span class="kw">continue </span><span class="lifetime">'cache</span>;
+                                            }
+
+                                            <span class="kw">_ </span>=&gt; {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        <span class="kw">break </span><span class="lifetime">'cache</span>;
+                        <span class="comment">// println!("Sharing: {}", entity);
+                    </span>}
+                }
+            } <span class="kw">else </span>{
+                parent = current_parent;
+                cache.clear();
+            }
+
+            <span class="comment">// matched_rules.clear();
+            // compute_match = true;
+
+            </span><span class="kw">if </span>compute_match {
+                compute_matched_rules(cx, entity, <span class="kw-2">&amp;mut </span>matched_rules);
+                cache.push(MatchedRulesCache { entity, rules: matched_rules.clone() });
+            }
 
             <span class="kw">if </span>!matched_rules.is_empty() {
                 link_style_data(
@@ -1285,8 +1506,7 @@
                 );
             }
         }
-
-        cx.style.system_flags.set(SystemFlags::RESTYLE, <span class="bool-val">false</span>);
+        cx.style.restyle.clear();
     }
 }
 </code></pre></div></section></main></body></html>

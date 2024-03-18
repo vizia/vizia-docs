@@ -320,11 +320,10 @@
 //! .run();
 //! ```
 
-</span><span class="kw">use </span><span class="kw">crate</span>::context::AccessNode;
+</span><span class="kw">use </span><span class="kw">crate</span>::accessibility::IntoNode;
 <span class="kw">use </span><span class="kw">crate</span>::model::ModelDataStore;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::systems::get_access_node;
-<span class="kw">use crate</span>::{accessibility::IntoNode, context::AccessContext};
 <span class="kw">use </span>std::any::Any;
 <span class="kw">mod </span>handle;
 <span class="kw">pub use </span>handle::Handle;
@@ -448,16 +447,17 @@
         <span class="kw">if let </span><span class="prelude-val">Some</span>(parent_node) = get_access_node(<span class="kw-2">&amp;mut </span>access_context, <span class="kw-2">&amp;mut </span>cx.views, parent_id) {
             <span class="kw">let </span>parent_node = parent_node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes);
             <span class="kw">let </span>node = NodeBuilder::default().build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes);
-            cx.tree_updates.push(TreeUpdate {
+
+            cx.tree_updates.push(<span class="prelude-val">Some</span>(TreeUpdate {
                 nodes: <span class="macro">vec!</span>[(parent_node_id, parent_node), (node_id, node)],
                 tree: <span class="prelude-val">None</span>,
-                focus: <span class="prelude-val">None</span>,
-            });
+                focus: cx.focused.accesskit_id(),
+            }));
         }
 
         cx.data.insert(id, ModelDataStore::default());
 
-        <span class="kw">let </span>handle = Handle { entity: id, p: Default::default(), cx };
+        <span class="kw">let </span>handle = Handle { current: id, entity: id, p: Default::default(), cx };
 
         handle.cx.with_current(handle.entity, content);
 

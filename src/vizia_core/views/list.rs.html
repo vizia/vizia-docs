@@ -112,161 +112,117 @@
 <a href="#111" id="111">111</a>
 <a href="#112" id="112">112</a>
 <a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a>
-<a href="#116" id="116">116</a>
-<a href="#117" id="117">117</a>
-<a href="#118" id="118">118</a>
-<a href="#119" id="119">119</a>
-<a href="#120" id="120">120</a>
-<a href="#121" id="121">121</a>
-<a href="#122" id="122">122</a>
-<a href="#123" id="123">123</a>
-<a href="#124" id="124">124</a>
-<a href="#125" id="125">125</a>
-<a href="#126" id="126">126</a>
-<a href="#127" id="127">127</a>
-<a href="#128" id="128">128</a>
-<a href="#129" id="129">129</a>
-<a href="#130" id="130">130</a>
-<a href="#131" id="131">131</a>
-<a href="#132" id="132">132</a>
-<a href="#133" id="133">133</a>
-<a href="#134" id="134">134</a>
-<a href="#135" id="135">135</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::binding::Index;
-<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span>std::marker::PhantomData;
-<span class="kw">use </span>vizia_input::Code;
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::Deref;
 
-<span class="doccomment">/// A view for creating a list of items from a binding to a `Vec&lt;T&gt;`
-</span><span class="kw">pub struct </span>List&lt;L, T: <span class="lifetime">'static</span>&gt;
-<span class="kw">where
-    </span>L: Lens,
-    &lt;L <span class="kw">as </span>Lens&gt;::Target: std::ops::Deref&lt;Target = [T]&gt;,
-{
-    p: PhantomData&lt;L&gt;,
-    increment_callback: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext)&gt;&gt;,
-    decrement_callback: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext)&gt;&gt;,
-    clear_callback: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext)&gt;&gt;,
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+
+<span class="attr">#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>Selectable {
+    <span class="attr">#[default]
+    </span><span class="prelude-val">None</span>,
+    Single,
+    Multi,
 }
 
-<span class="kw">impl</span>&lt;L: Lens, T: Clone&gt; List&lt;L, T&gt;
-<span class="kw">where
-    </span>&lt;L <span class="kw">as </span>Lens&gt;::Target: std::ops::Deref&lt;Target = [T]&gt;,
-{
-    <span class="doccomment">/// Creates a new List view with a binding to the given lens and a template for constructing the list items
-    </span><span class="kw">pub fn </span>new&lt;F&gt;(cx: <span class="kw-2">&amp;mut </span>Context, lens: L, item: F) -&gt; Handle&lt;<span class="self">Self</span>&gt;
-    <span class="kw">where
-        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, usize, Index&lt;L, T&gt;),
-    {
-        <span class="comment">//let item_template = Rc::new(item);
-        </span>List {
-            p: PhantomData,
-            increment_callback: <span class="prelude-val">None</span>,
-            decrement_callback: <span class="prelude-val">None</span>,
-            clear_callback: <span class="prelude-val">None</span>,
-        }
-        .build(cx, <span class="kw">move </span>|cx| {
-            <span class="comment">// Bind to the list data
-            </span>Binding::new(cx, lens.map(|lst| lst.len()), <span class="kw">move </span>|cx, list_len| {
-                <span class="comment">// If the number of list items is different to the number of children of the ListView
-                // then remove and rebuild all the children
-                </span><span class="kw">let </span>list_len = list_len.get_fallible(cx).map_or(<span class="number">0</span>, |d| d);
+<span class="macro">impl_res_simple!</span>(Selectable);
 
-                <span class="kw">for </span>index <span class="kw">in </span><span class="number">0</span>..list_len {
-                    <span class="kw">let </span>ptr = lens.index(index);
-                    (item)(cx, index, ptr);
-                }
-            });
-        })
+<span class="kw">pub enum </span>ListEvent {
+    Select(usize),
+    SelectFocused,
+    SetFocus(<span class="prelude-ty">Option</span>&lt;usize&gt;),
+    FocusNext(bool),
+    FocusPrev(bool),
+    ClearSelection,
+}
+
+<span class="doccomment">/// A view for creating a list of items from a binding to a `Vec&lt;T&gt;`
+</span><span class="attr">#[derive(Lens)]
+</span><span class="kw">pub struct </span>List {
+    list_len: usize,
+}
+
+<span class="kw">impl </span>List {
+    <span class="kw">pub fn </span>new&lt;L: Lens, T: <span class="lifetime">'static</span>&gt;(
+        cx: <span class="kw-2">&amp;mut </span>Context,
+        list: L,
+        item_content: <span class="kw">impl </span><span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, usize, MapRef&lt;L, T&gt;),
+    ) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>L::Target: Deref&lt;Target = [T]&gt;,
+    {
+        <span class="self">Self</span>::new_generic(cx, list, |list| list.len(), |list, index| <span class="kw-2">&amp;</span>list[index], item_content)
+    }
+
+    <span class="doccomment">/// Creates a new List view with a binding to the given lens and a template for constructing the list items
+    </span><span class="kw">pub fn </span>new_generic&lt;L: Lens, T: <span class="lifetime">'static</span>&gt;(
+        cx: <span class="kw-2">&amp;mut </span>Context,
+        list: L,
+        list_len: <span class="kw">impl </span><span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;</span>L::Target) -&gt; usize,
+        list_index: <span class="kw">impl </span><span class="lifetime">'static </span>+ Copy + Fn(<span class="kw-2">&amp;</span>L::Target, usize) -&gt; <span class="kw-2">&amp;</span>T,
+        item_content: <span class="kw">impl </span><span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, usize, MapRef&lt;L, T&gt;),
+    ) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>num_items = list.map(list_len);
+        <span class="self">Self </span>{ list_len: num_items.get(cx) }
+            .build(cx, <span class="kw">move </span>|cx| {
+                Keymap::from(<span class="macro">vec!</span>[
+                    (
+                        KeyChord::new(Modifiers::empty(), Code::ArrowDown),
+                        KeymapEntry::new(<span class="string">"Focus Next"</span>, |cx| cx.emit(ListEvent::FocusNext(<span class="bool-val">false</span>))),
+                    ),
+                    (
+                        KeyChord::new(Modifiers::empty(), Code::ArrowUp),
+                        KeymapEntry::new(<span class="string">"Focus Previous"</span>, |cx| {
+                            cx.emit(ListEvent::FocusPrev(<span class="bool-val">false</span>))
+                        }),
+                    ),
+                    <span class="comment">// (
+                    //     KeyChord::new(Modifiers::empty(), Code::Space),
+                    //     KeymapEntry::new((), |cx| cx.emit(ListEvent::SelectFocused)),
+                    // ),
+                    </span>(
+                        KeyChord::new(Modifiers::SHIFT, Code::ArrowDown),
+                        KeymapEntry::new(<span class="string">"Select Next"</span>, |cx| {
+                            cx.emit(ListEvent::FocusNext(<span class="bool-val">true</span>));
+                            <span class="comment">// cx.emit(ListEvent::SelectFocused);
+                        </span>}),
+                    ),
+                    (
+                        KeyChord::new(Modifiers::SHIFT, Code::ArrowUp),
+                        KeymapEntry::new(<span class="string">"Select Previous"</span>, |cx| {
+                            cx.emit(ListEvent::FocusPrev(<span class="bool-val">true</span>));
+                            <span class="comment">// cx.emit(ListEvent::SelectFocused);
+                        </span>}),
+                    ),
+                    (
+                        KeyChord::new(Modifiers::empty(), Code::Escape),
+                        KeymapEntry::new(<span class="string">"Clear Selection"</span>, |cx| {
+                            cx.emit(ListEvent::ClearSelection)
+                        }),
+                    ),
+                ])
+                .build(cx);
+
+                <span class="comment">// ScrollView::new(cx, 0.0, 0.0, false, true, move |cx| {
+                // Bind to the list data
+                </span>Binding::new(cx, num_items, <span class="kw">move </span>|cx, num_items| {
+                    <span class="comment">// If the number of list items is different to the number of children of the ListView
+                    // then remove and rebuild all the children
+
+                    </span><span class="kw">for </span>index <span class="kw">in </span><span class="number">0</span>..num_items.get(cx) {
+                        <span class="kw">let </span>item = list.map_ref(<span class="kw">move </span>|list| list_index(list, index));
+                        item_content(cx, index, item);
+                    }
+                });
+                <span class="comment">// });
+            </span>})
+            .width(Stretch(<span class="number">1.0</span>))
+            .role(Role::List)
     }
 }
 
-<span class="kw">impl</span>&lt;L: Lens, T&gt; View <span class="kw">for </span>List&lt;L, T&gt;
-<span class="kw">where
-    </span>&lt;L <span class="kw">as </span>Lens&gt;::Target: std::ops::Deref&lt;Target = [T]&gt;,
-{
+<span class="kw">impl </span>View <span class="kw">for </span>List {
     <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">"list"</span>)
     }
-
-    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
-        event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
-            WindowEvent::KeyDown(code, <span class="kw">_</span>) =&gt; <span class="kw">match </span>code {
-                Code::ArrowDown =&gt; {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.increment_callback {
-                        (callback)(cx);
-                    }
-                }
-
-                Code::ArrowUp =&gt; {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.decrement_callback {
-                        (callback)(cx);
-                    }
-                }
-
-                Code::Escape =&gt; {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.clear_callback {
-                        (callback)(cx);
-                    }
-                }
-
-                <span class="kw">_ </span>=&gt; {}
-            },
-
-            <span class="kw">_ </span>=&gt; {}
-        });
-
-        <span class="comment">// event.map(|window_event, _| match window_event {
-        //     WindowEvent::MouseDown(MouseButton::Left) =&gt; {
-        //         if !cx.focused.is_child_of(&amp;cx.tree, cx.current) {
-        //             cx.focused = cx.current;
-        //         }
-        //     }
-        //     _ =&gt; {}
-        // });
-    </span>}
-}
-
-<span class="kw">impl</span>&lt;L: Lens&lt;Target = Vec&lt;T&gt;&gt;, T: Data&gt; Handle&lt;<span class="lifetime">'_</span>, List&lt;L, T&gt;&gt; {
-    <span class="kw">pub fn </span>on_increment&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
-    </span><span class="kw">where
-        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext),
-    {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(list) =
-            <span class="self">self</span>.cx.views.get_mut(<span class="kw-2">&amp;</span><span class="self">self</span>.entity).and_then(|f| f.downcast_mut::&lt;List&lt;L, T&gt;&gt;())
-        {
-            list.increment_callback = <span class="prelude-val">Some</span>(Box::new(callback));
-        }
-
-        <span class="self">self
-    </span>}
-
-    <span class="kw">pub fn </span>on_decrement&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
-    </span><span class="kw">where
-        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext),
-    {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(list) =
-            <span class="self">self</span>.cx.views.get_mut(<span class="kw-2">&amp;</span><span class="self">self</span>.entity).and_then(|f| f.downcast_mut::&lt;List&lt;L, T&gt;&gt;())
-        {
-            list.decrement_callback = <span class="prelude-val">Some</span>(Box::new(callback));
-        }
-
-        <span class="self">self
-    </span>}
-
-    <span class="kw">pub fn </span>on_clear&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
-    </span><span class="kw">where
-        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext),
-    {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(list) =
-            <span class="self">self</span>.cx.views.get_mut(<span class="kw-2">&amp;</span><span class="self">self</span>.entity).and_then(|f| f.downcast_mut::&lt;List&lt;L, T&gt;&gt;())
-        {
-            list.clear_callback = <span class="prelude-val">Some</span>(Box::new(callback));
-        }
-
-        <span class="self">self
-    </span>}
 }
 </code></pre></div></section></main></body></html>

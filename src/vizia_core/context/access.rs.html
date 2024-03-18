@@ -115,7 +115,7 @@
 <a href="#114" id="114">114</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>accesskit::{NodeBuilder, NodeId, Rect, TextDirection, TextSelection};
 
-<span class="kw">use crate</span>::{cache::CachedData, prelude::<span class="kw-2">*</span>, style::Style, text::TextContext};
+<span class="kw">use crate</span>::{cache::CachedData, prelude::<span class="kw-2">*</span>, text::TextContext};
 
 <span class="doccomment">/// A context used for configuring the accessibility features of a view.
 </span><span class="kw">pub struct </span>AccessContext&lt;<span class="lifetime">'a</span>&gt; {
@@ -144,9 +144,9 @@
 <span class="kw">impl </span>AccessNode {
     <span class="kw">pub fn </span>new_from_parent(parent_id: NodeId, index: usize) -&gt; <span class="self">Self </span>{
         <span class="comment">// Concatenate the parent id with the index of the text line to form a unique node id.
-        </span><span class="kw">let </span><span class="kw-2">mut </span>node_id = (parent_id.<span class="number">0</span>.get() <span class="kw">as </span>u64) &lt;&lt; <span class="number">32</span>;
+        </span><span class="kw">let </span><span class="kw-2">mut </span>node_id = parent_id.<span class="number">0 </span>&lt;&lt; <span class="number">32</span>;
         node_id |= index <span class="kw">as </span>u64;
-        <span class="kw">let </span>node_id: NodeId = std::num::NonZeroU64::new(node_id).unwrap().into();
+        <span class="kw">let </span>node_id: NodeId = NodeId(node_id);
 
         <span class="self">Self </span>{ node_id, node_builder: NodeBuilder::default(), children: Vec::new() }
     }

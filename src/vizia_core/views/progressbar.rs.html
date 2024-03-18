@@ -139,9 +139,7 @@
 <a href="#138" id="138">138</a>
 <a href="#139" id="139">139</a>
 <a href="#140" id="140">140</a>
-<a href="#141" id="141">141</a>
-<a href="#142" id="142">142</a>
-</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{context::TreeProps, prelude::<span class="kw-2">*</span>};
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// A simple ProgressBar that can be used to show progress of something.
 ///
@@ -273,14 +271,12 @@
     /// you also pass a lens to this method if you want to be able to change the color
     /// dynamically.
     </span><span class="kw">pub fn </span>bar_color(<span class="self">self</span>, color: <span class="kw">impl </span>Res&lt;Color&gt;) -&gt; <span class="self">Self </span>{
-        color.set_or_bind(<span class="self">self</span>.cx, <span class="self">self</span>.entity, <span class="kw">move </span>|cx, val| {
-            <span class="kw">let </span>first_child = cx.first_child();
-            cx.with_current(first_child, |cx| {
-                cx.set_background_color(val);
-            })
-        });
-
-        <span class="self">self
-    </span>}
+        <span class="self">self</span>.bind(color, |<span class="kw-2">mut </span>h, c| {
+            <span class="kw">let </span>first_child = h.entity.first_child(<span class="kw-2">&amp;</span>h.cx.tree).unwrap();
+            h.entity = first_child;
+            <span class="kw">let </span>val = c.get(<span class="kw-2">&amp;</span>h);
+            h.background_color(val);
+        })
+    }
 }
 </code></pre></div></section></main></body></html>

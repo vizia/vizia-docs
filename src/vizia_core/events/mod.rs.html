@@ -100,8 +100,6 @@
 <a href="#99" id="99">99</a>
 <a href="#100" id="100">100</a>
 <a href="#101" id="101">101</a>
-<a href="#102" id="102">102</a>
-<a href="#103" id="103">103</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Events for communicating state change to views and models.
 //!
 //! Views and Models communicate with each other via events. An [Event] contains a message, as well as metadata to describe how events
@@ -175,17 +173,15 @@
 //!         // Alternatively, `event.take()` will attempt to cast the event message to the
 //!         // desired type and return the value of the message (not a reference),
 //!         // removing it from the event and thus preventing it from propagating further.
-//!         if let Some(app_event) = event.take() {
-//!             match app_event {
-//!                 AppEvent::Increment =&gt; {
-//!                     self.count += 1;
-//!                 }
-//!
-//!                 AppEvent::Decrement =&gt; {
-//!                     self.count -= 1;
-//!                 }
+//!         event.take(|app_event, meta| match app_event {
+//!             AppEvent::Increment =&gt; {
+//!                 self.count += 1;
 //!             }
-//!         }
+//!
+//!             AppEvent::Decrement =&gt; {
+//!                 self.count -= 1;
+//!             }
+//!         });
 //!     }
 //! }
 //! ```

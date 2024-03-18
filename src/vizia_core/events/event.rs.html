@@ -215,10 +215,15 @@
 <a href="#214" id="214">214</a>
 <a href="#215" id="215">215</a>
 <a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::entity::Entity;
-<span class="kw">use </span>instant::Instant;
 <span class="kw">use </span>std::{any::Any, cmp::Ordering, fmt::Debug};
 <span class="kw">use </span>vizia_id::GenerationalId;
+<span class="kw">use </span>web_time::Instant;
 
 <span class="doccomment">/// Determines how an event propagates through the tree.
 </span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq)]
@@ -346,21 +351,22 @@
     /// # }
     /// # impl Model for AppData {
     /// #     fn event(&amp;mut self, _cx: &amp;mut EventContext, event: &amp;mut Event) {
-    /// if let Some(app_event) = event.take() {
-    ///     match app_event {
-    ///         AppEvent::Increment =&gt; {
-    ///             self.count += 1;
-    ///         }
-    ///
-    ///         AppEvent::Decrement =&gt; {
-    ///             self.count -= 1;
-    ///         }
+    /// event.take(|app_event, meta| match app_event {
+    ///     AppEvent::Increment =&gt; {
+    ///         self.count += 1;
     ///     }
-    /// }
+    ///
+    ///     AppEvent::Decrement =&gt; {
+    ///         self.count -= 1;
+    ///     }
+    /// });
     /// #     }
     /// # }
     /// ```
-    </span><span class="kw">pub fn </span>take&lt;M: Any + Send&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;M&gt; {
+    </span><span class="kw">pub fn </span>take&lt;M: Any + Send, F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, f: F)
+    <span class="kw">where
+        </span>F: FnOnce(M, <span class="kw-2">&amp;mut </span>EventMeta),
+    {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(message) = <span class="kw-2">&amp;</span><span class="self">self</span>.message {
             <span class="kw">if </span>message.as_ref().is::&lt;M&gt;() {
                 <span class="comment">// Safe to unwrap because we already checked it exists
@@ -368,14 +374,14 @@
                 <span class="comment">// Safe to unwrap because we already checked it can be cast to M
                 </span><span class="kw">let </span>v = m.downcast().unwrap();
                 <span class="self">self</span>.meta.consume();
-                <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">*</span>v);
+                (f)(<span class="kw-2">*</span>v, <span class="kw-2">&amp;mut </span><span class="self">self</span>.meta);
             }
         }
-        <span class="prelude-val">None
-    </span>}
+    }
 }
 
 <span class="doccomment">/// The metadata of an [`Event`].
+</span><span class="attr">#[derive(Debug, Clone, Copy)]
 </span><span class="kw">pub struct </span>EventMeta {
     <span class="doccomment">/// The entity that produced the event. Entity::null() for OS events or unspecified.
     </span><span class="kw">pub </span>origin: Entity,
@@ -415,17 +421,21 @@
     <span class="kw">pub </span>event: Event,
     <span class="kw">pub </span>time: Instant,
 }
+
 <span class="kw">impl </span>PartialEq&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>TimedEvent {
     <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
         <span class="self">self</span>.time.eq(<span class="kw-2">&amp;</span>other.time)
     }
 }
+
 <span class="kw">impl </span>Eq <span class="kw">for </span>TimedEvent {}
+
 <span class="kw">impl </span>PartialOrd <span class="kw">for </span>TimedEvent {
     <span class="kw">fn </span>partial_cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Ordering&gt; {
         <span class="prelude-val">Some</span>(<span class="self">self</span>.cmp(other))
     }
 }
+
 <span class="kw">impl </span>Ord <span class="kw">for </span>TimedEvent {
     <span class="kw">fn </span>cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; Ordering {
         <span class="self">self</span>.time.cmp(<span class="kw-2">&amp;</span>other.time).reverse()

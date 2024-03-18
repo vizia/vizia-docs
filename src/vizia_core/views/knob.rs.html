@@ -535,10 +535,6 @@
 <a href="#534" id="534">534</a>
 <a href="#535" id="535">535</a>
 <a href="#536" id="536">536</a>
-<a href="#537" id="537">537</a>
-<a href="#538" id="538">538</a>
-<a href="#539" id="539">539</a>
-<a href="#540" id="540">540</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
@@ -552,7 +548,7 @@
 <span class="kw">static </span>DEFAULT_ARROW_SCALAR: f32 = <span class="number">0.1</span>;
 <span class="kw">static </span>DEFAULT_MODIFIER_SCALAR: f32 = <span class="number">0.04</span>;
 
-<span class="kw">use </span>std::f32::consts::PI;
+<span class="kw">use </span>std::{default, f32::consts::PI};
 
 <span class="kw">pub struct </span>Knob&lt;L&gt; {
     lens: L,
@@ -579,7 +575,7 @@
     ) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self </span>{
             lens,
-            default_normal: normalized_default.get_val(cx),
+            default_normal: normalized_default.get(cx),
 
             is_dragging: <span class="bool-val">false</span>,
             prev_drag_y: <span class="number">0.0</span>,
@@ -702,7 +698,7 @@
 
                     <span class="self">self</span>.prev_drag_y = <span class="kw-2">*</span>y;
 
-                    <span class="kw">if </span>cx.modifiers.contains(Modifiers::SHIFT) {
+                    <span class="kw">if </span>cx.modifiers.shift() {
                         delta_normal <span class="kw-2">*</span>= <span class="self">self</span>.modifier_scalar;
                     }
 
@@ -871,15 +867,11 @@
     </span>}
 }
 
-<span class="attr">#[derive(Debug, Copy, Clone, PartialEq)]
+<span class="attr">#[derive(Debug, Default, Copy, Clone, PartialEq)]
 </span><span class="kw">pub enum </span>KnobMode {
     Discrete(usize),
-    Continuous,
-}
-<span class="kw">impl </span>Default <span class="kw">for </span>KnobMode {
-    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-        KnobMode::Continuous
-    }
+    <span class="attr">#[default]
+    </span>Continuous,
 }
 
 <span class="doccomment">/// Adds tickmarks to a knob to show the steps that a knob can be set to.

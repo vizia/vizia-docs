@@ -233,12 +233,16 @@
 <a href="#232" id="232">232</a>
 <a href="#233" id="233">233</a>
 <a href="#234" id="234">234</a>
+<a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::icons::ICON_CHECK;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// A checkbox used to display and toggle a boolean state.
 ///
-/// Clicking on the checkbox with the left mouse button triggers the `on_toggle` callback.
+/// Pressing on the checkbox with the primary mouse button triggers the [`on_toggle`](Checkbox::on_toggle) callback.
 ///
 /// # Examples
 ///
@@ -389,9 +393,9 @@
             .build(cx, |<span class="kw">_</span>| {})
             .bind(checked, <span class="kw">move </span>|handle, c| {
                 handle.bind(intermediate, <span class="kw">move </span>|handle, i| {
-                    <span class="kw">if </span>c.get(handle.cx) {
+                    <span class="kw">if </span>c.get(<span class="kw-2">&amp;</span>handle) {
                         handle.text(ICON_CHECK).toggle_class(<span class="string">"intermediate"</span>, <span class="bool-val">false</span>);
-                    } <span class="kw">else if </span>i.get(handle.cx) {
+                    } <span class="kw">else if </span>i.get(<span class="kw-2">&amp;</span>handle) {
                         handle.text(<span class="string">"-"</span>).toggle_class(<span class="string">"intermediate"</span>, <span class="bool-val">true</span>);
                     } <span class="kw">else </span>{
                         handle.text(<span class="string">""</span>).toggle_class(<span class="string">"intermediate"</span>, <span class="bool-val">false</span>);
@@ -399,7 +403,6 @@
                 });
             })
             .checked(checked)
-            .cursor(CursorIcon::Hand)
             .navigable(<span class="bool-val">true</span>)
     }
 }
@@ -444,9 +447,14 @@
 
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
         event.map(|window_event, meta| <span class="kw">match </span>window_event {
-            WindowEvent::Press { mouse } =&gt; {
-                <span class="kw">let </span>over = <span class="kw">if </span><span class="kw-2">*</span>mouse { cx.mouse.left.pressed } <span class="kw">else </span>{ cx.focused() };
-                <span class="kw">if </span>over == cx.current() &amp;&amp; meta.target == cx.current() &amp;&amp; !cx.is_disabled() {
+            WindowEvent::PressDown { mouse: <span class="kw">_ </span>} =&gt; {
+                <span class="kw">if </span>meta.target == cx.current {
+                    cx.focus();
+                }
+            }
+
+            WindowEvent::Press { mouse: <span class="kw">_ </span>} =&gt; {
+                <span class="kw">if </span>meta.target == cx.current {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_toggle {
                         (callback)(cx);
                     }

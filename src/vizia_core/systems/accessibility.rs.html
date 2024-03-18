@@ -186,76 +186,84 @@
 <a href="#185" id="185">185</a>
 <a href="#186" id="186">186</a>
 <a href="#187" id="187">187</a>
-</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
-    accessibility::IntoNode,
-    context::{AccessContext, AccessNode},
-    events::ViewHandler,
-    prelude::<span class="kw-2">*</span>,
-    style::{Abilities, PseudoClassFlags},
-};
-<span class="kw">use </span>accesskit::{CheckedState, NodeBuilder, Rect, TreeUpdate};
-<span class="kw">use </span>fnv::FnvHashMap;
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{accessibility::IntoNode, events::ViewHandler, prelude::<span class="kw-2">*</span>};
+<span class="kw">use </span>accesskit::{Checked, NodeBuilder, NodeId, Rect, TreeUpdate};
+<span class="kw">use </span>hashbrown::HashMap;
 <span class="kw">use </span>vizia_storage::LayoutTreeIterator;
 
 <span class="doccomment">/// Updates node properties from view properties
 /// Should be run after layout so that things like bounding box are correct.
 /// This system doesn't change the structure of the accessibility tree as this is done when views are built/removed.
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>accessibility_system(cx: <span class="kw-2">&amp;mut </span>Context) {
-    <span class="kw">let </span>iterator = LayoutTreeIterator::full(<span class="kw-2">&amp;</span>cx.tree);
+    <span class="kw">if </span>!cx.style.reaccess.is_empty() {
+        <span class="kw">let </span>iterator = LayoutTreeIterator::full(<span class="kw-2">&amp;</span>cx.tree);
 
-    <span class="kw">for </span>entity <span class="kw">in </span>iterator {
-        <span class="comment">// if cx.style.needs_access_update.get(entity).filter(|flag| **flag).is_some() {
-        </span><span class="kw">let </span><span class="kw-2">mut </span>access_context = AccessContext {
-            current: entity,
-            tree: <span class="kw-2">&amp;</span>cx.tree,
-            cache: <span class="kw-2">&amp;</span>cx.cache,
-            style: <span class="kw-2">&amp;</span>cx.style,
-            text_context: <span class="kw-2">&amp;mut </span>cx.text_context,
-        };
-
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(node) = get_access_node(<span class="kw-2">&amp;mut </span>access_context, <span class="kw-2">&amp;mut </span>cx.views, entity) {
-            <span class="kw">let </span>navigable = cx
-                .style
-                .abilities
-                .get(entity)
-                .copied()
-                .unwrap_or_default()
-                .contains(Abilities::NAVIGABLE);
-
-            <span class="kw">if </span>node.node_builder.role() == Role::Unknown &amp;&amp; !navigable {
+        <span class="kw">for </span>entity <span class="kw">in </span>iterator {
+            <span class="kw">if </span>!cx.style.reaccess.contains(entity) {
                 <span class="kw">continue</span>;
             }
 
-            <span class="kw">let </span><span class="kw-2">mut </span>nodes = <span class="macro">vec!</span>[(
-                node.node_id(),
-                node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes),
-            )];
+            <span class="kw">let </span><span class="kw-2">mut </span>access_context = AccessContext {
+                current: entity,
+                tree: <span class="kw-2">&amp;</span>cx.tree,
+                cache: <span class="kw-2">&amp;</span>cx.cache,
+                style: <span class="kw-2">&amp;</span>cx.style,
+                text_context: <span class="kw-2">&amp;mut </span>cx.text_context,
+            };
 
-            <span class="comment">// If child nodes were generated then append them to the nodes list
-            </span><span class="kw">if </span>!node.children.is_empty() {
-                nodes.extend(node.children.into_iter().map(|child_node| {
-                    (
-                        child_node.node_id(),
-                        child_node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes),
-                    )
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(node) = get_access_node(<span class="kw-2">&amp;mut </span>access_context, <span class="kw-2">&amp;mut </span>cx.views, entity) {
+                <span class="kw">let </span>navigable = cx
+                    .style
+                    .abilities
+                    .get(entity)
+                    .copied()
+                    .unwrap_or_default()
+                    .contains(Abilities::NAVIGABLE);
+
+                <span class="kw">if </span>node.node_builder.role() == Role::Unknown &amp;&amp; !navigable {
+                    <span class="kw">continue</span>;
+                }
+
+                <span class="kw">let </span><span class="kw-2">mut </span>nodes = <span class="macro">vec!</span>[(
+                    node.node_id(),
+                    node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes),
+                )];
+
+                <span class="comment">// If child nodes were generated then append them to the nodes list
+                </span><span class="kw">if </span>!node.children.is_empty() {
+                    nodes.extend(node.children.into_iter().map(|child_node| {
+                        (
+                            child_node.node_id(),
+                            child_node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes),
+                        )
+                    }));
+                }
+
+                cx.tree_updates.push(<span class="prelude-val">Some</span>(TreeUpdate {
+                    nodes,
+                    tree: <span class="prelude-val">None</span>,
+                    focus: <span class="kw">if </span>cx.window_has_focus {
+                        cx.focused.accesskit_id()
+                    } <span class="kw">else </span>{
+                        NodeId(<span class="number">0u64</span>)
+                    },
                 }));
             }
 
-            cx.tree_updates.push(TreeUpdate {
-                nodes,
-                tree: <span class="prelude-val">None</span>,
-                focus: cx.window_has_focus.then_some(cx.focused.accesskit_id()),
-            });
-        }
+            <span class="comment">// }
+        </span>}
 
-        cx.style.needs_access_update.insert(entity, <span class="bool-val">false</span>);
-        <span class="comment">// }
-    </span>}
+        cx.style.reaccess.clear();
+    }
 }
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_access_node(
     cx: <span class="kw-2">&amp;mut </span>AccessContext,
-    views: <span class="kw-2">&amp;mut </span>FnvHashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
+    views: <span class="kw-2">&amp;mut </span>HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
     entity: Entity,
 ) -&gt; <span class="prelude-ty">Option</span>&lt;AccessNode&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>node_builder = NodeBuilder::default();
@@ -341,9 +349,9 @@
             .map(|pseudoclass| pseudoclass.contains(PseudoClassFlags::CHECKED))
         {
             <span class="kw">if </span>checked {
-                node_builder.set_checked_state(CheckedState::True);
+                node_builder.set_checked(Checked::True);
             } <span class="kw">else </span>{
-                node_builder.set_checked_state(CheckedState::False);
+                node_builder.set_checked(Checked::False);
             }
         }
     }

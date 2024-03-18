@@ -251,7 +251,7 @@
 <a href="#250" id="250">250</a>
 <a href="#251" id="251">251</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>indexmap::IndexMap;
 
 <span class="doccomment">/// A keymap that associates key chords with actions.
 ///
@@ -299,7 +299,7 @@
 <span class="kw">where
     </span>T: <span class="lifetime">'static </span>+ Clone + PartialEq + Send + Sync,
 {
-    entries: HashMap&lt;KeyChord, Vec&lt;KeymapEntry&lt;T&gt;&gt;&gt;,
+    entries: IndexMap&lt;KeyChord, Vec&lt;KeymapEntry&lt;T&gt;&gt;&gt;,
 }
 
 <span class="kw">impl</span>&lt;T&gt; Keymap&lt;T&gt;
@@ -323,7 +323,7 @@
     /// let keymap = Keymap::&lt;Action&gt;::new();
     /// ```
     </span><span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{ entries: HashMap::new() }
+        <span class="self">Self </span>{ entries: IndexMap::new() }
     }
 
     <span class="doccomment">/// Inserts an entry into the keymap.
@@ -348,7 +348,7 @@
         <span class="kw">if let </span><span class="prelude-val">Some</span>(actions) = <span class="self">self</span>.entries.get_mut(chord) {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(index) = actions.iter().position(|x| x == action) {
                 <span class="kw">if </span>actions.len() == <span class="number">1 </span>{
-                    <span class="self">self</span>.entries.remove(chord);
+                    <span class="self">self</span>.entries.swap_remove(chord);
                 } <span class="kw">else </span>{
                     actions.swap_remove(index);
                 }

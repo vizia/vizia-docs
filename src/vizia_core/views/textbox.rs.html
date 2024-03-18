@@ -1253,44 +1253,14 @@
 <a href="#1252" id="1252">1252</a>
 <a href="#1253" id="1253">1253</a>
 <a href="#1254" id="1254">1254</a>
-<a href="#1255" id="1255">1255</a>
-<a href="#1256" id="1256">1256</a>
-<a href="#1257" id="1257">1257</a>
-<a href="#1258" id="1258">1258</a>
-<a href="#1259" id="1259">1259</a>
-<a href="#1260" id="1260">1260</a>
-<a href="#1261" id="1261">1261</a>
-<a href="#1262" id="1262">1262</a>
-<a href="#1263" id="1263">1263</a>
-<a href="#1264" id="1264">1264</a>
-<a href="#1265" id="1265">1265</a>
-<a href="#1266" id="1266">1266</a>
-<a href="#1267" id="1267">1267</a>
-<a href="#1268" id="1268">1268</a>
-<a href="#1269" id="1269">1269</a>
-<a href="#1270" id="1270">1270</a>
-<a href="#1271" id="1271">1271</a>
-<a href="#1272" id="1272">1272</a>
-<a href="#1273" id="1273">1273</a>
-<a href="#1274" id="1274">1274</a>
-<a href="#1275" id="1275">1275</a>
-<a href="#1276" id="1276">1276</a>
-<a href="#1277" id="1277">1277</a>
-<a href="#1278" id="1278">1278</a>
-<a href="#1279" id="1279">1279</a>
-<a href="#1280" id="1280">1280</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::accessibility::IntoNode;
-<span class="kw">use </span><span class="kw">crate</span>::context::AccessNode;
-<span class="kw">use </span><span class="kw">crate</span>::layout::BoundingBox;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">use </span><span class="kw">crate</span>::text::{enforce_text_bounds, ensure_visible, Direction, Movement};
 <span class="kw">use </span><span class="kw">crate</span>::views::scrollview::SCROLL_SENSITIVITY;
 <span class="kw">use </span>accesskit::{ActionData, ActionRequest, TextDirection, TextPosition, TextSelection};
-<span class="kw">use </span>cosmic_text::{Action, Cursor, Edit, Editor, FontSystem};
+<span class="kw">use </span>cosmic_text::{Action, Cursor, Edit, Editor, FontSystem, Selection};
 <span class="kw">use </span>unicode_segmentation::UnicodeSegmentation;
-<span class="kw">use </span>vizia_input::Code;
-<span class="kw">use </span>vizia_storage::TreeExt;
 
 <span class="doccomment">/// Events for modifying a textbox.
 </span><span class="kw">pub enum </span>TextEvent {
@@ -1468,7 +1438,7 @@
             });
 
             Binding::new(cx, <span class="self">Self</span>::placeholder, |cx, placeholder| {
-                <span class="kw">let </span>placeholder_string = placeholder.get(cx).to_string();
+                <span class="kw">let </span>placeholder_string = placeholder.get(cx);
                 <span class="kw">if </span>!placeholder_string.is_empty() {
                     Label::new(cx, <span class="kw-2">&amp;</span>placeholder_string)
                         .size(Stretch(<span class="number">1.0</span>))
@@ -1484,7 +1454,7 @@
         .toggle_class(<span class="string">"multiline"</span>, kind == TextboxKind::MultiLineWrapped)
         .text_wrap(kind == TextboxKind::MultiLineWrapped)
         .navigable(<span class="bool-val">true</span>)
-        .role(Role::TextField)
+        .role(Role::TextInput)
         .text_value(lens)
         .default_action_verb(DefaultActionVerb::Focus)
         .toggle_class(<span class="string">"caret"</span>, <span class="self">Self</span>::show_caret)
@@ -1547,9 +1517,9 @@
 
     <span class="kw">fn </span>delete_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, movement: Movement) {
         <span class="kw">let </span>x = |<span class="kw">_</span>: <span class="kw-2">&amp;mut </span>FontSystem, buf: <span class="kw-2">&amp;mut </span>Editor| {
-            <span class="kw">let </span>no_selection = <span class="kw">match </span>(buf.cursor(), buf.select_opt()) {
-                (cursor, <span class="prelude-val">Some</span>(selection)) =&gt; cursor == selection,
-                (<span class="kw">_</span>, <span class="prelude-val">None</span>) =&gt; <span class="bool-val">true</span>,
+            <span class="kw">let </span>no_selection = <span class="kw">match </span>(buf.cursor(), buf.selection()) {
+                (cursor, Selection::Normal(selection)) =&gt; cursor == selection,
+                (<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
             };
             buf.delete_selection();
             no_selection
@@ -1577,11 +1547,11 @@
     <span class="kw">fn </span>move_cursor(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, movement: Movement, selection: bool) {
         cx.text_context.with_editor(cx.current, |fs, buf| {
             <span class="kw">if </span>selection {
-                <span class="kw">if </span>buf.select_opt().is_none() {
-                    buf.set_select_opt(<span class="prelude-val">Some</span>(buf.cursor()));
+                <span class="kw">if </span>buf.selection() == Selection::None {
+                    buf.set_selection(Selection::Normal(buf.cursor()));
                 }
             } <span class="kw">else </span>{
-                buf.set_select_opt(<span class="prelude-val">None</span>);
+                buf.set_selection(Selection::None);
             }
 
             buf.action(
@@ -1618,7 +1588,7 @@
     <span class="kw">fn </span>select_all(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
         cx.text_context.with_editor(cx.current, |fs, buf| {
             buf.action(fs, Action::BufferStart);
-            buf.set_select_opt(<span class="prelude-val">Some</span>(buf.cursor()));
+            buf.set_selection(Selection::Normal(buf.cursor()));
             buf.action(fs, Action::BufferEnd);
         });
         cx.needs_redraw();
@@ -1627,7 +1597,7 @@
     <span class="kw">fn </span>select_word(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
         cx.text_context.with_editor(cx.current, |fs, buf| {
             buf.action(fs, Action::PreviousWord);
-            buf.set_select_opt(<span class="prelude-val">Some</span>(buf.cursor()));
+            buf.set_selection(Selection::Normal(buf.cursor()));
             buf.action(fs, Action::NextWord);
         });
         cx.needs_redraw();
@@ -1636,7 +1606,7 @@
     <span class="kw">fn </span>select_paragraph(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
         cx.text_context.with_editor(cx.current, |fs, buf| {
             buf.action(fs, Action::ParagraphStart);
-            buf.set_select_opt(<span class="prelude-val">Some</span>(buf.cursor()));
+            buf.set_selection(Selection::Normal(buf.cursor()));
             buf.action(fs, Action::ParagraphEnd);
         });
         cx.needs_redraw();
@@ -1644,7 +1614,7 @@
 
     <span class="kw">fn </span>deselect(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
         cx.text_context.with_editor(cx.current, |<span class="kw">_</span>, buf| {
-            buf.set_select_opt(<span class="prelude-val">None</span>);
+            buf.set_selection(Selection::None);
         });
         cx.needs_redraw();
     }
@@ -1807,9 +1777,11 @@
     }
 
     <span class="doccomment">/// Sets the placeholder text that appears when the textbox has no value.
-    </span><span class="kw">pub fn </span>placeholder&lt;P: ToString&gt;(<span class="self">self</span>, text: <span class="kw">impl </span>Res&lt;P&gt;) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub fn </span>placeholder&lt;P: ToStringLocalized&gt;(<span class="self">self</span>, text: <span class="kw">impl </span>Res&lt;P&gt;) -&gt; <span class="self">Self </span>{
         text.set_or_bind(<span class="self">self</span>.cx, <span class="self">self</span>.entity, |cx, val| {
-            cx.emit(TextEvent::SetPlaceholder(val.to_string()));
+            <span class="kw">let </span>txt = val.get(cx).to_string_local(cx);
+            cx.emit(TextEvent::SetPlaceholder(txt.clone()));
+            cx.style.name.insert(cx.current, txt);
             cx.needs_relayout();
             cx.needs_redraw();
         });
@@ -1831,8 +1803,8 @@
 
         <span class="kw">let </span>node_id = node.node_id();
         cx.text_context.with_editor(cx.current, |<span class="kw">_</span>, editor| {
+            <span class="kw">let </span><span class="kw-2">mut </span>selection = editor.selection();
             <span class="kw">let </span>cursor = editor.cursor();
-            <span class="kw">let </span>selection = editor.select_opt().unwrap_or(cursor);
 
             <span class="kw">let </span><span class="kw-2">mut </span>selection_active_line = node_id;
             <span class="kw">let </span><span class="kw-2">mut </span>selection_anchor_line = node_id;
@@ -1929,16 +1901,21 @@
                 <span class="comment">// Check if the current line contains the cursor or selection
                 // This is a mess because a line happens due to soft and hard breaks but
                 // the cursor and selected indices are relative to the lines caused by hard breaks only.
-                </span><span class="kw">if </span>line.line_i == selection.line {
-                    <span class="comment">// A previous line index different to the current means that the current line follows a hard break
-                    </span><span class="kw">if </span>prev_line_index != line.line_i {
-                        <span class="kw">if </span>selection.index &lt;= line_length {
+                </span><span class="kw">if </span>selection == Selection::None {
+                    selection = Selection::Normal(cursor);
+                }
+                <span class="kw">if let </span>Selection::Normal(selection) = selection {
+                    <span class="kw">if </span>line.line_i == selection.line {
+                        <span class="comment">// A previous line index different to the current means that the current line follows a hard break
+                        </span><span class="kw">if </span>prev_line_index != line.line_i {
+                            <span class="kw">if </span>selection.index &lt;= line_length {
+                                selection_anchor_line = line_node.node_id();
+                                selection_anchor_cursor = selection.index;
+                            }
+                        } <span class="kw">else if </span>selection.index &gt; current_cursor {
                             selection_anchor_line = line_node.node_id();
-                            selection_anchor_cursor = selection.index;
+                            selection_anchor_cursor = selection.index - current_cursor;
                         }
-                    } <span class="kw">else if </span>selection.index &gt; current_cursor {
-                        selection_anchor_line = line_node.node_id();
-                        selection_anchor_cursor = selection.index - current_cursor;
                     }
                 }
 
@@ -1958,16 +1935,6 @@
                     character_index: selection_active_cursor,
                 },
             });
-
-            <span class="kw">match </span><span class="self">self</span>.kind {
-                TextboxKind::MultiLineUnwrapped | TextboxKind::MultiLineWrapped =&gt; {
-                    node.node_builder.set_multiline();
-                }
-
-                <span class="kw">_ </span>=&gt; {
-                    node.node_builder.clear_multiline();
-                }
-            }
 
             node.node_builder.set_default_action_verb(DefaultActionVerb::Focus);
         });
@@ -2035,14 +2002,16 @@
                 cx.release();
             }
 
-            WindowEvent::MouseMove(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
+            WindowEvent::MouseMove(x, y) =&gt; {
                 <span class="kw">if </span>cx.mouse.left.state == MouseButtonState::Pressed
                     &amp;&amp; cx.mouse.left.pressed == cx.current
                 {
                     <span class="kw">if </span><span class="self">self</span>.edit {
                         <span class="self">self</span>.reset_caret_timer(cx);
                     }
-                    cx.emit(TextEvent::Drag(cx.mouse.cursorx, cx.mouse.cursory));
+                    <span class="kw">if </span>cx.mouse.left.pos_down.<span class="number">0 </span>!= <span class="kw-2">*</span>x || cx.mouse.left.pos_down.<span class="number">1 </span>!= <span class="kw-2">*</span>y {
+                        cx.emit(TextEvent::Drag(cx.mouse.cursorx, cx.mouse.cursory));
+                    }
                 }
             }
 
@@ -2056,8 +2025,8 @@
                     </span><span class="kw-2">*</span>c != <span class="string">'\u{9}' </span>&amp;&amp; <span class="comment">// Tab
                     </span><span class="kw-2">*</span>c != <span class="string">'\u{7f}' </span>&amp;&amp; <span class="comment">// Delete
                     </span><span class="kw-2">*</span>c != <span class="string">'\u{0d}' </span>&amp;&amp; <span class="comment">// Carriage return
-                    </span>!cx.modifiers.contains(Modifiers::CTRL) &amp;&amp;
-                    !cx.modifiers.contains(Modifiers::LOGO) &amp;&amp;
+                    </span>!cx.modifiers.ctrl() &amp;&amp;
+                    !cx.modifiers.logo() &amp;&amp;
                     <span class="self">self</span>.edit &amp;&amp;
                     !cx.is_read_only()
                 {
@@ -2076,32 +2045,31 @@
                     }
                 }
 
+                Code::Space =&gt; {
+                    cx.emit(TextEvent::InsertText(String::from(<span class="string">" "</span>)));
+                }
+
                 Code::ArrowLeft =&gt; {
                     <span class="self">self</span>.reset_caret_timer(cx);
-                    <span class="kw">let </span>movement = <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
+                    <span class="kw">let </span>movement = <span class="kw">if </span>cx.modifiers.ctrl() {
                         Movement::Word(Direction::Left)
                     } <span class="kw">else </span>{
                         Movement::Grapheme(Direction::Left)
                     };
 
-                    cx.emit(TextEvent::MoveCursor(
-                        movement,
-                        cx.modifiers.contains(Modifiers::SHIFT),
-                    ));
+                    cx.emit(TextEvent::MoveCursor(movement, cx.modifiers.shift()));
                 }
 
                 Code::ArrowRight =&gt; {
                     <span class="self">self</span>.reset_caret_timer(cx);
-                    <span class="kw">let </span>movement = <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
+
+                    <span class="kw">let </span>movement = <span class="kw">if </span>cx.modifiers.ctrl() {
                         Movement::Word(Direction::Right)
                     } <span class="kw">else </span>{
                         Movement::Grapheme(Direction::Right)
                     };
 
-                    cx.emit(TextEvent::MoveCursor(
-                        movement,
-                        cx.modifiers.contains(Modifiers::SHIFT),
-                    ));
+                    cx.emit(TextEvent::MoveCursor(movement, cx.modifiers.shift()));
                 }
 
                 Code::ArrowUp =&gt; {
@@ -2109,7 +2077,7 @@
                     <span class="kw">if </span><span class="self">self</span>.kind != TextboxKind::SingleLine {
                         cx.emit(TextEvent::MoveCursor(
                             Movement::Line(Direction::Upstream),
-                            cx.modifiers.contains(Modifiers::SHIFT),
+                            cx.modifiers.shift(),
                         ));
                     }
                 }
@@ -2119,7 +2087,7 @@
                     <span class="kw">if </span><span class="self">self</span>.kind != TextboxKind::SingleLine {
                         cx.emit(TextEvent::MoveCursor(
                             Movement::Line(Direction::Downstream),
-                            cx.modifiers.contains(Modifiers::SHIFT),
+                            cx.modifiers.shift(),
                         ));
                     }
                 }
@@ -2127,7 +2095,7 @@
                 Code::Backspace =&gt; {
                     <span class="self">self</span>.reset_caret_timer(cx);
                     <span class="kw">if </span>!cx.is_read_only() {
-                        <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
+                        <span class="kw">if </span>cx.modifiers.ctrl() {
                             cx.emit(TextEvent::DeleteText(Movement::Word(Direction::Upstream)));
                         } <span class="kw">else </span>{
                             cx.emit(TextEvent::DeleteText(Movement::Grapheme(Direction::Upstream)));
@@ -2138,7 +2106,7 @@
                 Code::Delete =&gt; {
                     <span class="self">self</span>.reset_caret_timer(cx);
                     <span class="kw">if </span>!cx.is_read_only() {
-                        <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
+                        <span class="kw">if </span>cx.modifiers.ctrl() {
                             cx.emit(TextEvent::DeleteText(Movement::Word(Direction::Downstream)));
                         } <span class="kw">else </span>{
                             cx.emit(TextEvent::DeleteText(Movement::Grapheme(
@@ -2149,27 +2117,21 @@
                 }
 
                 Code::Escape =&gt; {
-                    cx.emit(TextEvent::EndEdit);
-                    cx.set_checked(<span class="bool-val">false</span>);
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_cancel {
                         (callback)(cx);
+                    } <span class="kw">else </span>{
+                        cx.emit(TextEvent::EndEdit);
                     }
                 }
 
                 Code::Home =&gt; {
                     <span class="self">self</span>.reset_caret_timer(cx);
-                    cx.emit(TextEvent::MoveCursor(
-                        Movement::LineStart,
-                        cx.modifiers.contains(Modifiers::SHIFT),
-                    ));
+                    cx.emit(TextEvent::MoveCursor(Movement::LineStart, cx.modifiers.shift()));
                 }
 
                 Code::End =&gt; {
                     <span class="self">self</span>.reset_caret_timer(cx);
-                    cx.emit(TextEvent::MoveCursor(
-                        Movement::LineEnd,
-                        cx.modifiers.contains(Modifiers::SHIFT),
-                    ));
+                    cx.emit(TextEvent::MoveCursor(Movement::LineEnd, cx.modifiers.shift()));
                 }
 
                 Code::PageUp | Code::PageDown =&gt; {
@@ -2180,18 +2142,18 @@
                         Direction::Downstream
                     };
                     cx.emit(TextEvent::MoveCursor(
-                        <span class="kw">if </span>cx.modifiers.contains(Modifiers::CTRL) {
+                        <span class="kw">if </span>cx.modifiers.ctrl() {
                             Movement::Body(direction)
                         } <span class="kw">else </span>{
                             Movement::Page(direction)
                         },
-                        cx.modifiers.contains(Modifiers::SHIFT),
+                        cx.modifiers.shift(),
                     ));
                 }
 
                 Code::KeyA =&gt; {
                     <span class="attr">#[cfg(target_os = <span class="string">"macos"</span>)]
-                    </span><span class="kw">let </span>modifier = Modifiers::LOGO;
+                    </span><span class="kw">let </span>modifier = Modifiers::SUPER;
                     <span class="attr">#[cfg(not(target_os = <span class="string">"macos"</span>))]
                     </span><span class="kw">let </span>modifier = Modifiers::CTRL;
 
@@ -2202,7 +2164,7 @@
 
                 Code::KeyC =&gt; {
                     <span class="attr">#[cfg(target_os = <span class="string">"macos"</span>)]
-                    </span><span class="kw">let </span>modifier = Modifiers::LOGO;
+                    </span><span class="kw">let </span>modifier = Modifiers::SUPER;
                     <span class="attr">#[cfg(not(target_os = <span class="string">"macos"</span>))]
                     </span><span class="kw">let </span>modifier = Modifiers::CTRL;
 
@@ -2213,7 +2175,7 @@
 
                 Code::KeyV =&gt; {
                     <span class="attr">#[cfg(target_os = <span class="string">"macos"</span>)]
-                    </span><span class="kw">let </span>modifier = Modifiers::LOGO;
+                    </span><span class="kw">let </span>modifier = Modifiers::SUPER;
                     <span class="attr">#[cfg(not(target_os = <span class="string">"macos"</span>))]
                     </span><span class="kw">let </span>modifier = Modifiers::CTRL;
 
@@ -2224,7 +2186,7 @@
 
                 Code::KeyX =&gt; {
                     <span class="attr">#[cfg(target_os = <span class="string">"macos"</span>)]
-                    </span><span class="kw">let </span>modifier = Modifiers::LOGO;
+                    </span><span class="kw">let </span>modifier = Modifiers::SUPER;
                     <span class="attr">#[cfg(not(target_os = <span class="string">"macos"</span>))]
                     </span><span class="kw">let </span>modifier = Modifiers::CTRL;
 
@@ -2283,7 +2245,7 @@
                     }
 
                     <span class="kw">let </span>selection_cursor = Cursor::new(selection_line_index, selection_index);
-                    editor.set_select_opt(<span class="prelude-val">Some</span>(selection_cursor));
+                    editor.set_selection(Selection::Normal(selection_cursor));
 
                     <span class="comment">// TODO: Either add a method to set the cursor by index to cosmic,
                     // or loop over an `Action` to move the cursor to the correct place.
@@ -2292,6 +2254,10 @@
                 <span class="comment">// println!("Select some text: {:?}", selection);
             </span>}
 
+            WindowEvent::GeometryChanged(<span class="kw">_</span>) =&gt; {
+                <span class="self">self</span>.set_caret(cx);
+            }
+
             <span class="kw">_ </span>=&gt; {}
         });
 
@@ -2299,9 +2265,9 @@
         </span>event.map(|text_event, <span class="kw">_</span>| <span class="kw">match </span>text_event {
             TextEvent::InsertText(text) =&gt; {
                 <span class="self">self</span>.insert_text(cx, text);
-                <span class="self">self</span>.set_caret(cx);
+                <span class="comment">// self.set_caret(cx);
 
-                <span class="kw">let </span>text = <span class="self">self</span>.clone_text(cx);
+                </span><span class="kw">let </span>text = <span class="self">self</span>.clone_text(cx);
 
                 <span class="kw">if let </span><span class="prelude-val">Ok</span>(value) = <span class="kw-2">&amp;</span>text.parse::&lt;L::Target&gt;() {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(validate) = <span class="kw-2">&amp;</span><span class="self">self</span>.validate {
@@ -2332,9 +2298,9 @@
             TextEvent::DeleteText(movement) =&gt; {
                 <span class="kw">if </span><span class="self">self</span>.edit {
                     <span class="self">self</span>.delete_text(cx, <span class="kw-2">*</span>movement);
-                    <span class="self">self</span>.set_caret(cx);
+                    <span class="comment">// self.set_caret(cx);
 
-                    <span class="kw">let </span>text = <span class="self">self</span>.clone_text(cx);
+                    </span><span class="kw">let </span>text = <span class="self">self</span>.clone_text(cx);
 
                     <span class="kw">if let </span><span class="prelude-val">Ok</span>(value) = <span class="kw-2">&amp;</span>text.parse::&lt;L::Target&gt;() {
                         <span class="kw">if let </span><span class="prelude-val">Some</span>(validate) = <span class="kw-2">&amp;</span><span class="self">self</span>.validate {
@@ -2357,13 +2323,11 @@
             TextEvent::MoveCursor(movement, selection) =&gt; {
                 <span class="kw">if </span><span class="self">self</span>.edit {
                     <span class="self">self</span>.move_cursor(cx, <span class="kw-2">*</span>movement, <span class="kw-2">*</span>selection);
-                    <span class="self">self</span>.set_caret(cx);
-                }
+                    <span class="comment">// self.set_caret(cx);
+                </span>}
             }
 
-            TextEvent::SetPlaceholder(text) =&gt; {
-                <span class="self">self</span>.placeholder = text.clone();
-            }
+            TextEvent::SetPlaceholder(text) =&gt; <span class="self">self</span>.placeholder.clone_from(text),
 
             TextEvent::StartEdit =&gt; {
                 <span class="kw">if </span>!cx.is_disabled() &amp;&amp; !<span class="self">self</span>.edit {
@@ -2373,31 +2337,23 @@
                     cx.set_checked(<span class="bool-val">true</span>);
                     <span class="self">self</span>.reset_caret_timer(cx);
 
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(source) = cx.data::&lt;L::Source&gt;() {
-                        <span class="kw">let </span>text = <span class="self">self</span>.lens.view(source, |t| {
-                            <span class="kw">if let </span><span class="prelude-val">Some</span>(t) = t {
-                                t.to_string()
-                            } <span class="kw">else </span>{
-                                String::from(<span class="string">""</span>)
-                            }
-                        });
+                    <span class="kw">let </span>text = <span class="self">self</span>.lens.get(cx);
+                    <span class="kw">let </span>text = text.to_string_local(cx);
+                    <span class="self">self</span>.placeholder_shown = text.is_empty();
 
-                        <span class="self">self</span>.placeholder_shown = text.is_empty();
+                    <span class="self">self</span>.select_all(cx);
+                    <span class="self">self</span>.insert_text(cx, <span class="kw-2">&amp;</span>text);
+                    <span class="comment">// self.set_caret(cx);
 
-                        <span class="self">self</span>.select_all(cx);
-                        <span class="self">self</span>.insert_text(cx, <span class="kw-2">&amp;</span>text);
-                        <span class="self">self</span>.set_caret(cx);
-
-                        <span class="kw">if let </span><span class="prelude-val">Ok</span>(value) = <span class="kw-2">&amp;</span>text.parse::&lt;L::Target&gt;() {
-                            <span class="kw">if let </span><span class="prelude-val">Some</span>(validate) = <span class="kw-2">&amp;</span><span class="self">self</span>.validate {
-                                cx.set_valid(validate(value));
-                            } <span class="kw">else </span>{
-                                cx.set_valid(<span class="bool-val">true</span>);
-                            }
+                    </span><span class="kw">if let </span><span class="prelude-val">Ok</span>(value) = <span class="kw-2">&amp;</span>text.parse::&lt;L::Target&gt;() {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(validate) = <span class="kw-2">&amp;</span><span class="self">self</span>.validate {
+                            cx.set_valid(validate(value));
                         } <span class="kw">else </span>{
-                            cx.set_valid(<span class="bool-val">false</span>);
+                            cx.set_valid(<span class="bool-val">true</span>);
                         }
-                    };
+                    } <span class="kw">else </span>{
+                        cx.set_valid(<span class="bool-val">false</span>);
+                    }
                 }
             }
 
@@ -2408,31 +2364,23 @@
                 cx.release();
                 cx.stop_timer(<span class="self">self</span>.caret_timer);
 
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(source) = cx.data::&lt;L::Source&gt;() {
-                    <span class="kw">let </span>text = <span class="self">self</span>.lens.view(source, |t| {
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>(t) = t {
-                            t.to_string()
-                        } <span class="kw">else </span>{
-                            <span class="string">""</span>.to_owned()
-                        }
-                    });
+                <span class="kw">let </span>text = <span class="self">self</span>.lens.get(cx);
+                <span class="kw">let </span>text = text.to_string_local(cx);
+                <span class="self">self</span>.placeholder_shown = text.is_empty();
 
-                    <span class="self">self</span>.placeholder_shown = text.is_empty();
+                <span class="self">self</span>.select_all(cx);
+                <span class="self">self</span>.insert_text(cx, <span class="kw-2">&amp;</span>text);
+                <span class="comment">// self.set_caret(cx);
 
-                    <span class="self">self</span>.select_all(cx);
-                    <span class="self">self</span>.insert_text(cx, <span class="kw-2">&amp;</span>text);
-                    <span class="self">self</span>.set_caret(cx);
-
-                    <span class="kw">if let </span><span class="prelude-val">Ok</span>(value) = <span class="kw-2">&amp;</span>text.parse::&lt;L::Target&gt;() {
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>(validate) = <span class="kw-2">&amp;</span><span class="self">self</span>.validate {
-                            cx.set_valid(validate(value));
-                        } <span class="kw">else </span>{
-                            cx.set_valid(<span class="bool-val">true</span>);
-                        }
+                </span><span class="kw">if let </span><span class="prelude-val">Ok</span>(value) = <span class="kw-2">&amp;</span>text.parse::&lt;L::Target&gt;() {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(validate) = <span class="kw-2">&amp;</span><span class="self">self</span>.validate {
+                        cx.set_valid(validate(value));
                     } <span class="kw">else </span>{
-                        cx.set_valid(<span class="bool-val">false</span>);
+                        cx.set_valid(<span class="bool-val">true</span>);
                     }
-                };
+                } <span class="kw">else </span>{
+                    cx.set_valid(<span class="bool-val">false</span>);
+                }
             }
 
             TextEvent::Blur =&gt; {
@@ -2458,28 +2406,28 @@
 
             TextEvent::SelectAll =&gt; {
                 <span class="self">self</span>.select_all(cx);
-                <span class="self">self</span>.set_caret(cx);
-            }
+                <span class="comment">// self.set_caret(cx);
+            </span>}
 
             TextEvent::SelectWord =&gt; {
                 <span class="self">self</span>.select_word(cx);
-                <span class="self">self</span>.set_caret(cx);
-            }
+                <span class="comment">// self.set_caret(cx);
+            </span>}
 
             TextEvent::SelectParagraph =&gt; {
                 <span class="self">self</span>.select_paragraph(cx);
-                <span class="self">self</span>.set_caret(cx);
-            }
+                <span class="comment">// self.set_caret(cx);
+            </span>}
 
             TextEvent::Hit(posx, posy) =&gt; {
                 <span class="self">self</span>.hit(cx, <span class="kw-2">*</span>posx, <span class="kw-2">*</span>posy);
-                <span class="self">self</span>.set_caret(cx);
-            }
+                <span class="comment">// self.set_caret(cx);
+            </span>}
 
             TextEvent::Drag(posx, posy) =&gt; {
                 <span class="self">self</span>.drag(cx, <span class="kw-2">*</span>posx, <span class="kw-2">*</span>posy);
-                <span class="self">self</span>.set_caret(cx);
-            }
+                <span class="comment">// self.set_caret(cx);
+            </span>}
 
             TextEvent::Scroll(x, y) =&gt; {
                 <span class="self">self</span>.scroll(cx, <span class="kw-2">*</span>x, <span class="kw-2">*</span>y);
@@ -2554,8 +2502,8 @@
         cx.draw_inset_box_shadows(canvas, <span class="kw-2">&amp;mut </span>path);
         cx.draw_outline(canvas);
         canvas.save();
-        canvas.translate(<span class="self">self</span>.transform.<span class="number">0</span>, <span class="self">self</span>.transform.<span class="number">1</span>);
-        cx.draw_text_and_selection(canvas);
+        <span class="comment">// canvas.translate(self.transform.0, self.transform.1);
+        </span>cx.draw_text_and_selection(canvas);
         canvas.restore();
     }
 }

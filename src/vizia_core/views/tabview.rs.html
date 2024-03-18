@@ -134,6 +134,21 @@
 <a href="#133" id="133">133</a>
 <a href="#134" id="134">134</a>
 <a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">pub enum </span>TabEvent {
@@ -143,6 +158,7 @@
 <span class="attr">#[derive(Lens)]
 </span><span class="kw">pub struct </span>TabView {
     selected_index: usize,
+    is_vertical: bool,
 
     <span class="attr">#[lens(ignore)]
     </span>on_select: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, usize)&gt;&gt;,
@@ -156,39 +172,49 @@
         T: Clone + <span class="lifetime">'static</span>,
         F: <span class="lifetime">'static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Index&lt;L, T&gt;) -&gt; TabPair,
     {
-        <span class="self">Self </span>{ selected_index: <span class="number">0</span>, on_select: <span class="prelude-val">None </span>}.build(cx, <span class="kw">move </span>|cx| {
-            <span class="kw">let </span>content2 = content.clone();
-            <span class="comment">// Tab headers
-            </span>VStack::new(cx, <span class="kw">move </span>|cx| {
-                Binding::new(cx, lens.map(|list| list.len()), <span class="kw">move </span>|cx, list_length| {
-                    <span class="kw">let </span>list_length = list_length.get_fallible(cx).map_or(<span class="number">0</span>, |d| d);
-                    <span class="kw">for </span>index <span class="kw">in </span><span class="number">0</span>..list_length {
-                        <span class="kw">let </span>l = lens.index(index);
-                        <span class="kw">let </span>builder = (content2)(cx, l).header;
-                        TabHeader::new(cx, index, builder).bind(
-                            TabView::selected_index,
-                            <span class="kw">move </span>|handle, selected_index| {
-                                <span class="kw">let </span>selected_index = selected_index.get(handle.cx);
-                                handle.checked(selected_index == index);
-                            },
-                        );
-                    }
+        <span class="self">Self </span>{ selected_index: <span class="number">0</span>, is_vertical: <span class="bool-val">false</span>, on_select: <span class="prelude-val">None </span>}
+            .build(cx, <span class="kw">move </span>|cx| {
+                <span class="kw">let </span>content2 = content.clone();
+                <span class="comment">// Tab headers
+                </span>ScrollView::new(cx, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="kw">move </span>|cx| {
+                    <span class="comment">//VStack::new(cx, move |cx| {
+                    </span>Binding::new(cx, lens.map(|list| list.len()), <span class="kw">move </span>|cx, list_length| {
+                        <span class="kw">let </span>list_length = list_length.get(cx);
+                        <span class="kw">for </span>index <span class="kw">in </span><span class="number">0</span>..list_length {
+                            <span class="kw">let </span>l = lens.index(index);
+                            <span class="kw">let </span>builder = (content2)(cx, l).header;
+                            TabHeader::new(cx, index, builder)
+                                .bind(TabView::selected_index, <span class="kw">move </span>|handle, selected_index| {
+                                    <span class="kw">let </span>selected_index = selected_index.get(handle.cx);
+                                    handle.checked(selected_index == index);
+                                })
+                                .toggle_class(<span class="string">"vertical"</span>, TabView::is_vertical);
+                        }
+                    })
+                    <span class="comment">//})
+                    //.toggle_class("vertical", TabView::is_vertical)
+                    //.class("tabview-tabheader-wrapper");
+                </span>})
+                .class(<span class="string">"tabview-header"</span>)
+                .z_index(<span class="number">1</span>)
+                .toggle_class(<span class="string">"vertical"</span>, TabView::is_vertical);
+
+                Element::new(cx)
+                    .class(<span class="string">"tabview-divider"</span>)
+                    .toggle_class(<span class="string">"vertical"</span>, TabView::is_vertical);
+
+                <span class="comment">// Tab content
+                </span>VStack::new(cx, |cx| {
+                    Binding::new(cx, TabView::selected_index, <span class="kw">move </span>|cx, selected| {
+                        <span class="kw">let </span>selected = selected.get(cx);
+                        <span class="kw">let </span>l = lens.index(selected);
+                        ((content)(cx, l).content)(cx);
+                    });
                 })
+                .overflow(Overflow::Hidden)
+                .class(<span class="string">"tabview-content-wrapper"</span>);
             })
-            .class(<span class="string">"tabview-tabheader-wrapper"</span>);
-
-            Element::new(cx).class(<span class="string">"tabview-divider"</span>);
-
-            <span class="comment">// Tab content
-            </span>VStack::new(cx, |cx| {
-                Binding::new(cx, TabView::selected_index, <span class="kw">move </span>|cx, selected| {
-                    <span class="kw">let </span>selected = selected.get(cx);
-                    <span class="kw">let </span>l = lens.index(selected);
-                    ((content)(cx, l).content)(cx);
-                });
-            })
-            .class(<span class="string">"tabview-content-wrapper"</span>);
-        })
+            .toggle_class(<span class="string">"vertical"</span>, TabView::is_vertical)
     }
 }
 
@@ -211,6 +237,10 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Handle&lt;<span class="lifetime">'a</span>, TabView&gt; {
+    <span class="kw">pub fn </span>vertical(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.modify(|tabview: <span class="kw-2">&amp;mut </span>TabView| tabview.is_vertical = <span class="bool-val">true</span>)
+    }
+
     <span class="kw">pub fn </span>on_select(<span class="self">self</span>, callback: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, usize) + <span class="lifetime">'static</span>) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.modify(|tabview: <span class="kw-2">&amp;mut </span>TabView| tabview.on_select = <span class="prelude-val">Some</span>(Box::new(callback)))
     }
@@ -218,7 +248,7 @@
     <span class="kw">pub fn </span>with_selected&lt;U: Into&lt;usize&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, selected: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
         selected.set_or_bind(<span class="self">self</span>.context(), entity, |cx, selected| {
-            <span class="kw">let </span>index = selected.into();
+            <span class="kw">let </span>index = selected.get(cx).into();
             cx.emit(TabEvent::SetSelected(index));
         });
 

@@ -124,25 +124,17 @@
 <a href="#123" id="123">123</a>
 <a href="#124" id="124">124</a>
 <a href="#125" id="125">125</a>
-<a href="#126" id="126">126</a>
-<a href="#127" id="127">127</a>
-<a href="#128" id="128">128</a>
-<a href="#129" id="129">129</a>
-<a href="#130" id="130">130</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::animation::Interpolator;
-<span class="kw">use </span>instant::{Duration, Instant};
-<span class="kw">use </span>std::collections::HashSet;
-<span class="kw">use </span>vizia_id::GenerationalId;
+<span class="kw">use </span>hashbrown::HashSet;
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">use super</span>::{Animation, TimingFunction};
+<span class="kw">use </span><span class="kw">super</span>::TimingFunction;
 
 <span class="doccomment">/// A keyframe in an animation state.
 </span><span class="attr">#[derive(Debug, Clone)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Keyframe&lt;T: Interpolator&gt; {
-    <span class="attr">#[allow(dead_code)] </span><span class="comment">// FIXME
-    </span><span class="kw">pub </span>time: f32,
+    <span class="kw">pub </span>time: f32,
     <span class="kw">pub </span>value: T,
     <span class="kw">pub </span>timing_function: TimingFunction,
 }
@@ -164,9 +156,7 @@
     </span><span class="kw">pub </span>output: <span class="prelude-ty">Option</span>&lt;T&gt;,
     <span class="doccomment">/// Whether the animation should persist after finishing.
     </span><span class="kw">pub </span>persistent: bool,
-
-    <span class="comment">// pub t0: f32,
-    </span><span class="doccomment">/// How far through the animation between 0.0 and 1.0.
+    <span class="doccomment">/// How far through the animation between 0.0 and 1.0.
     </span><span class="kw">pub </span>t: f32,
 
     <span class="kw">pub </span>active: bool,
@@ -229,7 +219,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>play(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
         <span class="self">self</span>.active = <span class="bool-val">true</span>;
         <span class="self">self</span>.t = <span class="number">0.0</span>;
-        <span class="self">self</span>.start_time = instant::Instant::now();
+        <span class="self">self</span>.start_time = Instant::now();
         <span class="self">self</span>.entities.insert(entity);
     }
 

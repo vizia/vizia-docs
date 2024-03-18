@@ -457,6 +457,7 @@
 <a href="#456" id="456">456</a>
 <a href="#457" id="457">457</a>
 <a href="#458" id="458">458</a>
+<a href="#459" id="459">459</a>
 </pre></div><pre class="rust"><code><span class="comment">// Adapted from Druid lens.rs
 
 // Copyright 2019 The Druid Authors.
@@ -638,8 +639,8 @@
                 <span class="kw">type </span>Source = #struct_type#ty_generics;
                 <span class="kw">type </span>Target = #field_ty;
 
-                <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span>#struct_type#ty_generics, map: F) -&gt; O {
-                    map(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>source.#field_name))
+                <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>#struct_type#ty_generics) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+                    <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="kw-2">&amp;</span>source.#field_name))
                 }
             }
         }
@@ -702,8 +703,8 @@
             <span class="kw">type </span>Source = #struct_type#ty_generics;
             <span class="kw">type </span>Target = #struct_type#ty_generics;
 
-            <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="self">Self</span>::Source, map: F) -&gt; O {
-                map(<span class="prelude-val">Some</span>(source))
+            <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+                <span class="prelude-val">Some</span>(LensValue::Borrowed(source))
             }
         }
 
@@ -841,12 +842,13 @@
                 <span class="kw">type </span>Source = #enum_type;
                 <span class="kw">type </span>Target = #variant_type;
 
-                <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span>#enum_type, map: F) -&gt; O {
-                    map(<span class="kw">if let </span>#enum_type::#variant_name(inner_value) = source {
-                        <span class="prelude-val">Some</span>(inner_value)
+                <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+                    <span class="kw">if let </span>#enum_type::#variant_name(inner_value) = source {
+                        <span class="prelude-val">Some</span>(LensValue::Borrowed(inner_value))
                     } <span class="kw">else </span>{
-                        <span class="prelude-val">None
-                    </span>})
+                        <span class="macro">panic!</span>(<span class="string">"failed"</span>)
+                    }
+
                 }
             }
 

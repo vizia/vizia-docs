@@ -60,65 +60,143 @@
 <a href="#59" id="59">59</a>
 <a href="#60" id="60">60</a>
 <a href="#61" id="61">61</a>
-</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{model::ModelOrView, prelude::<span class="kw-2">*</span>};
-<span class="kw">use </span>std::collections::HashSet;
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
+<a href="#81" id="81">81</a>
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
+<a href="#87" id="87">87</a>
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{binding::StoreId, model::ModelOrView, prelude::<span class="kw-2">*</span>};
+<span class="kw">use </span>hashbrown::{HashMap, HashSet};
+<span class="kw">use </span>std::any::TypeId;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>binding_system(cx: <span class="kw-2">&amp;mut </span>Context) {
-    <span class="kw">let </span><span class="kw-2">mut </span>observers: HashSet&lt;Entity&gt; = HashSet::new();
+    <span class="kw">let </span><span class="kw-2">mut </span>observers: HashMap&lt;Entity, (Entity, <span class="prelude-ty">Option</span>&lt;TypeId&gt;, StoreId)&gt; = HashMap::new();
 
-    <span class="comment">// Loop through all model data and check for changes.
-    </span><span class="kw">for </span>(entity, model_data_store) <span class="kw">in </span>cx.data.iter_mut() {
-        <span class="comment">// Determine observers of model data.
-        </span><span class="kw">for </span>(<span class="kw">_</span>, model) <span class="kw">in </span>model_data_store.models.iter() {
-            <span class="kw">let </span>model = ModelOrView::Model(model.as_ref());
+    <span class="kw">for </span>(entity, model_data_store) <span class="kw">in </span>cx.data.iter_mut() {
+        <span class="kw">for </span>(store_id, store) <span class="kw">in </span>model_data_store.stores.iter() {
+            <span class="comment">// Determine observers of model data.
+            </span><span class="kw">for </span>(model_id, model) <span class="kw">in </span>model_data_store.models.iter() {
+                <span class="kw">let </span>model: ModelOrView&lt;<span class="lifetime">'_</span>&gt; = ModelOrView::Model(model.as_ref());
 
-            <span class="kw">for </span>(<span class="kw">_</span>, store) <span class="kw">in </span>model_data_store.stores.iter_mut() {
-                <span class="kw">if </span>store.update(model) {
-                    observers.extend(store.observers().iter())
+                <span class="kw">if </span>store.contains_source(model) {
+                    observers.extend(
+                        store
+                            .observers()
+                            .iter()
+                            .map(|e| (<span class="kw-2">*</span>e, (<span class="kw-2">*</span>entity, <span class="prelude-val">Some</span>(<span class="kw-2">*</span>model_id), <span class="kw-2">*</span>store_id))),
+                    );
                 }
             }
-        }
 
-        <span class="comment">// Determine observers of view data.
-        </span><span class="kw">for </span>(<span class="kw">_</span>, store) <span class="kw">in </span>model_data_store.stores.iter_mut() {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = cx.views.get(entity) {
+            <span class="comment">// Determine observers of view data.
+            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = cx.views.get(entity) {
                 <span class="kw">let </span>view = ModelOrView::View(view_handler.as_ref());
 
-                <span class="kw">if </span>store.update(view) {
-                    observers.extend(store.observers().iter())
+                <span class="kw">if </span>store.contains_source(view) {
+                    observers
+                        .extend(store.observers().iter().map(|e| (<span class="kw-2">*</span>e, (<span class="kw-2">*</span>entity, <span class="prelude-val">None</span>, <span class="kw-2">*</span>store_id))))
                 }
             }
         }
     }
 
-    <span class="kw">for </span>img <span class="kw">in </span>cx.resource_manager.images.values_mut() {
-        <span class="kw">if </span>img.dirty {
-            observers.extend(img.observers.iter());
-            img.dirty = <span class="bool-val">false</span>;
-        }
-    }
+    <span class="comment">// for img in cx.resource_manager.images.values_mut() {
+    //     if img.dirty {
+    //         observers.extend(img.observers.iter());
+    //         img.dirty = false;
+    //     }
+    // }
 
-    <span class="kw">if </span>!observers.is_empty() {
+    </span><span class="kw">if </span>!observers.is_empty() {
         <span class="comment">// Sort observers into tree ordering.
-        </span><span class="kw">let </span>ordered_observers =
-            cx.tree.into_iter().filter(|ent| observers.contains(ent)).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+        </span><span class="kw">let </span>ordered_observers = cx
+            .tree
+            .into_iter()
+            .filter_map(|ent| observers.get(<span class="kw-2">&amp;</span>ent).map(|e| (ent, <span class="kw-2">*</span>e)))
+            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+
+        <span class="comment">// println!(
+        //     "{:?}",
+        //     ordered_observers
+        //         .iter()
+        //         .map(|(ob, (src, _, _))| (ob.index(), src.index()))
+        //         .collect::&lt;Vec&lt;_&gt;&gt;()
+        // );
+
+        </span><span class="kw">let </span><span class="kw-2">mut </span>updated_stores: HashSet&lt;StoreId&gt; = HashSet::new();
 
         <span class="comment">// Update observers in tree order.
-        </span><span class="kw">for </span>observer <span class="kw">in </span>ordered_observers.into_iter() {
-            <span class="comment">// Skip observers that have been destroyed
+        </span><span class="kw">for </span>(observer, (source, model_id, store_id)) <span class="kw">in </span>ordered_observers.into_iter() {
+            <span class="comment">// Skip observers that have been destroyed.
             </span><span class="kw">if </span>!cx.entity_manager.is_alive(observer) {
                 <span class="kw">continue</span>;
             }
 
-            <span class="comment">// TODO: Skip observers that have already been updated.
+            <span class="kw">if </span>updated_stores.contains(<span class="kw-2">&amp;</span>store_id) {
+                update_binding(cx, observer);
+            } <span class="kw">else if let </span><span class="prelude-val">Some</span>(model_data_store) = cx.data.get_mut(<span class="kw-2">&amp;</span>source) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(store) = model_data_store.stores.get_mut(<span class="kw-2">&amp;</span>store_id) {
+                    <span class="kw">let </span>model_or_view = <span class="kw">if let </span><span class="prelude-val">Some</span>(model_id) = model_id {
+                        model_data_store
+                            .models
+                            .get(<span class="kw-2">&amp;</span>model_id)
+                            .map(|model| ModelOrView::Model(model.as_ref()))
+                    } <span class="kw">else </span>{
+                        cx.views.get(<span class="kw-2">&amp;</span>source).map(|view| ModelOrView::View(view.as_ref()))
+                    };
 
-            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>binding) = cx.bindings.remove(<span class="kw-2">&amp;</span>observer) {
-                cx.with_current(observer, |cx| {
-                    binding.update(cx);
-                });
-                cx.bindings.insert(observer, binding);
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(model_or_view) = model_or_view {
+                        <span class="kw">if </span>store.update(model_or_view) {
+                            updated_stores.insert(store_id);
+                            update_binding(cx, observer);
+                        }
+                    }
+                }
             }
         }
+    }
+}
+
+<span class="kw">fn </span>update_binding(cx: <span class="kw-2">&amp;mut </span>Context, observer: Entity) {
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>binding) = cx.bindings.remove(<span class="kw-2">&amp;</span>observer) {
+        cx.with_current(observer, |cx| {
+            binding.update(cx);
+        });
+        cx.bindings.insert(observer, binding);
     }
 }
 </code></pre></div></section></main></body></html>

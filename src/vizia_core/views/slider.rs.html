@@ -617,15 +617,11 @@
 <a href="#616" id="616">616</a>
 <a href="#617" id="617">617</a>
 <a href="#618" id="618">618</a>
-<a href="#619" id="619">619</a>
-<a href="#620" id="620">620</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::Range;
 
 <span class="kw">use </span>accesskit::ActionData;
 
-<span class="kw">use </span><span class="kw">crate</span>::layout::cache::GeoChanged;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::views::Orientation;
 
 <span class="attr">#[derive(Debug)]
 </span><span class="kw">enum </span>SliderEventInternal {
@@ -749,7 +745,7 @@
 
                     <span class="comment">// Active track
                     </span>Element::new(cx).class(<span class="string">"active"</span>).bind(lens, <span class="kw">move </span>|handle, value| {
-                        <span class="kw">let </span>val = value.get(handle.cx);
+                        <span class="kw">let </span>val = value.get(<span class="kw-2">&amp;</span>handle);
 
                         <span class="kw">let </span>normal_val = (val - range.start) / (range.end - range.start);
                         <span class="kw">let </span>min = thumb_size / size;
@@ -783,7 +779,7 @@
                             }
                         })
                         .bind(lens, <span class="kw">move </span>|handle, value| {
-                            <span class="kw">let </span>val = value.get(handle.cx);
+                            <span class="kw">let </span>val = value.get(<span class="kw-2">&amp;</span>handle);
                             <span class="kw">let </span>normal_val = (val - range.start) / (range.end - range.start);
                             <span class="kw">let </span>px = normal_val * (<span class="number">1.0 </span>- (thumb_size / size));
                             <span class="kw">if </span>orientation == Orientation::Horizontal {
@@ -1149,7 +1145,7 @@
         </span>L: Lens&lt;Target = f32&gt;,
         T: ToString,
     {
-        <span class="kw">let </span>name = name.get_val(cx).to_string();
+        <span class="kw">let </span>name = name.get(cx).to_string();
         <span class="self">Self </span>{ on_changing: <span class="prelude-val">None </span>}
             .build(cx, <span class="kw">move </span>|cx| {
                 Binding::new(cx, lens, <span class="kw">move </span>|cx, lens| {
@@ -1169,7 +1165,7 @@
 
                             <span class="comment">// Active track
                             </span>Element::new(cx).class(<span class="string">"active"</span>).bind(lens, <span class="kw">move </span>|handle, value| {
-                                <span class="kw">let </span>val = value.get(handle.cx);
+                                <span class="kw">let </span>val = value.get(<span class="kw-2">&amp;</span>handle);
                                 <span class="kw">let </span>normal_val = (val - range.start) / (range.end - range.start);
                                 <span class="kw">let </span>min = thumb_size / size;
                                 <span class="kw">let </span>max = <span class="number">1.0</span>;

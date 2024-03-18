@@ -339,9 +339,15 @@
 <a href="#338" id="338">338</a>
 <a href="#339" id="339">339</a>
 <a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>femtovg::Transform2D;
 
-<span class="doccomment">/// Respresents the axis-aligned bounding box of a view.
+<span class="doccomment">/// Represents the axis-aligned bounding box of a view.
 </span><span class="attr">#[derive(Clone, Copy, Debug, PartialEq)]
 </span><span class="kw">pub struct </span>BoundingBox {
     <span class="kw">pub </span>x: f32,
@@ -558,8 +564,14 @@
     }
 
     <span class="kw">pub fn </span>contains(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
-        <span class="kw">let </span>x_hit = other.x &gt;= <span class="self">self</span>.x &amp;&amp; other.x &lt; <span class="self">self</span>.x + <span class="self">self</span>.w;
-        <span class="kw">let </span>y_hit = other.y &gt;= <span class="self">self</span>.y &amp;&amp; other.y &lt; <span class="self">self</span>.y + <span class="self">self</span>.h;
+        <span class="kw">let </span>x_hit = other.x &gt;= <span class="self">self</span>.x &amp;&amp; other.x + other.w &lt; <span class="self">self</span>.x + <span class="self">self</span>.w;
+        <span class="kw">let </span>y_hit = other.y &gt;= <span class="self">self</span>.y &amp;&amp; other.y + other.h &lt; <span class="self">self</span>.y + <span class="self">self</span>.h;
+        x_hit &amp;&amp; y_hit
+    }
+
+    <span class="kw">pub fn </span>contains_point(<span class="kw-2">&amp;</span><span class="self">self</span>, x: f32, y: f32) -&gt; bool {
+        <span class="kw">let </span>x_hit = x &gt;= <span class="self">self</span>.x &amp;&amp; x &lt; <span class="self">self</span>.x + <span class="self">self</span>.w;
+        <span class="kw">let </span>y_hit = y &gt;= <span class="self">self</span>.y &amp;&amp; y &lt; <span class="self">self</span>.y + <span class="self">self</span>.h;
         x_hit &amp;&amp; y_hit
     }
 

@@ -305,17 +305,19 @@
 <a href="#304" id="304">304</a>
 <a href="#305" id="305">305</a>
 <a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 
 <span class="kw">use </span>femtovg::{renderer::OpenGl, Canvas};
-<span class="kw">use </span>instant::Instant;
 <span class="kw">use </span>vizia_window::WindowDescription;
 
 <span class="kw">use </span><span class="kw">super</span>::EventProxy;
 <span class="kw">use </span><span class="kw">crate</span>::events::EventManager;
-<span class="kw">use </span><span class="kw">crate</span>::style::SystemFlags;
-<span class="kw">use crate</span>::{cache::CachedData, environment::Environment, prelude::<span class="kw-2">*</span>, style::Style, systems::<span class="kw-2">*</span>};
-<span class="kw">use </span>vizia_id::GenerationalId;
+<span class="kw">use crate</span>::{cache::CachedData, prelude::<span class="kw-2">*</span>, systems::<span class="kw-2">*</span>};
 
 <span class="kw">pub use </span><span class="kw">crate</span>::text::cosmic::TextConfig;
 
@@ -425,7 +427,8 @@
         <span class="self">self</span>.<span class="number">0</span>.style.disabled.insert(Entity::root(), <span class="bool-val">false</span>);
 
         <span class="self">self</span>.<span class="number">0</span>.style.pseudo_classes.insert(Entity::root(), PseudoClassFlags::OVER);
-
+        <span class="self">self</span>.<span class="number">0</span>.style.restyle.insert(Entity::root()).unwrap();
+        <span class="self">self</span>.<span class="number">0</span>.style.reaccess.insert(Entity::root()).unwrap();
         <span class="self">self</span>.<span class="number">0</span>.canvases.insert(Entity::root(), canvas);
     }
 
@@ -539,12 +542,19 @@
     }
 
     <span class="doccomment">/// Calls the accessibility system and updates the accesskit node tree.
-    </span><span class="kw">pub fn </span>process_tree_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>, process: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Vec&lt;accesskit::TreeUpdate&gt;)) {
+    </span><span class="kw">pub fn </span>process_tree_updates(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        process: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>Vec&lt;<span class="prelude-ty">Option</span>&lt;accesskit::TreeUpdate&gt;&gt;),
+    ) {
         accessibility_system(<span class="self">self</span>.<span class="number">0</span>);
 
-        (process)(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.tree_updates);
+        <span class="kw">if </span>!<span class="self">self</span>.<span class="number">0</span>.tree_updates.is_empty() {
+            (process)(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.tree_updates)
+        }
 
-        <span class="self">self</span>.<span class="number">0</span>.tree_updates.clear();
+        <span class="comment">// TODO: Fix this
+        // self.0.tree_updates.retain(|update| update.is_some());
+        </span><span class="self">self</span>.<span class="number">0</span>.tree_updates.clear();
     }
 
     <span class="doccomment">/// Calls the style system to match entities with shared styles.
@@ -588,7 +598,7 @@
         <span class="self">self</span>.<span class="number">0</span>.tick_timers();
     }
 
-    <span class="kw">pub fn </span>get_next_timer_time(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;instant::Instant&gt; {
+    <span class="kw">pub fn </span>get_next_timer_time(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Instant&gt; {
         <span class="kw">let </span>timer_time = <span class="self">self</span>.<span class="number">0</span>.running_timers.peek().map(|timer_state| timer_state.time);
         <span class="kw">let </span>scheduled_event_time = <span class="self">self</span>.<span class="number">0</span>.event_schedule.peek().map(|timed_event| timed_event.time);
 

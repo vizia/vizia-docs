@@ -99,6 +99,13 @@
 <a href="#98" id="98">98</a>
 <a href="#99" id="99">99</a>
 <a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Methods on views for changing their properties or for adding actions.
 //!
 //! # Examples
@@ -147,10 +154,12 @@
         <span class="attr">#[allow(unused_variables)]
         </span><span class="kw">fn </span><span class="macro-nonterminal">$name</span>&lt;U: Into&lt;<span class="macro-nonterminal">$t</span>&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
             <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-            value.set_or_bind(<span class="self">self</span>.context(), entity, |cx, v| {
-                cx.style.<span class="macro-nonterminal">$name</span>.insert(cx.current, v.into());
+            <span class="kw">let </span>current = <span class="self">self</span>.current();
+            value.set_or_bind(<span class="self">self</span>.context(), current, <span class="kw">move </span>|cx, v| {
+                cx.style.<span class="macro-nonterminal">$name</span>.insert(entity, v.get(cx).into());
 
                 cx.style.system_flags |= <span class="macro-nonterminal">$flags</span>;
+                cx.set_system_flags(entity, <span class="macro-nonterminal">$flags</span>);
             });
 
             <span class="self">self
@@ -166,6 +175,7 @@
     </span><span class="kw">pub trait </span>Modifiable: Sized {
         <span class="kw">fn </span>context(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Context;
         <span class="kw">fn </span>entity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity;
+        <span class="kw">fn </span>current(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity;
     }
 
     <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, V&gt; Modifiable <span class="kw">for </span>Handle&lt;<span class="lifetime">'a</span>, V&gt; {
@@ -175,6 +185,10 @@
 
         <span class="kw">fn </span>entity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
             <span class="self">self</span>.entity
+        }
+
+        <span class="kw">fn </span>current(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
+            <span class="self">self</span>.current
         }
     }
 }

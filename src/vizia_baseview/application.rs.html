@@ -461,7 +461,9 @@
 <span class="kw">use </span><span class="kw">crate</span>::proxy::queue_get;
 <span class="kw">use </span>vizia_core::backend::<span class="kw-2">*</span>;
 <span class="kw">use </span>vizia_core::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span>vizia_id::GenerationalId;
+
+<span class="attr">#[derive(Debug)]
+</span><span class="kw">pub enum </span>ApplicationError {}
 
 <span class="doccomment">///Creating a new application creates a root `Window` and a `Context`. Views declared within the closure passed to `Application::new()` are added to the context and rendered into the root window.
 ///
@@ -549,7 +551,7 @@
     /// standalone application.
     ///
     /// * `app` - The Vizia application builder.
-    </span><span class="kw">pub fn </span>run(<span class="self">self</span>) {
+    </span><span class="kw">pub fn </span>run(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ApplicationError&gt; {
         ViziaWindow::open_blocking(
             <span class="self">self</span>.window_description,
             <span class="self">self</span>.window_scale_policy,
@@ -557,7 +559,9 @@
             <span class="self">self</span>.on_idle,
             <span class="self">self</span>.ignore_default_theme,
             <span class="self">self</span>.text_config,
-        )
+        );
+
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="doccomment">/// Open a new child window.
@@ -617,7 +621,7 @@
     /// system or explicitly overridden by the creator of the window. In some cases window resize
     /// events may change this scaling policy. This value is only used when translating logical
     /// mouse coordinates to physical window coordinates. For any other use within VIZIA itself this
-    /// always needs to be multplied by `user_scale_factor`.
+    /// always needs to be multiplied by `user_scale_factor`.
     </span>window_scale_factor: f64,
     <span class="doccomment">/// The scale factor applied on top of the `window_scale` to convert the window's logical size
     /// to a physical size. If this is different from `*cx.user_scale_factor` after handling the
@@ -685,10 +689,6 @@
             // self.event_manager.flush_events(cx.context());
         </span>}
 
-        <span class="comment">// Force restyle on every frame for baseview backend to avoid style inheritance issues
-        // cx.style().needs_restyle();
-        </span>cx.process_data_updates();
-
         <span class="kw">let </span>context = window.gl_context().expect(<span class="string">"Window was created without OpenGL support"</span>);
         <span class="kw">unsafe </span>{ context.make_current() };
         cx.process_style_updates();
@@ -723,7 +723,7 @@
             cx.modifiers()
                 .set(Modifiers::CTRL, modifiers.contains(vizia_input::KeyboardModifiers::CONTROL));
             cx.modifiers()
-                .set(Modifiers::LOGO, modifiers.contains(vizia_input::KeyboardModifiers::META));
+                .set(Modifiers::SUPER, modifiers.contains(vizia_input::KeyboardModifiers::META));
             cx.modifiers()
                 .set(Modifiers::ALT, modifiers.contains(vizia_input::KeyboardModifiers::ALT));
         };
@@ -808,20 +808,20 @@
                     }
                     Code::AltLeft | Code::AltRight =&gt; cx.modifiers().set(Modifiers::ALT, pressed),
                     Code::MetaLeft | Code::MetaRight =&gt; {
-                        cx.modifiers().set(Modifiers::LOGO, pressed)
+                        cx.modifiers().set(Modifiers::SUPER, pressed)
                     }
                     <span class="kw">_ </span>=&gt; (),
                 }
 
                 <span class="kw">match </span>s {
                     MouseButtonState::Pressed =&gt; {
-                        cx.emit_origin(WindowEvent::KeyDown(event.code, <span class="prelude-val">Some</span>(event.key.clone())));
-
                         <span class="kw">if let </span>vizia_input::Key::Character(written) = <span class="kw-2">&amp;</span>event.key {
                             <span class="kw">for </span>chr <span class="kw">in </span>written.chars() {
                                 cx.emit_origin(WindowEvent::CharInput(chr));
                             }
                         }
+
+                        cx.emit_origin(WindowEvent::KeyDown(event.code, <span class="prelude-val">Some</span>(event.key)));
                     }
 
                     MouseButtonState::Released =&gt; {

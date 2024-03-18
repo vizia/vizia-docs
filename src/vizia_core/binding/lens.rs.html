@@ -691,7 +691,13 @@
 <a href="#690" id="690">690</a>
 <a href="#691" id="691">691</a>
 <a href="#692" id="692">692</a>
+<a href="#693" id="693">693</a>
+<a href="#694" id="694">694</a>
+<a href="#695" id="695">695</a>
+<a href="#696" id="696">696</a>
+<a href="#697" id="697">697</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::TypeId;
+<span class="kw">use </span>std::borrow::Borrow;
 <span class="kw">use </span>std::fmt::{Debug, Formatter};
 <span class="kw">use </span>std::hash::{Hash, Hasher};
 <span class="kw">use </span>std::marker::PhantomData;
@@ -699,7 +705,6 @@
 <span class="kw">use </span>std::rc::Rc;
 
 <span class="kw">use </span><span class="kw">crate</span>::context::{CURRENT, MAPS, MAP_MANAGER};
-<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">use </span><span class="kw">super</span>::MapId;
 
@@ -712,40 +717,59 @@
     <span class="kw">type </span>Source;
     <span class="kw">type </span>Target;
 
-    <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="self">Self</span>::Source, map: F) -&gt; O;
+    <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt;;
+}
+
+<span class="doccomment">/// A type returned by `Lens::view()` which contains either a reference to model data or an owned value.
+</span><span class="kw">pub enum </span>LensValue&lt;<span class="lifetime">'a</span>, T&gt; {
+    <span class="doccomment">/// A reference to model or local data
+    </span>Borrowed(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>T),
+    <span class="doccomment">/// Owned data
+    </span>Owned(T),
+}
+
+<span class="kw">impl</span>&lt;T: Clone&gt; Clone <span class="kw">for </span>LensValue&lt;<span class="lifetime">'_</span>, T&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span><span class="self">self </span>{
+            LensValue::Borrowed(v) =&gt; LensValue::Borrowed(<span class="kw-2">*</span>v),
+            LensValue::Owned(v) =&gt; LensValue::Owned(v.clone()),
+        }
+    }
+}
+
+<span class="kw">impl</span>&lt;T: Copy&gt; Copy <span class="kw">for </span>LensValue&lt;<span class="lifetime">'_</span>, T&gt; {}
+
+<span class="kw">impl</span>&lt;T: Clone&gt; LensValue&lt;<span class="lifetime">'_</span>, T&gt; {
+    <span class="kw">pub fn </span>into_owned(<span class="self">self</span>) -&gt; T {
+        <span class="kw">match </span><span class="self">self </span>{
+            LensValue::Borrowed(t) =&gt; t.clone(),
+            LensValue::Owned(t) =&gt; t,
+        }
+    }
+}
+
+<span class="kw">impl</span>&lt;T: Clone&gt; AsRef&lt;T&gt; <span class="kw">for </span>LensValue&lt;<span class="lifetime">'_</span>, T&gt; {
+    <span class="kw">fn </span>as_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
+        <span class="self">self
+    </span>}
+}
+
+<span class="kw">impl</span>&lt;B&gt; Deref <span class="kw">for </span>LensValue&lt;<span class="lifetime">'_</span>, B&gt;
+<span class="kw">where
+    </span>B: Borrow&lt;B&gt;,
+{
+    <span class="kw">type </span>Target = B;
+
+    <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>B {
+        <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
+            LensValue::Borrowed(borrowed) =&gt; borrowed,
+            LensValue::Owned(<span class="kw-2">ref </span>owned) =&gt; owned.borrow(),
+        }
+    }
 }
 
 <span class="doccomment">/// Helpers for constructing more complex `Lens`es.
 </span><span class="kw">pub trait </span>LensExt: Lens {
-    <span class="doccomment">/// Retrieve a copy of the lensed data from context. This will clone the data.
-    ///
-    /// Example
-    /// ```ignore
-    /// let value = lens.get(cx);
-    /// ```
-    </span><span class="kw">fn </span>get&lt;C: DataContext&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>C) -&gt; <span class="self">Self</span>::Target
-    <span class="kw">where
-        </span><span class="self">Self</span>::Target: Clone,
-    {
-        <span class="self">self</span>.view(
-            cx.data().expect(<span class="string">"Failed to get data from context. Has it been built into the tree?"</span>),
-            |t| {
-                t.expect(<span class="string">"Lens failed to resolve. Do you want to use LensExt::get_fallible?"</span>)
-                    .clone()
-            },
-        )
-    }
-
-    <span class="kw">fn </span>get_fallible&lt;C: DataContext&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>C) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Target&gt;
-    <span class="kw">where
-        </span><span class="self">Self</span>::Target: Clone,
-    {
-        <span class="self">self</span>.view(
-            cx.data().expect(<span class="string">"Failed to get data from context. Has it been built into the tree?"</span>),
-            |t| t.cloned(),
-        )
-    }
-
     <span class="kw">fn </span>or&lt;Other&gt;(<span class="self">self</span>, other: Other) -&gt; OrLens&lt;<span class="self">Self</span>, Other&gt;
     <span class="kw">where
         </span>Other: Lens&lt;Target = bool&gt;,
@@ -820,7 +844,7 @@
 }
 
 <span class="comment">// Implement LensExt for all types which implement Lens.
-</span><span class="kw">impl</span>&lt;T: Lens&gt; LensExt <span class="kw">for </span>T {}
+</span><span class="kw">impl</span>&lt;T: Lens + <span class="question-mark">?</span>Sized&gt; LensExt <span class="kw">for </span>T {}
 
 <span class="kw">pub struct </span>MapState&lt;T, O&gt; {
     closure: Rc&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>T) -&gt; O&gt;,
@@ -848,12 +872,8 @@
     <span class="kw">type </span>Source = L::Source;
     <span class="kw">type </span>Target = O;
 
-    <span class="kw">fn </span>view&lt;VO, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; VO&gt;(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        source: <span class="kw-2">&amp;</span><span class="self">Self</span>::Source,
-        map: F,
-    ) -&gt; VO {
-        <span class="self">self</span>.lens.view(source, |t| {
+    <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(t) = <span class="self">self</span>.lens.view(source) {
             <span class="kw">let </span>closure = MAPS.with(|f| {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(lens_map) = f.borrow().get(<span class="kw-2">&amp;</span><span class="self">self</span>.id) {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(mapping) = lens_map.<span class="number">1</span>.downcast_ref::&lt;MapState&lt;L::Target, O&gt;&gt;() {
@@ -863,9 +883,11 @@
 
                 <span class="prelude-val">None
             </span>});
-            map(t.map(|tt| (closure.unwrap())(tt)).as_ref())
-        })
-    }
+            <span class="kw">return </span><span class="prelude-val">Some</span>(LensValue::Owned((closure<span class="question-mark">?</span>)(<span class="kw-2">&amp;*</span>t)));
+        }
+
+        <span class="prelude-val">None
+    </span>}
 }
 
 <span class="kw">impl</span>&lt;L: Lens, O: <span class="lifetime">'static</span>&gt; std::fmt::Debug <span class="kw">for </span>Map&lt;L, O&gt; {
@@ -881,8 +903,7 @@
     }
 }
 
-<span class="comment">// #[derive(Debug)]
-</span><span class="kw">pub struct </span>MapRef&lt;L: Lens, O&gt; {
+<span class="kw">pub struct </span>MapRef&lt;L: Lens, O&gt; {
     id: MapId,
     lens: L,
     o: PhantomData&lt;O&gt;,
@@ -900,12 +921,8 @@
     <span class="kw">type </span>Source = L::Source;
     <span class="kw">type </span>Target = O;
 
-    <span class="kw">fn </span>view&lt;VO, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; VO&gt;(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        source: <span class="kw-2">&amp;</span><span class="self">Self</span>::Source,
-        map: F,
-    ) -&gt; VO {
-        <span class="self">self</span>.lens.view(source, |t| {
+    <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(t) = <span class="self">self</span>.lens.view(source) {
             <span class="kw">let </span>closure = MAPS.with(|f| {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(lens_map) = f.borrow().get(<span class="kw-2">&amp;</span><span class="self">self</span>.id) {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(mapping) = lens_map.<span class="number">1</span>.downcast_ref::&lt;MapRefState&lt;L::Target, O&gt;&gt;() {
@@ -915,9 +932,14 @@
 
                 <span class="prelude-val">None
             </span>});
-            map(t.map(|tt| (closure.unwrap())(tt)))
-        })
-    }
+            <span class="kw">match </span>t {
+                LensValue::Borrowed(b) =&gt; <span class="kw">return </span><span class="prelude-val">Some</span>(LensValue::Borrowed((closure<span class="question-mark">?</span>)(b))),
+                LensValue::Owned(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
+            }
+        }
+
+        <span class="prelude-val">None
+    </span>}
 }
 
 <span class="kw">impl</span>&lt;L: Lens, O: <span class="lifetime">'static</span>&gt; std::fmt::Debug <span class="kw">for </span>MapRef&lt;L, O&gt; {
@@ -958,9 +980,20 @@
     <span class="kw">type </span>Source = A::Source;
     <span class="kw">type </span>Target = B::Target;
 
-    <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="self">Self</span>::Source, map: F) -&gt; O {
-        <span class="self">self</span>.a.view(source, |t| <span class="kw">if let </span><span class="prelude-val">Some</span>(t) = t { <span class="self">self</span>.b.view(t, map) } <span class="kw">else </span>{ map(<span class="prelude-val">None</span>) })
-    }
+    <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(val) = <span class="self">self</span>.a.view(source) {
+            <span class="kw">let </span>val = <span class="kw">match </span>val {
+                LensValue::Borrowed(val) =&gt; <span class="kw">return </span><span class="self">self</span>.b.view(val),
+                LensValue::Owned(<span class="kw-2">ref </span>val) =&gt; val,
+            };
+            <span class="kw">match </span><span class="self">self</span>.b.view(val) {
+                <span class="prelude-val">Some</span>(LensValue::Owned(val)) =&gt; <span class="kw">return </span><span class="prelude-val">Some</span>(LensValue::Owned(val)),
+                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
+            }
+        }
+
+        <span class="prelude-val">None
+    </span>}
 }
 
 <span class="kw">impl</span>&lt;T: Clone, U: Clone&gt; Clone <span class="kw">for </span>Then&lt;T, U&gt; {
@@ -1021,8 +1054,11 @@
     <span class="kw">type </span>Source = L::Source;
     <span class="kw">type </span>Target = T;
 
-    <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="self">Self</span>::Source, map: F) -&gt; O {
-        <span class="self">self</span>.lens.view(source, |t| <span class="kw">if let </span><span class="prelude-val">Some</span>(t) = t { map(t.get(<span class="self">self</span>.index)) } <span class="kw">else </span>{ map(<span class="prelude-val">None</span>) })
+    <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+        <span class="self">self</span>.lens.view(source).and_then(|v| <span class="kw">match </span>v {
+            LensValue::Borrowed(v) =&gt; v.get(<span class="self">self</span>.index).map(LensValue::Borrowed),
+            LensValue::Owned(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
+        })
     }
 }
 
@@ -1057,8 +1093,8 @@
     <span class="kw">type </span>Source = ();
     <span class="kw">type </span>Target = T;
 
-    <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::Source, map: F) -&gt; O {
-        map(<span class="prelude-val">Some</span>(<span class="self">self</span>.data))
+    <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>.data))
     }
 }
 
@@ -1091,8 +1127,8 @@
     <span class="kw">type </span>Source = <span class="prelude-ty">Option</span>&lt;T&gt;;
     <span class="kw">type </span>Target = T;
 
-    <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="self">Self</span>::Source, map: F) -&gt; O {
-        map(source.as_ref())
+    <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+        source.as_ref().map(LensValue::Borrowed)
     }
 }
 
@@ -1133,9 +1169,8 @@
     <span class="kw">type </span>Source = T;
     <span class="kw">type </span>Target = U;
 
-    <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="self">Self</span>::Source, map: F) -&gt; O {
-        <span class="kw">let </span>converted = source.clone().try_into().ok();
-        map(converted.as_ref())
+    <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+        source.clone().try_into().ok().map(|t| LensValue::Owned(t))
     }
 }
 
@@ -1172,18 +1207,10 @@
     <span class="kw">type </span>Source = L1::Source;
     <span class="kw">type </span>Target = f32;
 
-    <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="self">Self</span>::Source, map: F) -&gt; O {
-        <span class="kw">let </span>num = <span class="self">self</span>.numerator.view(source, |num| num.copied());
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(num) = num {
-            <span class="kw">let </span>den = <span class="self">self</span>.denominator.view(source, |den| den.copied());
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(den) = den {
-                map(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(num / den)))
-            } <span class="kw">else </span>{
-                map(<span class="prelude-val">None</span>)
-            }
-        } <span class="kw">else </span>{
-            map(<span class="prelude-val">None</span>)
-        }
+    <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, f32&gt;&gt; {
+        <span class="kw">let </span>num = <span class="self">self</span>.numerator.view(source)<span class="question-mark">?</span>.into_owned();
+        <span class="kw">let </span>den = <span class="self">self</span>.denominator.view(source)<span class="question-mark">?</span>.into_owned();
+        <span class="prelude-val">Some</span>(LensValue::Owned(num / den))
     }
 }
 
@@ -1211,20 +1238,11 @@
     <span class="kw">type </span>Source = L1::Source;
     <span class="kw">type </span>Target = bool;
 
-    <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="self">Self</span>::Source, map: F) -&gt; O {
-        <span class="self">self</span>.lens1.view(source, |t1| {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(l1) = t1 {
-                <span class="self">self</span>.lens2.view(source, |t2| {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(l2) = t2 {
-                        map(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="kw-2">*</span>l1 | <span class="kw-2">*</span>l2)))
-                    } <span class="kw">else </span>{
-                        map(<span class="prelude-val">None</span>)
-                    }
-                })
-            } <span class="kw">else </span>{
-                map(<span class="prelude-val">None</span>)
-            }
-        })
+    <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+        <span class="kw">let </span>v1 = <span class="self">self</span>.lens1.view(source)<span class="question-mark">?</span>.into_owned();
+        <span class="kw">let </span>v2 = <span class="self">self</span>.lens2.view(source)<span class="question-mark">?</span>.into_owned();
+
+        <span class="prelude-val">Some</span>(LensValue::Owned(v1 | v2))
     }
 }
 
@@ -1242,8 +1260,9 @@
 <span class="kw">impl</span>&lt;L: Lens&gt; Lens <span class="kw">for </span>Wrapper&lt;L&gt; {
     <span class="kw">type </span>Source = L::Source;
     <span class="kw">type </span>Target = L::Target;
-    <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="self">Self</span>::Source, map: F) -&gt; O {
-        <span class="self">self</span>.<span class="number">0</span>.view(source, map)
+
+    <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.view(source)
     }
 }
 
@@ -1319,20 +1338,11 @@
     <span class="kw">type </span>Source = L1::Source;
     <span class="kw">type </span>Target = bool;
 
-    <span class="kw">fn </span>view&lt;O, F: FnOnce(<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>::Target&gt;) -&gt; O&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="self">Self</span>::Source, map: F) -&gt; O {
-        <span class="self">self</span>.lens1.view(source, |t1| {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(l1) = t1 {
-                <span class="self">self</span>.lens2.view(source, |t2| {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(l2) = t2 {
-                        map(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="kw-2">*</span>l1 &amp; <span class="kw-2">*</span>l2)))
-                    } <span class="kw">else </span>{
-                        map(<span class="prelude-val">None</span>)
-                    }
-                })
-            } <span class="kw">else </span>{
-                map(<span class="prelude-val">None</span>)
-            }
-        })
+    <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+        <span class="kw">let </span>v1 = <span class="self">self</span>.lens1.view(source)<span class="question-mark">?</span>.into_owned();
+        <span class="kw">let </span>v2 = <span class="self">self</span>.lens2.view(source)<span class="question-mark">?</span>.into_owned();
+
+        <span class="prelude-val">Some</span>(LensValue::Owned(v1 | v2))
     }
 }
 

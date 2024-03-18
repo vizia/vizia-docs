@@ -74,6 +74,10 @@
 <a href="#73" id="73">73</a>
 <a href="#74" id="74">74</a>
 <a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::cache::CachedData;
 <span class="kw">use </span>morphorm::Cache;
 
@@ -99,7 +103,11 @@
     <span class="kw">type </span>Node = Entity;
 
     <span class="kw">fn </span>set_bounds(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="kw-2">&amp;</span><span class="self">Self</span>::Node, posx: f32, posy: f32, width: f32, height: f32) {
-        <span class="kw">let </span><span class="kw-2">mut </span>geo_changed = <span class="self">self</span>.geo_changed.get(<span class="kw-2">*</span>node).copied().unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>geo_changed = <span class="self">self
+            </span>.geo_changed
+            .get(<span class="kw-2">*</span>node)
+            .copied()
+            .unwrap_or_else(|| <span class="macro">panic!</span>(<span class="string">"Failed to get geo changed for: {}"</span>, node));
         <span class="kw">if let </span><span class="prelude-val">Some</span>(bounds) = <span class="self">self</span>.bounds.get_mut(<span class="kw-2">*</span>node) {
             <span class="kw">if </span>bounds.w != width {
                 geo_changed.set(GeoChanged::WIDTH_CHANGED, <span class="bool-val">true</span>);
@@ -109,8 +117,8 @@
                 geo_changed.set(GeoChanged::HEIGHT_CHANGED, <span class="bool-val">true</span>);
             }
 
-            bounds.x = posx;
-            bounds.y = posy;
+            bounds.x = posx.round();
+            bounds.y = posy.round();
             bounds.w = width;
             bounds.h = height;
         }
@@ -124,8 +132,8 @@
                 geo_changed.set(GeoChanged::POSY_CHANGED, <span class="bool-val">true</span>);
             }
 
-            relative_position.x = posx;
-            relative_position.y = posy;
+            relative_position.x = posx.round();
+            relative_position.y = posy.round();
         }
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(geo) = <span class="self">self</span>.geo_changed.get_mut(<span class="kw-2">*</span>node) {

@@ -770,42 +770,6 @@
 <a href="#768" id="768">768</a>
 <a href="#769" id="769">769</a>
 <a href="#770" id="770">770</a>
-<a href="#771" id="771">771</a>
-<a href="#772" id="772">772</a>
-<a href="#773" id="773">773</a>
-<a href="#774" id="774">774</a>
-<a href="#775" id="775">775</a>
-<a href="#776" id="776">776</a>
-<a href="#777" id="777">777</a>
-<a href="#778" id="778">778</a>
-<a href="#779" id="779">779</a>
-<a href="#780" id="780">780</a>
-<a href="#781" id="781">781</a>
-<a href="#782" id="782">782</a>
-<a href="#783" id="783">783</a>
-<a href="#784" id="784">784</a>
-<a href="#785" id="785">785</a>
-<a href="#786" id="786">786</a>
-<a href="#787" id="787">787</a>
-<a href="#788" id="788">788</a>
-<a href="#789" id="789">789</a>
-<a href="#790" id="790">790</a>
-<a href="#791" id="791">791</a>
-<a href="#792" id="792">792</a>
-<a href="#793" id="793">793</a>
-<a href="#794" id="794">794</a>
-<a href="#795" id="795">795</a>
-<a href="#796" id="796">796</a>
-<a href="#797" id="797">797</a>
-<a href="#798" id="798">798</a>
-<a href="#799" id="799">799</a>
-<a href="#800" id="800">800</a>
-<a href="#801" id="801">801</a>
-<a href="#802" id="802">802</a>
-<a href="#803" id="803">803</a>
-<a href="#804" id="804">804</a>
-<a href="#805" id="805">805</a>
-<a href="#806" id="806">806</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
     convert::{winit_key_code_to_code, winit_key_to_key},
     window::Window,
@@ -1089,8 +1053,6 @@
 
         </span><span class="kw">let </span><span class="kw-2">mut </span>cursor_moved = <span class="bool-val">false</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>cursor = (<span class="number">0.0f32</span>, <span class="number">0.0f32</span>);
-        <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
-        </span><span class="kw">let </span><span class="kw-2">mut </span>inside_window = <span class="bool-val">false</span>;
 
         <span class="comment">// cx.process_events();
 
@@ -1269,32 +1231,6 @@
                                     cursor.<span class="number">0 </span>= position.x <span class="kw">as </span>f32;
                                     cursor.<span class="number">1 </span>= position.y <span class="kw">as </span>f32;
                                 }
-
-                                <span class="comment">// Temporary fix for windows platform until winit merge #3154
-                                </span><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
-                                </span>{
-                                    <span class="kw">let </span>(width, height) = {
-                                        <span class="kw">let </span>scale_factor = cx.scale_factor();
-                                        <span class="kw">let </span>size = cx.window_size();
-                                        (
-                                            (size.width <span class="kw">as </span>f32 * scale_factor).round() <span class="kw">as </span>u32,
-                                            (size.height <span class="kw">as </span>f32 * scale_factor).round() <span class="kw">as </span>u32,
-                                        )
-                                    };
-
-                                    <span class="kw">let </span>x = position.x.is_positive()
-                                        &amp;&amp; (<span class="number">0</span>..width).contains(<span class="kw-2">&amp;</span>(position.x <span class="kw">as </span>u32));
-                                    <span class="kw">let </span>y = position.y.is_positive()
-                                        &amp;&amp; (<span class="number">0</span>..height).contains(<span class="kw-2">&amp;</span>(position.y <span class="kw">as </span>u32));
-
-                                    <span class="kw">if </span>!inside_window &amp;&amp; x &amp;&amp; y {
-                                        inside_window = <span class="bool-val">true</span>;
-                                        cx.emit_origin(WindowEvent::MouseEnter);
-                                    } <span class="kw">else if </span>inside_window &amp;&amp; !(x &amp;&amp; y) {
-                                        inside_window = <span class="bool-val">false</span>;
-                                        cx.emit_origin(WindowEvent::MouseLeave);
-                                    }
-                                }
                             }
 
                             <span class="attr">#[allow(deprecated)]
@@ -1457,18 +1393,10 @@
                             }
 
                             winit::event::WindowEvent::CursorEntered { device_id: <span class="kw">_ </span>} =&gt; {
-                                <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
-                                </span>{
-                                    inside_window = <span class="bool-val">true</span>;
-                                }
                                 cx.emit_origin(WindowEvent::MouseEnter);
                             }
 
                             winit::event::WindowEvent::CursorLeft { device_id: <span class="kw">_ </span>} =&gt; {
-                                <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
-                                </span>{
-                                    inside_window = <span class="bool-val">false</span>;
-                                }
                                 cx.emit_origin(WindowEvent::MouseLeave);
                             }
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_derive/src/lens.rs`."><title>lens.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vizia_derive" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.2 (25ef9e3d8 2024-04-09)" data-channel="1.77.2" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_derive/src/lens.rs`."><title>lens.rs - source</title><script> if (window.location.protocol !== "file:") document.write(`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2">`)</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vizia_derive" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0 (9b00956e5 2024-04-29)" data-channel="1.78.0" data-search-js="search-42d8da7a6b9792c2.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../vizia_derive/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -539,18 +539,18 @@
 
     <span class="kw">for </span>gp <span class="kw">in </span>input.generics.params.iter() {
         <span class="kw">if let </span>GenericParam::Type(TypeParam { ident, .. }) = gp {
-            lens_ty_idents.push(<span class="macro">quote! </span>{#ident});
-            lens_ty_decls.push(<span class="macro">quote! </span>{#ident: <span class="lifetime">'static</span>});
-            phantom_decls.push(<span class="macro">quote! </span>{std::marker::PhantomData&lt;<span class="kw-2">*const </span>#ident&gt;});
-            phantom_inits.push(<span class="macro">quote! </span>{std::marker::PhantomData});
+            lens_ty_idents.push(<span class="macro">quote!</span> {#ident});
+            lens_ty_decls.push(<span class="macro">quote!</span> {#ident: <span class="lifetime">'static</span>});
+            phantom_decls.push(<span class="macro">quote!</span> {std::marker::PhantomData&lt;<span class="kw-2">*const </span>#ident&gt;});
+            phantom_inits.push(<span class="macro">quote!</span> {std::marker::PhantomData});
         }
     }
 
-    <span class="kw">let </span>lens_ty_generics = <span class="macro">quote! </span>{
+    <span class="kw">let </span>lens_ty_generics = <span class="macro">quote!</span> {
         &lt;#(#lens_ty_idents),<span class="kw-2">*</span>&gt;
     };
 
-    <span class="kw">let </span>lens_ty_generics_decls = <span class="macro">quote! </span>{
+    <span class="kw">let </span>lens_ty_generics_decls = <span class="macro">quote!</span> {
         &lt;#(#lens_ty_decls),<span class="kw-2">*</span>&gt;
     };
 
@@ -570,7 +570,7 @@
             ty = struct_type,
         );
 
-        <span class="macro">quote! </span>{
+        <span class="macro">quote!</span> {
             <span class="attr">#[doc = #struct_docs]
             #[allow(non_camel_case_types)]
             #[derive(PartialEq, Eq)]
@@ -633,7 +633,7 @@
     </span><span class="kw">let </span>impls = fields.iter().filter(|f| !f.attrs.ignore).map(|f| {
         <span class="kw">let </span>field_name = <span class="kw-2">&amp;</span>f.ident.unwrap_named();
         <span class="kw">let </span>field_ty = <span class="kw-2">&amp;</span>f.ty;
-        <span class="macro">quote! </span>{
+        <span class="macro">quote!</span> {
 
             <span class="kw">impl </span>#impl_generics Lens <span class="kw">for </span>#twizzled_name::#field_name#lens_ty_generics #where_clause {
 
@@ -652,7 +652,7 @@
         <span class="kw">let </span>lens_field_name = f.attrs.lens_name_override.as_ref().unwrap_or(field_name);
         <span class="kw">let </span>field_vis = <span class="kw-2">&amp;</span>f.vis;
 
-        <span class="macro">quote! </span>{
+        <span class="macro">quote!</span> {
             <span class="doccomment">/// Lens for the corresponding field.
             </span>#field_vis <span class="kw">const </span>#lens_field_name: Wrapper&lt;#twizzled_name::#field_name#lens_ty_generics&gt; = Wrapper(#twizzled_name::#field_name::new());
         }
@@ -662,7 +662,7 @@
     <span class="kw">let </span>root_docs = <span class="macro">format!</span>(<span class="string">"Lens for the whole [`{ty}`](super::{ty}) struct."</span>, ty = struct_type);
     <span class="comment">//let lens_docs = format!("# Lenses for [`{ty}`](super::{ty})", ty = struct_type);
 
-    </span><span class="kw">let </span>expanded = <span class="macro">quote! </span>{
+    </span><span class="kw">let </span>expanded = <span class="macro">quote!</span> {
         <span class="attr">#[doc = #mod_docs]
         </span>#module_vis <span class="kw">mod </span>#twizzled_name {
             #(#defs)*
@@ -817,7 +817,7 @@
     }
 
     <span class="kw">let </span>defs = usable_variants.iter().map(|(variant_name, <span class="kw">_</span>)| {
-        <span class="macro">quote! </span>{
+        <span class="macro">quote!</span> {
             <span class="attr">#[allow(non_camel_case_types)]
             #[derive(Copy, Clone, Hash, PartialEq, Eq)]
             </span>#struct_vis <span class="kw">struct </span>#variant_name();
@@ -838,7 +838,7 @@
 
     <span class="kw">let </span>impls = usable_variants.iter().map(|(variant_name, variant_type)| {
         <span class="kw">let </span>name = <span class="macro">format!</span>(<span class="string">"{}:{}"</span>, enum_type, variant_name);
-        <span class="macro">quote! </span>{
+        <span class="macro">quote!</span> {
             <span class="kw">impl </span>Lens <span class="kw">for </span>#twizzled_name::#variant_name {
                 <span class="kw">type </span>Source = #enum_type;
                 <span class="kw">type </span>Target = #variant_type;
@@ -864,12 +864,12 @@
     <span class="kw">let </span>associated_items = usable_variants.iter().map(|(variant_name, <span class="kw">_</span>)| {
         <span class="kw">let </span>variant_const_name = to_snake_case(<span class="kw-2">&amp;</span>variant_name.to_string());
         <span class="kw">let </span>variant_const_name = proc_macro2::Ident::new(<span class="kw-2">&amp;</span>variant_const_name, proc_macro2::Span::call_site());
-        <span class="macro">quote! </span>{
+        <span class="macro">quote!</span> {
             <span class="kw">pub const </span>#variant_const_name: #twizzled_name::#variant_name = #twizzled_name::#variant_name::new();
         }
     });
 
-    <span class="kw">let </span>expanded = <span class="macro">quote! </span>{
+    <span class="kw">let </span>expanded = <span class="macro">quote!</span> {
         #module_vis <span class="kw">mod </span>#twizzled_name {
             #(#defs)*
         }

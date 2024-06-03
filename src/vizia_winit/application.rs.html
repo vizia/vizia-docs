@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_winit/src/application.rs`."><title>application.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vizia_winit" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.2 (25ef9e3d8 2024-04-09)" data-channel="1.77.2" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_winit/src/application.rs`."><title>application.rs - source</title><script> if (window.location.protocol !== "file:") document.write(`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2">`)</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vizia_winit" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0 (9b00956e5 2024-04-29)" data-channel="1.78.0" data-search-js="search-42d8da7a6b9792c2.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../vizia_winit/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -748,41 +748,18 @@
 <a href="#746" id="746">746</a>
 <a href="#747" id="747">747</a>
 <a href="#748" id="748">748</a>
-<a href="#749" id="749">749</a>
-<a href="#750" id="750">750</a>
-<a href="#751" id="751">751</a>
-<a href="#752" id="752">752</a>
-<a href="#753" id="753">753</a>
-<a href="#754" id="754">754</a>
-<a href="#755" id="755">755</a>
-<a href="#756" id="756">756</a>
-<a href="#757" id="757">757</a>
-<a href="#758" id="758">758</a>
-<a href="#759" id="759">759</a>
-<a href="#760" id="760">760</a>
-<a href="#761" id="761">761</a>
-<a href="#762" id="762">762</a>
-<a href="#763" id="763">763</a>
-<a href="#764" id="764">764</a>
-<a href="#765" id="765">765</a>
-<a href="#766" id="766">766</a>
-<a href="#767" id="767">767</a>
-<a href="#768" id="768">768</a>
-<a href="#769" id="769">769</a>
-<a href="#770" id="770">770</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
     convert::{winit_key_code_to_code, winit_key_to_key},
     window::Window,
 };
 
-<span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+<span class="attr">#[cfg(feature = <span class="string">"accesskit"</span>)]
 </span><span class="kw">use </span>accesskit::{Action, NodeBuilder, NodeId, TreeUpdate};
-<span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+<span class="attr">#[cfg(feature = <span class="string">"accesskit"</span>)]
 </span><span class="kw">use </span>accesskit_winit;
 <span class="kw">use </span>std::cell::RefCell;
 <span class="kw">use </span>vizia_core::backend::<span class="kw-2">*</span>;
-<span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
-</span><span class="kw">use </span>vizia_core::context::EventProxy;
+<span class="kw">use </span>vizia_core::context::EventProxy;
 <span class="kw">use </span>vizia_core::prelude::<span class="kw-2">*</span>;
 <span class="comment">// use vizia_input::KeyState;
 </span><span class="attr">#[cfg(all(
@@ -807,17 +784,16 @@
     keyboard::NativeKeyCode,
 };
 
-<span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
-</span><span class="kw">use </span>winit::event_loop::EventLoopProxy;
+<span class="kw">use </span>winit::event_loop::EventLoopProxy;
 
 <span class="attr">#[derive(Debug)]
 </span><span class="kw">pub enum </span>UserEvent {
     Event(Event),
-    <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+    <span class="attr">#[cfg(feature = <span class="string">"accesskit"</span>)]
     </span>AccessKitActionRequest(accesskit_winit::ActionRequestEvent),
 }
 
-<span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+<span class="attr">#[cfg(feature = <span class="string">"accesskit"</span>)]
 </span><span class="kw">impl </span>From&lt;accesskit_winit::ActionRequestEvent&gt; <span class="kw">for </span>UserEvent {
     <span class="kw">fn </span>from(action_request_event: accesskit_winit::ActionRequestEvent) -&gt; <span class="self">Self </span>{
         UserEvent::AccessKitActionRequest(action_request_event)
@@ -857,12 +833,9 @@
     window_description: WindowDescription,
     should_poll: bool,
 }
+<span class="kw">pub struct </span>WinitEventProxy(EventLoopProxy&lt;UserEvent&gt;);
 
-<span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
-</span><span class="kw">pub struct </span>WinitEventProxy(EventLoopProxy&lt;UserEvent&gt;);
-
-<span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
-</span><span class="kw">impl </span>EventProxy <span class="kw">for </span>WinitEventProxy {
+<span class="kw">impl </span>EventProxy <span class="kw">for </span>WinitEventProxy {
     <span class="kw">fn </span>send(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Event) -&gt; <span class="prelude-ty">Result</span>&lt;(), ()&gt; {
         <span class="self">self</span>.<span class="number">0</span>.send_event(UserEvent::Event(event)).map_err(|<span class="kw">_</span>| ())
     }
@@ -877,10 +850,6 @@
     </span><span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ FnOnce(<span class="kw-2">&amp;mut </span>Context),
     {
-        <span class="comment">// wasm + debug: send panics to console
-        </span><span class="attr">#[cfg(all(debug_assertions, target_arch = <span class="string">"wasm32"</span>))]
-        </span>console_error_panic_hook::set_once();
-
         <span class="comment">// TODO: User scale factors and window resizing has not been implement for winit
         // TODO: Changing the scale factor doesn't work for winit anyways since winit doesn't let
         //       you resize the window, so there's no mutator for that at he moment
@@ -888,14 +857,11 @@
 
         <span class="kw">let </span>event_loop =
             EventLoopBuilder::with_user_event().build().expect(<span class="string">"Failed to create event loop"</span>);
-        <span class="attr">#[cfg(not(target_arch = <span class="string">"wasm32"</span>))]
-        </span>{
-            <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(<span class="kw-2">&amp;mut </span>context);
-            <span class="kw">let </span>event_proxy_obj = event_loop.create_proxy();
-            cx.set_event_proxy(Box::new(WinitEventProxy(event_proxy_obj)));
-        }
 
         <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(<span class="kw-2">&amp;mut </span>context);
+        <span class="kw">let </span>event_proxy_obj = event_loop.create_proxy();
+        cx.set_event_proxy(Box::new(WinitEventProxy(event_proxy_obj)));
+
         cx.renegotiate_language();
         cx.<span class="number">0</span>.remove_user_themes();
         (content)(cx.<span class="number">0</span>);
@@ -970,7 +936,7 @@
         </span><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
         </span><span class="kw">let </span><span class="kw-2">mut </span>is_initially_cloaked = window.set_cloak(<span class="bool-val">true</span>);
 
-        <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+        <span class="attr">#[cfg(feature = <span class="string">"accesskit"</span>)]
         </span><span class="kw">let </span>event_loop_proxy = event_loop.create_proxy();
 
         <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(<span class="kw-2">&amp;mut </span>context);
@@ -984,9 +950,9 @@
             cx.emit_origin(WindowEvent::ThemeChanged(theme));
         }
 
-        <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+        <span class="attr">#[cfg(feature = <span class="string">"accesskit"</span>)]
         </span><span class="kw">let </span>root_node = NodeBuilder::new(Role::Window).build(cx.accesskit_node_classes());
-        <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+        <span class="attr">#[cfg(feature = <span class="string">"accesskit"</span>)]
         </span><span class="kw">let </span>accesskit = accesskit_winit::Adapter::new(
             window.window(),
             <span class="kw">move </span>|| {
@@ -1044,7 +1010,7 @@
         <span class="kw">let </span>default_should_poll = <span class="self">self</span>.should_poll;
         <span class="kw">let </span>stored_control_flow = RefCell::new(ControlFlow::Poll);
 
-        <span class="comment">// #[cfg(all(not(target_arch = "wasm32"), feature = "accesskit"))]
+        <span class="comment">// #[cfg(feature = "accesskit")]
         // cx.process_tree_updates(|tree_updates| {
         //     for update in tree_updates.iter_mut() {
         //         accesskit.update_if_active(|| update.take().unwrap());
@@ -1076,7 +1042,7 @@
                             cx.send_event(event);
                         }
 
-                        <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+                        <span class="attr">#[cfg(feature = <span class="string">"accesskit"</span>)]
                         </span>UserEvent::AccessKitActionRequest(action_request_event) =&gt; {
                             <span class="kw">let </span>node_id = action_request_event.request.target;
 
@@ -1129,7 +1095,7 @@
 
                         cx.process_visual_updates();
 
-                        <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+                        <span class="attr">#[cfg(feature = <span class="string">"accesskit"</span>)]
                         </span>cx.process_tree_updates(|tree_updates| {
                             <span class="kw">for </span>update <span class="kw">in </span>tree_updates.iter_mut() {
                                 accesskit.update_if_active(|| update.take().unwrap());
@@ -1162,7 +1128,7 @@
                     }
 
                     winit::event::Event::WindowEvent { window_id: <span class="kw">_</span>, event } =&gt; {
-                        <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+                        <span class="attr">#[cfg(feature = <span class="string">"accesskit"</span>)]
                         </span>cx.mutate_window(|<span class="kw">_</span>, window: <span class="kw-2">&amp;</span>Window| {
                             accesskit.process_event(window.window(), <span class="kw-2">&amp;</span>event);
                         });
@@ -1196,7 +1162,7 @@
 
                             winit::event::WindowEvent::Focused(is_focused) =&gt; {
                                 cx.<span class="number">0</span>.window_has_focus = is_focused;
-                                <span class="attr">#[cfg(all(not(target_arch = <span class="string">"wasm32"</span>), feature = <span class="string">"accesskit"</span>))]
+                                <span class="attr">#[cfg(feature = <span class="string">"accesskit"</span>)]
                                 </span>accesskit.update_if_active(|| TreeUpdate {
                                     nodes: <span class="macro">vec!</span>[],
                                     tree: <span class="prelude-val">None</span>,
@@ -1354,10 +1320,7 @@
 
                                     cx.process_visual_updates();
 
-                                    <span class="attr">#[cfg(all(
-                                        not(target_arch = <span class="string">"wasm32"</span>),
-                                        feature = <span class="string">"accesskit"
-                                    </span>))]
+                                    <span class="attr">#[cfg(feature = <span class="string">"accesskit"</span>)]
                                     </span>cx.process_tree_updates(|tree_updates| {
                                         <span class="kw">for </span>update <span class="kw">in </span>tree_updates.iter_mut() {
                                             accesskit.update_if_active(|| update.take().unwrap());
@@ -1529,13 +1492,6 @@
         <span class="self">self</span>.window_description.icon = <span class="prelude-val">Some</span>(image);
         <span class="self">self</span>.window_description.icon_width = width;
         <span class="self">self</span>.window_description.icon_height = height;
-
-        <span class="self">self
-    </span>}
-
-    <span class="attr">#[cfg(target_arch = <span class="string">"wasm32"</span>)]
-    </span><span class="kw">fn </span>canvas(<span class="kw-2">mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.window_description.target_canvas = <span class="prelude-val">Some</span>(canvas.to_owned());
 
         <span class="self">self
     </span>}

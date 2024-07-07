@@ -305,8 +305,6 @@
 <a href="#305" id="305">305</a>
 <a href="#306" id="306">306</a>
 <a href="#307" id="307">307</a>
-<a href="#308" id="308">308</a>
-<a href="#309" id="309">309</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::application::UserEvent;
 <span class="kw">use </span>std::num::NonZeroU32;
 
@@ -327,12 +325,11 @@
 
 <span class="kw">use </span>vizia_core::backend::<span class="kw-2">*</span>;
 <span class="kw">use </span>vizia_core::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>winit::dpi::<span class="kw-2">*</span>;
 <span class="kw">use </span>winit::event_loop::EventLoop;
 <span class="kw">use </span>winit::window::{CursorGrabMode, WindowBuilder, WindowLevel};
-<span class="kw">use </span>winit::{dpi::<span class="kw-2">*</span>, window::WindowId};
 
 <span class="kw">pub struct </span>Window {
-    <span class="kw">pub </span>id: WindowId,
     context: glutin::context::PossiblyCurrentContext,
     surface: glutin::surface::Surface&lt;glutin::surface::WindowSurface&gt;,
     window: winit::window::Window,
@@ -459,8 +456,7 @@
         canvas.clear_rect(<span class="number">0</span>, <span class="number">0</span>, size.width, size.height, Color::rgb(<span class="number">255</span>, <span class="number">80</span>, <span class="number">80</span>));
 
         <span class="comment">// Build our window
-        </span><span class="kw">let </span>win =
-            Window { id: window.id(), context: gl_context, surface, window, should_close: <span class="bool-val">false </span>};
+        </span><span class="kw">let </span>win = Window { context: gl_context, surface, window, should_close: <span class="bool-val">false </span>};
 
         (win, canvas)
     }

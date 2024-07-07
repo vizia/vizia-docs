@@ -745,14 +745,6 @@
 <a href="#745" id="745">745</a>
 <a href="#746" id="746">746</a>
 <a href="#747" id="747">747</a>
-<a href="#748" id="748">748</a>
-<a href="#749" id="749">749</a>
-<a href="#750" id="750">750</a>
-<a href="#751" id="751">751</a>
-<a href="#752" id="752">752</a>
-<a href="#753" id="753">753</a>
-<a href="#754" id="754">754</a>
-<a href="#755" id="755">755</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{events::ViewHandler, prelude::<span class="kw-2">*</span>};
 <span class="kw">use </span>hashbrown::HashMap;
 <span class="kw">use </span>vizia_storage::TreeBreadthIterator;
@@ -1372,17 +1364,9 @@
 }
 
 <span class="kw">fn </span>has_same_selector(cx: <span class="kw-2">&amp;</span>Context, entity1: Entity, entity2: Entity) -&gt; bool {
-    <span class="kw">let </span>element1 = <span class="kw">if let </span><span class="prelude-val">Some</span>(element1) = cx.views.get(<span class="kw-2">&amp;</span>entity1).and_then(|view| view.element()) {
-        element1
-    } <span class="kw">else </span>{
-        <span class="string">""
-    </span>};
+    <span class="kw">let </span>element1 = cx.views.get(<span class="kw-2">&amp;</span>entity1).and_then(|view| view.element()).unwrap_or_default();
 
-    <span class="kw">let </span>element2 = <span class="kw">if let </span><span class="prelude-val">Some</span>(element2) = cx.views.get(<span class="kw-2">&amp;</span>entity2).and_then(|view| view.element()) {
-        element2
-    } <span class="kw">else </span>{
-        <span class="string">""
-    </span>};
+    <span class="kw">let </span>element2 = cx.views.get(<span class="kw-2">&amp;</span>entity2).and_then(|view| view.element()).unwrap_or_default();
 
     <span class="kw">if </span>element1 != element2 {
         <span class="kw">return </span><span class="bool-val">false</span>;

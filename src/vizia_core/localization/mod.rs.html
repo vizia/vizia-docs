@@ -348,6 +348,8 @@
 <a href="#348" id="348">348</a>
 <a href="#349" id="349">349</a>
 <a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Provides types for adapting an application to a particular language or regional peculiarities.
 //!
 //! # Language Translation
@@ -590,7 +592,7 @@
     </span>}
 }
 
-<span class="kw">impl </span>Res&lt;String&gt; <span class="kw">for </span>Localized {
+<span class="kw">impl </span>ResGet&lt;String&gt; <span class="kw">for </span>Localized {
     <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, String&gt;&gt; {
         <span class="prelude-val">Some</span>(LensValue::Owned(<span class="self">self</span>.get(cx)))
     }
@@ -621,7 +623,9 @@
             <span class="macro">format!</span>(<span class="string">"{} {{ERROR: {:?}}}"</span>, res, err)
         }
     }
+}
 
+<span class="kw">impl </span>Res&lt;String&gt; <span class="kw">for </span>Localized {
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Localized),

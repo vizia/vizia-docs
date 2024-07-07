@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["LensValue"],"struct":["AndLens","Binding","Index","IntoLens","Map","MapRef","MapRefState","MapState","OrLens","RatioLens","StaticLens","Then","UnwrapLens","Wrapper"],"trait":["Data","Lens","LensExt","Res"]};
+window.SIDEBAR_ITEMS = {"enum":["LensValue"],"struct":["AndLens","Binding","Index","IntoLens","Map","MapRef","MapRefState","MapState","OrLens","RatioLens","StaticLens","Then","UnwrapLens","Wrapper"],"trait":["Data","Lens","LensExt","Res","ResGet"]};

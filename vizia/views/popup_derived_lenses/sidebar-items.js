@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["arrow_size","placement","root","show_arrow"]};
+window.SIDEBAR_ITEMS = {"struct":["arrow_size","placement","root","should_reposition","show_arrow"]};

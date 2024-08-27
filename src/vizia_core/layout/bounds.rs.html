@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/layout/bounds.rs`."><title>bounds.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0 (129f3b996 2024-06-10)" data-channel="1.79.0" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../vizia_core/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/layout/bounds.rs`."><title>bounds.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -344,9 +344,51 @@
 <a href="#344" id="344">344</a>
 <a href="#345" id="345">345</a>
 <a href="#346" id="346">346</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>femtovg::Transform2D;
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
+<a href="#355" id="355">355</a>
+<a href="#356" id="356">356</a>
+<a href="#357" id="357">357</a>
+<a href="#358" id="358">358</a>
+<a href="#359" id="359">359</a>
+<a href="#360" id="360">360</a>
+<a href="#361" id="361">361</a>
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
+<a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::Rect;
 
-<span class="doccomment">/// Represents the axis-aligned bounding box of a view.
+<span class="doccomment">/// Represents an axis-aligned bounding box.
 </span><span class="attr">#[derive(Clone, Copy, Debug, PartialEq)]
 </span><span class="kw">pub struct </span>BoundingBox {
     <span class="kw">pub </span>x: f32,
@@ -363,7 +405,7 @@
 
 <span class="kw">impl </span>Default <span class="kw">for </span>BoundingBox {
     <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{ x: <span class="number">0.0</span>, y: <span class="number">0.0</span>, w: f32::MAX, h: f32::MAX }
+        <span class="self">Self </span>{ x: <span class="number">0.0</span>, y: <span class="number">0.0</span>, w: <span class="number">0.0</span>, h: <span class="number">0.0 </span>}
     }
 }
 
@@ -443,25 +485,25 @@
     <span class="doccomment">/// Bottom left point of bounds.
     </span><span class="attr">#[inline(always)]
     </span><span class="kw">pub fn </span>bottom_left(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (f32, f32) {
-        (<span class="self">self</span>.bottom(), <span class="self">self</span>.left())
+        (<span class="self">self</span>.left(), <span class="self">self</span>.bottom())
     }
 
     <span class="doccomment">/// Bottom right point of bounds.
     </span><span class="attr">#[inline(always)]
     </span><span class="kw">pub fn </span>bottom_right(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (f32, f32) {
-        (<span class="self">self</span>.bottom(), <span class="self">self</span>.right())
+        (<span class="self">self</span>.right(), <span class="self">self</span>.bottom())
     }
 
     <span class="doccomment">/// Top left point of bounds.
     </span><span class="attr">#[inline(always)]
     </span><span class="kw">pub fn </span>top_left(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (f32, f32) {
-        (<span class="self">self</span>.top(), <span class="self">self</span>.left())
+        (<span class="self">self</span>.left(), <span class="self">self</span>.top())
     }
 
     <span class="doccomment">/// Top right point of bounds.
     </span><span class="attr">#[inline(always)]
     </span><span class="kw">pub fn </span>top_right(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (f32, f32) {
-        (<span class="self">self</span>.top(), <span class="self">self</span>.right())
+        (<span class="self">self</span>.right(), <span class="self">self</span>.top())
     }
 
     <span class="doccomment">/// Shrinks by some `amount` in both directions and returns a new [`BoundingBox`].
@@ -510,6 +552,24 @@
         )
     }
 
+    <span class="kw">pub fn </span>expand_sides(<span class="kw-2">&amp;</span><span class="self">self</span>, left: f32, top: f32, right: f32, bottom: f32) -&gt; BoundingBox {
+        BoundingBox::from_min_max(
+            <span class="self">self</span>.left() - left,
+            <span class="self">self</span>.top() - top,
+            <span class="self">self</span>.right() + right,
+            <span class="self">self</span>.bottom() + bottom,
+        )
+    }
+
+    <span class="kw">pub fn </span>offset(<span class="kw-2">&amp;</span><span class="self">self</span>, x: f32, y: f32) -&gt; BoundingBox {
+        BoundingBox::from_min_max(
+            <span class="self">self</span>.left() + x,
+            <span class="self">self</span>.top() + y,
+            <span class="self">self</span>.right() + x,
+            <span class="self">self</span>.bottom() + y,
+        )
+    }
+
     <span class="doccomment">/// Expands by some `amount` in both directions and returns a new [`BoundingBox`].
     </span><span class="attr">#[inline(always)]
     #[must_use]
@@ -554,6 +614,14 @@
         BoundingBox::from_min_max(left, top, right, bottom)
     }
 
+    <span class="kw">pub fn </span>union(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>left = <span class="self">self</span>.left().min(other.left());
+        <span class="kw">let </span>right = <span class="self">self</span>.right().max(other.right());
+        <span class="kw">let </span>top = <span class="self">self</span>.top().min(other.top());
+        <span class="kw">let </span>bottom = <span class="self">self</span>.bottom().max(other.bottom());
+        BoundingBox::from_min_max(left, top, right, bottom)
+    }
+
     <span class="kw">pub fn </span>intersects(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
         <span class="kw">let </span>x_hit = (<span class="self">self</span>.x &gt;= other.x &amp;&amp; <span class="self">self</span>.x &lt; other.x + other.w)
             || (other.x &gt;= <span class="self">self</span>.x &amp;&amp; other.x &lt; <span class="self">self</span>.x + <span class="self">self</span>.w);
@@ -574,10 +642,26 @@
         x_hit &amp;&amp; y_hit
     }
 
-    <span class="kw">pub fn </span>transform(<span class="kw-2">&amp;</span><span class="self">self</span>, transform: <span class="kw-2">&amp;</span>Transform2D) -&gt; <span class="self">Self </span>{
-        <span class="kw">let </span>(tl, tt) = transform.transform_point(<span class="self">self</span>.x, <span class="self">self</span>.y);
-        <span class="kw">let </span>(tr, tb) = transform.transform_point(<span class="self">self</span>.right(), <span class="self">self</span>.bottom());
-        BoundingBox::from_min_max(tl, tt, tr, tb)
+    <span class="kw">pub fn </span>diagonal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        (<span class="self">self</span>.width() * <span class="self">self</span>.width() + <span class="self">self</span>.height() * <span class="self">self</span>.height()).sqrt()
+    }
+
+    <span class="comment">// pub fn transform(&amp;self, transform: &amp;Transform2D) -&gt; Self {
+    //     let (tl, tt) = transform.transform_point(self.x, self.y);
+    //     let (tr, tb) = transform.transform_point(self.right(), self.bottom());
+    //     BoundingBox::from_min_max(tl, tt, tr, tb)
+    // }
+</span>}
+
+<span class="kw">impl </span>From&lt;BoundingBox&gt; <span class="kw">for </span>skia_safe::Rect {
+    <span class="kw">fn </span>from(bb: BoundingBox) -&gt; <span class="self">Self </span>{
+        skia_safe::Rect { left: bb.left(), top: bb.top(), right: bb.right(), bottom: bb.bottom() }
+    }
+}
+
+<span class="kw">impl </span>From&lt;skia_safe::Rect&gt; <span class="kw">for </span>BoundingBox {
+    <span class="kw">fn </span>from(bb: Rect) -&gt; <span class="self">Self </span>{
+        BoundingBox { x: bb.left(), y: bb.top(), w: bb.width(), h: bb.height() }
     }
 }
 

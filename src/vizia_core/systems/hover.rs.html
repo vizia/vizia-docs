@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/hover.rs`."><title>hover.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0 (129f3b996 2024-06-10)" data-channel="1.79.0" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../vizia_core/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/hover.rs`."><title>hover.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -216,16 +216,24 @@
 <a href="#216" id="216">216</a>
 <a href="#217" id="217">217</a>
 <a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{cmp::Ordering, collections::BinaryHeap};
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span>femtovg::Transform2D;
 <span class="kw">use </span>log::debug;
-<span class="kw">use </span>vizia_storage::{LayoutChildIterator, LayoutParentIterator};
+<span class="kw">use </span>skia_safe::Matrix;
+<span class="kw">use </span>vizia_storage::{DrawChildIterator, LayoutParentIterator};
 
 <span class="comment">// Determines the hovered entity based on the mouse cursor position.
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>hover_system(cx: <span class="kw-2">&amp;mut </span>Context) {
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get(Entity::root()) {
+</span><span class="kw">pub fn </span>hover_system(cx: <span class="kw-2">&amp;mut </span>Context, window_entity: Entity) {
+    cx.current = window_entity;
+
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get(window_entity) {
         <span class="kw">if </span>!pseudo_classes.contains(PseudoClassFlags::OVER) {
             <span class="kw">return</span>;
         }
@@ -233,11 +241,11 @@
 
     <span class="kw">let </span><span class="kw-2">mut </span>queue = BinaryHeap::new();
     <span class="kw">let </span>pointer_events: bool =
-        cx.style.pointer_events.get(Entity::root()).copied().unwrap_or_default().into();
-    queue.push(ZEntity { index: <span class="number">0</span>, pointer_events, entity: Entity::root() });
-    <span class="kw">let </span><span class="kw-2">mut </span>hovered = Entity::root();
-    <span class="kw">let </span>transform = Transform2D::identity();
-    <span class="comment">// let clip_bounds = cx.cache.get_bounds(Entity::root());
+        cx.style.pointer_events.get(window_entity).copied().unwrap_or_default().into();
+    queue.push(ZEntity { index: <span class="number">0</span>, pointer_events, entity: window_entity });
+    <span class="kw">let </span><span class="kw-2">mut </span>hovered = window_entity;
+    <span class="kw">let </span>transform = Matrix::new_identity();
+    <span class="comment">// let clip_bounds = cx.cache.get_bounds(window_entity);
     </span><span class="kw">let </span>clip_bounds: BoundingBox =
         BoundingBox { x: -f32::MAX / <span class="number">2.0</span>, y: -f32::MAX / <span class="number">2.0</span>, w: f32::MAX, h: f32::MAX };
     <span class="kw">while </span>!queue.is_empty() {
@@ -256,7 +264,7 @@
     }
 
     <span class="comment">// Set hover state for hovered view and ancestors
-    </span><span class="kw">let </span>parent_iter = LayoutParentIterator::new(<span class="kw-2">&amp;</span>cx.tree, <span class="prelude-val">Some</span>(hovered));
+    </span><span class="kw">let </span>parent_iter = LayoutParentIterator::new(<span class="kw-2">&amp;</span>cx.tree, hovered);
     <span class="kw">for </span>ancestor <span class="kw">in </span>parent_iter {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(ancestor) {
             <span class="kw">if </span>pseudo_classes.contains(PseudoClassFlags::OVER)
@@ -281,8 +289,8 @@
         );
 
         <span class="kw">let </span>cursor = cx.style.cursor.get(hovered).cloned().unwrap_or_default();
-        <span class="comment">// TODO: Decide if not changing the cursor when the view is disabled is the correct thing to do
-        </span><span class="kw">if </span>!cx.cursor_icon_locked &amp;&amp; !cx.style.disabled.get(hovered).cloned().unwrap_or_default() {
+
+        <span class="kw">if </span>!cx.cursor_icon_locked {
             cx.emit(WindowEvent::SetCursor(cursor));
         }
 
@@ -294,9 +302,10 @@
         </span>cx.event_queue.push_back(Event::new(WindowEvent::MouseOver).target(hovered));
         cx.event_queue.push_back(Event::new(WindowEvent::MouseOut).target(cx.hovered));
 
-        cx.hovered = hovered;
+        cx.style.needs_restyle(cx.hovered);
+        cx.style.needs_restyle(hovered);
 
-        cx.style.needs_restyle();
+        cx.hovered = hovered;
     }
 }
 
@@ -306,7 +315,7 @@
     parent_pointer_events: bool,
     queue: <span class="kw-2">&amp;mut </span>BinaryHeap&lt;ZEntity&gt;,
     hovered: <span class="kw-2">&amp;mut </span>Entity,
-    parent_transform: Transform2D,
+    parent_transform: Matrix,
     clip_bounds: <span class="kw-2">&amp;</span>BoundingBox,
 ) {
     <span class="comment">// Skip if non-hoverable (will skip any descendants)
@@ -323,7 +332,9 @@
 
     <span class="comment">// Skip if not displayed.
     // TODO: Should this skip descendants? Probably not...?
-    </span><span class="kw">if </span>cx.style.display.get(cx.current).copied().unwrap_or_default() == Display::None {
+    </span><span class="kw">if </span>cx.style.display.get(cx.current).copied().unwrap_or_default() == Display::None
+        &amp;&amp; !cx.style.text_span.get(cx.current).copied().unwrap_or_default()
+    {
         <span class="kw">return</span>;
     }
 
@@ -333,7 +344,7 @@
         .get(cx.current)
         .copied()
         .map(|pointer_events| <span class="kw">match </span>pointer_events {
-            PointerEvents::Auto =&gt; parent_pointer_events,
+            PointerEvents::Auto =&gt; <span class="bool-val">true</span>,
             PointerEvents::None =&gt; <span class="bool-val">false</span>,
         })
         .unwrap_or(parent_pointer_events);
@@ -347,26 +358,27 @@
 
     <span class="kw">let </span>bounds = cx.bounds();
 
-    <span class="kw">let </span>cursorx = cx.mouse.cursorx;
-    <span class="kw">let </span>cursory = cx.mouse.cursory;
+    <span class="kw">let </span>cursor_x = cx.mouse.cursor_x;
+    <span class="kw">let </span>cursor_y = cx.mouse.cursor_y;
 
-    <span class="kw">if </span>cursorx &lt; <span class="number">0.0 </span>|| cursory &lt; <span class="number">0.0 </span>{
+    <span class="kw">if </span>cursor_x &lt; <span class="number">0.0 </span>|| cursor_y &lt; <span class="number">0.0 </span>{
         <span class="kw">return</span>;
     }
 
     <span class="kw">let </span><span class="kw-2">mut </span>transform = parent_transform;
 
-    transform.premultiply(<span class="kw-2">&amp;</span>cx.transform());
+    transform = cx.transform() * transform;
 
-    <span class="kw">let </span><span class="kw-2">mut </span>t = transform;
-    t.inverse();
-    <span class="kw">let </span>(tx, ty) = t.transform_point(cursorx, cursory);
-
+    <span class="kw">let </span>t = transform.invert().unwrap();
+    <span class="kw">let </span>t = t.map_point((cursor_x, cursor_y));
+    <span class="kw">let </span>tx = t.x;
+    <span class="kw">let </span>ty = t.y;
     <span class="kw">let </span>clipping = clip_bounds.intersection(<span class="kw-2">&amp;</span>cx.clip_region());
 
     <span class="kw">let </span>b = bounds.intersection(<span class="kw-2">&amp;</span>clipping);
+    <span class="comment">// let b = bounds;
 
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(cx.current) {
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(cx.current) {
         pseudo_classes.set(PseudoClassFlags::HOVER, <span class="bool-val">false</span>);
     }
 
@@ -404,7 +416,7 @@
         }
     }
 
-    <span class="kw">let </span>child_iter = LayoutChildIterator::new(cx.tree, cx.current);
+    <span class="kw">let </span>child_iter = DrawChildIterator::new(cx.tree, cx.current);
     <span class="kw">for </span>child <span class="kw">in </span>child_iter {
         cx.current = child;
         hover_entity(cx, current_z, pointer_events, queue, hovered, transform, <span class="kw-2">&amp;</span>clipping);

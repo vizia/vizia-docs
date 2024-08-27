@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["Handle"],"trait":["View"],"type":["Canvas"]};
+window.SIDEBAR_ITEMS = {"struct":["Handle"],"trait":["View"]};

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/layout.rs`."><title>layout.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0 (129f3b996 2024-06-10)" data-channel="1.79.0" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../vizia_core/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/layout.rs`."><title>layout.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -156,41 +156,13 @@
 <a href="#156" id="156">156</a>
 <a href="#157" id="157">157</a>
 <a href="#158" id="158">158</a>
-<a href="#159" id="159">159</a>
-<a href="#160" id="160">160</a>
-<a href="#161" id="161">161</a>
-<a href="#162" id="162">162</a>
-<a href="#163" id="163">163</a>
-<a href="#164" id="164">164</a>
-<a href="#165" id="165">165</a>
-<a href="#166" id="166">166</a>
-<a href="#167" id="167">167</a>
-<a href="#168" id="168">168</a>
-<a href="#169" id="169">169</a>
-<a href="#170" id="170">170</a>
-<a href="#171" id="171">171</a>
-<a href="#172" id="172">172</a>
-<a href="#173" id="173">173</a>
-<a href="#174" id="174">174</a>
-<a href="#175" id="175">175</a>
-<a href="#176" id="176">176</a>
-<a href="#177" id="177">177</a>
-<a href="#178" id="178">178</a>
-<a href="#179" id="179">179</a>
-<a href="#180" id="180">180</a>
-<a href="#181" id="181">181</a>
-<a href="#182" id="182">182</a>
-<a href="#183" id="183">183</a>
-<a href="#184" id="184">184</a>
-<a href="#185" id="185">185</a>
-<a href="#186" id="186">186</a>
-<a href="#187" id="187">187</a>
-<a href="#188" id="188">188</a>
-<a href="#189" id="189">189</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>morphorm::Node;
+<span class="kw">use </span>vizia_storage::LayoutTreeIterator;
 
 <span class="kw">use </span><span class="kw">crate</span>::layout::node::SubLayout;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+
+<span class="kw">use super</span>::{text_layout_system, text_system};
 
 <span class="doccomment">/// Determines the size and position of views.
 /// TODO: Currently relayout is done on an entire tree rather than incrementally.
@@ -198,6 +170,8 @@
 /// and when a node undergoes relayout remove the descendants that have been processed from the list,
 /// then continue relayout on the remaining nodes in the list.
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>layout_system(cx: <span class="kw-2">&amp;mut </span>Context) {
+    text_system(cx);
+
     <span class="kw">if </span>cx.style.system_flags.contains(SystemFlags::RELAYOUT) {
         <span class="comment">// Perform layout on the whole tree.
         </span>Entity::root().layout(
@@ -210,104 +184,66 @@
             },
         );
 
-        <span class="comment">// If layout has changed then redraw
-        </span>cx.style.system_flags.set(SystemFlags::REDRAW, <span class="bool-val">true</span>);
-
         <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new(cx);
 
-        <span class="kw">for </span>entity <span class="kw">in </span>cx.tree.into_iter() {
+        <span class="kw">let </span>iter = LayoutTreeIterator::full(cx.tree);
+
+        <span class="kw">for </span>entity <span class="kw">in </span>iter {
             cx.current = entity;
-            <span class="kw">if </span>cx.text_context.has_buffer(entity) {
-                <span class="kw">let </span>auto_width = cx.style.width.get(entity).copied().unwrap_or_default().is_auto();
-                <span class="kw">let </span>auto_height =
-                    cx.style.height.get(entity).copied().unwrap_or_default().is_auto();
-                <span class="kw">if </span>!auto_width &amp;&amp; !auto_height {
-                    <span class="kw">let </span>width = cx.cache.bounds.get(entity).unwrap().w;
-                    <span class="kw">let </span>child_left = cx
-                        .style
-                        .child_left
-                        .get(entity)
-                        .cloned()
-                        .unwrap_or_default()
-                        .to_px(width, <span class="number">0.0</span>)
-                        * cx.scale_factor();
-                    <span class="kw">let </span>child_right = cx
-                        .style
-                        .child_right
-                        .get(entity)
-                        .cloned()
-                        .unwrap_or_default()
-                        .to_px(width, <span class="number">0.0</span>)
-                        * cx.scale_factor();
-                    <span class="kw">let </span>border_width = cx
-                        .style
-                        .border_width
-                        .get(entity)
-                        .cloned()
-                        .unwrap_or_default()
-                        .to_pixels(width, cx.scale_factor());
-                    <span class="kw">let </span>width = width.ceil() - child_left - child_right - <span class="number">2.0 </span>* border_width;
-                    cx.text_context.sync_styles(entity, cx.style);
-                    <span class="kw">let </span>(text_width, text_height) =
-                        cx.text_context.with_buffer(entity, |fs, buf| {
-                            buf.set_size(fs, width, f32::MAX);
-                            <span class="kw">let </span>w = buf
-                                .layout_runs()
-                                .filter_map(|r| (!r.line_w.is_nan()).then_some(r.line_w))
-                                .max_by(|f1, f2| f1.partial_cmp(f2).unwrap())
-                                .unwrap_or_default();
-                            <span class="kw">let </span>h = buf.layout_runs().len() <span class="kw">as </span>f32 * buf.metrics().line_height;
-                            (w, h)
-                        });
-                    cx.text_context.set_bounds(
-                        entity,
-                        BoundingBox { w: text_width, h: text_height, ..Default::default() },
-                    )
-                } <span class="kw">else </span>{
-                    <span class="kw">let </span>width = cx.cache.bounds.get(entity).unwrap().w;
-                    <span class="kw">let </span>child_left = cx
-                        .style
-                        .child_left
-                        .get(entity)
-                        .cloned()
-                        .unwrap_or_default()
-                        .to_px(width, <span class="number">0.0</span>)
-                        * cx.scale_factor();
-                    <span class="kw">let </span>child_right = cx
-                        .style
-                        .child_right
-                        .get(entity)
-                        .cloned()
-                        .unwrap_or_default()
-                        .to_px(width, <span class="number">0.0</span>)
-                        * cx.scale_factor();
-                    <span class="kw">let </span>border_width = cx
-                        .style
-                        .border_width
-                        .get(entity)
-                        .cloned()
-                        .unwrap_or_default()
-                        .to_pixels(width, cx.scale_factor());
-                    <span class="kw">let </span>width = width.ceil() - child_left - child_right - <span class="number">2.0 </span>* border_width;
-
-                    cx.text_context.with_buffer(entity, |fs, buffer| {
-                        buffer.set_size(fs, width, f32::MAX);
-                    })
-                }
+            <span class="kw">if </span>cx.style.display.get(entity).copied().unwrap_or_default() == Display::None {
+                <span class="kw">continue</span>;
             }
-
             <span class="comment">// Morphorm produces relative positions so convert to absolute.
             </span><span class="kw">if let </span><span class="prelude-val">Some</span>(parent) = cx.tree.get_layout_parent(entity) {
                 <span class="kw">let </span>parent_bounds = cx.cache.get_bounds(parent);
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(bounds) = cx.cache.bounds.get_mut(entity) {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(relative_position) = cx.cache.relative_position.get(entity) {
-                        bounds.x = relative_position.x + parent_bounds.x;
-                        bounds.y = relative_position.y + parent_bounds.y;
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(relative_bounds) = cx.cache.relative_bounds.get(entity) {
+                        <span class="kw">let </span>x = relative_bounds.x + parent_bounds.x;
+                        <span class="kw">let </span>y = relative_bounds.y + parent_bounds.y;
+                        <span class="kw">let </span>w = relative_bounds.w;
+                        <span class="kw">let </span>h = relative_bounds.h;
+
+                        <span class="kw">let </span><span class="kw-2">mut </span>geo_changed = GeoChanged::empty();
+
+                        <span class="kw">if </span>x != bounds.x {
+                            geo_changed.set(GeoChanged::POSX_CHANGED, <span class="bool-val">true</span>);
+                        }
+
+                        <span class="kw">if </span>y != bounds.y {
+                            geo_changed.set(GeoChanged::POSY_CHANGED, <span class="bool-val">true</span>);
+                        }
+
+                        <span class="kw">if </span>w != bounds.w {
+                            geo_changed.set(GeoChanged::WIDTH_CHANGED, <span class="bool-val">true</span>);
+                        }
+
+                        <span class="kw">if </span>h != bounds.h {
+                            geo_changed.set(GeoChanged::HEIGHT_CHANGED, <span class="bool-val">true</span>);
+                        }
+
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(geo) = cx.cache.geo_changed.get_mut(entity) {
+                            <span class="kw-2">*</span>geo = geo_changed;
+                        }
+
+                        <span class="kw">let </span>new_bounds = BoundingBox { x, y, w, h };
+
+                        <span class="comment">// if new_bounds != *bounds &amp;&amp; *bounds != BoundingBox::default() {
+                        //     cx.needs_redraw();
+                        // }
+
+                        </span><span class="kw-2">*</span>bounds = new_bounds;
                     }
                 }
             }
 
             <span class="kw">if let </span><span class="prelude-val">Some</span>(geo) = cx.cache.geo_changed.get(entity).copied() {
+                <span class="kw">if </span>!geo.is_empty()
+                <span class="comment">// &amp;&amp; cx.style.text.get(entity).is_some()
+                </span>{
+                    cx.needs_redraw();
+                    cx.style.needs_text_layout(entity);
+                }
+
                 <span class="comment">// TODO: Use geo changed to determine whether an entity needs to be redrawn.
 
                 </span><span class="kw">if </span>!geo.is_empty() {
@@ -327,7 +263,7 @@
         <span class="comment">// A relayout, retransform, or reclip, can cause the element under the cursor to change. So we push a mouse move event here to force
         // a new event cycle and the hover system to trigger.
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(proxy) = <span class="kw-2">&amp;</span>cx.event_proxy {
-            <span class="kw">let </span>event = Event::new(WindowEvent::MouseMove(f32::NAN, f32::NAN))
+            <span class="kw">let </span>event = Event::new(WindowEvent::MouseMove(cx.mouse.cursor_x, cx.mouse.cursor_y))
                 .target(Entity::root())
                 .origin(Entity::root())
                 .propagate(Propagation::Up);
@@ -337,6 +273,8 @@
 
         cx.style.system_flags.set(SystemFlags::RELAYOUT, <span class="bool-val">false</span>);
     }
+
+    text_layout_system(cx);
 }
 
 <span class="kw">fn </span>visit_entity(cx: <span class="kw-2">&amp;mut </span>EventContext, entity: Entity, event: <span class="kw-2">&amp;mut </span>Event) {

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["DropData","WindowEvent"],"trait":["WindowModifiers"]};
+window.SIDEBAR_ITEMS = {"enum":["DropData","WindowEvent"]};

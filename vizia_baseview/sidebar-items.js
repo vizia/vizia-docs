@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["ApplicationError","WindowScalePolicy"],"struct":["Application","ParentWindow"]};
+window.SIDEBAR_ITEMS = {"enum":["ApplicationError","WindowScalePolicy"],"struct":["Application","ParentWindow","WindowHandle"]};

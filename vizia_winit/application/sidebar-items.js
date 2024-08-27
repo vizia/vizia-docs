@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["ApplicationError","UserEvent"],"struct":["Application","WinitEventProxy"]};
+window.SIDEBAR_ITEMS = {"enum":["ApplicationError","UserEvent"],"fn":["load_default_cursors"],"struct":["Application","WinitEventProxy"]};

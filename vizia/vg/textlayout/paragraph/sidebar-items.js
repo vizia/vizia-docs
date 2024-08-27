@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["FontInfo","GlyphClusterInfo","GlyphInfo","VisitorFlags"],"type":["ExtendedVisitorInfo","Paragraph","VisitorInfo"]};

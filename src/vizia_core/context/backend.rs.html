@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/backend.rs`."><title>backend.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0 (129f3b996 2024-06-10)" data-channel="1.79.0" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../vizia_core/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/backend.rs`."><title>backend.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -293,58 +293,38 @@
 <a href="#293" id="293">293</a>
 <a href="#294" id="294">294</a>
 <a href="#295" id="295">295</a>
-<a href="#296" id="296">296</a>
-<a href="#297" id="297">297</a>
-<a href="#298" id="298">298</a>
-<a href="#299" id="299">299</a>
-<a href="#300" id="300">300</a>
-<a href="#301" id="301">301</a>
-<a href="#302" id="302">302</a>
-<a href="#303" id="303">303</a>
-<a href="#304" id="304">304</a>
-<a href="#305" id="305">305</a>
-<a href="#306" id="306">306</a>
-<a href="#307" id="307">307</a>
-<a href="#308" id="308">308</a>
-<a href="#309" id="309">309</a>
-<a href="#310" id="310">310</a>
-<a href="#311" id="311">311</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 
-<span class="kw">use </span>femtovg::{renderer::OpenGl, Canvas};
-<span class="kw">use </span>vizia_window::WindowDescription;
+<span class="kw">use </span>skia_safe::Surface;
+<span class="kw">use </span>vizia_window::{WindowDescription, WindowPosition};
 
 <span class="kw">use </span><span class="kw">super</span>::EventProxy;
-<span class="kw">use </span><span class="kw">crate</span>::events::EventManager;
 <span class="kw">use crate</span>::{cache::CachedData, prelude::<span class="kw-2">*</span>, systems::<span class="kw-2">*</span>};
-
-<span class="kw">pub use </span><span class="kw">crate</span>::text::cosmic::TextConfig;
 
 <span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
 </span><span class="kw">use </span>copypasta::ClipboardProvider;
 
 <span class="doccomment">/// Context used to integrate vizia with windowing backends such as winit and baseview.
-</span><span class="kw">pub struct </span>BackendContext&lt;<span class="lifetime">'a</span>&gt;(<span class="kw">pub </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Context, <span class="prelude-ty">Option</span>&lt;EventManager&gt;);
+</span><span class="kw">pub struct </span>BackendContext(<span class="kw">pub </span>Context);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; BackendContext&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl </span>BackendContext {
     <span class="doccomment">/// Creates a new instance of a backend context.
-    </span><span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Context) -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>(cx, <span class="prelude-val">None</span>)
+    </span><span class="kw">pub fn </span>new(cx: Context) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(cx)
     }
 
-    <span class="doccomment">/// Creates a new instance of a backend context which includes an event manager.
-    </span><span class="kw">pub fn </span>new_with_event_manager(cx: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Context) -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>(cx, <span class="prelude-val">Some</span>(EventManager::new()))
-    }
-
-    <span class="doccomment">/// Helper function for mutating the state of the root window.
-    </span><span class="kw">pub fn </span>mutate_window&lt;W: Any, F: Fn(<span class="kw-2">&amp;mut </span>BackendContext, <span class="kw-2">&amp;</span>W)&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, f: F) {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(window_event_handler) = <span class="self">self</span>.<span class="number">0</span>.views.remove(<span class="kw-2">&amp;</span>Entity::root()) {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(window) = window_event_handler.downcast_ref::&lt;W&gt;() {
+    <span class="doccomment">/// Helper function for mutating the state of a window.
+    </span><span class="kw">pub fn </span>mutate_window&lt;W: Any, F: Fn(<span class="kw-2">&amp;mut </span>BackendContext, <span class="kw-2">&amp;mut </span>W)&gt;(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        window_entity: Entity,
+        f: F,
+    ) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>window_event_handler) = <span class="self">self</span>.<span class="number">0</span>.views.remove(<span class="kw-2">&amp;</span>window_entity) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(window) = window_event_handler.downcast_mut::&lt;W&gt;() {
                 f(<span class="self">self</span>, window);
             }
 
-            <span class="self">self</span>.<span class="number">0</span>.views.insert(Entity::root(), window_event_handler);
+            <span class="self">self</span>.<span class="number">0</span>.views.insert(window_entity, window_event_handler);
         }
     }
 
@@ -373,62 +353,43 @@
         <span class="self">self</span>.<span class="number">0</span>.focused
     }
 
-    <span class="doccomment">/// The window's size in logical pixels, before
-    /// [`user_scale_factor()`][Self::user_scale_factor()] gets applied to it. If this value changed
-    /// during a frame then the window will be resized and a [`WindowEvent::GeometryChanged`] will be
-    /// emitted.
-    </span><span class="kw">pub fn </span>window_size(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>WindowSize {
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.window_size
-    }
-
-    <span class="doccomment">/// A scale factor used for uniformly scaling the window independently of any HiDPI scaling.
-    /// `window_size` gets multplied with this factor to get the actual logical window size. If this
-    /// changes during a frame, then the window will be resized at the end of the frame and a
-    /// [`WindowEvent::GeometryChanged`] will be emitted. This can be initialized using
-    /// [`WindowDescription::user_scale_factor`][crate::WindowDescription::user_scale_factor].
-    </span><span class="kw">pub fn </span>user_scale_factor(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; f64 {
-        <span class="self">self</span>.<span class="number">0</span>.user_scale_factor
-    }
-
     <span class="kw">pub fn </span>add_main_window(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        window_entity: Entity,
         window_description: <span class="kw-2">&amp;</span>WindowDescription,
-        <span class="kw-2">mut </span>canvas: Canvas&lt;OpenGl&gt;,
         dpi_factor: f32,
     ) {
         <span class="kw">let </span>physical_width = window_description.inner_size.width <span class="kw">as </span>f32 * dpi_factor;
         <span class="kw">let </span>physical_height = window_description.inner_size.height <span class="kw">as </span>f32 * dpi_factor;
 
-        <span class="comment">// Scale factor is set to 1.0 here because scaling is applied prior to rendering
-        </span>canvas.set_size(physical_width <span class="kw">as </span>u32, physical_height <span class="kw">as </span>u32, <span class="number">1.0</span>);
-        canvas.clear_rect(
-            <span class="number">0</span>,
-            <span class="number">0</span>,
-            physical_width <span class="kw">as </span>u32,
-            physical_height <span class="kw">as </span>u32,
-            femtovg::Color::rgba(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),
-        );
-
         <span class="self">self</span>.<span class="number">0</span>.style.dpi_factor = dpi_factor <span class="kw">as </span>f64;
 
-        <span class="self">self</span>.<span class="number">0</span>.cache.set_width(Entity::root(), physical_width);
-        <span class="self">self</span>.<span class="number">0</span>.cache.set_height(Entity::root(), physical_height);
+        <span class="self">self</span>.<span class="number">0</span>.cache.set_width(window_entity, physical_width);
+        <span class="self">self</span>.<span class="number">0</span>.cache.set_height(window_entity, physical_height);
 
         <span class="self">self</span>.<span class="number">0
             </span>.style
             .width
-            .insert(Entity::root(), Units::Pixels(window_description.inner_size.width <span class="kw">as </span>f32));
+            .insert(window_entity, Units::Pixels(window_description.inner_size.width <span class="kw">as </span>f32));
         <span class="self">self</span>.<span class="number">0
             </span>.style
             .height
-            .insert(Entity::root(), Units::Pixels(window_description.inner_size.height <span class="kw">as </span>f32));
+            .insert(window_entity, Units::Pixels(window_description.inner_size.height <span class="kw">as </span>f32));
 
-        <span class="self">self</span>.<span class="number">0</span>.style.disabled.insert(Entity::root(), <span class="bool-val">false</span>);
+        <span class="self">self</span>.<span class="number">0</span>.style.disabled.insert(window_entity, <span class="bool-val">false</span>);
 
-        <span class="self">self</span>.<span class="number">0</span>.style.pseudo_classes.insert(Entity::root(), PseudoClassFlags::OVER);
-        <span class="self">self</span>.<span class="number">0</span>.style.restyle.insert(Entity::root()).unwrap();
-        <span class="self">self</span>.<span class="number">0</span>.style.reaccess.insert(Entity::root()).unwrap();
-        <span class="self">self</span>.<span class="number">0</span>.canvases.insert(Entity::root(), canvas);
+        <span class="self">self</span>.<span class="number">0</span>.style.pseudo_classes.insert(window_entity, PseudoClassFlags::OVER);
+        <span class="self">self</span>.<span class="number">0</span>.style.restyle.insert(window_entity).unwrap();
+        <span class="self">self</span>.<span class="number">0</span>.style.reaccess.insert(window_entity).unwrap();
+
+        <span class="self">self</span>.<span class="number">0</span>.style.position_type.insert(window_entity, PositionType::SelfDirected);
+
+        <span class="self">self</span>.<span class="number">0</span>.tree.set_window(window_entity, <span class="bool-val">true</span>);
+
+        <span class="kw">let </span>physical_x = window_description.position.unwrap_or_default().x <span class="kw">as </span>f32 * dpi_factor;
+        <span class="kw">let </span>physical_y = window_description.position.unwrap_or_default().y <span class="kw">as </span>f32 * dpi_factor;
+
+        <span class="self">self</span>.set_window_position(window_entity, physical_x, physical_y);
     }
 
     <span class="doccomment">/// Returns a reference to the [`Environment`] model.
@@ -438,12 +399,17 @@
 
     <span class="doccomment">/// Returns a mutable reference to the inner context.
     </span><span class="kw">pub fn </span>context(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Context {
-        <span class="self">self</span>.<span class="number">0
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0
     </span>}
 
     <span class="doccomment">/// Calls the draw system.
-    </span><span class="kw">pub fn </span>draw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        draw_system(<span class="self">self</span>.<span class="number">0</span>);
+    </span><span class="kw">pub fn </span>draw(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        window_entity: Entity,
+        surface: <span class="kw-2">&amp;mut </span>Surface,
+        dirty_surface: <span class="kw-2">&amp;mut </span>Surface,
+    ) {
+        draw_system(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>, window_entity, surface, dirty_surface);
     }
 
     <span class="doccomment">/// Set the current entity. This is useful in user code when you're performing black magic and
@@ -453,36 +419,44 @@
         <span class="self">self</span>.<span class="number">0</span>.current = e;
     }
 
-    <span class="doccomment">/// Sets the default text configuration to use for text rendering.
-    </span><span class="kw">pub fn </span>set_text_config(<span class="kw-2">&amp;mut </span><span class="self">self</span>, text_config: TextConfig) {
-        <span class="self">self</span>.<span class="number">0</span>.text_config = text_config;
-    }
-
     <span class="doccomment">/// Sets the scale factor used by the application.
     </span><span class="kw">pub fn </span>set_scale_factor(<span class="kw-2">&amp;mut </span><span class="self">self</span>, scale: f64) {
         <span class="self">self</span>.<span class="number">0</span>.style.dpi_factor = scale;
     }
 
-    <span class="doccomment">/// Sets the size of the root window.
-    </span><span class="kw">pub fn </span>set_window_size(<span class="kw-2">&amp;mut </span><span class="self">self</span>, physical_width: f32, physical_height: f32) {
+    <span class="doccomment">/// Sets the size of the window.
+    </span><span class="kw">pub fn </span>set_window_size(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        window_entity: Entity,
+        physical_width: f32,
+        physical_height: f32,
+    ) {
         <span class="self">self</span>.<span class="number">0</span>.cache.set_bounds(
-            Entity::root(),
+            window_entity,
             BoundingBox::from_min_max(<span class="number">0.0</span>, <span class="number">0.0</span>, physical_width, physical_height),
         );
 
         <span class="kw">let </span>logical_width = <span class="self">self</span>.<span class="number">0</span>.style.physical_to_logical(physical_width);
         <span class="kw">let </span>logical_height = <span class="self">self</span>.<span class="number">0</span>.style.physical_to_logical(physical_height);
-        <span class="self">self</span>.<span class="number">0</span>.window_size.width = logical_width.round() <span class="kw">as </span>u32;
-        <span class="self">self</span>.<span class="number">0</span>.window_size.height = logical_height.round() <span class="kw">as </span>u32;
-        <span class="self">self</span>.<span class="number">0</span>.style.width.insert(Entity::root(), Units::Pixels(logical_width));
-        <span class="self">self</span>.<span class="number">0</span>.style.height.insert(Entity::root(), Units::Pixels(logical_height));
+        <span class="self">self</span>.<span class="number">0</span>.style.width.insert(window_entity, Units::Pixels(logical_width));
+        <span class="self">self</span>.<span class="number">0</span>.style.height.insert(window_entity, Units::Pixels(logical_height));
+    }
+
+    <span class="kw">pub fn </span>set_window_position(<span class="kw-2">&amp;mut </span><span class="self">self</span>, window_entity: Entity, physical_x: f32, physical_y: f32) {
+        <span class="kw">let </span>logical_x = <span class="self">self</span>.<span class="number">0</span>.style.physical_to_logical(physical_x);
+        <span class="kw">let </span>logical_y = <span class="self">self</span>.<span class="number">0</span>.style.physical_to_logical(physical_y);
+
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(state) = <span class="self">self</span>.<span class="number">0</span>.windows.get_mut(<span class="kw-2">&amp;</span>window_entity) {
+            state.position =
+                WindowPosition::new(logical_x.round() <span class="kw">as </span>u32, logical_y.round() <span class="kw">as </span>u32);
+        }
     }
 
     <span class="doccomment">/// Temporarily sets the current entity, calls the provided closure, and then resets the current entity back to previous.
     </span><span class="kw">pub fn </span>with_current(<span class="kw-2">&amp;mut </span><span class="self">self</span>, e: Entity, f: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;mut </span>Context)) {
         <span class="kw">let </span>prev = <span class="self">self</span>.<span class="number">0</span>.current;
         <span class="self">self</span>.<span class="number">0</span>.current = e;
-        f(<span class="self">self</span>.<span class="number">0</span>);
+        f(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>);
         <span class="self">self</span>.<span class="number">0</span>.current = prev;
     }
 
@@ -527,25 +501,12 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>.style().accesskit_node_classes
     }
 
-    <span class="doccomment">/// Calls the event manager to process any queued events.
-    </span><span class="kw">pub fn </span>process_events(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(event_manager) = <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">1 </span>{
-            <span class="kw">while </span>event_manager.flush_events(<span class="self">self</span>.<span class="number">0</span>) {}
-        }
-    }
-
-    <span class="doccomment">/// For each binding or data observer, check if its data has changed, and if so, rerun its
-    /// builder/body.
-    </span><span class="kw">pub fn </span>process_data_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        binding_system(<span class="self">self</span>.<span class="number">0</span>);
-    }
-
     <span class="doccomment">/// Calls the accessibility system and updates the accesskit node tree.
     </span><span class="kw">pub fn </span>process_tree_updates(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         process: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>Vec&lt;<span class="prelude-ty">Option</span>&lt;accesskit::TreeUpdate&gt;&gt;),
     ) {
-        accessibility_system(<span class="self">self</span>.<span class="number">0</span>);
+        accessibility_system(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>);
 
         <span class="kw">if </span>!<span class="self">self</span>.<span class="number">0</span>.tree_updates.is_empty() {
             (process)(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.tree_updates)
@@ -558,26 +519,21 @@
 
     <span class="doccomment">/// Calls the style system to match entities with shared styles.
     </span><span class="kw">pub fn </span>process_style_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="comment">// Apply any inline style inheritance.
-        </span>inline_inheritance_system(<span class="self">self</span>.<span class="number">0</span>);
-
-        style_system(<span class="self">self</span>.<span class="number">0</span>);
-
-        shared_inheritance_system(<span class="self">self</span>.<span class="number">0</span>);
+        style_system(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>);
 
         <span class="comment">// Load any unloaded images and remove unused images.
-        </span>image_system(<span class="self">self</span>.<span class="number">0</span>);
+        </span>image_system(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>);
     }
 
     <span class="comment">// Returns true if animations are playing
     </span><span class="kw">pub fn </span>process_animations(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; bool {
-        animation_system(<span class="self">self</span>.<span class="number">0</span>)
+        animation_system(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>)
     }
 
     <span class="doccomment">/// Massages the style system until everything is coherent
     </span><span class="kw">pub fn </span>process_visual_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="comment">// Perform layout.
-        </span>layout_system(<span class="self">self</span>.<span class="number">0</span>);
+        </span>layout_system(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>);
     }
 
     <span class="kw">pub fn </span>emit_origin&lt;M: Send + Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M) {
@@ -589,8 +545,20 @@
         );
     }
 
-    <span class="kw">pub fn </span>needs_refresh(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="kw">pub fn </span>emit_window_event&lt;M: Send + Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, window_entity: Entity, message: M) {
+        <span class="self">self</span>.<span class="number">0</span>.event_queue.push_back(
+            Event::new(message)
+                .target(window_entity)
+                .origin(window_entity)
+                .propagate(Propagation::Up),
+        );
+    }
+
+    <span class="kw">pub fn </span>needs_refresh(<span class="kw-2">&amp;mut </span><span class="self">self</span>, window_entity: Entity) {
         <span class="self">self</span>.<span class="number">0</span>.style.system_flags = SystemFlags::all();
+        <span class="self">self</span>.<span class="number">0</span>.needs_redraw(window_entity);
+        <span class="self">self</span>.<span class="number">0</span>.style.needs_restyle(window_entity);
+        <span class="self">self</span>.<span class="number">0</span>.style.needs_relayout();
     }
 
     <span class="kw">pub fn </span>process_timers(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {

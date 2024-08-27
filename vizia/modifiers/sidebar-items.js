@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["ModalEvent"],"mod":["modal_model_derived_lenses"],"struct":["BoxShadowBuilder","LinearGradientBuilder","ModalModel"],"trait":["AbilityModifiers","AccessibilityModifiers","ActionModifiers","LayoutModifiers","StyleModifiers","TextModifiers","WindowModifiers"]};
+window.SIDEBAR_ITEMS = {"enum":["ModalEvent"],"mod":["modal_model_derived_lenses"],"struct":["LinearGradientBuilder","ModalModel","ShadowBuilder"],"trait":["AbilityModifiers","AccessibilityModifiers","ActionModifiers","LayoutModifiers","StyleModifiers","TextModifiers"]};

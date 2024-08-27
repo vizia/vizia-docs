@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["CommandType","RenderTarget","ShaderType"],"struct":["Command","Drawable","OpenGl","Vertex","Void"],"trait":["Renderer"]};

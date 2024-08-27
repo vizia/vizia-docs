@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_derive/src/lens.rs`."><title>lens.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vizia_derive" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0 (129f3b996 2024-06-10)" data-channel="1.79.0" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../vizia_derive/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_derive/src/lens.rs`."><title>lens.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vizia_derive" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -453,10 +453,6 @@
 <a href="#453" id="453">453</a>
 <a href="#454" id="454">454</a>
 <a href="#455" id="455">455</a>
-<a href="#456" id="456">456</a>
-<a href="#457" id="457">457</a>
-<a href="#458" id="458">458</a>
-<a href="#459" id="459">459</a>
 </pre></div><pre class="rust"><code><span class="comment">// Adapted from Druid lens.rs
 
 // Copyright 2019 The Druid Authors.
@@ -539,8 +535,8 @@
         <span class="kw">if let </span>GenericParam::Type(TypeParam { ident, .. }) = gp {
             lens_ty_idents.push(<span class="macro">quote!</span> {#ident});
             lens_ty_decls.push(<span class="macro">quote!</span> {#ident: <span class="lifetime">'static</span>});
-            phantom_decls.push(<span class="macro">quote!</span> {std::marker::PhantomData&lt;<span class="kw-2">*const </span>#ident&gt;});
-            phantom_inits.push(<span class="macro">quote!</span> {std::marker::PhantomData});
+            phantom_decls.push(<span class="macro">quote!</span> {::std::marker::PhantomData&lt;<span class="kw-2">*const </span>#ident&gt;});
+            phantom_inits.push(<span class="macro">quote!</span> {::std::marker::PhantomData});
         }
     }
 
@@ -571,37 +567,35 @@
         <span class="macro">quote!</span> {
             <span class="attr">#[doc = #struct_docs]
             #[allow(non_camel_case_types)]
-            #[derive(PartialEq, Eq)]
-            </span>#struct_vis <span class="kw">struct </span>#field_name#lens_ty_generics(#(#phantom_decls),<span class="kw-2">*</span>);
+            #[derive(::std::cmp::PartialEq, ::std::cmp::Eq)]
+            </span>#struct_vis <span class="kw">struct </span>#field_name #lens_ty_generics(#(#phantom_decls),<span class="kw-2">*</span>);
 
-            <span class="kw">impl </span>#lens_ty_generics #field_name#lens_ty_generics{
+            <span class="kw">impl </span>#lens_ty_generics #field_name #lens_ty_generics {
                 <span class="attr">#[doc = #fn_docs]
                 </span><span class="kw">pub const fn </span>new()-&gt;<span class="self">Self</span>{
                     <span class="self">Self</span>(#(#phantom_inits),<span class="kw-2">*</span>)
                 }
             }
 
-            <span class="kw">impl </span>#lens_ty_generics_decls std::hash::Hash <span class="kw">for </span>#field_name#lens_ty_generics {
-                <span class="kw">fn </span>hash&lt;H: std::hash::Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>H) {
-                    std::any::TypeId::of::&lt;<span class="self">Self</span>&gt;().hash(state);
+            <span class="kw">impl </span>#lens_ty_generics_decls ::std::hash::Hash <span class="kw">for </span>#field_name #lens_ty_generics {
+                <span class="kw">fn </span>hash&lt;H: ::std::hash::Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>H) {
+                    ::std::any::TypeId::of::&lt;<span class="self">Self</span>&gt;().hash(state);
                 }
             }
 
-            <span class="kw">impl </span>#lens_ty_generics std::fmt::Debug <span class="kw">for </span>#field_name#lens_ty_generics {
-                <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
-                    <span class="macro">write!</span>(f,<span class="string">"{}:{}"</span>,<span class="macro">stringify!</span>(#struct_type), <span class="macro">stringify!</span>(#field_name))
+            <span class="kw">impl </span>#lens_ty_generics ::std::fmt::Debug <span class="kw">for </span>#field_name #lens_ty_generics {
+                <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>::std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; ::std::fmt::Result {
+                    <span class="macro">write!</span>(f, <span class="string">"{}:{}"</span>, <span class="macro">stringify!</span>(#struct_type), <span class="macro">stringify!</span>(#field_name))
                 }
             }
 
-            <span class="kw">impl </span>#lens_ty_generics Clone <span class="kw">for </span>#field_name#lens_ty_generics  {
-                <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; #field_name#lens_ty_generics {
+            <span class="kw">impl </span>#lens_ty_generics ::std::clone::Clone <span class="kw">for </span>#field_name #lens_ty_generics  {
+                <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; #field_name #lens_ty_generics {
                     <span class="kw-2">*</span><span class="self">self
                 </span>}
             }
 
-            <span class="kw">impl </span>#lens_ty_generics Copy <span class="kw">for </span>#field_name#lens_ty_generics {}
-
-
+            <span class="kw">impl </span>#lens_ty_generics ::std::marker::Copy <span class="kw">for </span>#field_name #lens_ty_generics {}
         }
     });
 
@@ -632,14 +626,12 @@
         <span class="kw">let </span>field_name = <span class="kw-2">&amp;</span>f.ident.unwrap_named();
         <span class="kw">let </span>field_ty = <span class="kw-2">&amp;</span>f.ty;
         <span class="macro">quote!</span> {
-
-            <span class="kw">impl </span>#impl_generics Lens <span class="kw">for </span>#twizzled_name::#field_name#lens_ty_generics #where_clause {
-
-                <span class="kw">type </span>Source = #struct_type#ty_generics;
+            <span class="kw">impl </span>#impl_generics ::vizia::prelude::Lens <span class="kw">for </span>#twizzled_name::#field_name #lens_ty_generics #where_clause {
+                <span class="kw">type </span>Source = #struct_type #ty_generics;
                 <span class="kw">type </span>Target = #field_ty;
 
-                <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>#struct_type#ty_generics) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
-                    <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="kw-2">&amp;</span>source.#field_name))
+                <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>#struct_type #ty_generics) -&gt; ::std::option::Option&lt;::vizia::prelude::LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+                    ::std::option::Option::Some(::vizia::prelude::LensValue::Borrowed(<span class="kw-2">&amp;</span>source.#field_name))
                 }
             }
         }
@@ -652,7 +644,7 @@
 
         <span class="macro">quote!</span> {
             <span class="doccomment">/// Lens for the corresponding field.
-            </span>#field_vis <span class="kw">const </span>#lens_field_name: Wrapper&lt;#twizzled_name::#field_name#lens_ty_generics&gt; = Wrapper(#twizzled_name::#field_name::new());
+            </span>#field_vis <span class="kw">const </span>#lens_field_name: ::vizia::prelude::Wrapper&lt;#twizzled_name::#field_name #lens_ty_generics&gt; = ::vizia::prelude::Wrapper(#twizzled_name::#field_name::new());
         }
     });
 
@@ -664,46 +656,46 @@
         <span class="attr">#[doc = #mod_docs]
         </span>#module_vis <span class="kw">mod </span>#twizzled_name {
             #(#defs)*
-            <span class="attr">#[derive(PartialEq, Eq)]
+            <span class="attr">#[derive(::std::cmp::PartialEq, ::std::cmp::Eq)]
             #[doc = #root_docs]
             #[allow(non_camel_case_types)]
-            </span>#struct_vis <span class="kw">struct </span>root#lens_ty_generics(#(#phantom_decls),<span class="kw-2">*</span>);
+            </span>#struct_vis <span class="kw">struct </span>root #lens_ty_generics(#(#phantom_decls),<span class="kw-2">*</span>);
 
-            <span class="kw">impl </span>#lens_ty_generics root#lens_ty_generics{
+            <span class="kw">impl </span>#lens_ty_generics root #lens_ty_generics {
                 <span class="kw">pub const fn </span>new()-&gt;<span class="self">Self</span>{
                     <span class="self">Self</span>(#(#phantom_inits),<span class="kw-2">*</span>)
                 }
             }
 
-            <span class="kw">impl </span>#lens_ty_generics_decls std::hash::Hash <span class="kw">for </span>root#lens_ty_generics {
-                <span class="kw">fn </span>hash&lt;H: std::hash::Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>H) {
-                    std::any::TypeId::of::&lt;<span class="self">Self</span>&gt;().hash(state);
+            <span class="kw">impl </span>#lens_ty_generics_decls ::std::hash::Hash <span class="kw">for </span>root #lens_ty_generics {
+                <span class="kw">fn </span>hash&lt;H: ::std::hash::Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>H) {
+                    ::std::any::TypeId::of::&lt;<span class="self">Self</span>&gt;().hash(state);
                 }
             }
 
-            <span class="kw">impl </span>#lens_ty_generics std::fmt::Debug <span class="kw">for </span>root#lens_ty_generics {
-                <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+            <span class="kw">impl </span>#lens_ty_generics ::std::fmt::Debug <span class="kw">for </span>root #lens_ty_generics {
+                <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>::std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; ::std::fmt::Result {
                     <span class="macro">write!</span>(f,<span class="string">"{}"</span>,<span class="macro">stringify!</span>(#struct_type))
                 }
             }
 
-            <span class="kw">impl </span>#lens_ty_generics Clone <span class="kw">for </span>root#lens_ty_generics  {
-                <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; root#lens_ty_generics {
+            <span class="kw">impl </span>#lens_ty_generics ::std::clone::Clone <span class="kw">for </span>root #lens_ty_generics  {
+                <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; root #lens_ty_generics {
                     <span class="kw-2">*</span><span class="self">self
                 </span>}
             }
 
-            <span class="kw">impl </span>#lens_ty_generics Copy <span class="kw">for </span>root#lens_ty_generics {}
+            <span class="kw">impl </span>#lens_ty_generics ::std::marker::Copy <span class="kw">for </span>root #lens_ty_generics {}
         }
 
         #(#impls)*
 
-        <span class="kw">impl </span>#impl_generics Lens <span class="kw">for </span>#twizzled_name::root#lens_ty_generics {
-            <span class="kw">type </span>Source = #struct_type#ty_generics;
-            <span class="kw">type </span>Target = #struct_type#ty_generics;
+        <span class="kw">impl </span>#impl_generics ::vizia::prelude::Lens <span class="kw">for </span>#twizzled_name::root #lens_ty_generics {
+            <span class="kw">type </span>Source = #struct_type #ty_generics;
+            <span class="kw">type </span>Target = #struct_type #ty_generics;
 
-            <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
-                <span class="prelude-val">Some</span>(LensValue::Borrowed(source))
+            <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; ::std::option::Option&lt;::vizia::prelude::LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+                ::std::option::Option::Some(::vizia::prelude::LensValue::Borrowed(source))
             }
         }
 
@@ -712,7 +704,7 @@
         </span><span class="kw">impl </span>#impl_generics #struct_type #ty_generics #where_clause {
             #(#associated_items)*
 
-            <span class="kw">pub const </span>root: Wrapper&lt;#twizzled_name::root#lens_ty_generics&gt; = Wrapper(#twizzled_name::root::new());
+            <span class="kw">pub const </span>root: ::vizia::prelude::Wrapper&lt;#twizzled_name::root #lens_ty_generics&gt; = ::vizia::prelude::Wrapper(#twizzled_name::root::new());
         }
     };
 
@@ -817,7 +809,7 @@
     <span class="kw">let </span>defs = usable_variants.iter().map(|(variant_name, <span class="kw">_</span>)| {
         <span class="macro">quote!</span> {
             <span class="attr">#[allow(non_camel_case_types)]
-            #[derive(Copy, Clone, Hash, PartialEq, Eq)]
+            #[derive(:std::marker::Copy, ::std::clone::Clone, ::std::hash::Hash, ::std::cmp::PartialEq, ::std::cmp::Eq)]
             </span>#struct_vis <span class="kw">struct </span>#variant_name();
 
             <span class="kw">impl </span>#variant_name {
@@ -826,8 +818,8 @@
                 }
             }
 
-            <span class="kw">impl </span>std::fmt::Debug <span class="kw">for </span>#variant_name {
-                <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+            <span class="kw">impl </span>::std::fmt::Debug <span class="kw">for </span>#variant_name {
+                <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>::std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; ::std::fmt::Result {
                     <span class="macro">write!</span>(f,<span class="string">"{}:{}"</span>,<span class="macro">stringify!</span>(#enum_type), <span class="macro">stringify!</span>(#variant_name))
                 }
             }
@@ -837,22 +829,22 @@
     <span class="kw">let </span>impls = usable_variants.iter().map(|(variant_name, variant_type)| {
         <span class="kw">let </span>name = <span class="macro">format!</span>(<span class="string">"{}:{}"</span>, enum_type, variant_name);
         <span class="macro">quote!</span> {
-            <span class="kw">impl </span>Lens <span class="kw">for </span>#twizzled_name::#variant_name {
+            <span class="kw">impl </span>::vizia::prelude::Lens <span class="kw">for </span>#twizzled_name::#variant_name {
                 <span class="kw">type </span>Source = #enum_type;
                 <span class="kw">type </span>Target = #variant_type;
 
-                <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
+                <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;::vizia::prelude::LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
                     <span class="kw">if let </span>#enum_type::#variant_name(inner_value) = source {
-                        <span class="prelude-val">Some</span>(LensValue::Borrowed(inner_value))
+                        ::std::option::Option::Some(::vizia::prelude::LensValue::Borrowed(inner_value))
                     } <span class="kw">else </span>{
-                        <span class="macro">panic!</span>(<span class="string">"failed"</span>)
+                        <span class="macro">::std::panic!</span>(<span class="string">"failed"</span>)
                     }
 
                 }
             }
 
-            <span class="kw">impl </span>std::fmt::Debug <span class="kw">for </span>#twizzled_name::#variant_name {
-                <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+            <span class="kw">impl </span>::std::fmt::Debug <span class="kw">for </span>#twizzled_name::#variant_name {
+                <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>::std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; ::std::fmt::Result {
                     f.write_str(#name)
                 }
             }

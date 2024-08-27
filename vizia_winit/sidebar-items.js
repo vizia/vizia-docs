@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["application","rwh"],"trait":["GetRawWindowHandle"]};
+window.SIDEBAR_ITEMS = {"mod":["application","window","window_modifiers"],"trait":["ModifyWindow"]};

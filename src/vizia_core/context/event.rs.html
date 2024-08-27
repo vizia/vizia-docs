@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/event.rs`."><title>event.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0 (129f3b996 2024-06-10)" data-channel="1.79.0" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../vizia_core/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/event.rs`."><title>event.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1392,15 +1392,23 @@
 <a href="#1392" id="1392">1392</a>
 <a href="#1393" id="1393">1393</a>
 <a href="#1394" id="1394">1394</a>
+<a href="#1395" id="1395">1395</a>
+<a href="#1396" id="1396">1396</a>
+<a href="#1397" id="1397">1397</a>
+<a href="#1398" id="1398">1398</a>
+<a href="#1399" id="1399">1399</a>
+<a href="#1400" id="1400">1400</a>
+<a href="#1401" id="1401">1401</a>
+<a href="#1402" id="1402">1402</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::collections::{BinaryHeap, VecDeque};
 <span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
 </span><span class="kw">use </span>std::error::Error;
 <span class="kw">use </span>std::rc::Rc;
 
-<span class="kw">use </span>femtovg::Transform2D;
 <span class="kw">use </span>hashbrown::{HashMap, HashSet};
 <span class="kw">use </span>vizia_storage::{LayoutTreeIterator, TreeIterator};
+<span class="kw">use </span>vizia_window::WindowPosition;
 
 <span class="kw">use </span><span class="kw">crate</span>::animation::{AnimId, Interpolator};
 <span class="kw">use </span><span class="kw">crate</span>::cache::CachedData;
@@ -1410,6 +1418,8 @@
 <span class="kw">use </span><span class="kw">crate</span>::resource::ResourceManager;
 <span class="kw">use </span><span class="kw">crate</span>::tree::{focus_backward, focus_forward, is_navigatable};
 <span class="kw">use </span>vizia_input::MouseState;
+
+<span class="kw">use </span>skia_safe::Matrix;
 
 <span class="kw">use </span><span class="kw">crate</span>::text::TextContext;
 <span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
@@ -1473,13 +1483,12 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) timers: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Vec&lt;TimerState&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) running_timers: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>BinaryHeap&lt;TimerState&gt;,
     cursor_icon_locked: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>bool,
-    window_size: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>WindowSize,
-    user_scale_factor: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>f64,
     <span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
     </span>clipboard: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Box&lt;<span class="kw">dyn </span>ClipboardProvider&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) event_proxy: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span><span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span><span class="kw">crate</span>::context::EventProxy&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) ignore_default_theme: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>bool,
     <span class="kw">pub</span>(<span class="kw">crate</span>) drop_data: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span><span class="prelude-ty">Option</span>&lt;DropData&gt;,
+    <span class="kw">pub </span>windows: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>HashMap&lt;Entity, WindowState&gt;,
 }
 
 <span class="macro">macro_rules!</span> get_length_property {
@@ -1526,13 +1535,12 @@
             timers: <span class="kw-2">&amp;mut </span>cx.timers,
             running_timers: <span class="kw-2">&amp;mut </span>cx.running_timers,
             cursor_icon_locked: <span class="kw-2">&amp;mut </span>cx.cursor_icon_locked,
-            window_size: <span class="kw-2">&amp;mut </span>cx.window_size,
-            user_scale_factor: <span class="kw-2">&amp;mut </span>cx.user_scale_factor,
             <span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
             </span>clipboard: <span class="kw-2">&amp;mut </span>cx.clipboard,
             event_proxy: <span class="kw-2">&amp;mut </span>cx.event_proxy,
             ignore_default_theme: <span class="kw-2">&amp;</span>cx.ignore_default_theme,
             drop_data: <span class="kw-2">&amp;mut </span>cx.drop_data,
+            windows: <span class="kw-2">&amp;mut </span>cx.windows,
         }
     }
 
@@ -1560,18 +1568,38 @@
             timers: <span class="kw-2">&amp;mut </span>cx.timers,
             running_timers: <span class="kw-2">&amp;mut </span>cx.running_timers,
             cursor_icon_locked: <span class="kw-2">&amp;mut </span>cx.cursor_icon_locked,
-            window_size: <span class="kw-2">&amp;mut </span>cx.window_size,
-            user_scale_factor: <span class="kw-2">&amp;mut </span>cx.user_scale_factor,
             <span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
             </span>clipboard: <span class="kw-2">&amp;mut </span>cx.clipboard,
             event_proxy: <span class="kw-2">&amp;mut </span>cx.event_proxy,
             ignore_default_theme: <span class="kw-2">&amp;</span>cx.ignore_default_theme,
             drop_data: <span class="kw-2">&amp;mut </span>cx.drop_data,
+            windows: <span class="kw-2">&amp;mut </span>cx.windows,
         }
     }
 
     <span class="kw">pub fn </span>get_view&lt;V: View&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>V&gt; {
         <span class="self">self</span>.views.get(<span class="kw-2">&amp;</span><span class="self">self</span>.current).and_then(|view| view.downcast_ref::&lt;V&gt;())
+    }
+
+    <span class="kw">pub fn </span>close_window(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(state) = <span class="self">self</span>.windows.get_mut(<span class="kw-2">&amp;</span><span class="self">self</span>.current) {
+            state.should_close = <span class="bool-val">true</span>;
+        }
+    }
+
+    <span class="kw">pub fn </span>window_position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WindowPosition {
+        <span class="kw">let </span>parent_window = <span class="self">self</span>.parent_window().unwrap_or(Entity::root());
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(state) = <span class="self">self</span>.windows.get(<span class="kw-2">&amp;</span>parent_window) {
+            <span class="kw">return </span>state.position;
+        }
+
+        WindowPosition::new(<span class="number">0</span>, <span class="number">0</span>)
+    }
+
+    <span class="kw">pub fn </span>window_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WindowSize {
+        <span class="kw">let </span>parent_window = <span class="self">self</span>.parent_window().unwrap_or(Entity::root());
+        <span class="kw">let </span>bounds = <span class="self">self</span>.cache.get_bounds(parent_window);
+        WindowSize::new(bounds.width() <span class="kw">as </span>u32, bounds.height() <span class="kw">as </span>u32)
     }
 
     <span class="doccomment">/// Returns the [Entity] id associated with the given identifier.
@@ -1687,10 +1715,8 @@
         }
     }
 
-    <span class="doccomment">/// Returns the transform of the current view.
-    </span><span class="kw">pub fn </span>transform(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Transform2D {
-        <span class="kw">let </span><span class="kw-2">mut </span>transform = Transform2D::identity();
-
+    <span class="doccomment">/// Returns the 2D transform of the current view.
+    </span><span class="kw">pub fn </span>transform(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Matrix {
         <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
         <span class="kw">let </span>scale_factor = <span class="self">self</span>.scale_factor();
 
@@ -1700,28 +1726,29 @@
             .transform_origin
             .get(<span class="self">self</span>.current)
             .map(|transform_origin| {
-                <span class="kw">let </span><span class="kw-2">mut </span>origin = Transform2D::new_translation(bounds.left(), bounds.top());
+                <span class="kw">let </span><span class="kw-2">mut </span>origin = Matrix::translate(bounds.top_left());
                 <span class="kw">let </span>offset = transform_origin.as_transform(bounds, scale_factor);
-                origin.premultiply(<span class="kw-2">&amp;</span>offset);
+                origin = offset * origin;
                 origin
             })
-            .unwrap_or(Transform2D::new_translation(bounds.center().<span class="number">0</span>, bounds.center().<span class="number">1</span>));
-        transform.premultiply(<span class="kw-2">&amp;</span>origin);
-        origin.inverse();
+            .unwrap_or(Matrix::translate(bounds.center()));
+        <span class="comment">// transform = origin * transform;
+        </span><span class="kw">let </span><span class="kw-2">mut </span>transform = origin;
+        origin = origin.invert().unwrap();
 
         <span class="comment">// Apply translation.
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(translate) = <span class="self">self</span>.style.translate.get(<span class="self">self</span>.current) {
-            transform.premultiply(<span class="kw-2">&amp;</span>translate.as_transform(bounds, scale_factor));
+            transform = transform * translate.as_transform(bounds, scale_factor);
         }
 
         <span class="comment">// Apply rotation.
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(rotate) = <span class="self">self</span>.style.rotate.get(<span class="self">self</span>.current) {
-            transform.premultiply(<span class="kw-2">&amp;</span>rotate.as_transform(bounds, scale_factor));
+            transform = transform * rotate.as_transform(bounds, scale_factor);
         }
 
         <span class="comment">// Apply scaling.
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(scale) = <span class="self">self</span>.style.scale.get(<span class="self">self</span>.current) {
-            transform.premultiply(<span class="kw-2">&amp;</span>scale.as_transform(bounds, scale_factor));
+            transform = transform * scale.as_transform(bounds, scale_factor);
         }
 
         <span class="comment">// Apply transform functions.
@@ -1736,32 +1763,38 @@
                         <span class="kw">let </span>end_transform = end.value.as_transform(bounds, scale_factor);
                         <span class="kw">let </span>t = animation_state.t;
                         <span class="kw">let </span>animated_transform =
-                            Transform2D::interpolate(<span class="kw-2">&amp;</span>start_transform, <span class="kw-2">&amp;</span>end_transform, t);
-                        transform.premultiply(<span class="kw-2">&amp;</span>animated_transform);
+                            Matrix::interpolate(<span class="kw-2">&amp;</span>start_transform, <span class="kw-2">&amp;</span>end_transform, t);
+                        transform = transform * animated_transform;
                     }
                 }
             } <span class="kw">else </span>{
-                transform.premultiply(<span class="kw-2">&amp;</span>transforms.as_transform(bounds, scale_factor));
+                transform = transform * transforms.as_transform(bounds, scale_factor);
             }
         }
 
-        transform.premultiply(<span class="kw-2">&amp;</span>origin);
+        transform = transform * origin;
 
         transform
     }
 
     <span class="doccomment">/// Trigger an animation with the given id to play on the current view.
-    </span><span class="kw">pub fn </span>play_animation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, anim_id: <span class="kw">impl </span>AnimId, duration: Duration) {
+    </span><span class="kw">pub fn </span>play_animation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, anim_id: <span class="kw">impl </span>AnimId, duration: Duration, delay: Duration) {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(animation_id) = anim_id.get(<span class="self">self</span>) {
-            <span class="self">self</span>.style.enqueue_animation(<span class="self">self</span>.current, animation_id, duration);
+            <span class="self">self</span>.style.enqueue_animation(<span class="self">self</span>.current, animation_id, duration, delay);
         }
     }
 
     <span class="doccomment">/// Trigger an animation with the given id to play on a target view.
-    </span><span class="kw">pub fn </span>play_animation_for(<span class="kw-2">&amp;mut </span><span class="self">self</span>, anim_id: <span class="kw">impl </span>AnimId, target: <span class="kw-2">&amp;</span>str, duration: Duration) {
+    </span><span class="kw">pub fn </span>play_animation_for(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        anim_id: <span class="kw">impl </span>AnimId,
+        target: <span class="kw-2">&amp;</span>str,
+        duration: Duration,
+        delay: Duration,
+    ) {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(target_entity) = <span class="self">self</span>.resolve_entity_identifier(target) {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(animation_id) = anim_id.get(<span class="self">self</span>) {
-                <span class="self">self</span>.style.enqueue_animation(target_entity, animation_id, duration)
+                <span class="self">self</span>.style.enqueue_animation(target_entity, animation_id, duration, delay)
             }
         }
     }
@@ -2072,11 +2105,11 @@
         <span class="kw">if </span>!<span class="self">self</span>.ignore_default_theme {
             <span class="kw">match </span>theme_mode {
                 ThemeMode::LightMode =&gt; {
-                    <span class="self">self</span>.resource_manager.themes[<span class="number">1</span>] = String::from(LIGHT_THEME);
+                    <span class="self">self</span>.resource_manager.themes[<span class="number">2</span>] = String::from(LIGHT_THEME);
                 }
 
                 ThemeMode::DarkMode =&gt; {
-                    <span class="self">self</span>.resource_manager.themes[<span class="number">1</span>] = String::from(DARK_THEME);
+                    <span class="self">self</span>.resource_manager.themes[<span class="number">2</span>] = String::from(DARK_THEME);
                 }
             }
         }
@@ -2084,16 +2117,20 @@
 
     <span class="doccomment">/// Marks the current view as needing to be redrawn.
     </span><span class="kw">pub fn </span>needs_redraw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="self">self</span>.style.needs_redraw();
+        <span class="kw">let </span>parent_window = <span class="self">self</span>.tree.get_parent_window(<span class="self">self</span>.current).unwrap_or(Entity::root());
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(window_state) = <span class="self">self</span>.windows.get_mut(<span class="kw-2">&amp;</span>parent_window) {
+            window_state.redraw_list.insert(<span class="self">self</span>.current);
+        }
     }
 
     <span class="doccomment">/// Marks the current view as needing a layout computation.
     </span><span class="kw">pub fn </span>needs_relayout(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.style.needs_relayout();
-        <span class="self">self</span>.style.needs_redraw();
+        <span class="self">self</span>.needs_redraw();
     }
 
-    <span class="kw">pub fn </span>needs_restyle(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="doccomment">/// Marks the current view as needing to be restyled.
+    </span><span class="kw">pub fn </span>needs_restyle(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.style.restyle.insert(<span class="self">self</span>.current).unwrap();
         <span class="kw">let </span>iter = <span class="kw">if let </span><span class="prelude-val">Some</span>(parent) = <span class="self">self</span>.tree.get_layout_parent(<span class="self">self</span>.current) {
             LayoutTreeIterator::subtree(<span class="self">self</span>.tree, parent)
@@ -2104,7 +2141,7 @@
         <span class="kw">for </span>descendant <span class="kw">in </span>iter {
             <span class="self">self</span>.style.restyle.insert(descendant).unwrap();
         }
-        <span class="self">self</span>.style.needs_restyle();
+        <span class="self">self</span>.style.needs_restyle(<span class="self">self</span>.current);
     }
 
     <span class="doccomment">/// Reloads the stylesheets linked to the application.
@@ -2132,12 +2169,11 @@
         <span class="self">self</span>.style.parse_theme(<span class="kw-2">&amp;</span>overall_theme);
 
         <span class="kw">for </span>entity <span class="kw">in </span><span class="self">self</span>.tree.into_iter() {
-            <span class="self">self</span>.style.restyle.insert(entity).unwrap();
+            <span class="self">self</span>.style.needs_restyle(entity);
+            <span class="self">self</span>.style.needs_relayout();
+            <span class="comment">//self.style.needs_redraw(entity);
+            </span><span class="self">self</span>.style.needs_text_update(entity);
         }
-
-        <span class="self">self</span>.style.needs_restyle();
-        <span class="self">self</span>.style.needs_relayout();
-        <span class="self">self</span>.style.needs_redraw();
 
         <span class="prelude-val">Ok</span>(())
     }
@@ -2171,37 +2207,6 @@
         {
             (f)(view);
         }
-    }
-
-    <span class="doccomment">/// Returns the window's size in logical pixels, before
-    /// [`user_scale_factor()`][Self::user_scale_factor()] gets applied to it. If this value changed
-    /// during a frame then the window will be resized and a [`WindowEvent::GeometryChanged`] will
-    /// be emitted.
-    </span><span class="kw">pub fn </span>window_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WindowSize {
-        <span class="kw-2">*</span><span class="self">self</span>.window_size
-    }
-
-    <span class="doccomment">/// Change the window size. A [`WindowEvent::GeometryChanged`] will be emitted when the window
-    /// has actually changed in size.
-    </span><span class="kw">pub fn </span>set_window_size(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_size: WindowSize) {
-        <span class="kw-2">*</span><span class="self">self</span>.window_size = new_size;
-    }
-
-    <span class="doccomment">/// A scale factor used for uniformly scaling the window independently of any HiDPI scaling.
-    /// `window_size` gets multplied with this factor to get the actual logical window size. If this
-    /// changes during a frame, then the window will be resized at the end of the frame and a
-    /// [`WindowEvent::GeometryChanged`] will be emitted. This can be initialized using
-    /// [`WindowDescription::user_scale_factor`](vizia_window::WindowDescription::user_scale_factor).
-    </span><span class="kw">pub fn </span>user_scale_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f64 {
-        <span class="kw-2">*</span><span class="self">self</span>.user_scale_factor
-    }
-
-    <span class="doccomment">/// Change the user scale factor size. A [`WindowEvent::GeometryChanged`] will be emitted when the
-    /// window has actually changed in size.
-    </span><span class="kw">pub fn </span>set_user_scale_factor(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_factor: f64) {
-        <span class="kw-2">*</span><span class="self">self</span>.user_scale_factor = new_factor;
-        <span class="self">self</span>.style.system_flags.set(SystemFlags::RELAYOUT, <span class="bool-val">true</span>);
-        <span class="self">self</span>.style.system_flags.set(SystemFlags::REFLOW, <span class="bool-val">true</span>);
     }
 
     <span class="comment">// TODO: Abstract this to shared trait for all contexts
@@ -2482,6 +2487,12 @@
         <span class="self">self</span>.needs_redraw();
     }
 
+    <span class="kw">pub fn </span>set_max_height(<span class="kw-2">&amp;mut </span><span class="self">self</span>, height: Units) {
+        <span class="self">self</span>.style.max_height.insert(<span class="self">self</span>.current, height);
+        <span class="self">self</span>.needs_relayout();
+        <span class="self">self</span>.needs_redraw();
+    }
+
     <span class="comment">// SPACE
 
     </span><span class="kw">pub fn </span>set_left(<span class="kw-2">&amp;mut </span><span class="self">self</span>, left: Units) {
@@ -2512,9 +2523,8 @@
 
     </span><span class="doccomment">/// Sets the text of the current view.
     </span><span class="kw">pub fn </span>set_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) {
-        <span class="self">self</span>.text_context.set_text(<span class="self">self</span>.current, text);
-
-        <span class="self">self</span>.style.needs_text_layout.insert(<span class="self">self</span>.current, <span class="bool-val">true</span>);
+        <span class="self">self</span>.style.text.insert(<span class="self">self</span>.current, text.to_owned());
+        <span class="self">self</span>.style.needs_text_update(<span class="self">self</span>.current);
         <span class="self">self</span>.needs_relayout();
         <span class="self">self</span>.needs_redraw();
     }
@@ -2553,15 +2563,15 @@
     /// let timer = cx.add_timer(Duration::from_secs(1), Some(Duration::from_secs(5)), |cx, reason|{
     ///     match reason {
     ///         TimerAction::Start =&gt; {
-    ///             println!("Start timer");
+    ///             debug!("Start timer");
     ///         }
     ///     
     ///         TimerAction::Tick(delta) =&gt; {
-    ///             println!("Tick timer: {:?}", delta);
+    ///             debug!("Tick timer: {:?}", delta);
     ///         }
     ///
     ///         TimerAction::Stop =&gt; {
-    ///             println!("Stop timer");
+    ///             debug!("Stop timer");
     ///         }
     ///     }
     /// });
@@ -2775,6 +2785,8 @@
     </span><span class="kw">fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity;
     <span class="doccomment">/// Returns the id of the first_child of the current view.
     </span><span class="kw">fn </span>first_child(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity;
+
+    <span class="kw">fn </span>parent_window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Entity&gt;;
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TreeProps <span class="kw">for </span>EventContext&lt;<span class="lifetime">'a</span>&gt; {
@@ -2784,6 +2796,10 @@
 
     <span class="kw">fn </span>first_child(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
         <span class="self">self</span>.tree.get_layout_first_child(<span class="self">self</span>.current).unwrap()
+    }
+
+    <span class="kw">fn </span>parent_window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Entity&gt; {
+        <span class="self">self</span>.tree.get_parent_window(<span class="self">self</span>.current)
     }
 }
 </code></pre></div></section></main></body></html>

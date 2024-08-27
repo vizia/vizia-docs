@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/modifiers/actions.rs`."><title>actions.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0 (129f3b996 2024-06-10)" data-channel="1.79.0" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../vizia_core/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/modifiers/actions.rs`."><title>actions.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -820,7 +820,14 @@
             ModalEvent::HideMenu =&gt; {
                 <span class="self">self</span>.menu_visible = <span class="bool-val">false</span>;
             }
-        })
+        });
+
+        event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
+            WindowEvent::MouseOver =&gt; <span class="self">self</span>.tooltip_visible = <span class="bool-val">true</span>,
+            WindowEvent::MouseOut =&gt; <span class="self">self</span>.tooltip_visible = <span class="bool-val">false</span>,
+            WindowEvent::PressDown { mouse: <span class="kw">_ </span>} =&gt; <span class="self">self</span>.tooltip_visible = <span class="bool-val">false</span>,
+            <span class="kw">_ </span>=&gt; {}
+        });
     }
 }
 
@@ -954,11 +961,6 @@
                         (action)(cx);
                     }
                 }
-                <span class="kw">if </span>cx.is_draggable() {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_drag_start {
-                        (action)(cx);
-                    }
-                }
             }
 
             WindowEvent::MouseDoubleClick(button) =&gt; {
@@ -995,6 +997,15 @@
                 <span class="comment">// if meta.target == cx.current() {
                 </span><span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_over_out {
                     (action)(cx);
+                }
+
+                <span class="kw">if </span>cx.mouse.left.state == MouseButtonState::Pressed
+                    &amp;&amp; cx.mouse.left.pressed == cx.current()
+                    &amp;&amp; cx.is_draggable()
+                {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(action) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_drag_start {
+                        (action)(cx);
+                    }
                 }
                 <span class="comment">// }
             </span>}
@@ -1082,7 +1093,7 @@
     /// ```rust
     /// # use vizia_core::prelude::*;
     /// # let mut cx = &amp;mut Context::default();
-    /// Element::new(cx).on_press(|_| println!("View was pressed!"));
+    /// Element::new(cx).on_press(|_| debug!("View was pressed!"));
     /// ```
     </span><span class="kw">fn </span>on_press&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
@@ -1096,7 +1107,7 @@
     /// ```rust
     /// # use vizia_core::prelude::*;
     /// # let mut cx = &amp;mut Context::default();
-    /// Element::new(cx).on_press_down(|_| println!("View was pressed down!"));
+    /// Element::new(cx).on_press_down(|_| debug!("View was pressed down!"));
     /// ```
     </span><span class="kw">fn </span>on_press_down&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
@@ -1108,7 +1119,7 @@
     /// ```rust
     /// # use vizia_core::prelude::*;
     /// # let mut cx = &amp;mut Context::default();
-    /// Element::new(cx).on_double_click(|_, _button| println!("View was double clicked on!"));
+    /// Element::new(cx).on_double_click(|_, _button| debug!("View was double clicked on!"));
     /// ```
     </span><span class="kw">fn </span>on_double_click&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
@@ -1121,7 +1132,7 @@
     /// ```rust
     /// # use vizia_core::prelude::*;
     /// # let mut cx = &amp;mut Context::default();
-    /// Element::new(cx).on_hover(|_| println!("Mouse cursor entered the view!"));
+    /// Element::new(cx).on_hover(|_| debug!("Mouse cursor entered the view!"));
     /// ```
     </span><span class="kw">fn </span>on_hover&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
@@ -1134,7 +1145,7 @@
     /// ```rust
     /// # use vizia_core::prelude::*;
     /// # let mut cx = &amp;mut Context::default();
-    /// Element::new(cx).on_hover_out(|_| println!("Mouse cursor left the view!"));
+    /// Element::new(cx).on_hover_out(|_| debug!("Mouse cursor left the view!"));
     /// ```
     </span><span class="kw">fn </span>on_hover_out&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
@@ -1147,7 +1158,7 @@
     /// ```rust
     /// # use vizia_core::prelude::*;
     /// # let mut cx = &amp;mut Context::default();
-    /// Element::new(cx).on_over(|_| println!("Mouse cursor entered the view bounds!"));
+    /// Element::new(cx).on_over(|_| debug!("Mouse cursor entered the view bounds!"));
     /// ```
     </span><span class="kw">fn </span>on_over&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
@@ -1160,7 +1171,7 @@
     /// ```rust
     /// # use vizia_core::prelude::*;
     /// # let mut cx = &amp;mut Context::default();
-    /// Element::new(cx).on_over_out(|_| println!("Mouse cursor left the view bounds!"));
+    /// Element::new(cx).on_over_out(|_| debug!("Mouse cursor left the view bounds!"));
     /// ```
     </span><span class="kw">fn </span>on_over_out&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
@@ -1172,7 +1183,7 @@
     /// ```rust
     /// # use vizia_core::prelude::*;
     /// # let mut cx = &amp;mut Context::default();
-    /// Element::new(cx).on_mouse_move(|_, x, y| println!("Cursor moving: {} {}", x, y));
+    /// Element::new(cx).on_mouse_move(|_, x, y| debug!("Cursor moving: {} {}", x, y));
     /// ```
     </span><span class="kw">fn </span>on_mouse_move&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
@@ -1185,7 +1196,7 @@
     /// ```rust
     /// # use vizia_core::prelude::*;
     /// # let mut cx = &amp;mut Context::default();
-    /// Element::new(cx).on_mouse_down(|_, button| println!("Mouse button, {:?}, was pressed!", button));
+    /// Element::new(cx).on_mouse_down(|_, button| debug!("Mouse button, {:?}, was pressed!", button));
     /// ```
     </span><span class="kw">fn </span>on_mouse_down&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
@@ -1198,7 +1209,7 @@
     /// ```rust
     /// # use vizia_core::prelude::*;
     /// # let mut cx = &amp;mut Context::default();
-    /// Element::new(cx).on_mouse_up(|_, button| println!("Mouse button, {:?}, was released!", button));
+    /// Element::new(cx).on_mouse_up(|_, button| debug!("Mouse button, {:?}, was released!", button));
     /// ```
     </span><span class="kw">fn </span>on_mouse_up&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
@@ -1210,7 +1221,7 @@
     /// ```rust
     /// # use vizia_core::prelude::*;
     /// # let mut cx = &amp;mut Context::default();
-    /// Element::new(cx).on_focus_in(|_| println!("View gained keyboard focus!"));
+    /// Element::new(cx).on_focus_in(|_| debug!("View gained keyboard focus!"));
     /// ```
     </span><span class="kw">fn </span>on_focus_in&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
@@ -1222,7 +1233,7 @@
     /// ```rust
     /// # use vizia_core::prelude::*;
     /// # let mut cx = &amp;mut Context::default();
-    /// Element::new(cx).on_focus_out(|_| println!("View lost keyboard focus!"));
+    /// Element::new(cx).on_focus_out(|_| debug!("View lost keyboard focus!"));
     /// ```
     </span><span class="kw">fn </span>on_focus_out&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
@@ -1234,13 +1245,13 @@
     /// ```rust
     /// # use vizia_core::prelude::*;
     /// # let mut cx = &amp;mut Context::default();
-    /// Element::new(cx).on_geo_changed(|_, _| println!("View geometry changed!"));
+    /// Element::new(cx).on_geo_changed(|_, _| debug!("View geometry changed!"));
     /// ```
     </span><span class="kw">fn </span>on_geo_changed&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, GeoChanged) + Send + Sync;
 
-    <span class="kw">fn </span>tooltip&lt;C: FnOnce(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="lifetime">'_</span>, Tooltip&gt;&gt;(<span class="self">self</span>, content: C) -&gt; <span class="self">Self</span>;
+    <span class="kw">fn </span>tooltip&lt;C: Fn(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="lifetime">'_</span>, Tooltip&gt; + <span class="lifetime">'static</span>&gt;(<span class="self">self</span>, content: C) -&gt; <span class="self">Self</span>;
 
     <span class="kw">fn </span>menu&lt;C: FnOnce(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="lifetime">'_</span>, T&gt;, T: View&gt;(<span class="self">self</span>, content: C) -&gt; <span class="self">Self</span>;
 
@@ -1281,28 +1292,27 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, V: View&gt; ActionModifiers&lt;V&gt; <span class="kw">for </span>Handle&lt;<span class="lifetime">'a</span>, V&gt; {
-    <span class="kw">fn </span>tooltip&lt;C: FnOnce(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="lifetime">'_</span>, Tooltip&gt;&gt;(<span class="self">self</span>, content: C) -&gt; <span class="self">Self </span>{
+    <span class="kw">fn </span>tooltip&lt;C: Fn(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="lifetime">'_</span>, Tooltip&gt; + <span class="lifetime">'static</span>&gt;(<span class="self">self</span>, content: C) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
 
         build_modal_model(<span class="self">self</span>.cx, entity);
 
-        <span class="kw">let </span>s = <span class="self">self
-            </span>.on_over(|cx| cx.emit(ModalEvent::ShowTooltip))
-            .on_over_out(|cx| cx.emit(ModalEvent::HideTooltip));
-
-        s.cx.with_current(entity, |cx| {
-            (content)(cx).class(<span class="string">"tooltip"</span>).bind(ModalModel::tooltip_visible, |<span class="kw-2">mut </span>handle, vis| {
-                <span class="kw">let </span>is_visible = vis.get(<span class="kw-2">&amp;</span>handle);
-                handle = handle.toggle_class(<span class="string">"vis"</span>, is_visible);
-
-                <span class="kw">if </span>is_visible {
-                    handle.context().emit(WindowEvent::GeometryChanged(GeoChanged::empty()));
+        <span class="self">self</span>.cx.with_current(entity, <span class="kw">move </span>|cx| {
+            Binding::new(cx, ModalModel::tooltip_visible, <span class="kw">move </span>|cx, tooltip_visible| {
+                <span class="kw">if </span>tooltip_visible.get(cx) {
+                    (content)(cx).on_build(|cx| {
+                        cx.play_animation(
+                            <span class="string">"tooltip_fade"</span>,
+                            Duration::from_millis(<span class="number">100</span>),
+                            Duration::from_millis(<span class="number">500</span>),
+                        )
+                    });
                 }
             });
         });
 
-        s
-    }
+        <span class="self">self
+    </span>}
 
     <span class="kw">fn </span>menu&lt;C: FnOnce(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="lifetime">'_</span>, T&gt;, T: View&gt;(<span class="self">self</span>, content: C) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
@@ -1334,16 +1344,6 @@
             .views
             .get_mut(<span class="kw-2">&amp;</span><span class="self">self</span>.entity)
             .and_then(|view_handler| view_handler.downcast_mut::&lt;Button&gt;())
-        {
-            view.action = <span class="prelude-val">Some</span>(Box::new(action));
-            <span class="kw">return </span><span class="self">self</span>;
-        }
-
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(view) = <span class="self">self
-            </span>.cx
-            .views
-            .get_mut(<span class="kw-2">&amp;</span><span class="self">self</span>.entity)
-            .and_then(|view_handler| view_handler.downcast_mut::&lt;IconButton&gt;())
         {
             view.action = <span class="prelude-val">Some</span>(Box::new(action));
             <span class="kw">return </span><span class="self">self</span>;

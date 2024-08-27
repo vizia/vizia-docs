@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/knob.rs`."><title>knob.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0 (129f3b996 2024-06-10)" data-channel="1.79.0" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../vizia_core/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/knob.rs`."><title>knob.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -534,10 +534,26 @@
 <a href="#534" id="534">534</a>
 <a href="#535" id="535">535</a>
 <a href="#536" id="536">536</a>
+<a href="#537" id="537">537</a>
+<a href="#538" id="538">538</a>
+<a href="#539" id="539">539</a>
+<a href="#540" id="540">540</a>
+<a href="#541" id="541">541</a>
+<a href="#542" id="542">542</a>
+<a href="#543" id="543">543</a>
+<a href="#544" id="544">544</a>
+<a href="#545" id="545">545</a>
+<a href="#546" id="546">546</a>
+<a href="#547" id="547">547</a>
+<a href="#548" id="548">548</a>
+<a href="#549" id="549">549</a>
+<a href="#550" id="550">550</a>
+<a href="#551" id="551">551</a>
+<a href="#552" id="552">552</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
-</span><span class="kw">use </span>femtovg::{LineCap, Paint, Path, Solidity};
+</span><span class="kw">use </span><span class="kw">crate</span>::vg;
 <span class="kw">use </span>morphorm::Units;
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -594,8 +610,8 @@
                     centered,
                     Percentage(<span class="number">100.0</span>),
                     Percentage(<span class="number">15.0</span>),
-                    -<span class="number">150.</span>,
-                    <span class="number">150.</span>,
+                    -<span class="number">240.</span>,
+                    <span class="number">60.</span>,
                     KnobMode::Continuous,
                 )
                 .value(lens)
@@ -782,12 +798,12 @@
         <span class="prelude-val">Some</span>(<span class="string">"arctrack"</span>)
     }
 
-    <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
+    <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;</span>Canvas) {
         <span class="kw">let </span>opacity = cx.opacity();
 
-        <span class="kw">let </span>foreground_color = cx.font_color().into();
+        <span class="kw">let </span>foreground_color = cx.font_color();
 
-        <span class="kw">let </span>background_color = cx.background_color().into();
+        <span class="kw">let </span>background_color = cx.background_color();
 
         <span class="kw">let </span>bounds = cx.bounds();
 
@@ -796,8 +812,8 @@
         <span class="kw">let </span>centery = bounds.y + <span class="number">0.5 </span>* bounds.h;
 
         <span class="comment">// Convert start and end angles to radians and rotate origin direction to be upwards instead of to the right
-        </span><span class="kw">let </span>start = <span class="self">self</span>.angle_start.to_radians() - PI / <span class="number">2.0</span>;
-        <span class="kw">let </span>end = <span class="self">self</span>.angle_end.to_radians() - PI / <span class="number">2.0</span>;
+        </span><span class="kw">let </span>start = <span class="self">self</span>.angle_start;
+        <span class="kw">let </span>end = <span class="self">self</span>.angle_end;
 
         <span class="kw">let </span>parent = cx.tree.get_parent(cx.current).unwrap();
 
@@ -809,15 +825,20 @@
         </span><span class="kw">let </span>span = <span class="self">self</span>.span.to_px(radius, <span class="number">0.0</span>);
 
         <span class="comment">// Draw the track arc
-        </span><span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
-        path.arc(centerx, centery, radius - span / <span class="number">2.0</span>, end, start, Solidity::Solid);
-        <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::color(background_color);
-        paint.set_line_width(span);
-        paint.set_line_cap(LineCap::Round);
-        canvas.stroke_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
+        </span><span class="kw">let </span>path = vg::Path::new();
+        <span class="comment">// path.arc(centerx, centery, radius - span / 2.0, end, start, Solidity::Solid);
+        </span><span class="kw">let </span>oval = vg::Rect::new(bounds.left(), bounds.top(), bounds.right(), bounds.bottom());
+
+        <span class="kw">let </span><span class="kw-2">mut </span>paint = vg::Paint::default();
+        paint.set_color(background_color);
+        paint.set_stroke_width(span);
+        paint.set_stroke_cap(vg::PaintCap::Round);
+        paint.set_style(vg::PaintStyle::Stroke);
+        <span class="comment">// canvas.draw_path(&amp;path, &amp;paint);
+        </span>canvas.draw_arc(oval, start, end - start, <span class="bool-val">true</span>, <span class="kw-2">&amp;</span>paint);
 
         <span class="comment">// Draw the active arc
-        </span><span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
+        </span><span class="kw">let </span><span class="kw-2">mut </span>path = vg::Path::new();
 
         <span class="kw">let </span>value = <span class="kw">match </span><span class="self">self</span>.mode {
             KnobMode::Continuous =&gt; <span class="self">self</span>.normalized_value,
@@ -828,24 +849,27 @@
         };
 
         <span class="kw">if </span><span class="self">self</span>.center {
-            <span class="kw">let </span>center = -PI / <span class="number">2.0</span>;
+            <span class="kw">let </span>center = -<span class="number">90.0</span>;
 
             <span class="kw">if </span>value &lt;= <span class="number">0.5 </span>{
                 <span class="kw">let </span>current = value * <span class="number">2.0 </span>* (center - start) + start;
-                path.arc(centerx, centery, radius - span / <span class="number">2.0</span>, center, current, Solidity::Solid);
+                path.arc_to(oval.with_inset((span / <span class="number">2.0</span>, span / <span class="number">2.0</span>)), start, current, <span class="bool-val">false</span>);
             } <span class="kw">else </span>{
-                <span class="kw">let </span>current = (value * <span class="number">2.0 </span>- <span class="number">1.0</span>) * (end - center) + center;
-                path.arc(centerx, centery, radius - span / <span class="number">2.0</span>, current, center, Solidity::Solid);
+                <span class="kw">let </span>current = (value * <span class="number">2.0 </span>- <span class="number">1.0</span>) * (end - center);
+                path.arc_to(oval.with_inset((span / <span class="number">2.0</span>, span / <span class="number">2.0</span>)), center, current, <span class="bool-val">false</span>);
             }
         } <span class="kw">else </span>{
             <span class="kw">let </span>current = value * (end - start) + start;
-            path.arc(centerx, centery, radius - span / <span class="number">2.0</span>, current, start, Solidity::Solid);
+            path.arc_to(oval.with_inset((span / <span class="number">2.0</span>, span / <span class="number">2.0</span>)), start, current - start, <span class="bool-val">false</span>);
         }
 
-        <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::color(foreground_color);
-        paint.set_line_width(span);
-        paint.set_line_cap(LineCap::Round);
-        canvas.stroke_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
+        <span class="kw">let </span><span class="kw-2">mut </span>paint = vg::Paint::default();
+        paint.set_color(foreground_color);
+        paint.set_stroke_width(span);
+        paint.set_stroke_cap(vg::PaintCap::Round);
+        paint.set_style(vg::PaintStyle::Stroke);
+        paint.set_anti_alias(<span class="bool-val">true</span>);
+        canvas.draw_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
     }
 }
 
@@ -857,7 +881,7 @@
             <span class="kw">if let </span><span class="prelude-val">Some</span>(view) = cx.views.get_mut(<span class="kw-2">&amp;</span>entity) {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(knob) = view.downcast_mut::&lt;ArcTrack&gt;() {
                     knob.normalized_value = value;
-                    cx.style.needs_redraw();
+                    cx.needs_redraw(entity);
                 }
             }
         });
@@ -913,7 +937,7 @@
     <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">"ticks"</span>)
     }
-    <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
+    <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;</span>Canvas) {
         <span class="kw">let </span>opacity = cx.opacity();
         <span class="comment">//let mut background_color: femtovg::Color = cx.current.get_background_color(cx).into();
         // background_color.set_alphaf(background_color.a * opacity);
@@ -935,7 +959,7 @@
         </span><span class="kw">let </span>tick_len = <span class="self">self</span>.tick_len.to_px(radius, <span class="number">0.0</span>);
         <span class="kw">let </span>line_width = <span class="self">self</span>.tick_width.to_px(radius, <span class="number">0.0</span>);
         <span class="comment">// Draw ticks
-        </span><span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
+        </span><span class="kw">let </span><span class="kw-2">mut </span>path = vg::Path::new();
         <span class="kw">match </span><span class="self">self</span>.mode {
             <span class="comment">// can't really make ticks for a continuous knob
             </span>KnobMode::Continuous =&gt; <span class="kw">return</span>,
@@ -943,21 +967,23 @@
                 <span class="kw">for </span>n <span class="kw">in </span><span class="number">0</span>..steps {
                     <span class="kw">let </span>a = n <span class="kw">as </span>f32 / (steps - <span class="number">1</span>) <span class="kw">as </span>f32;
                     <span class="kw">let </span>angle = start + (end - start) * a;
-                    path.move_to(
+                    path.move_to((
                         centerx + angle.cos() * (radius - tick_len),
                         centery + angle.sin() * (radius - tick_len),
-                    );
-                    path.line_to(
+                    ));
+                    path.line_to((
                         centerx + angle.cos() * (radius - line_width / <span class="number">2.0</span>),
                         centery + angle.sin() * (radius - line_width / <span class="number">2.0</span>),
-                    );
+                    ));
                 }
             }
         }
-        <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::color(foreground_color.into());
-        paint.set_line_width(line_width);
-        paint.set_line_cap(LineCap::Round);
-        canvas.stroke_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
+        <span class="kw">let </span><span class="kw-2">mut </span>paint = vg::Paint::default();
+        paint.set_color(foreground_color);
+        paint.set_stroke_width(line_width);
+        paint.set_stroke_cap(vg::PaintCap::Round);
+        paint.set_style(vg::PaintStyle::Stroke);
+        canvas.draw_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
     }
 }
 
@@ -1000,7 +1026,7 @@
     <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">"tickknob"</span>)
     }
-    <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
+    <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;</span>Canvas) {
         <span class="kw">let </span>opacity = cx.opacity();
         <span class="comment">//let mut background_color: femtovg::Color = cx.current.get_background_color(cx).into();
         // background_color.set_alphaf(background_color.a * opacity);
@@ -1021,15 +1047,17 @@
         <span class="kw">let </span>tick_width = <span class="self">self</span>.tick_width.to_px(radius, <span class="number">0.0</span>);
         <span class="kw">let </span>tick_len = <span class="self">self</span>.tick_len.to_px(radius, <span class="number">0.0</span>);
         <span class="comment">// Draw the circle
-        </span><span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
-        path.circle(centerx, centery, radius);
+        </span><span class="kw">let </span><span class="kw-2">mut </span>path = vg::Path::new();
+        path.add_circle((centerx, centery), radius, <span class="prelude-val">None</span>);
         <span class="comment">// path.arc(centerx, centery, radius - span / 2.0, end, start, Solidity::Solid);
-        </span><span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::color(background_color.into());
-        paint.set_line_width(tick_width);
-        paint.set_line_cap(LineCap::Round);
-        canvas.fill_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
+        </span><span class="kw">let </span><span class="kw-2">mut </span>paint = vg::Paint::default();
+        paint.set_color(background_color);
+        paint.set_stroke_width(tick_width);
+        paint.set_stroke_cap(vg::PaintCap::Round);
+        paint.set_style(vg::PaintStyle::Stroke);
+        canvas.draw_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
         <span class="comment">// Draw the tick
-        </span><span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
+        </span><span class="kw">let </span><span class="kw-2">mut </span>path = vg::Path::new();
         <span class="kw">let </span>angle = <span class="kw">match </span><span class="self">self</span>.mode {
             KnobMode::Continuous =&gt; start + (end - start) * <span class="self">self</span>.normalized_value,
             <span class="comment">// snapping
@@ -1041,17 +1069,21 @@
         };
         path.move_to(
             <span class="comment">// centerx + angle.cos() * (radius * 0.70),
-            </span>centerx + angle.cos() * (radius - tick_len),
-            centery + angle.sin() * (radius - tick_len),
+            </span>(
+                centerx + angle.cos() * (radius - tick_len),
+                centery + angle.sin() * (radius - tick_len),
+            ),
         );
-        path.line_to(
+        path.line_to((
             centerx + angle.cos() * (radius - tick_width / <span class="number">2.0</span>),
             centery + angle.sin() * (radius - tick_width / <span class="number">2.0</span>),
-        );
-        <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::color(foreground_color.into());
-        paint.set_line_width(tick_width);
-        paint.set_line_cap(LineCap::Round);
-        canvas.stroke_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
+        ));
+        <span class="kw">let </span><span class="kw-2">mut </span>paint = vg::Paint::default();
+        paint.set_color(foreground_color);
+        paint.set_stroke_width(tick_width);
+        paint.set_stroke_cap(vg::PaintCap::Round);
+        paint.set_style(vg::PaintStyle::Stroke);
+        canvas.draw_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
     }
 }
 
@@ -1063,7 +1095,7 @@
             <span class="kw">if let </span><span class="prelude-val">Some</span>(view) = cx.views.get_mut(<span class="kw-2">&amp;</span>entity) {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(knob) = view.downcast_mut::&lt;TickKnob&gt;() {
                     knob.normalized_value = value;
-                    cx.style.needs_redraw();
+                    cx.needs_redraw(entity);
                 }
             }
         });

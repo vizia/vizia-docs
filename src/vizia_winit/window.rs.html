@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_winit/src/window.rs`."><title>window.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vizia_winit" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0 (129f3b996 2024-06-10)" data-channel="1.79.0" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../vizia_winit/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_winit/src/window.rs`."><title>window.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vizia_winit" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -305,15 +305,343 @@
 <a href="#305" id="305">305</a>
 <a href="#306" id="306">306</a>
 <a href="#307" id="307">307</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::application::UserEvent;
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
+<a href="#355" id="355">355</a>
+<a href="#356" id="356">356</a>
+<a href="#357" id="357">357</a>
+<a href="#358" id="358">358</a>
+<a href="#359" id="359">359</a>
+<a href="#360" id="360">360</a>
+<a href="#361" id="361">361</a>
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
+<a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+<a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+<a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+<a href="#410" id="410">410</a>
+<a href="#411" id="411">411</a>
+<a href="#412" id="412">412</a>
+<a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
+<a href="#415" id="415">415</a>
+<a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
+<a href="#434" id="434">434</a>
+<a href="#435" id="435">435</a>
+<a href="#436" id="436">436</a>
+<a href="#437" id="437">437</a>
+<a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
+<a href="#440" id="440">440</a>
+<a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
+<a href="#444" id="444">444</a>
+<a href="#445" id="445">445</a>
+<a href="#446" id="446">446</a>
+<a href="#447" id="447">447</a>
+<a href="#448" id="448">448</a>
+<a href="#449" id="449">449</a>
+<a href="#450" id="450">450</a>
+<a href="#451" id="451">451</a>
+<a href="#452" id="452">452</a>
+<a href="#453" id="453">453</a>
+<a href="#454" id="454">454</a>
+<a href="#455" id="455">455</a>
+<a href="#456" id="456">456</a>
+<a href="#457" id="457">457</a>
+<a href="#458" id="458">458</a>
+<a href="#459" id="459">459</a>
+<a href="#460" id="460">460</a>
+<a href="#461" id="461">461</a>
+<a href="#462" id="462">462</a>
+<a href="#463" id="463">463</a>
+<a href="#464" id="464">464</a>
+<a href="#465" id="465">465</a>
+<a href="#466" id="466">466</a>
+<a href="#467" id="467">467</a>
+<a href="#468" id="468">468</a>
+<a href="#469" id="469">469</a>
+<a href="#470" id="470">470</a>
+<a href="#471" id="471">471</a>
+<a href="#472" id="472">472</a>
+<a href="#473" id="473">473</a>
+<a href="#474" id="474">474</a>
+<a href="#475" id="475">475</a>
+<a href="#476" id="476">476</a>
+<a href="#477" id="477">477</a>
+<a href="#478" id="478">478</a>
+<a href="#479" id="479">479</a>
+<a href="#480" id="480">480</a>
+<a href="#481" id="481">481</a>
+<a href="#482" id="482">482</a>
+<a href="#483" id="483">483</a>
+<a href="#484" id="484">484</a>
+<a href="#485" id="485">485</a>
+<a href="#486" id="486">486</a>
+<a href="#487" id="487">487</a>
+<a href="#488" id="488">488</a>
+<a href="#489" id="489">489</a>
+<a href="#490" id="490">490</a>
+<a href="#491" id="491">491</a>
+<a href="#492" id="492">492</a>
+<a href="#493" id="493">493</a>
+<a href="#494" id="494">494</a>
+<a href="#495" id="495">495</a>
+<a href="#496" id="496">496</a>
+<a href="#497" id="497">497</a>
+<a href="#498" id="498">498</a>
+<a href="#499" id="499">499</a>
+<a href="#500" id="500">500</a>
+<a href="#501" id="501">501</a>
+<a href="#502" id="502">502</a>
+<a href="#503" id="503">503</a>
+<a href="#504" id="504">504</a>
+<a href="#505" id="505">505</a>
+<a href="#506" id="506">506</a>
+<a href="#507" id="507">507</a>
+<a href="#508" id="508">508</a>
+<a href="#509" id="509">509</a>
+<a href="#510" id="510">510</a>
+<a href="#511" id="511">511</a>
+<a href="#512" id="512">512</a>
+<a href="#513" id="513">513</a>
+<a href="#514" id="514">514</a>
+<a href="#515" id="515">515</a>
+<a href="#516" id="516">516</a>
+<a href="#517" id="517">517</a>
+<a href="#518" id="518">518</a>
+<a href="#519" id="519">519</a>
+<a href="#520" id="520">520</a>
+<a href="#521" id="521">521</a>
+<a href="#522" id="522">522</a>
+<a href="#523" id="523">523</a>
+<a href="#524" id="524">524</a>
+<a href="#525" id="525">525</a>
+<a href="#526" id="526">526</a>
+<a href="#527" id="527">527</a>
+<a href="#528" id="528">528</a>
+<a href="#529" id="529">529</a>
+<a href="#530" id="530">530</a>
+<a href="#531" id="531">531</a>
+<a href="#532" id="532">532</a>
+<a href="#533" id="533">533</a>
+<a href="#534" id="534">534</a>
+<a href="#535" id="535">535</a>
+<a href="#536" id="536">536</a>
+<a href="#537" id="537">537</a>
+<a href="#538" id="538">538</a>
+<a href="#539" id="539">539</a>
+<a href="#540" id="540">540</a>
+<a href="#541" id="541">541</a>
+<a href="#542" id="542">542</a>
+<a href="#543" id="543">543</a>
+<a href="#544" id="544">544</a>
+<a href="#545" id="545">545</a>
+<a href="#546" id="546">546</a>
+<a href="#547" id="547">547</a>
+<a href="#548" id="548">548</a>
+<a href="#549" id="549">549</a>
+<a href="#550" id="550">550</a>
+<a href="#551" id="551">551</a>
+<a href="#552" id="552">552</a>
+<a href="#553" id="553">553</a>
+<a href="#554" id="554">554</a>
+<a href="#555" id="555">555</a>
+<a href="#556" id="556">556</a>
+<a href="#557" id="557">557</a>
+<a href="#558" id="558">558</a>
+<a href="#559" id="559">559</a>
+<a href="#560" id="560">560</a>
+<a href="#561" id="561">561</a>
+<a href="#562" id="562">562</a>
+<a href="#563" id="563">563</a>
+<a href="#564" id="564">564</a>
+<a href="#565" id="565">565</a>
+<a href="#566" id="566">566</a>
+<a href="#567" id="567">567</a>
+<a href="#568" id="568">568</a>
+<a href="#569" id="569">569</a>
+<a href="#570" id="570">570</a>
+<a href="#571" id="571">571</a>
+<a href="#572" id="572">572</a>
+<a href="#573" id="573">573</a>
+<a href="#574" id="574">574</a>
+<a href="#575" id="575">575</a>
+<a href="#576" id="576">576</a>
+<a href="#577" id="577">577</a>
+<a href="#578" id="578">578</a>
+<a href="#579" id="579">579</a>
+<a href="#580" id="580">580</a>
+<a href="#581" id="581">581</a>
+<a href="#582" id="582">582</a>
+<a href="#583" id="583">583</a>
+<a href="#584" id="584">584</a>
+<a href="#585" id="585">585</a>
+<a href="#586" id="586">586</a>
+<a href="#587" id="587">587</a>
+<a href="#588" id="588">588</a>
+<a href="#589" id="589">589</a>
+<a href="#590" id="590">590</a>
+<a href="#591" id="591">591</a>
+<a href="#592" id="592">592</a>
+<a href="#593" id="593">593</a>
+<a href="#594" id="594">594</a>
+<a href="#595" id="595">595</a>
+<a href="#596" id="596">596</a>
+<a href="#597" id="597">597</a>
+<a href="#598" id="598">598</a>
+<a href="#599" id="599">599</a>
+<a href="#600" id="600">600</a>
+<a href="#601" id="601">601</a>
+<a href="#602" id="602">602</a>
+<a href="#603" id="603">603</a>
+<a href="#604" id="604">604</a>
+<a href="#605" id="605">605</a>
+<a href="#606" id="606">606</a>
+<a href="#607" id="607">607</a>
+<a href="#608" id="608">608</a>
+<a href="#609" id="609">609</a>
+<a href="#610" id="610">610</a>
+<a href="#611" id="611">611</a>
+<a href="#612" id="612">612</a>
+<a href="#613" id="613">613</a>
+<a href="#614" id="614">614</a>
+<a href="#615" id="615">615</a>
+<a href="#616" id="616">616</a>
+<a href="#617" id="617">617</a>
+<a href="#618" id="618">618</a>
+<a href="#619" id="619">619</a>
+<a href="#620" id="620">620</a>
+<a href="#621" id="621">621</a>
+<a href="#622" id="622">622</a>
+<a href="#623" id="623">623</a>
+<a href="#624" id="624">624</a>
+<a href="#625" id="625">625</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::window_modifiers::WindowModifiers;
+<span class="kw">use </span>glutin::context::GlProfile;
+<span class="kw">use </span>vizia_core::context::TreeProps;
+<span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
+</span><span class="kw">use </span>winit::platform::windows::WindowExtWindows;
+
+<span class="kw">use </span>hashbrown::HashMap;
+<span class="kw">use </span>std::error::Error;
 <span class="kw">use </span>std::num::NonZeroU32;
+<span class="kw">use </span>std::{ffi::CString, sync::Arc};
+<span class="kw">use </span>winit::raw_window_handle::HasWindowHandle;
 
 <span class="kw">use </span><span class="kw">crate</span>::convert::cursor_icon_to_cursor_icon;
-<span class="kw">use </span>femtovg::{renderer::OpenGl, Canvas, Color};
 
-<span class="kw">use </span>glutin::surface::SwapInterval;
+<span class="kw">use </span>gl_rs <span class="kw">as </span>gl;
+<span class="kw">use </span>glutin::config::Config;
 <span class="kw">use </span>glutin_winit::DisplayBuilder;
-<span class="kw">use </span>raw_window_handle::HasRawWindowHandle;
+
+<span class="kw">use </span>gl::types::<span class="kw-2">*</span>;
 
 <span class="kw">use </span>glutin::{
     config::ConfigTemplateBuilder,
@@ -323,72 +651,54 @@
     surface::{SurfaceAttributesBuilder, WindowSurface},
 };
 
-<span class="kw">use </span>vizia_core::backend::<span class="kw-2">*</span>;
+<span class="kw">use </span>skia_safe::{
+    gpu::{
+        <span class="self">self</span>, backend_render_targets, context_options, gl::FramebufferInfo, ContextOptions,
+        SurfaceOrigin,
+    },
+    ColorSpace, ColorType, PixelGeometry, Surface, SurfaceProps, SurfacePropsFlags,
+};
+
 <span class="kw">use </span>vizia_core::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span>winit::dpi::<span class="kw-2">*</span>;
-<span class="kw">use </span>winit::event_loop::EventLoop;
-<span class="kw">use </span>winit::window::{CursorGrabMode, WindowBuilder, WindowLevel};
+<span class="kw">use </span>winit::event_loop::ActiveEventLoop;
+<span class="kw">use </span>winit::window::{CursorGrabMode, CursorIcon, CustomCursor};
+<span class="kw">use </span>winit::{dpi::<span class="kw-2">*</span>, window::WindowId};
 
-<span class="kw">pub struct </span>Window {
-    context: glutin::context::PossiblyCurrentContext,
-    surface: glutin::surface::Surface&lt;glutin::surface::WindowSurface&gt;,
-    window: winit::window::Window,
+<span class="kw">pub struct </span>WinState {
+    <span class="kw">pub </span>entity: Entity,
+    gl_config: Config,
+    gl_context: glutin::context::PossiblyCurrentContext,
+    <span class="kw">pub </span>gl_surface: glutin::surface::Surface&lt;glutin::surface::WindowSurface&gt;,
+    <span class="kw">pub </span>id: WindowId,
+    <span class="kw">pub </span>gr_context: skia_safe::gpu::DirectContext,
+    <span class="kw">pub </span>window: Arc&lt;winit::window::Window&gt;,
+    <span class="kw">pub </span>surface: skia_safe::Surface,
+    <span class="kw">pub </span>dirty_surface: skia_safe::Surface,
     <span class="kw">pub </span>should_close: bool,
+    <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
+    </span><span class="kw">pub </span>is_initially_cloaked: bool,
 }
 
-<span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
-</span><span class="kw">impl </span>Window {
-    <span class="doccomment">/// Cloaks the window such that it is not visible to the user, but will still be composited.
-    /// We use this to work around the "blank window flash" startup bug on windows.
-    ///
-    /// &lt;https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute&gt;
-    ///
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_cloak(<span class="kw-2">&amp;</span><span class="self">self</span>, state: bool) -&gt; bool {
-        <span class="kw">use </span>raw_window_handle::RawWindowHandle::Win32;
-        <span class="kw">use </span>winapi::shared::minwindef::{BOOL, FALSE, TRUE};
-        <span class="kw">use </span>winapi::um::dwmapi::{DwmSetWindowAttribute, DWMWA_CLOAK};
-
-        <span class="kw">let </span>Win32(handle) = <span class="self">self</span>.window.raw_window_handle() <span class="kw">else </span>{
-            <span class="macro">unreachable!</span>();
-        };
-
-        <span class="kw">let </span>value = <span class="kw">if </span>state { TRUE } <span class="kw">else </span>{ FALSE };
-        <span class="kw">let </span>result = <span class="kw">unsafe </span>{
-            DwmSetWindowAttribute(
-                handle.hwnd <span class="kw">as _</span>,
-                DWMWA_CLOAK,
-                <span class="kw-2">&amp;</span>value <span class="kw">as </span><span class="kw-2">*const </span>BOOL <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>,
-                std::mem::size_of::&lt;BOOL&gt;() <span class="kw">as </span>u32,
-            )
-        };
-
-        result == <span class="number">0 </span><span class="comment">// success
-    </span>}
+<span class="kw">impl </span>Drop <span class="kw">for </span>WinState {
+    <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.gl_context.make_current(<span class="kw-2">&amp;</span><span class="self">self</span>.gl_surface).unwrap();
+    }
 }
 
-<span class="kw">impl </span>Window {
+<span class="kw">impl </span>WinState {
     <span class="kw">pub fn </span>new(
-        events_loop: <span class="kw-2">&amp;</span>EventLoop&lt;UserEvent&gt;,
-        window_description: <span class="kw-2">&amp;</span>WindowDescription,
-    ) -&gt; (<span class="self">Self</span>, Canvas&lt;OpenGl&gt;) {
-        <span class="kw">let </span>window_builder = WindowBuilder::new();
+        event_loop: <span class="kw-2">&amp;</span>ActiveEventLoop,
+        window: Arc&lt;winit::window::Window&gt;,
+        entity: Entity,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
+        window.set_ime_allowed(<span class="bool-val">true</span>);
+        window.set_visible(<span class="bool-val">true</span>);
 
-        <span class="comment">//Windows COM doesn't play nicely with winit's drag and drop right now
-        </span><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
-        </span><span class="kw">let </span>window_builder = {
-            <span class="kw">use </span>winit::platform::windows::WindowBuilderExtWindows;
-            window_builder.with_drag_and_drop(<span class="bool-val">false</span>)
-        };
+        <span class="kw">let </span>template = ConfigTemplateBuilder::new().with_alpha_size(<span class="number">8</span>).with_transparency(<span class="bool-val">true</span>);
+        <span class="kw">let </span>display_builder = DisplayBuilder::new();
 
-        <span class="comment">// Apply generic WindowBuilder properties
-        </span><span class="kw">let </span>window_builder = apply_window_description(window_builder, window_description);
-
-        <span class="kw">let </span>template =
-            ConfigTemplateBuilder::new().with_alpha_size(<span class="number">8</span>).with_transparency(<span class="macro">cfg!</span>(cgl_backend));
-        <span class="kw">let </span>display_builder = DisplayBuilder::new().with_window_builder(<span class="prelude-val">Some</span>(window_builder));
-
-        <span class="kw">let </span>(window, gl_config) = display_builder
-            .build(events_loop, template, |configs| {
+        <span class="kw">let </span>(<span class="kw">_</span>, gl_config) = display_builder
+            .build(event_loop, template, |configs| {
                 <span class="comment">// Find the config with the maximum number of samples, so our triangle will
                 // be smooth.
                 </span>configs
@@ -406,83 +716,261 @@
             })
             .unwrap();
 
-        <span class="kw">let </span>window = window.unwrap();
-
-        <span class="kw">let </span>raw_window_handle = <span class="prelude-val">Some</span>(window.raw_window_handle());
+        <span class="kw">let </span>raw_window_handle = window.window_handle().unwrap().as_raw();
 
         <span class="kw">let </span>gl_display = gl_config.display();
 
-        <span class="kw">let </span>context_attributes = ContextAttributesBuilder::new().build(raw_window_handle);
+        <span class="kw">let </span>context_attributes = ContextAttributesBuilder::new()
+            .with_profile(GlProfile::Core)
+            .with_context_api(ContextApi::OpenGl(<span class="prelude-val">None</span>))
+            .build(<span class="prelude-val">Some</span>(raw_window_handle));
+
         <span class="kw">let </span>fallback_context_attributes = ContextAttributesBuilder::new()
+            .with_profile(GlProfile::Core)
             .with_context_api(ContextApi::Gles(<span class="prelude-val">None</span>))
-            .build(raw_window_handle);
-        <span class="kw">let </span><span class="kw-2">mut </span>not_current_gl_context = <span class="prelude-val">Some</span>(<span class="kw">unsafe </span>{
+            .build(<span class="prelude-val">Some</span>(raw_window_handle));
+
+        <span class="kw">let </span>not_current_gl_context = <span class="kw">unsafe </span>{
             gl_display.create_context(<span class="kw-2">&amp;</span>gl_config, <span class="kw-2">&amp;</span>context_attributes).unwrap_or_else(|<span class="kw">_</span>| {
                 gl_display
                     .create_context(<span class="kw-2">&amp;</span>gl_config, <span class="kw-2">&amp;</span>fallback_context_attributes)
                     .expect(<span class="string">"failed to create context"</span>)
             })
-        });
+        };
 
         <span class="kw">let </span>(width, height): (u32, u32) = window.inner_size().into();
-        <span class="kw">let </span>raw_window_handle = window.raw_window_handle();
-        <span class="kw">let </span>attrs = SurfaceAttributesBuilder::&lt;WindowSurface&gt;::new().build(
+
+        <span class="kw">let </span>attrs = SurfaceAttributesBuilder::&lt;WindowSurface&gt;::new().with_srgb(<span class="prelude-val">Some</span>(<span class="bool-val">true</span>)).build(
             raw_window_handle,
             NonZeroU32::new(width.max(<span class="number">1</span>)).unwrap(),
             NonZeroU32::new(height.max(<span class="number">1</span>)).unwrap(),
         );
 
-        <span class="kw">let </span>surface =
+        <span class="kw">let </span>gl_surface =
             <span class="kw">unsafe </span>{ gl_config.display().create_window_surface(<span class="kw-2">&amp;</span>gl_config, <span class="kw-2">&amp;</span>attrs).unwrap() };
 
-        <span class="kw">let </span>gl_context = not_current_gl_context.take().unwrap().make_current(<span class="kw-2">&amp;</span>surface).unwrap();
+        <span class="kw">let </span>gl_context = not_current_gl_context.make_current(<span class="kw-2">&amp;</span>gl_surface).unwrap();
 
-        <span class="comment">// Build the femtovg renderer
-        </span><span class="kw">let </span>renderer = <span class="kw">unsafe </span>{
-            OpenGl::new_from_function_cstr(|s| gl_display.get_proc_address(s) <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>)
-        }
-        .expect(<span class="string">"Cannot create renderer"</span>);
+        <span class="comment">// if window_description.vsync {
+        //     gl_surface
+        //         .set_swap_interval(&amp;gl_context, SwapInterval::Wait(NonZeroU32::new(1).unwrap()))
+        //         .expect("Failed to set vsync");
+        // }
 
-        <span class="kw">if </span>window_description.vsync {
-            surface
-                .set_swap_interval(<span class="kw-2">&amp;</span>gl_context, SwapInterval::Wait(NonZeroU32::new(<span class="number">1</span>).unwrap()))
-                .expect(<span class="string">"Failed to set vsync"</span>);
-        }
+        // Build skia renderer
+        </span>gl::load_with(|s| {
+            gl_config.display().get_proc_address(CString::new(s).unwrap().as_c_str())
+        });
 
-        <span class="kw">let </span><span class="kw-2">mut </span>canvas = Canvas::new(renderer).expect(<span class="string">"Failed to create canvas"</span>);
+        <span class="kw">let </span>interface = skia_safe::gpu::gl::Interface::new_load_with(|name| {
+            <span class="kw">if </span>name == <span class="string">"eglGetCurrentDisplay" </span>{
+                <span class="kw">return </span>std::ptr::null();
+            }
+            gl_config.display().get_proc_address(CString::new(name).unwrap().as_c_str())
+        })
+        .expect(<span class="string">"Could not create interface"</span>);
 
-        <span class="kw">let </span>size = window.inner_size();
-        canvas.set_size(size.width, size.height, <span class="number">1.0</span>);
-        canvas.clear_rect(<span class="number">0</span>, <span class="number">0</span>, size.width, size.height, Color::rgb(<span class="number">255</span>, <span class="number">80</span>, <span class="number">80</span>));
+        <span class="comment">// https://github.com/rust-skia/rust-skia/issues/476
+        </span><span class="kw">let </span><span class="kw-2">mut </span>context_options = ContextOptions::new();
+        context_options.skip_gl_error_checks = context_options::Enable::Yes;
+
+        <span class="kw">let </span><span class="kw-2">mut </span>gr_context = skia_safe::gpu::direct_contexts::make_gl(interface, <span class="kw-2">&amp;</span>context_options)
+            .expect(<span class="string">"Could not create direct context"</span>);
+
+        <span class="kw">let </span>fb_info = {
+            <span class="kw">let </span><span class="kw-2">mut </span>fboid: GLint = <span class="number">0</span>;
+            <span class="kw">unsafe </span>{ gl::GetIntegerv(gl::FRAMEBUFFER_BINDING, <span class="kw-2">&amp;mut </span>fboid) };
+
+            FramebufferInfo {
+                fboid: fboid.try_into().unwrap(),
+                format: skia_safe::gpu::gl::Format::RGBA8.into(),
+                ..Default::default()
+            }
+        };
+
+        <span class="kw">let </span>num_samples = gl_config.num_samples() <span class="kw">as </span>usize;
+        <span class="kw">let </span>stencil_size = gl_config.stencil_size() <span class="kw">as </span>usize;
+
+        <span class="kw">let </span><span class="kw-2">mut </span>surface =
+            create_surface(<span class="kw-2">&amp;</span>window, fb_info, <span class="kw-2">&amp;mut </span>gr_context, num_samples, stencil_size);
+
+        <span class="kw">let </span>inner_size = window.inner_size();
+
+        <span class="kw">let </span>dirty_surface = surface
+            .new_surface_with_dimensions((inner_size.width <span class="kw">as </span>i32, inner_size.height <span class="kw">as </span>i32))
+            .unwrap();
 
         <span class="comment">// Build our window
-        </span><span class="kw">let </span>win = Window { context: gl_context, surface, window, should_close: <span class="bool-val">false </span>};
-
-        (win, canvas)
+        </span><span class="prelude-val">Ok</span>(WinState {
+            entity,
+            gl_config,
+            gl_context,
+            id: window.id(),
+            gr_context,
+            gl_surface,
+            window,
+            surface,
+            dirty_surface,
+            should_close: <span class="bool-val">false</span>,
+            <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
+            </span>is_initially_cloaked: <span class="bool-val">true</span>,
+        })
     }
 
-    <span class="kw">pub fn </span>window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>winit::window::Window {
+    <span class="comment">// Returns a reference to the winit window
+    </span><span class="kw">pub fn </span>window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>winit::window::Window {
         <span class="kw-2">&amp;</span><span class="self">self</span>.window
     }
 
-    <span class="kw">pub fn </span>resize(<span class="kw-2">&amp;</span><span class="self">self</span>, size: PhysicalSize&lt;u32&gt;) {
-        <span class="kw">if </span>size.width != <span class="number">0 </span>&amp;&amp; size.height != <span class="number">0 </span>{
-            <span class="self">self</span>.surface.resize(
-                <span class="kw-2">&amp;</span><span class="self">self</span>.context,
-                size.width.try_into().unwrap(),
-                size.height.try_into().unwrap(),
-            );
-        }
+    <span class="kw">pub fn </span>make_current(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.gl_context.make_current(<span class="kw-2">&amp;</span><span class="self">self</span>.gl_surface).unwrap();
     }
 
-    <span class="kw">pub fn </span>swap_buffers(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="self">self</span>.surface.swap_buffers(<span class="kw-2">&amp;</span><span class="self">self</span>.context).expect(<span class="string">"Failed to swap buffers"</span>);
+    <span class="kw">pub fn </span>resize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, size: PhysicalSize&lt;u32&gt;) {
+        <span class="self">self</span>.gl_context.make_current(<span class="kw-2">&amp;</span><span class="self">self</span>.gl_surface).unwrap();
+        <span class="kw">let </span>(width, height): (u32, u32) = size.into();
+
+        <span class="kw">if </span>width == <span class="number">0 </span>|| height == <span class="number">0 </span>{
+            <span class="kw">return</span>;
+        }
+
+        <span class="kw">let </span>fb_info = {
+            <span class="kw">let </span><span class="kw-2">mut </span>fboid: GLint = <span class="number">0</span>;
+            <span class="kw">unsafe </span>{ gl::GetIntegerv(gl::FRAMEBUFFER_BINDING, <span class="kw-2">&amp;mut </span>fboid) };
+
+            FramebufferInfo {
+                fboid: fboid.try_into().unwrap(),
+                format: skia_safe::gpu::gl::Format::RGBA8.into(),
+                ..Default::default()
+            }
+        };
+
+        <span class="self">self</span>.surface = create_surface(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.window,
+            fb_info,
+            <span class="kw-2">&amp;mut </span><span class="self">self</span>.gr_context,
+            <span class="self">self</span>.gl_config.num_samples() <span class="kw">as </span>usize,
+            <span class="self">self</span>.gl_config.stencil_size() <span class="kw">as </span>usize,
+        );
+
+        <span class="self">self</span>.dirty_surface = <span class="self">self
+            </span>.surface
+            .new_surface_with_dimensions((width.max(<span class="number">1</span>) <span class="kw">as </span>i32, height.max(<span class="number">1</span>) <span class="kw">as </span>i32))
+            .unwrap();
+
+        <span class="self">self</span>.gl_surface.resize(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.gl_context,
+            NonZeroU32::new(width.max(<span class="number">1</span>)).unwrap(),
+            NonZeroU32::new(height.max(<span class="number">1</span>)).unwrap(),
+        );
+    }
+
+    <span class="kw">pub fn </span>swap_buffers(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.gr_context.flush_and_submit();
+        <span class="self">self</span>.gl_surface.swap_buffers(<span class="kw-2">&amp;</span><span class="self">self</span>.gl_context).expect(<span class="string">"Failed to swap buffers"</span>);
+    }
+}
+
+<span class="kw">pub fn </span>create_surface(
+    window: <span class="kw-2">&amp;</span>winit::window::Window,
+    fb_info: FramebufferInfo,
+    gr_context: <span class="kw-2">&amp;mut </span>skia_safe::gpu::DirectContext,
+    num_samples: usize,
+    stencil_size: usize,
+) -&gt; Surface {
+    <span class="kw">let </span>size = window.inner_size();
+    <span class="kw">let </span>size = (
+        size.width.try_into().expect(<span class="string">"Could not convert width"</span>),
+        size.height.try_into().expect(<span class="string">"Could not convert height"</span>),
+    );
+
+    <span class="kw">let </span>backend_render_target =
+        backend_render_targets::make_gl(size, num_samples, stencil_size, fb_info);
+
+    <span class="kw">let </span>surface_props = SurfaceProps::new_with_text_properties(
+        SurfacePropsFlags::default(),
+        PixelGeometry::default(),
+        <span class="number">0.5</span>,
+        <span class="number">0.0</span>,
+    );
+
+    gpu::surfaces::wrap_backend_render_target(
+        gr_context,
+        <span class="kw-2">&amp;</span>backend_render_target,
+        SurfaceOrigin::BottomLeft,
+        ColorType::RGBA8888,
+        ColorSpace::new_srgb(),
+        <span class="prelude-val">Some</span>(surface_props).as_ref(),
+        <span class="comment">// None,
+    </span>)
+    .expect(<span class="string">"Could not create skia surface"</span>)
+}
+
+<span class="kw">pub struct </span>Window {
+    <span class="kw">pub </span>window: <span class="prelude-ty">Option</span>&lt;Arc&lt;winit::window::Window&gt;&gt;,
+    <span class="kw">pub </span>on_close: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext)&gt;&gt;,
+    <span class="kw">pub </span>on_create: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext)&gt;&gt;,
+    <span class="kw">pub </span>should_close: bool,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) custom_cursors: Arc&lt;HashMap&lt;CursorIcon, CustomCursor&gt;&gt;,
+}
+
+<span class="kw">impl </span>Window {
+    <span class="kw">fn </span>window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>winit::window::Window {
+        <span class="self">self</span>.window.as_ref().unwrap()
+    }
+
+    <span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;mut </span>Context, content: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>Context)) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+        <span class="self">Self </span>{
+            window: <span class="prelude-val">None</span>,
+            on_close: <span class="prelude-val">None</span>,
+            on_create: <span class="prelude-val">None</span>,
+            should_close: <span class="bool-val">false</span>,
+            custom_cursors: Default::default(),
+        }
+        .build(cx, |cx| {
+            cx.windows.insert(cx.current(), WindowState::default());
+            cx.tree.set_window(cx.current(), <span class="bool-val">true</span>);
+            (content)(cx);
+        })
+    }
+
+    <span class="kw">pub fn </span>popup(cx: <span class="kw-2">&amp;mut </span>Context, is_modal: bool, content: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>Context)) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+        <span class="self">Self </span>{
+            window: <span class="prelude-val">None</span>,
+            on_close: <span class="prelude-val">None</span>,
+            on_create: <span class="prelude-val">None</span>,
+            should_close: <span class="bool-val">false</span>,
+            custom_cursors: Default::default(),
+        }
+        .build(cx, |cx| {
+            <span class="kw">let </span>parent_window = cx.parent_window();
+            <span class="kw">if </span>is_modal {
+                cx.emit_to(parent_window, WindowEvent::SetEnabled(<span class="bool-val">false</span>));
+            }
+
+            cx.windows.insert(
+                cx.current(),
+                WindowState { owner: <span class="prelude-val">Some</span>(parent_window), is_modal: <span class="bool-val">true</span>, ..Default::default() },
+            );
+            cx.tree.set_window(cx.current(), <span class="bool-val">true</span>);
+            (content)(cx);
+        })
+        .lock_focus_to_within()
     }
 }
 
 <span class="kw">impl </span>View <span class="kw">for </span>Window {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+        <span class="prelude-val">Some</span>(<span class="string">"window"</span>)
+    }
+
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
-        event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
+        event.map(|window_event, meta| <span class="kw">match </span>window_event {
+            WindowEvent::Destroyed =&gt; {
+                <span class="kw">let </span>parent_window = cx.parent_window().unwrap_or(Entity::root());
+                cx.emit_to(parent_window, WindowEvent::SetEnabled(<span class="bool-val">true</span>));
+            }
+
             WindowEvent::GrabCursor(flag) =&gt; {
                 <span class="kw">let </span>grab_mode = <span class="kw">if </span><span class="kw-2">*</span>flag { CursorGrabMode::Locked } <span class="kw">else </span>{ CursorGrabMode::None };
                 <span class="self">self</span>.window().set_cursor_grab(grab_mode).expect(<span class="string">"Failed to set cursor grab"</span>);
@@ -497,12 +985,18 @@
             }
 
             WindowEvent::SetCursor(cursor) =&gt; {
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(icon) = cursor_icon_to_cursor_icon(<span class="kw-2">*</span>cursor) {
-                    <span class="self">self</span>.window().set_cursor_visible(<span class="bool-val">true</span>);
-                    <span class="self">self</span>.window().set_cursor_icon(icon);
-                } <span class="kw">else </span>{
+                <span class="kw">let </span><span class="prelude-val">Some</span>(icon) = cursor_icon_to_cursor_icon(<span class="kw-2">*</span>cursor) <span class="kw">else </span>{
                     <span class="self">self</span>.window().set_cursor_visible(<span class="bool-val">false</span>);
+                    <span class="kw">return</span>;
+                };
+
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(custom_icon) = <span class="self">self</span>.custom_cursors.get(<span class="kw-2">&amp;</span>icon) {
+                    <span class="self">self</span>.window().set_cursor(custom_icon.clone());
+                } <span class="kw">else </span>{
+                    <span class="self">self</span>.window().set_cursor(icon);
                 }
+
+                <span class="self">self</span>.window().set_cursor_visible(<span class="bool-val">true</span>);
             }
 
             WindowEvent::SetTitle(title) =&gt; {
@@ -524,7 +1018,12 @@
             }
 
             WindowEvent::SetPosition(pos) =&gt; {
-                <span class="self">self</span>.window().set_outer_position(LogicalPosition::new(pos.x, pos.y));
+                <span class="kw">let </span>parent_window_position = cx.window_position();
+                <span class="self">self</span>.window().set_outer_position(LogicalPosition::new(
+                    parent_window_position.x + pos.x,
+                    parent_window_position.y + pos.y,
+                ));
+                meta.consume();
             }
 
             WindowEvent::SetResizable(flag) =&gt; {
@@ -541,6 +1040,8 @@
 
             WindowEvent::SetVisible(flag) =&gt; {
                 <span class="self">self</span>.window().set_visible(<span class="kw-2">*</span>flag);
+
+                meta.consume();
             }
 
             WindowEvent::SetDecorations(flag) =&gt; {
@@ -553,6 +1054,14 @@
 
             WindowEvent::WindowClose =&gt; {
                 <span class="self">self</span>.should_close = <span class="bool-val">true</span>;
+
+                cx.close_window();
+
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_close {
+                    callback(cx);
+                }
+
+                meta.consume();
             }
 
             WindowEvent::FocusNext =&gt; {
@@ -563,53 +1072,180 @@
                 cx.focus_prev();
             }
 
+            WindowEvent::Redraw =&gt; {
+                <span class="self">self</span>.window().request_redraw();
+            }
+
+            <span class="attr">#[allow(unused_variables)]
+            </span>WindowEvent::SetEnabled(flag) =&gt; {
+                <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
+                </span><span class="self">self</span>.window().set_enable(<span class="kw-2">*</span>flag);
+
+                <span class="self">self</span>.window().focus_window();
+            }
+
+            WindowEvent::DragWindow =&gt; {
+                <span class="self">self</span>.window().drag_window().expect(<span class="string">"Failed to init drag window"</span>);
+                meta.consume();
+            }
+
             <span class="kw">_ </span>=&gt; {}
         })
     }
 }
 
-<span class="kw">fn </span>apply_window_description(
-    <span class="kw-2">mut </span>builder: WindowBuilder,
-    description: <span class="kw-2">&amp;</span>WindowDescription,
-) -&gt; WindowBuilder {
-    builder = builder.with_title(<span class="kw-2">&amp;</span>description.title).with_inner_size(LogicalSize::new(
-        description.inner_size.width,
-        description.inner_size.height,
-    ));
-
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(min_inner_size) = description.min_inner_size {
-        builder = builder
-            .with_min_inner_size(LogicalSize::new(min_inner_size.width, min_inner_size.height))
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; WindowModifiers <span class="kw">for </span>Handle&lt;<span class="lifetime">'a</span>, Window&gt; {
+    <span class="kw">fn </span>on_close(<span class="self">self</span>, callback: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + <span class="lifetime">'static</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.modify(|window| window.on_close = <span class="prelude-val">Some</span>(Box::new(callback)))
     }
 
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(max_inner_size) = description.max_inner_size {
-        builder = builder
-            .with_max_inner_size(LogicalSize::new(max_inner_size.width, max_inner_size.height));
+    <span class="kw">fn </span>on_create(<span class="self">self</span>, callback: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + <span class="lifetime">'static</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.modify(|window| window.on_create = <span class="prelude-val">Some</span>(Box::new(callback)))
     }
 
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(position) = description.position {
-        builder = builder.with_position(LogicalPosition::new(position.x, position.y));
-    }
+    <span class="kw">fn </span>title&lt;T: ToString&gt;(<span class="kw-2">mut </span><span class="self">self</span>, title: <span class="kw">impl </span>Res&lt;T&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">let </span>title = title.get(<span class="kw-2">&amp;</span><span class="self">self</span>).to_string();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.title = title;
+        }
 
-    builder
-        .with_resizable(description.resizable)
-        .with_maximized(description.maximized)
-        <span class="comment">// Accesskit requires that the window start invisible until accesskit is initialized.
-        </span>.with_visible(<span class="bool-val">false</span>)
-        .with_window_level(<span class="kw">if </span>description.always_on_top {
-            WindowLevel::AlwaysOnTop
-        } <span class="kw">else </span>{
-            WindowLevel::Normal
-        })
-        .with_transparent(description.transparent)
-        .with_decorations(description.decorations)
-        .with_window_icon(description.icon.as_ref().map(|icon| {
-            winit::window::Icon::from_rgba(
-                icon.clone(),
-                description.icon_width,
-                description.icon_height,
-            )
-            .unwrap()
-        }))
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>inner_size&lt;S: Into&lt;WindowSize&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, size: <span class="kw">impl </span>Res&lt;S&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">let </span>size = size.get(<span class="kw-2">&amp;</span><span class="self">self</span>).into();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.inner_size = size;
+        }
+
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>min_inner_size&lt;S: Into&lt;WindowSize&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, size: <span class="kw">impl </span>Res&lt;<span class="prelude-ty">Option</span>&lt;S&gt;&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">let </span>size = size.get(<span class="kw-2">&amp;</span><span class="self">self</span>).map(|size| size.into());
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.min_inner_size = size;
+        }
+
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>max_inner_size&lt;S: Into&lt;WindowSize&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, size: <span class="kw">impl </span>Res&lt;<span class="prelude-ty">Option</span>&lt;S&gt;&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">let </span>size = size.get(<span class="kw-2">&amp;</span><span class="self">self</span>).map(|size| size.into());
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.max_inner_size = size;
+        }
+
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>position&lt;P: Into&lt;vizia_window::WindowPosition&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, position: <span class="kw">impl </span>Res&lt;P&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">let </span>pos = <span class="prelude-val">Some</span>(position.get(<span class="kw-2">&amp;</span><span class="self">self</span>).into());
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.position = pos;
+        }
+
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>resizable(<span class="kw-2">mut </span><span class="self">self</span>, flag: <span class="kw">impl </span>Res&lt;bool&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">let </span>flag = flag.get(<span class="kw-2">&amp;</span><span class="self">self</span>);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.resizable = flag;
+        }
+
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>minimized(<span class="kw-2">mut </span><span class="self">self</span>, flag: <span class="kw">impl </span>Res&lt;bool&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">let </span>flag = flag.get(<span class="kw-2">&amp;</span><span class="self">self</span>);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.minimized = flag;
+        }
+
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>maximized(<span class="kw-2">mut </span><span class="self">self</span>, flag: <span class="kw">impl </span>Res&lt;bool&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">let </span>flag = flag.get(<span class="kw-2">&amp;</span><span class="self">self</span>);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.maximized = flag;
+        }
+
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>visible(<span class="kw-2">mut </span><span class="self">self</span>, flag: bool) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.visible = flag
+        }
+
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>transparent(<span class="kw-2">mut </span><span class="self">self</span>, flag: bool) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.transparent = flag
+        }
+
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>decorations(<span class="kw-2">mut </span><span class="self">self</span>, flag: bool) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.decorations = flag
+        }
+
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>always_on_top(<span class="kw-2">mut </span><span class="self">self</span>, flag: bool) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.always_on_top = flag
+        }
+
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>vsync(<span class="kw-2">mut </span><span class="self">self</span>, flag: bool) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.vsync = flag
+        }
+
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>icon(<span class="kw-2">mut </span><span class="self">self</span>, width: u32, height: u32, image: Vec&lt;u8&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.icon = <span class="prelude-val">Some</span>(image);
+            win_state.window_description.icon_width = width;
+            win_state.window_description.icon_height = height;
+        }
+
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>enabled_window_buttons(<span class="kw-2">mut </span><span class="self">self</span>, window_buttons: WindowButtons) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
+            win_state.window_description.enabled_window_buttons = window_buttons;
+        }
+
+        <span class="self">self
+    </span>}
 }
 </code></pre></div></section></main></body></html>

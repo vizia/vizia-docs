@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/layout/node.rs`."><title>node.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0 (129f3b996 2024-06-10)" data-channel="1.79.0" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../vizia_core/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/layout/node.rs`."><title>node.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -372,11 +372,38 @@
 <a href="#372" id="372">372</a>
 <a href="#373" id="373">373</a>
 <a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>morphorm::Node;
+<span class="kw">use </span>skia_safe::wrapper::PointerWrapper;
 <span class="kw">use </span>vizia_storage::MorphormChildIter;
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::resource::{ImageOrId, ResourceManager};
+<span class="kw">use </span><span class="kw">crate</span>::resource::{ImageOrSvg, ResourceManager};
 <span class="kw">use </span><span class="kw">crate</span>::text::TextContext;
 
 <span class="kw">pub struct </span>SubLayout&lt;<span class="lifetime">'a</span>&gt; {
@@ -523,28 +550,28 @@
         width: <span class="prelude-ty">Option</span>&lt;f32&gt;,
         height: <span class="prelude-ty">Option</span>&lt;f32&gt;,
     ) -&gt; <span class="prelude-ty">Option</span>&lt;(f32, f32)&gt; {
-        <span class="kw">if </span>sublayout.text_context.has_buffer(<span class="kw-2">*</span><span class="self">self</span>) {
-            <span class="comment">// If the width is known use that, else use 0 for wrapping text or 999999 for non-wrapping text.
-            </span><span class="kw">let </span>max_width = <span class="kw">if let </span><span class="prelude-val">Some</span>(width) = width {
-                <span class="kw">let </span>child_left =
-                    store.child_left.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().unwrap_or_default().to_px(width, <span class="number">0.0</span>)
-                        * store.scale_factor();
-                <span class="kw">let </span>child_right =
-                    store.child_right.get(<span class="kw-2">*</span><span class="self">self</span>).cloned().unwrap_or_default().to_px(width, <span class="number">0.0</span>)
-                        * store.scale_factor();
-                <span class="kw">let </span>border_width = store
-                    .border_width
-                    .get(<span class="kw-2">*</span><span class="self">self</span>)
-                    .cloned()
-                    .unwrap_or_default()
-                    .to_pixels(<span class="number">0.0</span>, store.scale_factor());
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(paragraph) = sublayout.text_context.text_paragraphs.get_mut(<span class="kw-2">*</span><span class="self">self</span>) {
+            <span class="comment">// // If the width is known use that, else use 0 for wrapping text or 999999 for non-wrapping text.
+            // let max_width = if let Some(width) = width {
+            //     let child_left =
+            //         store.child_left.get(*self).cloned().unwrap_or_default().to_px(width, 0.0)
+            //             * store.scale_factor();
+            //     let child_right =
+            //         store.child_right.get(*self).cloned().unwrap_or_default().to_px(width, 0.0)
+            //             * store.scale_factor();
+            //     let border_width = store
+            //         .border_width
+            //         .get(*self)
+            //         .cloned()
+            //         .unwrap_or_default()
+            //         .to_pixels(0.0, store.scale_factor());
 
-                (width.ceil() - child_left - child_right - border_width - border_width) <span class="kw">as </span>i32
-            } <span class="kw">else if </span>store.text_wrap.get(<span class="kw-2">*</span><span class="self">self</span>).copied().unwrap_or(<span class="bool-val">true</span>) {
-                <span class="number">0
-            </span>} <span class="kw">else </span>{
-                <span class="number">999999
-            </span>};
+            //     width.ceil() - child_left - child_right - border_width - border_width
+            // } else {
+            //     f32::MAX
+            // };
+
+            </span>paragraph.layout(f32::MAX);
 
             <span class="kw">let </span>child_left = store.child_left.get(<span class="kw-2">*</span><span class="self">self</span>).copied().unwrap_or_default();
             <span class="kw">let </span>child_right = store.child_right.get(<span class="kw-2">*</span><span class="self">self</span>).copied().unwrap_or_default();
@@ -554,10 +581,14 @@
             <span class="kw">let </span><span class="kw-2">mut </span>child_space_x = <span class="number">0.0</span>;
             <span class="kw">let </span><span class="kw-2">mut </span>child_space_y = <span class="number">0.0</span>;
 
+            <span class="kw">let </span><span class="kw-2">mut </span>padding_left = <span class="number">0.0</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>padding_top = <span class="number">0.0</span>;
+
             <span class="comment">// shrink the bounding box based on pixel values
             </span><span class="kw">if let </span>Pixels(val) = child_left {
                 <span class="kw">let </span>val = val * store.scale_factor();
                 child_space_x += val;
+                padding_left += val;
             }
             <span class="kw">if let </span>Pixels(val) = child_right {
                 <span class="kw">let </span>val = val * store.scale_factor();
@@ -566,6 +597,7 @@
             <span class="kw">if let </span>Pixels(val) = child_top {
                 <span class="kw">let </span>val = val * store.scale_factor();
                 child_space_y += val;
+                padding_top += val;
             }
             <span class="kw">if let </span>Pixels(val) = child_bottom {
                 <span class="kw">let </span>val = val * store.scale_factor();
@@ -582,57 +614,77 @@
             child_space_x += <span class="number">2.0 </span>* border_width;
             child_space_y += <span class="number">2.0 </span>* border_width;
 
-            sublayout.text_context.sync_styles(<span class="kw-2">*</span><span class="self">self</span>, store);
+            padding_left += border_width;
+            padding_top += border_width;
 
-            <span class="kw">let </span>(text_width, <span class="kw-2">mut </span>text_height) =
-                sublayout.text_context.with_buffer(<span class="kw-2">*</span><span class="self">self</span>, |fs, buffer| {
-                    buffer.set_size(fs, max_width <span class="kw">as </span>f32, f32::MAX);
+            <span class="kw">let </span>text_width = <span class="kw">if </span>store.text_wrap.get(<span class="kw-2">*</span><span class="self">self</span>).copied().unwrap_or(<span class="bool-val">true</span>) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(width) = width {
+                    width - child_space_x
+                } <span class="kw">else </span>{
+                    paragraph.min_intrinsic_width().ceil()
+                }
+            } <span class="kw">else if </span>store.text_overflow.get(<span class="kw-2">*</span><span class="self">self</span>).is_some() {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(width) = width {
+                    width - child_space_x
+                } <span class="kw">else </span>{
+                    paragraph.max_intrinsic_width().ceil()
+                }
+            } <span class="kw">else </span>{
+                paragraph.max_intrinsic_width().ceil()
+            };
 
-                    <span class="kw">let </span>w = buffer
-                        .layout_runs()
-                        .filter_map(|r| (!r.line_w.is_nan()).then_some(r.line_w))
-                        .max_by(|f1, f2| f1.partial_cmp(f2).unwrap())
-                        .unwrap_or_default();
-                    <span class="kw">let </span>lines = buffer.layout_runs().count();
+            paragraph.layout(text_width);
 
-                    <span class="kw">let </span>h = lines <span class="kw">as </span>f32 * buffer.metrics().line_height;
-                    (w, h)
-                });
+            <span class="kw">let </span>text_height = <span class="kw">if let </span><span class="prelude-val">Some</span>(height) = height { height } <span class="kw">else </span>{ paragraph.height() };
 
-            <span class="kw">if </span>height.is_none() {
-                text_height = sublayout.text_context.with_buffer(<span class="kw-2">*</span><span class="self">self</span>, |fs, buffer| {
-                    buffer.set_size(fs, text_width, f32::MAX);
+            <span class="kw">let </span>width =
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(width) = width { width } <span class="kw">else </span>{ text_width.round() + child_space_x };
 
-                    <span class="kw">let </span>lines = buffer.layout_runs().count();
-                    lines <span class="kw">as </span>f32 * buffer.metrics().line_height
-                });
-            }
-
-            <span class="kw">let </span>height =
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(height) = height { height } <span class="kw">else </span>{ text_height + child_space_y };
-            <span class="kw">let </span>width = <span class="kw">if let </span><span class="prelude-val">Some</span>(width) = width { width } <span class="kw">else </span>{ text_width + child_space_x };
+            <span class="kw">let </span>height = <span class="kw">if let </span><span class="prelude-val">Some</span>(height) = height {
+                height
+            } <span class="kw">else </span>{
+                text_height.round() + child_space_y
+            };
 
             <span class="comment">// Cache the text_width/ text_height in the text context so we can use it to compute transforms later
-            </span>sublayout.text_context.set_bounds(
+            </span>sublayout.text_context.set_text_bounds(
                 <span class="kw-2">*</span><span class="self">self</span>,
-                BoundingBox { w: text_width, h: text_height, ..Default::default() },
+                BoundingBox { x: padding_left, y: padding_top, w: text_width, h: text_height },
             );
 
-            <span class="prelude-val">Some</span>((width.ceil(), height.ceil()))
+            <span class="prelude-val">Some</span>((width, height))
         } <span class="kw">else if let </span><span class="prelude-val">Some</span>(images) = store.background_image.get(<span class="kw-2">*</span><span class="self">self</span>) {
             <span class="kw">let </span><span class="kw-2">mut </span>max_width = <span class="number">0.0f32</span>;
             <span class="kw">let </span><span class="kw-2">mut </span>max_height = <span class="number">0.0f32</span>;
             <span class="kw">for </span>image <span class="kw">in </span>images.iter() {
                 <span class="kw">match </span>image {
                     ImageOrGradient::Image(image_name) =&gt; {
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>(ImageOrId::Id(<span class="kw">_</span>, dim)) = sublayout
-                            .resource_manager
-                            .images
-                            .get(image_name)
-                            .map(|stored_img| <span class="kw-2">&amp;</span>stored_img.image)
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(image_id) = sublayout.resource_manager.image_ids.get(image_name)
                         {
-                            max_width = max_width.max(dim.<span class="number">0 </span><span class="kw">as </span>f32);
-                            max_height = max_height.max(dim.<span class="number">1 </span><span class="kw">as </span>f32);
+                            <span class="kw">match </span>sublayout
+                                .resource_manager
+                                .images
+                                .get(image_id)
+                                .map(|stored_img| <span class="kw-2">&amp;</span>stored_img.image)
+                            {
+                                <span class="prelude-val">Some</span>(ImageOrSvg::Image(image)) =&gt; {
+                                    max_width =
+                                        max_width.max(image.width() <span class="kw">as </span>f32 * store.scale_factor());
+                                    max_height = max_height
+                                        .max(image.height() <span class="kw">as </span>f32 * store.scale_factor());
+                                }
+
+                                <span class="prelude-val">Some</span>(ImageOrSvg::Svg(svg)) =&gt; {
+                                    max_width = max_width.max(
+                                        svg.inner().fContainerSize.fWidth * store.scale_factor(),
+                                    );
+                                    max_height = max_height.max(
+                                        svg.inner().fContainerSize.fWidth * store.scale_factor(),
+                                    );
+                                }
+
+                                <span class="kw">_ </span>=&gt; {}
+                            }
                         }
                     }
                     <span class="kw">_ </span>=&gt; {}

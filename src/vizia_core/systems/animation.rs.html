@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/animation.rs`."><title>animation.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0 (129f3b996 2024-06-10)" data-channel="1.79.0" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../vizia_core/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/systems/animation.rs`."><title>animation.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -86,6 +86,16 @@
 <a href="#86" id="86">86</a>
 <a href="#87" id="87">87</a>
 <a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>animation_system(cx: <span class="kw-2">&amp;mut </span>Context) -&gt; bool {
@@ -95,83 +105,93 @@
 
     </span><span class="kw">let </span>time = Instant::now();
 
+    <span class="kw">let </span><span class="kw-2">mut </span>redraw_entities = Vec::new();
+    <span class="kw">let </span><span class="kw-2">mut </span>reflow_entities = Vec::new();
+    <span class="kw">let </span><span class="kw-2">mut </span>relayout_entities = Vec::new();
+
     <span class="comment">// Properties which affect rendering
-    </span><span class="kw">let </span>needs_redraw =
-        <span class="comment">// Opacity
-        </span>cx.style.opacity.tick(time)
-        <span class="comment">// Border Colour
-        </span>| cx.style.border_color.tick(time)
-        <span class="comment">// Border Radius
-        </span>| cx.style.border_top_left_radius.tick(time)
-        | cx.style.border_top_right_radius.tick(time)
-        | cx.style.border_bottom_left_radius.tick(time)
-        | cx.style.border_bottom_right_radius.tick(time)
-        <span class="comment">// Background
-        </span>| cx.style.background_color.tick(time)
-        | cx.style.background_image.tick(time)
-        | cx.style.background_size.tick(time)
-        <span class="comment">// Box Shadow
-        </span>| cx.style.box_shadow.tick(time)
-        <span class="comment">// Font Color
-        </span>| cx.style.font_color.tick(time)
-        <span class="comment">// Transform
-        </span>| cx.style.transform.tick(time)
-        | cx.style.transform_origin.tick(time)
-        | cx.style.translate.tick(time)
-        | cx.style.rotate.tick(time)
-        | cx.style.scale.tick(time)
-        <span class="comment">// Outline
-        </span>| cx.style.outline_color.tick(time)
-        | cx.style.outline_offset.tick(time)
-        | cx.style.outline_width.tick(time)
-        <span class="comment">// Clip Path
-        </span>| cx.style.clip_path.tick(time);
+    // Opacity
+    </span>redraw_entities.extend(cx.style.opacity.tick(time));
+    <span class="comment">// Corner Colour
+    </span>redraw_entities.extend(cx.style.border_color.tick(time));
+    <span class="comment">// Corner Radius
+    </span>redraw_entities.extend(cx.style.corner_top_left_radius.tick(time));
+    redraw_entities.extend(cx.style.corner_top_right_radius.tick(time));
+    redraw_entities.extend(cx.style.corner_bottom_left_radius.tick(time));
+    redraw_entities.extend(cx.style.corner_bottom_right_radius.tick(time));
+    <span class="comment">// Background
+    </span>redraw_entities.extend(cx.style.background_color.tick(time));
+    redraw_entities.extend(cx.style.background_image.tick(time));
+    redraw_entities.extend(cx.style.background_size.tick(time));
+    <span class="comment">// Box Shadow
+    </span>redraw_entities.extend(cx.style.shadow.tick(time));
+    <span class="comment">// Transform
+    </span>redraw_entities.extend(cx.style.transform.tick(time));
+    redraw_entities.extend(cx.style.transform_origin.tick(time));
+    redraw_entities.extend(cx.style.translate.tick(time));
+    redraw_entities.extend(cx.style.rotate.tick(time));
+    redraw_entities.extend(cx.style.scale.tick(time));
+    <span class="comment">// Outline
+    </span>redraw_entities.extend(cx.style.outline_color.tick(time));
+    redraw_entities.extend(cx.style.outline_offset.tick(time));
+    redraw_entities.extend(cx.style.outline_width.tick(time));
+    <span class="comment">// Clip Path
+    </span>redraw_entities.extend(cx.style.clip_path.tick(time));
+
+    redraw_entities.extend(cx.style.fill.tick(time));
+
+    <span class="comment">// Font Color
+    </span>reflow_entities.extend(cx.style.font_color.tick(time));
+    <span class="comment">// Font Size
+    </span>reflow_entities.extend(cx.style.font_size.tick(time));
 
     <span class="comment">// Properties which affect layout
-    </span><span class="kw">let </span>needs_relayout = cx.style.display.tick(time)
-        <span class="comment">// Border Width
-        </span>| cx.style.border_width.tick(time)
-        <span class="comment">// Font Size
-        </span>| cx.style.font_size.tick(time)
-        <span class="comment">// Space
-        </span>| cx.style.left.tick(time)
-        | cx.style.right.tick(time)
-        | cx.style.top.tick(time)
-        | cx.style.bottom.tick(time)
-        <span class="comment">// Size
-        </span>| cx.style.width.tick(time)
-        | cx.style.height.tick(time)
-        <span class="comment">// Min/Max Size
-        </span>| cx.style.max_width.tick(time)
-        | cx.style.max_height.tick(time)
-        | cx.style.min_width.tick(time)
-        | cx.style.min_height.tick(time)
-        <span class="comment">// Min/Max Space
-        </span>| cx.style.min_left.tick(time)
-        | cx.style.max_left.tick(time)
-        | cx.style.min_right.tick(time)
-        | cx.style.max_right.tick(time)
-        | cx.style.min_top.tick(time)
-        | cx.style.max_top.tick(time)
-        | cx.style.min_bottom.tick(time)
-        | cx.style.max_bottom.tick(time)
-        <span class="comment">// Row/Col Between
-        </span>| cx.style.row_between.tick(time)
-        | cx.style.col_between.tick(time)
-        <span class="comment">// Child Space
-        </span>| cx.style.child_left.tick(time)
-        | cx.style.child_right.tick(time)
-        | cx.style.child_top.tick(time)
-        | cx.style.child_bottom.tick(time);
+    </span>relayout_entities.extend(cx.style.display.tick(time));
+    <span class="comment">// Border Width
+    </span>relayout_entities.extend(cx.style.border_width.tick(time));
+    <span class="comment">// Space
+    </span>relayout_entities.extend(cx.style.left.tick(time));
+    relayout_entities.extend(cx.style.right.tick(time));
+    relayout_entities.extend(cx.style.top.tick(time));
+    relayout_entities.extend(cx.style.bottom.tick(time));
+    <span class="comment">// Size
+    </span>relayout_entities.extend(cx.style.width.tick(time));
+    relayout_entities.extend(cx.style.height.tick(time));
+    <span class="comment">// Min/Max Size
+    </span>relayout_entities.extend(cx.style.max_width.tick(time));
+    relayout_entities.extend(cx.style.max_height.tick(time));
+    relayout_entities.extend(cx.style.min_width.tick(time));
+    relayout_entities.extend(cx.style.min_height.tick(time));
+    <span class="comment">// Min/Max Space
+    </span>relayout_entities.extend(cx.style.min_left.tick(time));
+    relayout_entities.extend(cx.style.max_left.tick(time));
+    relayout_entities.extend(cx.style.min_right.tick(time));
+    relayout_entities.extend(cx.style.max_right.tick(time));
+    relayout_entities.extend(cx.style.min_top.tick(time));
+    relayout_entities.extend(cx.style.max_top.tick(time));
+    relayout_entities.extend(cx.style.min_bottom.tick(time));
+    relayout_entities.extend(cx.style.max_bottom.tick(time));
+    <span class="comment">// Row/Col Between
+    </span>relayout_entities.extend(cx.style.row_between.tick(time));
+    relayout_entities.extend(cx.style.col_between.tick(time));
+    <span class="comment">// Child Space
+    </span>relayout_entities.extend(cx.style.child_left.tick(time));
+    relayout_entities.extend(cx.style.child_right.tick(time));
+    relayout_entities.extend(cx.style.child_top.tick(time));
+    relayout_entities.extend(cx.style.child_bottom.tick(time));
 
-    <span class="kw">if </span>needs_relayout {
+    <span class="kw">if </span>!relayout_entities.is_empty() {
         cx.style.system_flags.set(SystemFlags::RELAYOUT, <span class="bool-val">true</span>);
     }
 
-    <span class="kw">if </span>needs_redraw {
-        cx.style.system_flags.set(SystemFlags::REDRAW, <span class="bool-val">true</span>);
+    <span class="kw">for </span>entity <span class="kw">in </span>redraw_entities.iter() {
+        cx.needs_redraw(<span class="kw-2">*</span>entity);
     }
 
-    needs_redraw | needs_relayout
+    <span class="kw">for </span>entity <span class="kw">in </span>reflow_entities.iter() {
+        cx.style.text_construction.insert(<span class="kw-2">*</span>entity).unwrap();
+    }
+
+    !redraw_entities.is_empty() | !relayout_entities.is_empty() | !reflow_entities.is_empty()
 }
 </code></pre></div></section></main></body></html>

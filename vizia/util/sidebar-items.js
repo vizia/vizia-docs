@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["CSS"],"trait":["IntoCssStr"]};
+window.SIDEBAR_ITEMS = {"trait":["IntoCssStr"]};

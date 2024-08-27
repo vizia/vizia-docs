@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/events/event_manager.rs`."><title>event_manager.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0 (129f3b996 2024-06-10)" data-channel="1.79.0" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../vizia_core/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/events/event_manager.rs`."><title>event_manager.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -650,6 +650,11 @@
 <a href="#650" id="650">650</a>
 <a href="#651" id="651">651</a>
 <a href="#652" id="652">652</a>
+<a href="#653" id="653">653</a>
+<a href="#654" id="654">654</a>
+<a href="#655" id="655">655</a>
+<a href="#656" id="656">656</a>
+<a href="#657" id="657">657</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
 <span class="kw">use </span><span class="kw">crate</span>::events::EventMeta;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -661,7 +666,9 @@
 </span><span class="kw">use </span>log::debug;
 <span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>vizia_storage::LayoutParentIterator;
-<span class="kw">use </span>vizia_storage::{ParentIterator, TreeIterator};
+<span class="attr">#[cfg(debug_assertions)]
+</span><span class="kw">use </span>vizia_storage::ParentIterator;
+<span class="kw">use </span>vizia_storage::TreeIterator;
 
 <span class="kw">const </span>DOUBLE_CLICK_INTERVAL: Duration = Duration::from_millis(<span class="number">500</span>);
 
@@ -670,9 +677,15 @@
 /// The [EventManager] is responsible for taking the events in the event queue in cx
 /// and dispatching them to views and models based on the target and propagation metadata of the event.
 </span><span class="attr">#[doc(hidden)]
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>EventManager {
+</span><span class="kw">pub struct </span>EventManager {
     <span class="comment">// Queue of events to be processed.
     </span>event_queue: Vec&lt;Event&gt;,
+}
+
+<span class="kw">impl </span>Default <span class="kw">for </span>EventManager {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new()
+    }
 }
 
 <span class="kw">impl </span>EventManager {
@@ -682,7 +695,7 @@
 
     <span class="doccomment">/// Flush the event queue, dispatching events to their targets.
     /// Returns whether there are still more events to process, i.e. the event handlers sent events.
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>flush_events(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context) -&gt; bool {
+    </span><span class="kw">pub fn </span>flush_events(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context) -&gt; bool {
         <span class="comment">// Clear the event queue in the event manager.
         </span><span class="self">self</span>.event_queue.clear();
 
@@ -694,7 +707,7 @@
         </span><span class="lifetime">'events</span>: <span class="kw">for </span>event <span class="kw">in </span><span class="self">self</span>.event_queue.iter_mut() {
             <span class="comment">// Handle internal events.
             </span>event.take(|internal_event, <span class="kw">_</span>| <span class="kw">match </span>internal_event {
-                InternalEvent::Redraw =&gt; cx.needs_redraw(),
+                InternalEvent::Redraw =&gt; cx.needs_redraw(Entity::root()),
                 InternalEvent::LoadImage { path, image, policy } =&gt; {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(image) = image.lock().unwrap().take() {
                         ResourceContext::new(cx).load_image(path, image, policy);
@@ -732,7 +745,7 @@
 
             <span class="comment">// Handle state updates for window events.
             </span>event.map(|window_event, meta| {
-                <span class="kw">if </span>meta.origin == Entity::root() {
+                <span class="kw">if </span>cx.windows.contains_key(<span class="kw-2">&amp;</span>meta.origin) {
                     internal_state_updates(cx, window_event, meta);
                 }
             });
@@ -844,21 +857,22 @@
 
         WindowEvent::MouseMove(x, y) =&gt; {
             <span class="kw">if </span>!x.is_nan() &amp;&amp; !y.is_nan() {
-                cx.mouse.previous_cursorx = cx.mouse.cursorx;
-                cx.mouse.previous_cursory = cx.mouse.cursory;
-                cx.mouse.cursorx = <span class="kw-2">*</span>x;
-                cx.mouse.cursory = <span class="kw-2">*</span>y;
+                cx.mouse.previous_cursor_x = cx.mouse.cursor_x;
+                cx.mouse.previous_cursor_y = cx.mouse.cursor_y;
+                cx.mouse.cursor_x = <span class="kw-2">*</span>x;
+                cx.mouse.cursor_y = <span class="kw-2">*</span>y;
+
+                hover_system(cx, meta.origin);
 
                 mutate_direct_or_up(meta, cx.captured, cx.hovered, <span class="bool-val">false</span>);
             }
 
-            <span class="comment">// if cx.mouse.cursorx != cx.mouse.previous_cursorx
-            //     || cx.mouse.cursory != cx.mouse.previous_cursory
+            <span class="comment">// if cx.mouse.cursor_x != cx.mouse.previous_cursor_x
+            //     || cx.mouse.cursor_y != cx.mouse.previous_cursor_y
             // {
             // }
 
-            </span>hover_system(cx);
-            <span class="comment">// if let Some(dropped_file) = cx.dropped_file.take() {
+            // if let Some(dropped_file) = cx.dropped_file.take() {
             //     emit_direct_or_up(
             //         cx,
             //         WindowEvent::DroppedFile(dropped_file),
@@ -874,7 +888,7 @@
                 MouseButton::Left =&gt; {
                     cx.mouse.left.state = MouseButtonState::Pressed;
 
-                    cx.mouse.left.pos_down = (cx.mouse.cursorx, cx.mouse.cursory);
+                    cx.mouse.left.pos_down = (cx.mouse.cursor_x, cx.mouse.cursor_y);
                     cx.mouse.left.pressed = cx.hovered;
                     cx.triggered = cx.hovered;
 
@@ -902,12 +916,12 @@
                 }
                 MouseButton::Right =&gt; {
                     cx.mouse.right.state = MouseButtonState::Pressed;
-                    cx.mouse.right.pos_down = (cx.mouse.cursorx, cx.mouse.cursory);
+                    cx.mouse.right.pos_down = (cx.mouse.cursor_x, cx.mouse.cursor_y);
                     cx.mouse.right.pressed = cx.hovered;
                 }
                 MouseButton::Middle =&gt; {
                     cx.mouse.middle.state = MouseButtonState::Pressed;
-                    cx.mouse.middle.pos_down = (cx.mouse.cursorx, cx.mouse.cursory);
+                    cx.mouse.middle.pos_down = (cx.mouse.cursor_x, cx.mouse.cursor_y);
                     cx.mouse.middle.pressed = cx.hovered;
                 }
                 <span class="kw">_ </span>=&gt; {}
@@ -927,7 +941,7 @@
             <span class="comment">// track double/triple -click
             </span><span class="kw">let </span>new_click_time = Instant::now();
             <span class="kw">let </span>click_duration = new_click_time - cx.click_time;
-            <span class="kw">let </span>new_click_pos = (cx.mouse.cursorx, cx.mouse.cursory);
+            <span class="kw">let </span>new_click_pos = (cx.mouse.cursor_x, cx.mouse.cursor_y);
             <span class="kw">if </span>click_duration &lt;= DOUBLE_CLICK_INTERVAL
                 &amp;&amp; new_click_pos == cx.click_pos
                 &amp;&amp; <span class="kw-2">*</span>button == cx.click_button
@@ -953,17 +967,17 @@
         WindowEvent::MouseUp(button) =&gt; {
             <span class="kw">match </span>button {
                 MouseButton::Left =&gt; {
-                    cx.mouse.left.pos_up = (cx.mouse.cursorx, cx.mouse.cursory);
+                    cx.mouse.left.pos_up = (cx.mouse.cursor_x, cx.mouse.cursor_y);
                     cx.mouse.left.released = cx.hovered;
                     cx.mouse.left.state = MouseButtonState::Released;
                 }
                 MouseButton::Right =&gt; {
-                    cx.mouse.right.pos_up = (cx.mouse.cursorx, cx.mouse.cursory);
+                    cx.mouse.right.pos_up = (cx.mouse.cursor_x, cx.mouse.cursor_y);
                     cx.mouse.right.released = cx.hovered;
                     cx.mouse.right.state = MouseButtonState::Released;
                 }
                 MouseButton::Middle =&gt; {
-                    cx.mouse.middle.pos_up = (cx.mouse.cursorx, cx.mouse.cursory);
+                    cx.mouse.middle.pos_up = (cx.mouse.cursor_x, cx.mouse.cursor_y);
                     cx.mouse.middle.released = cx.hovered;
                     cx.mouse.middle.state = MouseButtonState::Released;
                 }
@@ -1007,20 +1021,16 @@
                 <span class="kw">for </span>entity <span class="kw">in </span>TreeIterator::full(<span class="kw-2">&amp;</span>cx.tree) {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = cx.data.get(<span class="kw-2">&amp;</span>entity) {
                         <span class="kw">if </span>!model_data_store.models.is_empty() {
-                            <span class="macro">println!</span>(<span class="string">"Models for {}"</span>, entity);
+                            <span class="macro">debug!</span>(<span class="string">"Models for {}"</span>, entity);
                             <span class="kw">for </span>(<span class="kw">_</span>, model) <span class="kw">in </span>model_data_store.models.iter() {
-                                <span class="macro">println!</span>(<span class="string">"M: {:?}"</span>, model.name())
+                                <span class="macro">debug!</span>(<span class="string">"M: {:?}"</span>, model.name())
                             }
                         }
 
                         <span class="kw">if </span>!model_data_store.stores.is_empty() {
-                            <span class="macro">println!</span>(<span class="string">"Stores for {}"</span>, entity);
+                            <span class="macro">debug!</span>(<span class="string">"Stores for {}"</span>, entity);
                             <span class="kw">for </span>(<span class="kw">_</span>, store) <span class="kw">in </span>model_data_store.stores.iter() {
-                                <span class="macro">println!</span>(
-                                    <span class="string">"S: [{}] - Observers {:?}"</span>,
-                                    store.name(),
-                                    store.observers()
-                                )
+                                <span class="macro">debug!</span>(<span class="string">"S: [{}] - Observers {:?}"</span>, store.name(), store.observers())
                             }
                         }
                     }
@@ -1029,7 +1039,7 @@
 
             <span class="attr">#[cfg(debug_assertions)]
             </span><span class="kw">if </span><span class="kw-2">*</span>code == Code::KeyI &amp;&amp; cx.modifiers.ctrl() {
-                <span class="macro">println!</span>(<span class="string">"Entity tree"</span>);
+                <span class="macro">debug!</span>(<span class="string">"Entity tree"</span>);
                 <span class="kw">let </span>(tree, views, cache) = (<span class="kw-2">&amp;</span>cx.tree, <span class="kw-2">&amp;</span>cx.views, <span class="kw-2">&amp;</span>cx.cache);
                 <span class="kw">let </span>has_next_sibling = |entity| tree.get_next_sibling(entity).is_some();
                 <span class="kw">let </span>root_indents = |entity: Entity| {
@@ -1126,19 +1136,19 @@
             </span><span class="kw">if </span><span class="kw-2">*</span>code == Code::KeyT
                 &amp;&amp; cx.modifiers == Modifiers::CTRL | Modifiers::SHIFT | Modifiers::ALT
             {
-                <span class="macro">debug!</span>(<span class="string">"Loaded font face info:"</span>);
-                <span class="kw">for </span>face <span class="kw">in </span>cx.text_context.font_system().db().faces() {
-                    <span class="macro">debug!</span>(
-                        <span class="string">"family: {:?}\npost_script_name: {:?}\nstyle: {:?}\nweight: {:?}\nstretch: {:?}\nmonospaced: {:?}\n"</span>,
-                        face.families,
-                        face.post_script_name,
-                        face.style,
-                        face.weight,
-                        face.stretch,
-                        face.monospaced,
-                    );
-                }
-            }
+                <span class="comment">// debug!("Loaded font face info:");
+                // for face in cx.text_context.font_system().db().faces() {
+                //     debug!(
+                //         "family: {:?}\npost_script_name: {:?}\nstyle: {:?}\nweight: {:?}\nstretch: {:?}\nmonospaced: {:?}\n",
+                //         face.families,
+                //         face.post_script_name,
+                //         face.style,
+                //         face.weight,
+                //         face.stretch,
+                //         face.monospaced,
+                //     );
+                // }
+            </span>}
 
             <span class="kw">if </span><span class="kw-2">*</span>code == Code::F5 {
                 EventContext::new(cx).reload_styles().unwrap();
@@ -1220,7 +1230,7 @@
                 }
             }
 
-            <span class="kw">if </span><span class="macro">matches!</span>(<span class="kw-2">*</span>code, Code::Enter | Code::NumpadEnter | Code::Space) {
+            <span class="kw">if </span><span class="macro">matches!</span>(<span class="kw-2">*</span>code, Code::Enter | Code::NumpadEnter) {
                 cx.triggered = cx.focused;
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(cx.triggered) {
                     pseudo_classes.set(PseudoClassFlags::ACTIVE, <span class="bool-val">true</span>);
@@ -1230,7 +1240,7 @@
         }
         WindowEvent::KeyUp(code, <span class="kw">_</span>) =&gt; {
             meta.target = cx.focused;
-            <span class="kw">if </span><span class="macro">matches!</span>(code, Code::Enter | Code::NumpadEnter | Code::Space) {
+            <span class="kw">if </span><span class="macro">matches!</span>(code, Code::Enter | Code::NumpadEnter) {
                 <span class="kw">if </span>cx.focused == cx.triggered {
                     cx.with_current(cx.triggered, |cx| {
                         cx.emit(WindowEvent::Press { mouse: <span class="bool-val">false </span>})
@@ -1255,20 +1265,20 @@
             cx.set_focus_pseudo_classes(cx.focused, <span class="bool-val">true</span>, <span class="bool-val">true</span>);
         }
         WindowEvent::MouseEnter =&gt; {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_class) = cx.style.pseudo_classes.get_mut(Entity::root()) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_class) = cx.style.pseudo_classes.get_mut(meta.origin) {
                 pseudo_class.set(PseudoClassFlags::OVER, <span class="bool-val">true</span>);
             }
         }
         WindowEvent::MouseLeave =&gt; {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_class) = cx.style.pseudo_classes.get_mut(Entity::root()) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_class) = cx.style.pseudo_classes.get_mut(meta.origin) {
                 pseudo_class.set(PseudoClassFlags::OVER, <span class="bool-val">false</span>);
             }
 
-            <span class="kw">let </span>parent_iter = LayoutParentIterator::new(<span class="kw-2">&amp;</span>cx.tree, <span class="prelude-val">Some</span>(cx.hovered));
+            <span class="kw">let </span>parent_iter = LayoutParentIterator::new(<span class="kw-2">&amp;</span>cx.tree, cx.hovered);
             <span class="kw">for </span>ancestor <span class="kw">in </span>parent_iter {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(ancestor) {
                     pseudo_classes.set(PseudoClassFlags::HOVER, <span class="bool-val">false</span>);
-                    cx.style.needs_restyle();
+                    cx.style.needs_restyle(ancestor);
                 }
             }
 

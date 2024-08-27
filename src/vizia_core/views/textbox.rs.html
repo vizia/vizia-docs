@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/textbox.rs`."><title>textbox.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0 (129f3b996 2024-06-10)" data-channel="1.79.0" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../vizia_core/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/textbox.rs`."><title>textbox.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1252,13 +1252,90 @@
 <a href="#1252" id="1252">1252</a>
 <a href="#1253" id="1253">1253</a>
 <a href="#1254" id="1254">1254</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::accessibility::IntoNode;
-<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#1255" id="1255">1255</a>
+<a href="#1256" id="1256">1256</a>
+<a href="#1257" id="1257">1257</a>
+<a href="#1258" id="1258">1258</a>
+<a href="#1259" id="1259">1259</a>
+<a href="#1260" id="1260">1260</a>
+<a href="#1261" id="1261">1261</a>
+<a href="#1262" id="1262">1262</a>
+<a href="#1263" id="1263">1263</a>
+<a href="#1264" id="1264">1264</a>
+<a href="#1265" id="1265">1265</a>
+<a href="#1266" id="1266">1266</a>
+<a href="#1267" id="1267">1267</a>
+<a href="#1268" id="1268">1268</a>
+<a href="#1269" id="1269">1269</a>
+<a href="#1270" id="1270">1270</a>
+<a href="#1271" id="1271">1271</a>
+<a href="#1272" id="1272">1272</a>
+<a href="#1273" id="1273">1273</a>
+<a href="#1274" id="1274">1274</a>
+<a href="#1275" id="1275">1275</a>
+<a href="#1276" id="1276">1276</a>
+<a href="#1277" id="1277">1277</a>
+<a href="#1278" id="1278">1278</a>
+<a href="#1279" id="1279">1279</a>
+<a href="#1280" id="1280">1280</a>
+<a href="#1281" id="1281">1281</a>
+<a href="#1282" id="1282">1282</a>
+<a href="#1283" id="1283">1283</a>
+<a href="#1284" id="1284">1284</a>
+<a href="#1285" id="1285">1285</a>
+<a href="#1286" id="1286">1286</a>
+<a href="#1287" id="1287">1287</a>
+<a href="#1288" id="1288">1288</a>
+<a href="#1289" id="1289">1289</a>
+<a href="#1290" id="1290">1290</a>
+<a href="#1291" id="1291">1291</a>
+<a href="#1292" id="1292">1292</a>
+<a href="#1293" id="1293">1293</a>
+<a href="#1294" id="1294">1294</a>
+<a href="#1295" id="1295">1295</a>
+<a href="#1296" id="1296">1296</a>
+<a href="#1297" id="1297">1297</a>
+<a href="#1298" id="1298">1298</a>
+<a href="#1299" id="1299">1299</a>
+<a href="#1300" id="1300">1300</a>
+<a href="#1301" id="1301">1301</a>
+<a href="#1302" id="1302">1302</a>
+<a href="#1303" id="1303">1303</a>
+<a href="#1304" id="1304">1304</a>
+<a href="#1305" id="1305">1305</a>
+<a href="#1306" id="1306">1306</a>
+<a href="#1307" id="1307">1307</a>
+<a href="#1308" id="1308">1308</a>
+<a href="#1309" id="1309">1309</a>
+<a href="#1310" id="1310">1310</a>
+<a href="#1311" id="1311">1311</a>
+<a href="#1312" id="1312">1312</a>
+<a href="#1313" id="1313">1313</a>
+<a href="#1314" id="1314">1314</a>
+<a href="#1315" id="1315">1315</a>
+<a href="#1316" id="1316">1316</a>
+<a href="#1317" id="1317">1317</a>
+<a href="#1318" id="1318">1318</a>
+<a href="#1319" id="1319">1319</a>
+<a href="#1320" id="1320">1320</a>
+<a href="#1321" id="1321">1321</a>
+<a href="#1322" id="1322">1322</a>
+<a href="#1323" id="1323">1323</a>
+<a href="#1324" id="1324">1324</a>
+<a href="#1325" id="1325">1325</a>
+<a href="#1326" id="1326">1326</a>
+<a href="#1327" id="1327">1327</a>
+</pre></div><pre class="rust"><code><span class="comment">// use crate::accessibility::IntoNode;
+</span><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">use </span><span class="kw">crate</span>::text::{enforce_text_bounds, ensure_visible, Direction, Movement};
-<span class="kw">use </span><span class="kw">crate</span>::views::scrollview::SCROLL_SENSITIVITY;
-<span class="kw">use </span>accesskit::{ActionData, ActionRequest, TextDirection, TextPosition, TextSelection};
-<span class="kw">use </span>cosmic_text::{Action, Cursor, Edit, Editor, FontSystem, Selection};
+<span class="kw">use </span><span class="kw">crate</span>::text::{
+    apply_movement, offset_for_delete_backwards, Direction, EditableText, Movement, Selection,
+    VerticalMovement,
+};
+<span class="comment">// use crate::views::scrollview::SCROLL_SENSITIVITY;
+</span><span class="kw">use </span>accesskit::{ActionData, ActionRequest};
+<span class="kw">use </span>skia_safe::textlayout::{RectHeightStyle, RectWidthStyle};
+<span class="kw">use </span>skia_safe::{Paint, PaintStyle, Rect};
 <span class="kw">use </span>unicode_segmentation::UnicodeSegmentation;
 
 <span class="doccomment">/// Events for modifying a textbox.
@@ -1284,7 +1361,7 @@
     <span class="doccomment">/// Trigger the `on_submit` callback with the current text.
     </span>Submit(bool),
     <span class="doccomment">/// Specify the 'hit' position of the mouse cursor.
-    </span>Hit(f32, f32),
+    </span>Hit(f32, f32, bool),
     <span class="doccomment">/// Specify the 'drag' position of the mouse cursor.
     </span>Drag(f32, f32),
     <span class="doccomment">/// Specify the scroll offset of the textbox.
@@ -1322,9 +1399,9 @@
     on_cancel: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;&gt;,
     validate: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>L::Target) -&gt; bool&gt;&gt;,
     placeholder: String,
-    placeholder_shown: bool,
     show_caret: bool,
     caret_timer: Timer,
+    selection: Selection,
 }
 
 <span class="comment">// Determines whether the enter key submits the text or inserts a new line.
@@ -1335,9 +1412,9 @@
     MultiLineWrapped,
 }
 
-<span class="kw">impl</span>&lt;L: Lens&gt; Textbox&lt;L&gt;
+<span class="kw">impl</span>&lt;L&gt; Textbox&lt;L&gt;
 <span class="kw">where
-    </span>&lt;L <span class="kw">as </span>Lens&gt;::Target: Data + Clone + ToString + std::str::FromStr,
+    </span>L: Lens&lt;Target: Data + Clone + ToStringLocalized + std::str::FromStr&gt;,
 {
     <span class="doccomment">/// Creates a new single-line textbox.
     ///
@@ -1407,9 +1484,9 @@
             on_cancel: <span class="prelude-val">None</span>,
             validate: <span class="prelude-val">None</span>,
             placeholder: String::from(<span class="string">""</span>),
-            placeholder_shown: <span class="bool-val">true</span>,
             show_caret: <span class="bool-val">true</span>,
             caret_timer,
+            selection: Selection::new(<span class="number">0</span>, <span class="number">0</span>),
         }
         .build(cx, <span class="kw">move </span>|cx| {
             cx.add_listener(<span class="kw">move </span>|textbox: <span class="kw-2">&amp;mut </span><span class="self">Self</span>, cx, event| {
@@ -1425,28 +1502,20 @@
                 });
             });
 
-            Binding::new(cx, lens, <span class="kw">move </span>|cx: <span class="kw-2">&amp;mut </span>Context, text| {
-                Binding::new(cx, <span class="self">Self</span>::edit, <span class="kw">move </span>|cx, edit| {
-                    <span class="kw">if </span>!edit.get(cx) {
-                        <span class="kw">let </span>text_str = text.get(cx).to_string();
-                        cx.emit(TextEvent::SelectAll);
-                        cx.emit(TextEvent::InsertText(text_str));
-                        cx.emit(TextEvent::Scroll(<span class="number">0.0</span>, <span class="number">0.0</span>));
-                    }
-                })
-            });
-
-            Binding::new(cx, <span class="self">Self</span>::placeholder, |cx, placeholder| {
+            Binding::new(cx, <span class="self">Self</span>::placeholder, <span class="kw">move </span>|cx, placeholder| {
                 <span class="kw">let </span>placeholder_string = placeholder.get(cx);
                 <span class="kw">if </span>!placeholder_string.is_empty() {
                     Label::new(cx, <span class="kw-2">&amp;</span>placeholder_string)
                         .size(Stretch(<span class="number">1.0</span>))
                         .space(Pixels(<span class="number">0.0</span>))
-                        .display(<span class="self">Self</span>::placeholder_shown)
                         .hoverable(<span class="bool-val">false</span>)
                         .position_type(PositionType::SelfDirected)
                         .hidden(<span class="bool-val">true</span>)
-                        .class(<span class="string">"placeholder"</span>);
+                        .class(<span class="string">"placeholder"</span>)
+                        .bind(lens, |handle, lens| {
+                            <span class="kw">let </span>flag = lens.get(<span class="kw-2">&amp;</span>handle).to_string_local(handle.cx).is_empty();
+                            handle.display(flag);
+                        });
                 }
             });
         })
@@ -1457,189 +1526,93 @@
         .text_value(lens)
         .default_action_verb(DefaultActionVerb::Focus)
         .toggle_class(<span class="string">"caret"</span>, <span class="self">Self</span>::show_caret)
+        .text(lens)
     }
 
-    <span class="kw">fn </span>set_caret(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
-        <span class="comment">// Calculate visible area for content and container
-        </span><span class="kw">let </span><span class="kw-2">mut </span>text_bounds = cx.text_context.get_bounds(cx.current).unwrap_or_default();
-        <span class="kw">let </span><span class="kw-2">mut </span>bounds = cx.bounds();
-
-        <span class="kw">let </span>child_left = cx.style.child_left.get(cx.current).copied().unwrap_or_default();
-        <span class="kw">let </span>child_top = cx.style.child_top.get(cx.current).copied().unwrap_or_default();
-        <span class="kw">let </span>child_right = cx.style.child_right.get(cx.current).copied().unwrap_or_default();
-        <span class="kw">let </span>child_bottom = cx.style.child_bottom.get(cx.current).copied().unwrap_or_default();
-
-        <span class="kw">let </span>logical_parent_width = cx.physical_to_logical(bounds.w);
-        <span class="kw">let </span>logical_parent_height = cx.physical_to_logical(bounds.h);
-
-        <span class="kw">let </span>child_left = child_left.to_px(logical_parent_width, <span class="number">0.0</span>) * cx.scale_factor();
-        <span class="kw">let </span>child_top = child_top.to_px(logical_parent_height, <span class="number">0.0</span>) * cx.scale_factor();
-        <span class="kw">let </span>child_right = child_right.to_px(logical_parent_width, <span class="number">0.0</span>) * cx.scale_factor();
-        <span class="kw">let </span>child_bottom = child_bottom.to_px(logical_parent_height, <span class="number">0.0</span>) * cx.scale_factor();
-
-        text_bounds.x = bounds.x;
-        text_bounds.y = bounds.y;
-
-        bounds.h -= child_top + child_bottom;
-        bounds.w -= child_left + child_right;
-
-        cx.text_context.sync_styles(cx.current, cx.style);
-
-        <span class="kw">let </span>(<span class="kw-2">mut </span>tx, <span class="kw-2">mut </span>ty) = <span class="self">self</span>.transform;
-
-        (tx, ty) = enforce_text_bounds(<span class="kw-2">&amp;</span>text_bounds, <span class="kw-2">&amp;</span>bounds, (tx, ty));
-
-        text_bounds.x += child_left;
-        text_bounds.y += child_top;
-
-        <span class="comment">// TODO justify????
-        </span><span class="kw">if let </span><span class="prelude-val">Some</span>((x, y, <span class="kw">_</span>, h)) =
-            cx.text_context.layout_caret(cx.current, text_bounds, (<span class="number">0.</span>, <span class="number">0.</span>), <span class="number">1.0 </span>* cx.scale_factor())
-        {
-            <span class="kw">let </span>caret_box = BoundingBox { x, y, w: <span class="number">0.0</span>, h };
-            bounds.x += child_left;
-            bounds.y += child_top;
-
-            (tx, ty) = ensure_visible(<span class="kw-2">&amp;</span>caret_box, <span class="kw-2">&amp;</span>bounds, (tx, ty));
+    <span class="kw">fn </span>insert_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, txt: <span class="kw-2">&amp;</span>str) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get_mut(cx.current) {
+            text.edit(<span class="self">self</span>.selection.range(), txt);
+            <span class="self">self</span>.selection = Selection::caret(<span class="self">self</span>.selection.min() + txt.len());
+            cx.style.needs_text_update(cx.current);
         }
-
-        <span class="self">self</span>.transform = (tx.round(), ty.round());
-    }
-
-    <span class="kw">fn </span>insert_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, text: <span class="kw-2">&amp;</span>str) {
-        cx.text_context.with_editor(cx.current, |<span class="kw">_</span>: <span class="kw-2">&amp;mut </span>FontSystem, buf| {
-            buf.insert_string(text, <span class="prelude-val">None</span>);
-        });
-        cx.needs_relayout();
-        cx.needs_redraw();
     }
 
     <span class="kw">fn </span>delete_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, movement: Movement) {
-        <span class="kw">let </span>x = |<span class="kw">_</span>: <span class="kw-2">&amp;mut </span>FontSystem, buf: <span class="kw-2">&amp;mut </span>Editor| {
-            <span class="kw">let </span>no_selection = <span class="kw">match </span>(buf.cursor(), buf.selection()) {
-                (cursor, Selection::Normal(selection)) =&gt; cursor == selection,
-                (<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
-            };
-            buf.delete_selection();
-            no_selection
-        };
+        <span class="kw">if </span><span class="self">self</span>.selection.is_caret() {
+            <span class="kw">if </span>movement == Movement::Grapheme(Direction::Upstream) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get_mut(cx.current) {
+                    <span class="kw">let </span>del_offset = offset_for_delete_backwards(<span class="kw-2">&amp;</span><span class="self">self</span>.selection, text);
+                    <span class="kw">let </span>del_range = del_offset..<span class="self">self</span>.selection.active;
 
-        <span class="kw">if </span>cx.text_context.with_editor(cx.current, x) {
-            <span class="self">self</span>.move_cursor(cx, movement, <span class="bool-val">true</span>);
-            cx.text_context.with_editor(cx.current, |<span class="kw">_</span>, buf| {
-                buf.delete_selection();
-            });
+                    <span class="self">self</span>.selection = Selection::caret(del_range.start);
+
+                    text.edit(del_range, <span class="string">""</span>);
+
+                    cx.style.needs_text_update(cx.current);
+                }
+            } <span class="kw">else if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get_mut(cx.current) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(paragraph) = cx.text_context.text_paragraphs.get(cx.current) {
+                    <span class="kw">let </span>to_delete = apply_movement(movement, <span class="self">self</span>.selection, text, paragraph, <span class="bool-val">true</span>);
+                    <span class="self">self</span>.selection = to_delete;
+                    <span class="kw">let </span>new_cursor_pos = <span class="self">self</span>.selection.min();
+                    text.edit(to_delete.range(), <span class="string">""</span>);
+                    <span class="self">self</span>.selection = Selection::caret(new_cursor_pos);
+                    cx.style.needs_text_update(cx.current);
+                }
+            }
+        } <span class="kw">else if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get_mut(cx.current) {
+            <span class="kw">let </span>del_range = <span class="self">self</span>.selection.range();
+            <span class="self">self</span>.selection = Selection::caret(del_range.start);
+
+            text.edit(del_range, <span class="string">""</span>);
+
+            cx.style.needs_text_update(cx.current);
         }
-        cx.needs_relayout();
-        cx.needs_redraw();
-    }
-
-    <span class="kw">fn </span>reset_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
-        <span class="self">self</span>.select_all(cx);
-        cx.text_context.with_editor(cx.current, |<span class="kw">_</span>, buf| {
-            buf.delete_selection();
-        });
-        cx.needs_relayout();
-        cx.needs_redraw();
     }
 
     <span class="kw">fn </span>move_cursor(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, movement: Movement, selection: bool) {
-        cx.text_context.with_editor(cx.current, |fs, buf| {
-            <span class="kw">if </span>selection {
-                <span class="kw">if </span>buf.selection() == Selection::None {
-                    buf.set_selection(Selection::Normal(buf.cursor()));
-                }
-            } <span class="kw">else </span>{
-                buf.set_selection(Selection::None);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get_mut(cx.current) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(paragraph) = cx.text_context.text_paragraphs.get(cx.current) {
+                <span class="kw">let </span>new_selection =
+                    apply_movement(movement, <span class="self">self</span>.selection, text, paragraph, selection);
+                <span class="self">self</span>.selection = new_selection;
+                cx.needs_redraw();
             }
-
-            buf.action(
-                fs,
-                <span class="kw">match </span>movement {
-                    Movement::Grapheme(Direction::Upstream) =&gt; Action::Previous,
-                    Movement::Grapheme(Direction::Downstream) =&gt; Action::Next,
-                    Movement::Grapheme(Direction::Left) =&gt; Action::Left,
-                    Movement::Grapheme(Direction::Right) =&gt; Action::Right,
-                    Movement::Word(Direction::Upstream) =&gt; Action::PreviousWord,
-                    Movement::Word(Direction::Downstream) =&gt; Action::NextWord,
-                    Movement::Word(Direction::Left) =&gt; Action::LeftWord,
-                    Movement::Word(Direction::Right) =&gt; Action::RightWord,
-                    Movement::Line(Direction::Upstream) =&gt; Action::Up,
-                    Movement::Line(Direction::Downstream) =&gt; Action::Down,
-                    Movement::LineStart =&gt; Action::Home,
-                    Movement::LineEnd =&gt; Action::End,
-                    Movement::Page(dir) =&gt; {
-                        <span class="kw">let </span>parent = cx.current.parent(cx.tree).unwrap();
-                        <span class="kw">let </span>parent_bounds = <span class="kw-2">*</span>cx.cache.bounds.get(parent).unwrap();
-                        <span class="kw">let </span>sign = <span class="kw">if let </span>Direction::Upstream = dir { -<span class="number">1 </span>} <span class="kw">else </span>{ <span class="number">1 </span>};
-                        Action::Vertical(sign * parent_bounds.h <span class="kw">as </span>i32)
-                    }
-                    Movement::Body(Direction::Upstream) =&gt; Action::BufferStart,
-                    Movement::Body(Direction::Downstream) =&gt; Action::BufferEnd,
-                    <span class="kw">_ </span>=&gt; <span class="kw">return</span>,
-                },
-            );
-        });
-        cx.needs_relayout();
-        cx.needs_redraw();
+        }
     }
 
     <span class="kw">fn </span>select_all(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
-        cx.text_context.with_editor(cx.current, |fs, buf| {
-            buf.action(fs, Action::BufferStart);
-            buf.set_selection(Selection::Normal(buf.cursor()));
-            buf.action(fs, Action::BufferEnd);
-        });
-        cx.needs_redraw();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get(cx.current) {
+            <span class="self">self</span>.selection.anchor = <span class="number">0</span>;
+            <span class="self">self</span>.selection.active = text.len();
+            cx.needs_redraw();
+        }
     }
 
     <span class="kw">fn </span>select_word(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
-        cx.text_context.with_editor(cx.current, |fs, buf| {
-            buf.action(fs, Action::PreviousWord);
-            buf.set_selection(Selection::Normal(buf.cursor()));
-            buf.action(fs, Action::NextWord);
-        });
-        cx.needs_redraw();
+        <span class="self">self</span>.move_cursor(cx, Movement::Word(Direction::Upstream), <span class="bool-val">false</span>);
+        <span class="self">self</span>.move_cursor(cx, Movement::Word(Direction::Downstream), <span class="bool-val">true</span>);
     }
 
     <span class="kw">fn </span>select_paragraph(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
-        cx.text_context.with_editor(cx.current, |fs, buf| {
-            buf.action(fs, Action::ParagraphStart);
-            buf.set_selection(Selection::Normal(buf.cursor()));
-            buf.action(fs, Action::ParagraphEnd);
-        });
-        cx.needs_redraw();
+        <span class="self">self</span>.move_cursor(cx, Movement::ParagraphStart, <span class="bool-val">false</span>);
+        <span class="self">self</span>.move_cursor(cx, Movement::ParagraphEnd, <span class="bool-val">true</span>);
     }
 
-    <span class="kw">fn </span>deselect(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
-        cx.text_context.with_editor(cx.current, |<span class="kw">_</span>, buf| {
-            buf.set_selection(Selection::None);
-        });
-        cx.needs_redraw();
+    <span class="kw">fn </span>deselect(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.selection = Selection::caret(<span class="self">self</span>.selection.active);
     }
 
     <span class="doccomment">/// These input coordinates should be physical coordinates, i.e. what the mouse events provide.
     /// The output text coordinates will also be physical, but relative to the top of the text
     /// glyphs, appropriate for passage to cosmic.
-    </span><span class="kw">fn </span>coordinates_global_to_text(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, x: f32, y: f32) -&gt; (f32, f32) {
+    </span><span class="kw">fn </span>coordinates_global_to_text(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>EventContext, x: f32, y: f32) -&gt; (f32, f32) {
         <span class="kw">let </span>bounds = cx.bounds();
 
         <span class="kw">let </span>child_left = cx.style.child_left.get(cx.current).copied().unwrap_or_default();
         <span class="kw">let </span>child_top = cx.style.child_top.get(cx.current).copied().unwrap_or_default();
         <span class="kw">let </span>_child_right = cx.style.child_right.get(cx.current).copied().unwrap_or_default();
-        <span class="kw">let </span>child_bottom = cx.style.child_bottom.get(cx.current).copied().unwrap_or_default();
-
-        <span class="kw">let </span>justify_y = <span class="kw">match </span>(child_top, child_bottom) {
-            (Stretch(top), Stretch(bottom)) =&gt; {
-                <span class="kw">if </span>top + bottom == <span class="number">0.0 </span>{
-                    <span class="number">0.5
-                </span>} <span class="kw">else </span>{
-                    top / (top + bottom)
-                }
-            }
-            (Stretch(<span class="kw">_</span>), <span class="kw">_</span>) =&gt; <span class="number">1.0</span>,
-            <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
-        };
+        <span class="kw">let </span>_child_bottom = cx.style.child_bottom.get(cx.current).copied().unwrap_or_default();
 
         <span class="kw">let </span>logical_parent_width = cx.physical_to_logical(bounds.w);
         <span class="kw">let </span>logical_parent_height = cx.physical_to_logical(bounds.h);
@@ -1647,75 +1620,88 @@
         <span class="kw">let </span>child_left = child_left.to_px(logical_parent_width, <span class="number">0.0</span>) * cx.scale_factor();
         <span class="kw">let </span>child_top = child_top.to_px(logical_parent_height, <span class="number">0.0</span>) * cx.scale_factor();
 
-        <span class="kw">let </span>total_height = cx.text_context.with_buffer(cx.current, |<span class="kw">_</span>, buffer| {
-            buffer.layout_runs().len() <span class="kw">as </span>f32 * buffer.metrics().line_height
-        });
+        <span class="comment">// let total_height = cx.text_context.with_buffer(cx.current, |_, buffer| {
+        //     buffer.layout_runs().len() as f32 * buffer.metrics().line_height
+        // });
 
-        <span class="kw">let </span>x = x - bounds.x - <span class="self">self</span>.transform.<span class="number">0 </span>- child_left;
-        <span class="kw">let </span>y = y - <span class="self">self</span>.transform.<span class="number">1 </span>- bounds.y - (bounds.h - total_height) * justify_y - child_top;
+        // let x = x - bounds.x - self.transform.0 - child_left;
+        // let y = y - self.transform.1 - bounds.y - (bounds.h - total_height) * justify_y - child_top;
+
+        </span><span class="kw">let </span>x = x - bounds.x - child_left;
+        <span class="kw">let </span>y = y - bounds.y - child_top;
 
         (x, y)
     }
 
     <span class="doccomment">/// This function takes window-global physical coordinates.
-    </span><span class="kw">fn </span>hit(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, x: f32, y: f32) {
-        <span class="kw">let </span>(x, y) = <span class="self">self</span>.coordinates_global_to_text(cx, x, y);
-        cx.text_context.with_editor(cx.current, |fs, buf| {
-            buf.action(fs, Action::Click { x: x <span class="kw">as </span>i32, y: y <span class="kw">as </span>i32 });
-        });
-        cx.needs_redraw();
+    </span><span class="kw">fn </span>hit(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, x: f32, y: f32, selection: bool) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get(cx.current) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(paragraph) = cx.text_context.text_paragraphs.get(cx.current) {
+                <span class="kw">let </span>gp = paragraph
+                    .get_glyph_position_at_coordinate(<span class="self">self</span>.coordinates_global_to_text(cx, x, y));
+                <span class="kw">let </span>num_graphemes = text.graphemes(<span class="bool-val">true</span>).count();
+                <span class="kw">let </span>pos = (gp.position <span class="kw">as </span>usize).min(num_graphemes);
+                <span class="kw">let </span><span class="kw-2">mut </span>cursor = text.len();
+                <span class="kw">for </span>(i, (j, <span class="kw">_</span>)) <span class="kw">in </span>text.grapheme_indices(<span class="bool-val">true</span>).enumerate() {
+                    <span class="kw">if </span>pos == i {
+                        cursor = j;
+                        <span class="kw">break</span>;
+                    }
+                }
+
+                <span class="kw">if </span>selection {
+                    <span class="self">self</span>.selection.active = cursor;
+                } <span class="kw">else </span>{
+                    <span class="self">self</span>.selection = Selection::caret(cursor);
+                }
+
+                cx.needs_redraw();
+            }
+        }
     }
 
     <span class="doccomment">/// This function takes window-global physical coordinates.
     </span><span class="kw">fn </span>drag(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, x: f32, y: f32) {
-        <span class="kw">let </span>(x, y) = <span class="self">self</span>.coordinates_global_to_text(cx, x, y);
-        cx.text_context.with_editor(cx.current, |fs, buf| {
-            buf.action(fs, Action::Drag { x: x <span class="kw">as </span>i32, y: y <span class="kw">as </span>i32 });
-        });
-        cx.needs_redraw();
-    }
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get(cx.current) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(paragraph) = cx.text_context.text_paragraphs.get(cx.current) {
+                <span class="kw">let </span>gp = paragraph
+                    .get_glyph_position_at_coordinate(<span class="self">self</span>.coordinates_global_to_text(cx, x, y));
+                <span class="kw">let </span>num_graphemes = text.graphemes(<span class="bool-val">true</span>).count();
+                <span class="kw">let </span>pos = (gp.position <span class="kw">as </span>usize).min(num_graphemes);
 
-    <span class="doccomment">/// This function takes window-global physical dimensions.
-    </span><span class="kw">fn </span>scroll(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, x: f32, y: f32) {
-        <span class="kw">let </span>entity = cx.current;
-        <span class="kw">let </span><span class="kw-2">mut </span>bounds = cx.cache.get_bounds(entity);
+                <span class="kw">let </span><span class="kw-2">mut </span>cursor = text.len();
+                <span class="kw">for </span>(i, (j, <span class="kw">_</span>)) <span class="kw">in </span>text.grapheme_indices(<span class="bool-val">true</span>).enumerate() {
+                    <span class="kw">if </span>pos == i {
+                        cursor = j;
+                        <span class="kw">break</span>;
+                    }
+                }
 
-        <span class="kw">let </span>child_left = cx.style.child_left.get(cx.current).copied().unwrap_or_default();
-        <span class="kw">let </span>child_top = cx.style.child_top.get(cx.current).copied().unwrap_or_default();
-        <span class="kw">let </span>child_right = cx.style.child_right.get(cx.current).copied().unwrap_or_default();
-        <span class="kw">let </span>child_bottom = cx.style.child_bottom.get(cx.current).copied().unwrap_or_default();
+                <span class="self">self</span>.selection.active = cursor;
 
-        <span class="kw">let </span>logical_parent_width = cx.physical_to_logical(bounds.w);
-        <span class="kw">let </span>logical_parent_height = cx.physical_to_logical(bounds.h);
-
-        <span class="kw">let </span>child_left = child_left.to_px(logical_parent_width, <span class="number">0.0</span>) * cx.scale_factor();
-        <span class="kw">let </span>child_top = child_top.to_px(logical_parent_height, <span class="number">0.0</span>) * cx.scale_factor();
-        <span class="kw">let </span>child_right = child_right.to_px(logical_parent_width, <span class="number">0.0</span>) * cx.scale_factor();
-        <span class="kw">let </span>child_bottom = child_bottom.to_px(logical_parent_height, <span class="number">0.0</span>) * cx.scale_factor();
-
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>text_bounds) = cx.text_context.get_bounds(entity) {
-            text_bounds.x = bounds.x;
-            text_bounds.y = bounds.y;
-            bounds.h -= child_top + child_bottom;
-            bounds.w -= child_left + child_right;
-            <span class="kw">let </span>(<span class="kw-2">mut </span>tx, <span class="kw-2">mut </span>ty) = <span class="self">self</span>.transform;
-            tx += x * SCROLL_SENSITIVITY;
-            ty += y * SCROLL_SENSITIVITY;
-            (tx, ty) = enforce_text_bounds(<span class="kw-2">&amp;</span>text_bounds, <span class="kw-2">&amp;</span>bounds, (tx, ty));
-            <span class="self">self</span>.transform = (tx, ty);
-            cx.needs_redraw();
+                cx.needs_redraw();
+            }
         }
     }
 
-    <span class="attr">#[allow(dead_code)]
+    <span class="comment">// /// This function takes window-global physical dimensions.
+    // fn scroll(&amp;mut self, cx: &amp;mut EventContext, x: f32, y: f32) {}
+
     </span><span class="kw">fn </span>clone_selected(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
-        cx.text_context.with_editor(cx.current, |<span class="kw">_</span>, buf| buf.copy_selection())
-    }
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get(cx.current) {
+            <span class="kw">let </span>substring = <span class="kw-2">&amp;</span>text[<span class="self">self</span>.selection.range()];
+            <span class="kw">return </span><span class="prelude-val">Some</span>(substring.to_string());
+        }
+
+        <span class="prelude-val">None
+    </span>}
 
     <span class="kw">fn </span>clone_text(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) -&gt; String {
-        cx.text_context.with_buffer(cx.current, |<span class="kw">_</span>, buf| {
-            buf.lines.iter().map(|line| line.text()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;().join(<span class="string">"\n"</span>)
-        })
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get(cx.current) {
+            text.clone()
+        } <span class="kw">else </span>{
+            String::new()
+        }
     }
 
     <span class="kw">fn </span>reset_caret_timer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
@@ -1723,6 +1709,179 @@
         <span class="kw">if </span>!cx.is_read_only() {
             <span class="self">self</span>.show_caret = <span class="bool-val">true</span>;
             cx.start_timer(<span class="self">self</span>.caret_timer);
+        }
+    }
+
+    <span class="kw">pub fn </span>draw_selection(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;</span>Canvas) {
+        <span class="kw">if </span>!<span class="self">self</span>.selection.is_caret() {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(paragraph) = cx.text_context.text_paragraphs.get(cx.current) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get(cx.current) {
+                    <span class="kw">let </span>min = text.current_grapheme_offset(<span class="self">self</span>.selection.min());
+                    <span class="kw">let </span>max = text.current_grapheme_offset(<span class="self">self</span>.selection.max());
+
+                    <span class="kw">let </span>cursor_rects = paragraph.get_rects_for_range(
+                        min..max,
+                        RectHeightStyle::Tight,
+                        RectWidthStyle::Tight,
+                    );
+
+                    <span class="kw">for </span>cursor_rect <span class="kw">in </span>cursor_rects {
+                        <span class="kw">let </span>bounds = cx.bounds();
+
+                        <span class="kw">let </span><span class="kw-2">mut </span>vertical_flex_sum = <span class="number">0.0</span>;
+                        <span class="kw">let </span><span class="kw-2">mut </span>horizontal_flex_sum = <span class="number">0.0</span>;
+
+                        <span class="kw">let </span><span class="kw-2">mut </span>padding_top = <span class="kw">match </span>cx.child_top() {
+                            Units::Pixels(val) =&gt; val,
+                            Units::Stretch(val) =&gt; {
+                                vertical_flex_sum += val;
+                                <span class="number">0.0
+                            </span>}
+                            <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
+                        };
+
+                        <span class="kw">let </span>padding_bottom = <span class="kw">match </span>cx.child_bottom() {
+                            Units::Pixels(val) =&gt; val,
+                            Units::Stretch(val) =&gt; {
+                                vertical_flex_sum += val;
+                                <span class="number">0.0
+                            </span>}
+                            <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
+                        };
+
+                        <span class="kw">let </span>vertical_free_space =
+                            bounds.height() - paragraph.height() - padding_top - padding_bottom;
+
+                        <span class="kw">if let </span>Units::Stretch(val) = cx.child_top() {
+                            padding_top = (vertical_free_space * val / vertical_flex_sum).round()
+                        }
+
+                        <span class="kw">let </span><span class="kw-2">mut </span>padding_left = <span class="kw">match </span>cx.child_left() {
+                            Units::Pixels(val) =&gt; val,
+                            Units::Stretch(val) =&gt; {
+                                horizontal_flex_sum += val;
+                                <span class="number">0.0
+                            </span>}
+                            <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
+                        };
+
+                        <span class="kw">let </span>padding_right = <span class="kw">match </span>cx.child_right() {
+                            Units::Pixels(val) =&gt; val,
+                            Units::Stretch(val) =&gt; {
+                                horizontal_flex_sum += val;
+                                <span class="number">0.0
+                            </span>}
+                            <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
+                        };
+
+                        <span class="kw">let </span>horizontal_free_space =
+                            bounds.width() - paragraph.max_width() - padding_left - padding_right;
+
+                        <span class="kw">if let </span>Units::Stretch(val) = cx.child_left() {
+                            padding_left =
+                                (horizontal_free_space * val / horizontal_flex_sum).round()
+                        }
+
+                        <span class="kw">let </span>x = bounds.x + padding_left + cursor_rect.rect.left;
+                        <span class="kw">let </span>y = bounds.y + padding_top + cursor_rect.rect.top;
+
+                        <span class="kw">let </span>x2 = x + (cursor_rect.rect.right - cursor_rect.rect.left);
+                        <span class="kw">let </span>y2 = y + (cursor_rect.rect.bottom - cursor_rect.rect.top);
+
+                        <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
+                        paint.set_anti_alias(<span class="bool-val">true</span>);
+                        paint.set_style(PaintStyle::Fill);
+                        paint.set_color(cx.selection_color());
+
+                        canvas.draw_rect(Rect::new(x, y, x2, y2), <span class="kw-2">&amp;</span>paint);
+                    }
+                }
+            }
+        }
+    }
+
+    <span class="doccomment">/// Draw text caret for the current view.
+    </span><span class="kw">pub fn </span>draw_text_caret(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;</span>Canvas) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(paragraph) = cx.text_context.text_paragraphs.get(cx.current) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get(cx.current) {
+                <span class="kw">let </span>bounds = cx.bounds();
+
+                <span class="kw">let </span>current = text.current_grapheme_offset(<span class="self">self</span>.selection.active);
+
+                <span class="kw">let </span>rects = paragraph.get_rects_for_range(
+                    current..current + <span class="number">1</span>,
+                    RectHeightStyle::Tight,
+                    RectWidthStyle::Tight,
+                );
+
+                <span class="kw">let </span>cursor_rect = rects.first().unwrap();
+
+                <span class="kw">let </span><span class="kw-2">mut </span>vertical_flex_sum = <span class="number">0.0</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>horizontal_flex_sum = <span class="number">0.0</span>;
+
+                <span class="kw">let </span><span class="kw-2">mut </span>padding_top = <span class="kw">match </span>cx.child_top() {
+                    Units::Pixels(val) =&gt; val,
+                    Units::Stretch(val) =&gt; {
+                        vertical_flex_sum += val;
+                        <span class="number">0.0
+                    </span>}
+                    <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
+                };
+
+                <span class="kw">let </span>padding_bottom = <span class="kw">match </span>cx.child_bottom() {
+                    Units::Pixels(val) =&gt; val,
+                    Units::Stretch(val) =&gt; {
+                        vertical_flex_sum += val;
+                        <span class="number">0.0
+                    </span>}
+                    <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
+                };
+
+                <span class="kw">let </span>vertical_free_space =
+                    bounds.height() - paragraph.height() - padding_top - padding_bottom;
+
+                <span class="kw">if let </span>Units::Stretch(val) = cx.child_top() {
+                    padding_top = (vertical_free_space * val / vertical_flex_sum).round()
+                }
+
+                <span class="kw">let </span><span class="kw-2">mut </span>padding_left = <span class="kw">match </span>cx.child_left() {
+                    Units::Pixels(val) =&gt; val,
+                    Units::Stretch(val) =&gt; {
+                        horizontal_flex_sum += val;
+                        <span class="number">0.0
+                    </span>}
+                    <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
+                };
+
+                <span class="kw">let </span>padding_right = <span class="kw">match </span>cx.child_right() {
+                    Units::Pixels(val) =&gt; val,
+                    Units::Stretch(val) =&gt; {
+                        horizontal_flex_sum += val;
+                        <span class="number">0.0
+                    </span>}
+                    <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
+                };
+
+                <span class="kw">let </span>horizontal_free_space =
+                    bounds.width() - paragraph.max_width() - padding_left - padding_right;
+
+                <span class="kw">if let </span>Units::Stretch(val) = cx.child_left() {
+                    padding_left = (horizontal_free_space * val / horizontal_flex_sum).round()
+                }
+
+                <span class="kw">let </span>x = (bounds.x + padding_left + cursor_rect.rect.left).round();
+                <span class="kw">let </span>y = (bounds.y + padding_top + cursor_rect.rect.top).round();
+
+                <span class="kw">let </span>x2 = x + <span class="number">1.0</span>;
+                <span class="kw">let </span>y2 = y + (cursor_rect.rect.bottom - cursor_rect.rect.top);
+
+                <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
+                paint.set_anti_alias(<span class="bool-val">true</span>);
+                paint.set_style(PaintStyle::Fill);
+                paint.set_color(cx.caret_color());
+
+                canvas.draw_rect(Rect::new(x, y, x2, y2), <span class="kw-2">&amp;</span>paint);
+            }
         }
     }
 }
@@ -1777,166 +1936,171 @@
 
     <span class="doccomment">/// Sets the placeholder text that appears when the textbox has no value.
     </span><span class="kw">pub fn </span>placeholder&lt;P: ToStringLocalized&gt;(<span class="self">self</span>, text: <span class="kw">impl </span>Res&lt;P&gt;) -&gt; <span class="self">Self </span>{
-        text.set_or_bind(<span class="self">self</span>.cx, <span class="self">self</span>.entity, |cx, val| {
+        text.set_or_bind(<span class="self">self</span>.cx, <span class="self">self</span>.entity, <span class="kw">move </span>|cx, val| {
             <span class="kw">let </span>txt = val.get(cx).to_string_local(cx);
             cx.emit(TextEvent::SetPlaceholder(txt.clone()));
             cx.style.name.insert(cx.current, txt);
             cx.needs_relayout();
-            cx.needs_redraw();
+            cx.needs_redraw(<span class="self">self</span>.entity);
         });
 
         <span class="self">self
     </span>}
 }
 
-<span class="kw">impl</span>&lt;L: Lens&gt; View <span class="kw">for </span>Textbox&lt;L&gt;
+<span class="kw">impl</span>&lt;L&gt; View <span class="kw">for </span>Textbox&lt;L&gt;
 <span class="kw">where
-    </span>&lt;L <span class="kw">as </span>Lens&gt;::Target: Data + ToString + std::str::FromStr,
+    </span>L: Lens&lt;Target: Data + ToStringLocalized + std::str::FromStr&gt;,
 {
     <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">"textbox"</span>)
     }
 
     <span class="kw">fn </span>accessibility(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>AccessContext, node: <span class="kw-2">&amp;mut </span>AccessNode) {
-        <span class="kw">let </span>bounds = cx.bounds();
+        <span class="kw">let </span>_bounds = cx.bounds();
 
         <span class="kw">let </span>node_id = node.node_id();
-        cx.text_context.with_editor(cx.current, |<span class="kw">_</span>, editor| {
-            <span class="kw">let </span><span class="kw-2">mut </span>selection = editor.selection();
-            <span class="kw">let </span>cursor = editor.cursor();
 
-            <span class="kw">let </span><span class="kw-2">mut </span>selection_active_line = node_id;
-            <span class="kw">let </span><span class="kw-2">mut </span>selection_anchor_line = node_id;
-            <span class="kw">let </span><span class="kw-2">mut </span>selection_active_cursor = <span class="number">0</span>;
-            <span class="kw">let </span><span class="kw-2">mut </span>selection_anchor_cursor = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>_selection = <span class="self">self</span>.selection;
 
-            <span class="kw">let </span><span class="kw-2">mut </span>current_cursor = <span class="number">0</span>;
-            <span class="kw">let </span><span class="kw-2">mut </span>prev_line_index = usize::MAX;
+        <span class="comment">// let mut selection_active_line = node_id;
+        // let mut selection_anchor_line = node_id;
+        // let mut selection_active_cursor = 0;
+        // let mut selection_anchor_cursor = 0;
 
-            <span class="kw">for </span>(index, line) <span class="kw">in </span>editor.buffer().layout_runs().enumerate() {
-                <span class="kw">let </span>text = line.text;
+        </span><span class="kw">let </span><span class="kw-2">mut </span>_current_cursor = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>_prev_line_index = usize::MAX;
 
-                <span class="comment">// We need a child node per line
-                </span><span class="kw">let </span><span class="kw-2">mut </span>line_node = AccessNode::new_from_parent(node_id, index);
-                line_node.set_role(Role::InlineTextBox);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(_text) = cx.style.text.get(cx.current) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(paragraph) = cx.text_context.text_paragraphs.get(cx.current) {
+                <span class="kw">let </span>line_metrics = paragraph.get_line_metrics();
+                <span class="kw">for </span>line <span class="kw">in </span>line_metrics.iter() {
+                    <span class="comment">// We need a child node per line
+                    </span><span class="kw">let </span><span class="kw-2">mut </span>line_node = AccessNode::new_from_parent(node_id, line.line_number);
+                    line_node.set_role(Role::InlineTextBox);
+                    line_node.set_bounds(BoundingBox {
+                        x: line.left <span class="kw">as </span>f32,
+                        y: (line.baseline - line.ascent) <span class="kw">as </span>f32,
+                        w: line.width <span class="kw">as </span>f32,
+                        h: line.height <span class="kw">as </span>f32,
+                    });
+                    <span class="comment">// line_node.set_text_direction(if line.ltr {
+                    //     TextDirection::RightToLeft
+                    // } else {
+                    //     TextDirection::LeftToRight
+                    // });
 
-                <span class="kw">let </span>line_height = editor.buffer().metrics().line_height;
-                line_node.set_bounds(BoundingBox {
-                    x: bounds.x,
-                    y: bounds.y + line.line_y - editor.buffer().metrics().font_size,
-                    w: line.line_w,
-                    h: line_height,
-                });
-                line_node.set_text_direction(<span class="kw">if </span>line.rtl {
-                    TextDirection::RightToLeft
-                } <span class="kw">else </span>{
-                    TextDirection::LeftToRight
-                });
+                    </span><span class="kw">let </span><span class="kw-2">mut </span>character_lengths = Vec::new();
+                    <span class="kw">let </span><span class="kw-2">mut </span>character_positions = Vec::new();
+                    <span class="kw">let </span><span class="kw-2">mut </span>character_widths = Vec::new();
 
-                <span class="kw">let </span><span class="kw-2">mut </span>character_lengths = Vec::with_capacity(line.glyphs.len());
-                <span class="kw">let </span><span class="kw-2">mut </span>character_positions = Vec::with_capacity(line.glyphs.len());
-                <span class="kw">let </span><span class="kw-2">mut </span>character_widths = Vec::with_capacity(line.glyphs.len());
+                    <span class="comment">// let mut line_text = text[line.start_index..line.end_index].to_owned();
 
-                <span class="comment">// Get the actual text in the line
-                </span><span class="kw">let </span>first_glyph_pos =
-                    line.glyphs.first().map(|glyph| glyph.start).unwrap_or_default();
-                <span class="kw">let </span>last_glyph_pos = line.glyphs.last().map(|glyph| glyph.end).unwrap_or_default();
+                    // let word_lengths =
+                    //     line_text.unicode_words().map(|word| word.len() as u8).collect::&lt;Vec&lt;_&gt;&gt;();
 
-                <span class="kw">let </span><span class="kw-2">mut </span>line_text = text[first_glyph_pos..last_glyph_pos].to_owned();
+                    // let mut line_length = 0;
 
-                <span class="kw">let </span>word_lengths =
-                    line_text.unicode_words().map(|word| word.len() <span class="kw">as </span>u8).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+                    </span><span class="kw">let </span><span class="kw-2">mut </span>glyph_pos = line.start_index;
 
-                <span class="kw">let </span><span class="kw-2">mut </span>line_length = <span class="number">0</span>;
+                    <span class="kw">for _ in </span>line.start_index..line.end_index {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(cluster_info) = paragraph.get_glyph_cluster_at(glyph_pos) {
+                            <span class="kw">let </span>length =
+                                cluster_info.text_range.end - cluster_info.text_range.start;
 
-                <span class="kw">for </span>glyph <span class="kw">in </span>line.glyphs.iter() {
-                    <span class="kw">let </span>length = (glyph.end - glyph.start) <span class="kw">as </span>u8;
+                            <span class="comment">// line_length += length as usize;
 
-                    line_length += length <span class="kw">as </span>usize;
+                            </span><span class="kw">let </span>position = cluster_info.bounds.left();
+                            <span class="kw">let </span>width = cluster_info.bounds.width();
 
-                    <span class="kw">let </span>position = glyph.x;
-                    <span class="kw">let </span>width = glyph.w;
+                            character_lengths.push(length <span class="kw">as </span>u8);
+                            character_positions.push(position);
+                            character_widths.push(width);
 
-                    character_lengths.push(length);
-                    character_positions.push(position);
-                    character_widths.push(width);
-                }
+                            glyph_pos += length;
 
-                <span class="comment">// Cosmic strips the newlines but accesskit needs them so we append them back in if line originally ended with a newline
-                // If the last glyph position is equal to the end of the buffer line then this layout run is the last one and ends in a newline.
-                </span><span class="kw">if </span>last_glyph_pos == line.text.len() {
-                    line_text += <span class="string">"\n"</span>;
-                    character_lengths.push(<span class="number">1</span>);
-                    character_positions.push(line.line_w);
-                    character_widths.push(<span class="number">0.0</span>);
-                }
-
-                <span class="comment">// TODO: Might need to append any spaces that were stripped during layout. This can be done by
-                // figuring out if the start of the next line is greater than the end of the current line as long
-                // as the lines have the same `line_i`. This will require a peekable iterator loop.
-
-                </span>line_node.set_value(line_text.into_boxed_str());
-                line_node.set_character_lengths(character_lengths.into_boxed_slice());
-                line_node.set_character_positions(character_positions.into_boxed_slice());
-                line_node.set_character_widths(character_widths.into_boxed_slice());
-                line_node.set_word_lengths(word_lengths.into_boxed_slice());
-
-                <span class="kw">if </span>line.line_i != prev_line_index {
-                    current_cursor = <span class="number">0</span>;
-                }
-
-                <span class="kw">if </span>line.line_i == cursor.line {
-                    <span class="kw">if </span>prev_line_index != line.line_i {
-                        <span class="kw">if </span>cursor.index &lt;= line_length {
-                            selection_active_line = line_node.node_id();
-                            selection_active_cursor = cursor.index;
-                        }
-                    } <span class="kw">else if </span>cursor.index &gt; current_cursor {
-                        selection_active_line = line_node.node_id();
-                        selection_active_cursor = cursor.index - current_cursor;
+                            <span class="comment">// if glyph_pos &gt;= line.end_index {
+                            //     break;
+                            // }
+                        </span>}
                     }
-                }
 
-                <span class="comment">// Check if the current line contains the cursor or selection
-                // This is a mess because a line happens due to soft and hard breaks but
-                // the cursor and selected indices are relative to the lines caused by hard breaks only.
-                </span><span class="kw">if </span>selection == Selection::None {
-                    selection = Selection::Normal(cursor);
-                }
-                <span class="kw">if let </span>Selection::Normal(selection) = selection {
-                    <span class="kw">if </span>line.line_i == selection.line {
-                        <span class="comment">// A previous line index different to the current means that the current line follows a hard break
-                        </span><span class="kw">if </span>prev_line_index != line.line_i {
-                            <span class="kw">if </span>selection.index &lt;= line_length {
-                                selection_anchor_line = line_node.node_id();
-                                selection_anchor_cursor = selection.index;
-                            }
-                        } <span class="kw">else if </span>selection.index &gt; current_cursor {
-                            selection_anchor_line = line_node.node_id();
-                            selection_anchor_cursor = selection.index - current_cursor;
-                        }
-                    }
-                }
+                    <span class="comment">// Cosmic strips the newlines but accesskit needs them so we append them back in if line originally ended with a newline
+                    // If the last glyph position is equal to the end of the buffer line then this layout run is the last one and ends in a newline.
+                    // if line.hard_break {
+                    //     line_text += "\n";
+                    //     character_lengths.push(1);
+                    //     character_positions.push(line.width as f32);
+                    //     character_widths.push(0.0);
+                    // }
 
-                node.add_child(line_node);
+                    // TODO: Might need to append any spaces that were stripped during layout. This can be done by
+                    // figuring out if the start of the next line is greater than the end of the current line as long
+                    // as the lines have the same `line_i`. This will require a peekable iterator loop.
 
-                current_cursor += line_length;
-                prev_line_index = line.line_i;
+                    // line_node.set_value(line_text.into_boxed_str());
+                    </span>line_node.set_character_lengths(character_lengths.into_boxed_slice());
+                    line_node.set_character_positions(character_positions.into_boxed_slice());
+                    line_node.set_character_widths(character_widths.into_boxed_slice());
+                    <span class="comment">// line_node.set_word_lengths(word_lengths.into_boxed_slice());
+
+                    // if line.line_i != prev_line_index {
+                    //     current_cursor = 0;
+                    // }
+
+                    // if line.line_i == cursor.line {
+                    //     if prev_line_index != line.line_i {
+                    //         if cursor.index &lt;= line_length {
+                    //             selection_active_line = line_node.node_id();
+                    //             selection_active_cursor = cursor.index;
+                    //         }
+                    //     } else if cursor.index &gt; current_cursor {
+                    //         selection_active_line = line_node.node_id();
+                    //         selection_active_cursor = cursor.index - current_cursor;
+                    //     }
+                    // }
+
+                    // Check if the current line contains the cursor or selection
+                    // This is a mess because a line happens due to soft and hard breaks but
+                    // the cursor and selected indices are relative to the lines caused by hard breaks only.
+                    // if selection == Selection::None {
+                    //     selection = Selection::Normal(cursor);
+                    // }
+                    // if let Selection::Normal(selection) = selection {
+                    //     if line.line_i == selection.line {
+                    //         // A previous line index different to the current means that the current line follows a hard break
+                    //         if prev_line_index != line.line_i {
+                    //             if selection.index &lt;= line_length {
+                    //                 selection_anchor_line = line_node.node_id();
+                    //                 selection_anchor_cursor = selection.index;
+                    //             }
+                    //         } else if selection.index &gt; current_cursor {
+                    //             selection_anchor_line = line_node.node_id();
+                    //             selection_anchor_cursor = selection.index - current_cursor;
+                    //         }
+                    //     }
+                    // }
+
+                    </span>node.add_child(line_node);
+
+                    <span class="comment">// current_cursor += line_length;
+                    // prev_line_index = line.line_i;
+                </span>}
             }
+        }
 
-            node.set_text_selection(TextSelection {
-                anchor: TextPosition {
-                    node: selection_anchor_line,
-                    character_index: selection_anchor_cursor,
-                },
-                focus: TextPosition {
-                    node: selection_active_line,
-                    character_index: selection_active_cursor,
-                },
-            });
+        <span class="comment">// node.set_text_selection(TextSelection {
+        //     anchor: TextPosition {
+        //         node: selection_anchor_line,
+        //         character_index: selection_anchor_cursor,
+        //     },
+        //     focus: TextPosition {
+        //         node: selection_active_line,
+        //         character_index: selection_active_cursor,
+        //     },
+        // });
 
-            node.node_builder.set_default_action_verb(DefaultActionVerb::Focus);
-        });
+        </span>node.node_builder.set_default_action_verb(DefaultActionVerb::Focus);
     }
 
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
@@ -1958,7 +2122,11 @@
                             cx.emit(TextEvent::StartEdit);
                         }
                         <span class="self">self</span>.reset_caret_timer(cx);
-                        cx.emit(TextEvent::Hit(cx.mouse.cursorx, cx.mouse.cursory));
+                        cx.emit(TextEvent::Hit(
+                            cx.mouse.cursor_x,
+                            cx.mouse.cursor_y,
+                            cx.modifiers.shift(),
+                        ));
                     }
                 } <span class="kw">else </span>{
                     cx.emit(TextEvent::Submit(<span class="bool-val">false</span>));
@@ -2009,7 +2177,7 @@
                         <span class="self">self</span>.reset_caret_timer(cx);
                     }
                     <span class="kw">if </span>cx.mouse.left.pos_down.<span class="number">0 </span>!= <span class="kw-2">*</span>x || cx.mouse.left.pos_down.<span class="number">1 </span>!= <span class="kw-2">*</span>y {
-                        cx.emit(TextEvent::Drag(cx.mouse.cursorx, cx.mouse.cursory));
+                        cx.emit(TextEvent::Drag(cx.mouse.cursor_x, cx.mouse.cursor_y));
                     }
                 }
             }
@@ -2075,7 +2243,7 @@
                     <span class="self">self</span>.reset_caret_timer(cx);
                     <span class="kw">if </span><span class="self">self</span>.kind != TextboxKind::SingleLine {
                         cx.emit(TextEvent::MoveCursor(
-                            Movement::Line(Direction::Upstream),
+                            Movement::Vertical(VerticalMovement::LineUp),
                             cx.modifiers.shift(),
                         ));
                     }
@@ -2085,7 +2253,7 @@
                     <span class="self">self</span>.reset_caret_timer(cx);
                     <span class="kw">if </span><span class="self">self</span>.kind != TextboxKind::SingleLine {
                         cx.emit(TextEvent::MoveCursor(
-                            Movement::Line(Direction::Downstream),
+                            Movement::Vertical(VerticalMovement::LineDown),
                             cx.modifiers.shift(),
                         ));
                     }
@@ -2200,62 +2368,56 @@
             WindowEvent::ActionRequest(ActionRequest {
                 action: accesskit::Action::SetTextSelection,
                 target: <span class="kw">_</span>,
-                data: <span class="prelude-val">Some</span>(ActionData::SetTextSelection(selection)),
+                data: <span class="prelude-val">Some</span>(ActionData::SetTextSelection(_selection)),
             }) =&gt; {
                 <span class="comment">// TODO: This needs testing once I figure out how to trigger it with a screen reader.
-                </span><span class="kw">let </span>node_id = cx.current.accesskit_id();
-                cx.text_context.with_editor(cx.current, |<span class="kw">_</span>, editor| {
-                    <span class="comment">// let cursor_node = selection.focus.node;
-                    </span><span class="kw">let </span>selection_node = selection.anchor.node;
+                // let node_id = cx.current.accesskit_id();
+                // cx.text_context.with_editor(cx.current, |_, editor| {
+                //     // let cursor_node = selection.focus.node;
+                //     let selection_node = selection.anchor.node;
 
-                    <span class="comment">// let mut cursor_line_index = 0;
-                    // let mut cursor_index = 0;
-                    </span><span class="kw">let </span><span class="kw-2">mut </span>selection_line_index = <span class="number">0</span>;
-                    <span class="kw">let </span><span class="kw-2">mut </span>selection_index = <span class="number">0</span>;
+                //     // let mut cursor_line_index = 0;
+                //     // let mut cursor_index = 0;
+                //     let mut selection_line_index = 0;
+                //     let mut selection_index = 0;
 
-                    <span class="kw">let </span><span class="kw-2">mut </span>current_cursor = <span class="number">0</span>;
-                    <span class="kw">let </span><span class="kw-2">mut </span>prev_line_index = usize::MAX;
+                //     let mut current_cursor = 0;
+                //     let mut prev_line_index = usize::MAX;
 
-                    <span class="kw">for </span>(index, line) <span class="kw">in </span>editor.buffer().layout_runs().enumerate() {
-                        <span class="kw">let </span>line_node = AccessNode::new_from_parent(node_id, index);
-                        <span class="comment">// if line_node.node_id() == cursor_node {
-                        //     cursor_line_index = line.line_i;
-                        //     cursor_index = selection.focus.character_index + current_cursor;
-                        // }
+                //     for (index, line) in editor.buffer().layout_runs().enumerate() {
+                //         let line_node = AccessNode::new_from_parent(node_id, index);
+                //         // if line_node.node_id() == cursor_node {
+                //         //     cursor_line_index = line.line_i;
+                //         //     cursor_index = selection.focus.character_index + current_cursor;
+                //         // }
 
-                        </span><span class="kw">if </span>line_node.node_id() == selection_node {
-                            selection_line_index = line.line_i;
-                            selection_index = selection.anchor.character_index + current_cursor;
-                        }
+                //         if line_node.node_id() == selection_node {
+                //             selection_line_index = line.line_i;
+                //             selection_index = selection.anchor.character_index + current_cursor;
+                //         }
 
-                        <span class="kw">if </span>line.line_i != prev_line_index {
-                            current_cursor = <span class="number">0</span>;
-                        }
+                //         if line.line_i != prev_line_index {
+                //             current_cursor = 0;
+                //         }
 
-                        <span class="kw">let </span>first_glyph_pos =
-                            line.glyphs.first().map(|glyph| glyph.start).unwrap_or_default();
-                        <span class="kw">let </span>last_glyph_pos =
-                            line.glyphs.last().map(|glyph| glyph.end).unwrap_or_default();
+                //         let first_glyph_pos =
+                //             line.glyphs.first().map(|glyph| glyph.start).unwrap_or_default();
+                //         let last_glyph_pos =
+                //             line.glyphs.last().map(|glyph| glyph.end).unwrap_or_default();
 
-                        <span class="kw">let </span>line_length = last_glyph_pos - first_glyph_pos;
+                //         let line_length = last_glyph_pos - first_glyph_pos;
 
-                        current_cursor += line_length;
-                        prev_line_index = line.line_i;
-                    }
+                //         current_cursor += line_length;
+                //         prev_line_index = line.line_i;
+                //     }
 
-                    <span class="kw">let </span>selection_cursor = Cursor::new(selection_line_index, selection_index);
-                    editor.set_selection(Selection::Normal(selection_cursor));
+                //     let selection_cursor = Cursor::new(selection_line_index, selection_index);
+                //     editor.set_selection(Selection::Normal(selection_cursor));
 
-                    <span class="comment">// TODO: Either add a method to set the cursor by index to cosmic,
-                    // or loop over an `Action` to move the cursor to the correct place.
-                </span>});
-
-                <span class="comment">// println!("Select some text: {:?}", selection);
+                //     // TODO: Either add a method to set the cursor by index to cosmic,
+                //     // or loop over an `Action` to move the cursor to the correct place.
+                // });
             </span>}
-
-            WindowEvent::GeometryChanged(<span class="kw">_</span>) =&gt; {
-                <span class="self">self</span>.set_caret(cx);
-            }
 
             <span class="kw">_ </span>=&gt; {}
         });
@@ -2264,9 +2426,8 @@
         </span>event.map(|text_event, <span class="kw">_</span>| <span class="kw">match </span>text_event {
             TextEvent::InsertText(text) =&gt; {
                 <span class="self">self</span>.insert_text(cx, text);
-                <span class="comment">// self.set_caret(cx);
 
-                </span><span class="kw">let </span>text = <span class="self">self</span>.clone_text(cx);
+                <span class="kw">let </span>text = <span class="self">self</span>.clone_text(cx);
 
                 <span class="kw">if let </span><span class="prelude-val">Ok</span>(value) = <span class="kw-2">&amp;</span>text.parse::&lt;L::Target&gt;() {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(validate) = <span class="kw-2">&amp;</span><span class="self">self</span>.validate {
@@ -2278,8 +2439,6 @@
                     cx.set_valid(<span class="bool-val">false</span>);
                 }
 
-                <span class="self">self</span>.placeholder_shown = text.is_empty();
-
                 <span class="kw">if </span><span class="self">self</span>.edit {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_edit {
                         (callback)(cx, text);
@@ -2288,8 +2447,8 @@
             }
 
             TextEvent::Clear =&gt; {
-                <span class="self">self</span>.reset_text(cx);
-                <span class="self">self</span>.scroll(cx, <span class="number">0.0</span>, <span class="number">0.0</span>); <span class="comment">// ensure_visible
+                <span class="comment">// self.reset_text(cx);
+                // self.scroll(cx, 0.0, 0.0); // ensure_visible
                 </span>cx.needs_relayout();
                 cx.needs_redraw();
             }
@@ -2297,9 +2456,8 @@
             TextEvent::DeleteText(movement) =&gt; {
                 <span class="kw">if </span><span class="self">self</span>.edit {
                     <span class="self">self</span>.delete_text(cx, <span class="kw-2">*</span>movement);
-                    <span class="comment">// self.set_caret(cx);
 
-                    </span><span class="kw">let </span>text = <span class="self">self</span>.clone_text(cx);
+                    <span class="kw">let </span>text = <span class="self">self</span>.clone_text(cx);
 
                     <span class="kw">if let </span><span class="prelude-val">Ok</span>(value) = <span class="kw-2">&amp;</span>text.parse::&lt;L::Target&gt;() {
                         <span class="kw">if let </span><span class="prelude-val">Some</span>(validate) = <span class="kw-2">&amp;</span><span class="self">self</span>.validate {
@@ -2311,8 +2469,6 @@
                         cx.set_valid(<span class="bool-val">false</span>);
                     }
 
-                    <span class="self">self</span>.placeholder_shown = text.is_empty();
-
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_edit {
                         (callback)(cx, text);
                     }
@@ -2322,8 +2478,7 @@
             TextEvent::MoveCursor(movement, selection) =&gt; {
                 <span class="kw">if </span><span class="self">self</span>.edit {
                     <span class="self">self</span>.move_cursor(cx, <span class="kw-2">*</span>movement, <span class="kw-2">*</span>selection);
-                    <span class="comment">// self.set_caret(cx);
-                </span>}
+                }
             }
 
             TextEvent::SetPlaceholder(text) =&gt; <span class="self">self</span>.placeholder.clone_from(text),
@@ -2338,13 +2493,10 @@
 
                     <span class="kw">let </span>text = <span class="self">self</span>.lens.get(cx);
                     <span class="kw">let </span>text = text.to_string_local(cx);
-                    <span class="self">self</span>.placeholder_shown = text.is_empty();
 
                     <span class="self">self</span>.select_all(cx);
-                    <span class="self">self</span>.insert_text(cx, <span class="kw-2">&amp;</span>text);
-                    <span class="comment">// self.set_caret(cx);
 
-                    </span><span class="kw">if let </span><span class="prelude-val">Ok</span>(value) = <span class="kw-2">&amp;</span>text.parse::&lt;L::Target&gt;() {
+                    <span class="kw">if let </span><span class="prelude-val">Ok</span>(value) = <span class="kw-2">&amp;</span>text.parse::&lt;L::Target&gt;() {
                         <span class="kw">if let </span><span class="prelude-val">Some</span>(validate) = <span class="kw-2">&amp;</span><span class="self">self</span>.validate {
                             cx.set_valid(validate(value));
                         } <span class="kw">else </span>{
@@ -2357,7 +2509,7 @@
             }
 
             TextEvent::EndEdit =&gt; {
-                <span class="self">self</span>.deselect(cx);
+                <span class="self">self</span>.deselect();
                 <span class="self">self</span>.edit = <span class="bool-val">false</span>;
                 cx.set_checked(<span class="bool-val">false</span>);
                 cx.release();
@@ -2365,13 +2517,10 @@
 
                 <span class="kw">let </span>text = <span class="self">self</span>.lens.get(cx);
                 <span class="kw">let </span>text = text.to_string_local(cx);
-                <span class="self">self</span>.placeholder_shown = text.is_empty();
 
                 <span class="self">self</span>.select_all(cx);
-                <span class="self">self</span>.insert_text(cx, <span class="kw-2">&amp;</span>text);
-                <span class="comment">// self.set_caret(cx);
 
-                </span><span class="kw">if let </span><span class="prelude-val">Ok</span>(value) = <span class="kw-2">&amp;</span>text.parse::&lt;L::Target&gt;() {
+                <span class="kw">if let </span><span class="prelude-val">Ok</span>(value) = <span class="kw-2">&amp;</span>text.parse::&lt;L::Target&gt;() {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(validate) = <span class="kw-2">&amp;</span><span class="self">self</span>.validate {
                         cx.set_valid(validate(value));
                     } <span class="kw">else </span>{
@@ -2405,32 +2554,27 @@
 
             TextEvent::SelectAll =&gt; {
                 <span class="self">self</span>.select_all(cx);
-                <span class="comment">// self.set_caret(cx);
-            </span>}
+            }
 
             TextEvent::SelectWord =&gt; {
                 <span class="self">self</span>.select_word(cx);
-                <span class="comment">// self.set_caret(cx);
-            </span>}
+            }
 
             TextEvent::SelectParagraph =&gt; {
                 <span class="self">self</span>.select_paragraph(cx);
-                <span class="comment">// self.set_caret(cx);
-            </span>}
+            }
 
-            TextEvent::Hit(posx, posy) =&gt; {
-                <span class="self">self</span>.hit(cx, <span class="kw-2">*</span>posx, <span class="kw-2">*</span>posy);
-                <span class="comment">// self.set_caret(cx);
-            </span>}
+            TextEvent::Hit(posx, posy, selection) =&gt; {
+                <span class="self">self</span>.hit(cx, <span class="kw-2">*</span>posx, <span class="kw-2">*</span>posy, <span class="kw-2">*</span>selection);
+            }
 
             TextEvent::Drag(posx, posy) =&gt; {
                 <span class="self">self</span>.drag(cx, <span class="kw-2">*</span>posx, <span class="kw-2">*</span>posy);
-                <span class="comment">// self.set_caret(cx);
-            </span>}
-
-            TextEvent::Scroll(x, y) =&gt; {
-                <span class="self">self</span>.scroll(cx, <span class="kw-2">*</span>x, <span class="kw-2">*</span>y);
             }
+
+            TextEvent::Scroll(_x, _y) =&gt; {
+                <span class="comment">//self.scroll(cx, *x, *y);
+            </span>}
 
             TextEvent::Copy =&gt;
             {
@@ -2492,18 +2636,20 @@
     }
 
     <span class="comment">// Use custom drawing for the textbox so a transform can be applied to just the text.
-    </span><span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
-        <span class="kw">let </span><span class="kw-2">mut </span>path = cx.build_path();
-        cx.draw_shadows(canvas, <span class="kw-2">&amp;mut </span>path);
-        cx.draw_backdrop_filter(canvas, <span class="kw-2">&amp;mut </span>path);
-        cx.draw_background(canvas, <span class="kw-2">&amp;mut </span>path);
-        cx.draw_border(canvas, <span class="kw-2">&amp;mut </span>path);
-        cx.draw_inset_box_shadows(canvas, <span class="kw-2">&amp;mut </span>path);
+    </span><span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;</span>Canvas) {
+        cx.draw_shadows(canvas);
+        cx.draw_background(canvas);
+        cx.draw_border(canvas);
         cx.draw_outline(canvas);
-        canvas.save();
-        <span class="comment">// canvas.translate(self.transform.0, self.transform.1);
-        </span>cx.draw_text_and_selection(canvas);
-        canvas.restore();
-    }
+        <span class="comment">// canvas.save();
+        // canvas.translate(self.transform.0, self.transform.1);
+        // cx.draw_text_and_selection(canvas);
+        </span>cx.draw_text(canvas);
+        <span class="kw">if </span><span class="self">self</span>.edit {
+            <span class="self">self</span>.draw_selection(cx, canvas);
+            <span class="self">self</span>.draw_text_caret(cx, canvas);
+        }
+        <span class="comment">// canvas.restore();
+    </span>}
 }
 </code></pre></div></section></main></body></html>

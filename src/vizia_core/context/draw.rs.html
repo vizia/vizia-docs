@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/draw.rs`."><title>draw.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0 (129f3b996 2024-06-10)" data-channel="1.79.0" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../vizia_core/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/draw.rs`."><title>draw.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1239,157 +1239,18 @@
 <a href="#1239" id="1239">1239</a>
 <a href="#1240" id="1240">1240</a>
 <a href="#1241" id="1241">1241</a>
-<a href="#1242" id="1242">1242</a>
-<a href="#1243" id="1243">1243</a>
-<a href="#1244" id="1244">1244</a>
-<a href="#1245" id="1245">1245</a>
-<a href="#1246" id="1246">1246</a>
-<a href="#1247" id="1247">1247</a>
-<a href="#1248" id="1248">1248</a>
-<a href="#1249" id="1249">1249</a>
-<a href="#1250" id="1250">1250</a>
-<a href="#1251" id="1251">1251</a>
-<a href="#1252" id="1252">1252</a>
-<a href="#1253" id="1253">1253</a>
-<a href="#1254" id="1254">1254</a>
-<a href="#1255" id="1255">1255</a>
-<a href="#1256" id="1256">1256</a>
-<a href="#1257" id="1257">1257</a>
-<a href="#1258" id="1258">1258</a>
-<a href="#1259" id="1259">1259</a>
-<a href="#1260" id="1260">1260</a>
-<a href="#1261" id="1261">1261</a>
-<a href="#1262" id="1262">1262</a>
-<a href="#1263" id="1263">1263</a>
-<a href="#1264" id="1264">1264</a>
-<a href="#1265" id="1265">1265</a>
-<a href="#1266" id="1266">1266</a>
-<a href="#1267" id="1267">1267</a>
-<a href="#1268" id="1268">1268</a>
-<a href="#1269" id="1269">1269</a>
-<a href="#1270" id="1270">1270</a>
-<a href="#1271" id="1271">1271</a>
-<a href="#1272" id="1272">1272</a>
-<a href="#1273" id="1273">1273</a>
-<a href="#1274" id="1274">1274</a>
-<a href="#1275" id="1275">1275</a>
-<a href="#1276" id="1276">1276</a>
-<a href="#1277" id="1277">1277</a>
-<a href="#1278" id="1278">1278</a>
-<a href="#1279" id="1279">1279</a>
-<a href="#1280" id="1280">1280</a>
-<a href="#1281" id="1281">1281</a>
-<a href="#1282" id="1282">1282</a>
-<a href="#1283" id="1283">1283</a>
-<a href="#1284" id="1284">1284</a>
-<a href="#1285" id="1285">1285</a>
-<a href="#1286" id="1286">1286</a>
-<a href="#1287" id="1287">1287</a>
-<a href="#1288" id="1288">1288</a>
-<a href="#1289" id="1289">1289</a>
-<a href="#1290" id="1290">1290</a>
-<a href="#1291" id="1291">1291</a>
-<a href="#1292" id="1292">1292</a>
-<a href="#1293" id="1293">1293</a>
-<a href="#1294" id="1294">1294</a>
-<a href="#1295" id="1295">1295</a>
-<a href="#1296" id="1296">1296</a>
-<a href="#1297" id="1297">1297</a>
-<a href="#1298" id="1298">1298</a>
-<a href="#1299" id="1299">1299</a>
-<a href="#1300" id="1300">1300</a>
-<a href="#1301" id="1301">1301</a>
-<a href="#1302" id="1302">1302</a>
-<a href="#1303" id="1303">1303</a>
-<a href="#1304" id="1304">1304</a>
-<a href="#1305" id="1305">1305</a>
-<a href="#1306" id="1306">1306</a>
-<a href="#1307" id="1307">1307</a>
-<a href="#1308" id="1308">1308</a>
-<a href="#1309" id="1309">1309</a>
-<a href="#1310" id="1310">1310</a>
-<a href="#1311" id="1311">1311</a>
-<a href="#1312" id="1312">1312</a>
-<a href="#1313" id="1313">1313</a>
-<a href="#1314" id="1314">1314</a>
-<a href="#1315" id="1315">1315</a>
-<a href="#1316" id="1316">1316</a>
-<a href="#1317" id="1317">1317</a>
-<a href="#1318" id="1318">1318</a>
-<a href="#1319" id="1319">1319</a>
-<a href="#1320" id="1320">1320</a>
-<a href="#1321" id="1321">1321</a>
-<a href="#1322" id="1322">1322</a>
-<a href="#1323" id="1323">1323</a>
-<a href="#1324" id="1324">1324</a>
-<a href="#1325" id="1325">1325</a>
-<a href="#1326" id="1326">1326</a>
-<a href="#1327" id="1327">1327</a>
-<a href="#1328" id="1328">1328</a>
-<a href="#1329" id="1329">1329</a>
-<a href="#1330" id="1330">1330</a>
-<a href="#1331" id="1331">1331</a>
-<a href="#1332" id="1332">1332</a>
-<a href="#1333" id="1333">1333</a>
-<a href="#1334" id="1334">1334</a>
-<a href="#1335" id="1335">1335</a>
-<a href="#1336" id="1336">1336</a>
-<a href="#1337" id="1337">1337</a>
-<a href="#1338" id="1338">1338</a>
-<a href="#1339" id="1339">1339</a>
-<a href="#1340" id="1340">1340</a>
-<a href="#1341" id="1341">1341</a>
-<a href="#1342" id="1342">1342</a>
-<a href="#1343" id="1343">1343</a>
-<a href="#1344" id="1344">1344</a>
-<a href="#1345" id="1345">1345</a>
-<a href="#1346" id="1346">1346</a>
-<a href="#1347" id="1347">1347</a>
-<a href="#1348" id="1348">1348</a>
-<a href="#1349" id="1349">1349</a>
-<a href="#1350" id="1350">1350</a>
-<a href="#1351" id="1351">1351</a>
-<a href="#1352" id="1352">1352</a>
-<a href="#1353" id="1353">1353</a>
-<a href="#1354" id="1354">1354</a>
-<a href="#1355" id="1355">1355</a>
-<a href="#1356" id="1356">1356</a>
-<a href="#1357" id="1357">1357</a>
-<a href="#1358" id="1358">1358</a>
-<a href="#1359" id="1359">1359</a>
-<a href="#1360" id="1360">1360</a>
-<a href="#1361" id="1361">1361</a>
-<a href="#1362" id="1362">1362</a>
-<a href="#1363" id="1363">1363</a>
-<a href="#1364" id="1364">1364</a>
-<a href="#1365" id="1365">1365</a>
-<a href="#1366" id="1366">1366</a>
-<a href="#1367" id="1367">1367</a>
-<a href="#1368" id="1368">1368</a>
-<a href="#1369" id="1369">1369</a>
-<a href="#1370" id="1370">1370</a>
-<a href="#1371" id="1371">1371</a>
-<a href="#1372" id="1372">1372</a>
-<a href="#1373" id="1373">1373</a>
-<a href="#1374" id="1374">1374</a>
-<a href="#1375" id="1375">1375</a>
-<a href="#1376" id="1376">1376</a>
-<a href="#1377" id="1377">1377</a>
-<a href="#1378" id="1378">1378</a>
-<a href="#1379" id="1379">1379</a>
-<a href="#1380" id="1380">1380</a>
-<a href="#1381" id="1381">1381</a>
-<a href="#1382" id="1382">1382</a>
-<a href="#1383" id="1383">1383</a>
-<a href="#1384" id="1384">1384</a>
-<a href="#1385" id="1385">1385</a>
-<a href="#1386" id="1386">1386</a>
-<a href="#1387" id="1387">1387</a>
-<a href="#1388" id="1388">1388</a>
-<a href="#1389" id="1389">1389</a>
-<a href="#1390" id="1390">1390</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>femtovg::{ImageId, Transform2D};
+</pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::canvas::SaveLayerRec;
+<span class="kw">use </span>skia_safe::gradient_shader::GradientShaderColors;
+<span class="kw">use </span>skia_safe::path::ArcSize;
+<span class="kw">use </span>skia_safe::rrect::Corner;
+<span class="kw">use </span>skia_safe::wrapper::PointerWrapper;
+<span class="kw">use </span>skia_safe::{
+    BlurStyle, ClipOp, MaskFilter, Matrix, Paint, PaintStyle, Path, PathDirection, PathEffect,
+    Point, RRect, Rect, SamplingOptions, Shader, TileMode,
+};
 <span class="kw">use </span>std::any::{Any, TypeId};
+<span class="kw">use </span>std::f32::consts::SQRT_2;
+<span class="kw">use </span>vizia_style::LengthPercentageOrAuto;
 
 <span class="kw">use </span>hashbrown::HashMap;
 
@@ -1398,11 +1259,9 @@
 <span class="kw">use </span><span class="kw">crate</span>::events::ViewHandler;
 <span class="kw">use </span><span class="kw">crate</span>::model::ModelDataStore;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::resource::{ImageOrId, ResourceManager};
-<span class="kw">use </span><span class="kw">crate</span>::text::{TextConfig, TextContext};
-<span class="kw">use </span><span class="kw">crate</span>::vg::{Paint, Path};
+<span class="kw">use </span><span class="kw">crate</span>::resource::{ImageOrSvg, ResourceManager};
+<span class="kw">use </span><span class="kw">crate</span>::text::TextContext;
 <span class="kw">use </span>vizia_input::MouseState;
-<span class="kw">use </span>vizia_style::LengthPercentageOrAuto;
 
 <span class="doccomment">/// A context used when drawing a view.
 ///
@@ -1424,13 +1283,15 @@
 /// }
 ///
 /// impl View for CustomView {
-///     fn draw(&amp;self, cx: &amp;mut DrawContext, canvas: &amp;mut Canvas) {
+///     fn draw(&amp;self, cx: &amp;mut DrawContext, canvas: &amp;Canvas) {
 ///         // Get the computed bounds after layout of the current view
 ///         let bounds = cx.bounds();
 ///         // Draw to the canvas using the bounds of the current view
-///         let mut path = vg::Path::new();
+///         let path = vg::Path::new();
 ///         path.rect(bounds.x, bounds.y, bounds.w, bounds.h);
-///         canvas.fill_path(&amp;mut path, &amp;vg::Paint::color(vg::Color::rgb(200, 100, 100)));
+///         let mut paint = vg::Paint::default();
+///         paint.set_color(Color::rgb(200, 100, 100));
+///         canvas.draw_path(&amp;path, &amp;paint);
 ///     }
 /// }
 /// ```
@@ -1443,10 +1304,8 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) views: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) resource_manager: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ResourceManager,
     <span class="kw">pub</span>(<span class="kw">crate</span>) text_context: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>TextContext,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) text_config: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TextConfig,
     <span class="kw">pub</span>(<span class="kw">crate</span>) modifiers: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Modifiers,
     <span class="kw">pub</span>(<span class="kw">crate</span>) mouse: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>MouseState&lt;Entity&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) opacity: f32,
 }
 
 <span class="macro">macro_rules!</span> get_units_property {
@@ -1473,9 +1332,8 @@
     ) =&gt; {
         $(<span class="attr">#[<span class="macro-nonterminal">$meta</span>]</span>)*
         <span class="kw">pub fn </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Color {
-            <span class="kw">let </span>opacity = <span class="self">self</span>.opacity();
             <span class="kw">if let </span><span class="prelude-val">Some</span>(col) = <span class="self">self</span>.style.<span class="macro-nonterminal">$name</span>.get(<span class="self">self</span>.current) {
-                Color::rgba(col.r(), col.g(), col.b(), (opacity * col.a() <span class="kw">as </span>f32) <span class="kw">as </span>u8)
+                Color::rgba(col.r(), col.g(), col.b(), col.a())
             } <span class="kw">else </span>{
                 Color::rgba(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)
             }
@@ -1508,6 +1366,11 @@
         <span class="self">self</span>.cache.get_bounds(<span class="self">self</span>.current)
     }
 
+    <span class="doccomment">/// Returns the z-index of the current view.
+    </span><span class="kw">pub fn </span>z_index(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i32 {
+        <span class="self">self</span>.style.z_index.get(<span class="self">self</span>.current).copied().unwrap_or_default()
+    }
+
     <span class="doccomment">/// Returns the scale factor.
     </span><span class="kw">pub fn </span>scale_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
         <span class="self">self</span>.style.dpi_factor <span class="kw">as </span>f32
@@ -1523,15 +1386,13 @@
         <span class="self">self</span>.mouse
     }
 
-    <span class="doccomment">/// Returns the bounding box of the clip region of the current view.
-    </span><span class="kw">pub fn </span>clip_region(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BoundingBox {
+    <span class="doccomment">/// Returns the clip path of the current view.
+    </span><span class="kw">pub fn </span>clip_path(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;skia_safe::Path&gt; {
         <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
         <span class="kw">let </span>overflowx = <span class="self">self</span>.style.overflowx.get(<span class="self">self</span>.current).copied().unwrap_or_default();
         <span class="kw">let </span>overflowy = <span class="self">self</span>.style.overflowy.get(<span class="self">self</span>.current).copied().unwrap_or_default();
 
-        <span class="comment">// let root_bounds = self.cache.get_bounds(Entity::root());
-
-        </span><span class="kw">let </span>scale = <span class="self">self</span>.scale_factor();
+        <span class="kw">let </span>scale = <span class="self">self</span>.scale_factor();
 
         <span class="kw">let </span>clip_bounds = <span class="self">self
             </span>.style
@@ -1548,11 +1409,10 @@
             })
             .unwrap_or(bounds);
 
-        <span class="kw">let </span>root_bounds: BoundingBox =
-            BoundingBox { x: -f32::MAX / <span class="number">2.0</span>, y: -f32::MAX / <span class="number">2.0</span>, w: f32::MAX, h: f32::MAX };
+        <span class="kw">let </span>root_bounds = <span class="self">self</span>.cache.get_bounds(Entity::root());
 
-        <span class="kw">match </span>(overflowx, overflowy) {
-            (Overflow::Visible, Overflow::Visible) =&gt; root_bounds,
+        <span class="kw">let </span>clip_bounds = <span class="kw">match </span>(overflowx, overflowy) {
+            (Overflow::Visible, Overflow::Visible) =&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
             (Overflow::Hidden, Overflow::Visible) =&gt; {
                 <span class="kw">let </span>left = clip_bounds.left();
                 <span class="kw">let </span>right = clip_bounds.right();
@@ -1568,13 +1428,13 @@
                 BoundingBox::from_min_max(left, top, right, bottom)
             }
             (Overflow::Hidden, Overflow::Hidden) =&gt; clip_bounds,
-        }
+        };
+
+        <span class="prelude-val">Some</span>(<span class="self">self</span>.build_path(clip_bounds, (<span class="number">0.0</span>, <span class="number">0.0</span>)))
     }
 
     <span class="doccomment">/// Returns the 2D transform of the current view.
-    </span><span class="kw">pub fn </span>transform(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Transform2D {
-        <span class="kw">let </span><span class="kw-2">mut </span>transform = Transform2D::identity();
-
+    </span><span class="kw">pub fn </span>transform(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Matrix {
         <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
         <span class="kw">let </span>scale_factor = <span class="self">self</span>.scale_factor();
 
@@ -1584,28 +1444,29 @@
             .transform_origin
             .get(<span class="self">self</span>.current)
             .map(|transform_origin| {
-                <span class="kw">let </span><span class="kw-2">mut </span>origin = Transform2D::new_translation(bounds.left(), bounds.top());
+                <span class="kw">let </span><span class="kw-2">mut </span>origin = Matrix::translate(bounds.top_left());
                 <span class="kw">let </span>offset = transform_origin.as_transform(bounds, scale_factor);
-                origin.premultiply(<span class="kw-2">&amp;</span>offset);
+                origin = offset * origin;
                 origin
             })
-            .unwrap_or(Transform2D::new_translation(bounds.center().<span class="number">0</span>, bounds.center().<span class="number">1</span>));
-        transform.premultiply(<span class="kw-2">&amp;</span>origin);
-        origin.inverse();
+            .unwrap_or(Matrix::translate(bounds.center()));
+
+        <span class="kw">let </span><span class="kw-2">mut </span>transform = origin;
+        origin = origin.invert().unwrap();
 
         <span class="comment">// Apply translation.
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(translate) = <span class="self">self</span>.style.translate.get(<span class="self">self</span>.current) {
-            transform.premultiply(<span class="kw-2">&amp;</span>translate.as_transform(bounds, scale_factor));
+            transform = transform * translate.as_transform(bounds, scale_factor);
         }
 
         <span class="comment">// Apply rotation.
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(rotate) = <span class="self">self</span>.style.rotate.get(<span class="self">self</span>.current) {
-            transform.premultiply(<span class="kw-2">&amp;</span>rotate.as_transform(bounds, scale_factor));
+            transform = transform * rotate.as_transform(bounds, scale_factor);
         }
 
         <span class="comment">// Apply scaling.
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(scale) = <span class="self">self</span>.style.scale.get(<span class="self">self</span>.current) {
-            transform.premultiply(<span class="kw-2">&amp;</span>scale.as_transform(bounds, scale_factor));
+            transform = transform * scale.as_transform(bounds, scale_factor);
         }
 
         <span class="comment">// Apply transform functions.
@@ -1620,16 +1481,16 @@
                         <span class="kw">let </span>end_transform = end.value.as_transform(bounds, scale_factor);
                         <span class="kw">let </span>t = animation_state.t;
                         <span class="kw">let </span>animated_transform =
-                            Transform2D::interpolate(<span class="kw-2">&amp;</span>start_transform, <span class="kw-2">&amp;</span>end_transform, t);
-                        transform.premultiply(<span class="kw-2">&amp;</span>animated_transform);
+                            Matrix::interpolate(<span class="kw-2">&amp;</span>start_transform, <span class="kw-2">&amp;</span>end_transform, t);
+                        transform = transform * animated_transform;
                     }
                 }
             } <span class="kw">else </span>{
-                transform.premultiply(<span class="kw-2">&amp;</span>transforms.as_transform(bounds, scale_factor));
+                transform = transform * transforms.as_transform(bounds, scale_factor);
             }
         }
 
-        transform.premultiply(<span class="kw-2">&amp;</span>origin);
+        transform = transform * origin;
 
         transform
     }
@@ -1646,8 +1507,8 @@
 
     <span class="doccomment">/// Returns the opacity of the current view.
     </span><span class="kw">pub fn </span>opacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
-        <span class="self">self</span>.opacity
-    }
+        <span class="self">self</span>.style.opacity.get(<span class="self">self</span>.current).copied().unwrap_or(Opacity(<span class="number">1.0</span>)).<span class="number">0
+    </span>}
 
     <span class="doccomment">/// Returns the lookup pattern to pick the default font.
     </span><span class="kw">pub fn </span>default_font(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[FamilyOwned] {
@@ -1655,10 +1516,30 @@
     }
 
     <span class="doccomment">/// Returns the font-size of the current view in physical pixels.
-    </span><span class="kw">pub fn </span>font_size(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; f32 {
+    </span><span class="kw">pub fn </span>font_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
         <span class="self">self</span>.logical_to_physical(
-            <span class="self">self</span>.style.font_size.get(entity).copied().map(|f| f.<span class="number">0</span>).unwrap_or(<span class="number">16.0</span>),
+            <span class="self">self</span>.style.font_size.get(<span class="self">self</span>.current).copied().map(|f| f.<span class="number">0</span>).unwrap_or(<span class="number">16.0</span>),
         )
+    }
+
+    <span class="doccomment">/// Returns the font-weight of the current view.
+    </span><span class="kw">pub fn </span>font_weight(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; FontWeight {
+        <span class="self">self</span>.style.font_weight.get(<span class="self">self</span>.current).copied().unwrap_or_default()
+    }
+
+    <span class="doccomment">/// Returns the font-width of the current view.
+    </span><span class="kw">pub fn </span>font_width(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; FontWidth {
+        <span class="self">self</span>.style.font_width.get(<span class="self">self</span>.current).copied().unwrap_or_default()
+    }
+
+    <span class="doccomment">/// Returns the font-slant of the current view.
+    </span><span class="kw">pub fn </span>font_slant(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; FontSlant {
+        <span class="self">self</span>.style.font_slant.get(<span class="self">self</span>.current).copied().unwrap_or_default()
+    }
+
+    <span class="doccomment">/// Returns the font variation settings of the current view.
+    </span><span class="kw">pub fn </span>font_variation_settings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[FontVariation] {
+        <span class="self">self</span>.style.font_variation_settings.get(<span class="self">self</span>.current).map(Vec::as_slice).unwrap_or_default()
     }
 
     <span class="doccomment">/// Function to convert logical points to physical pixels.
@@ -1692,43 +1573,63 @@
     );
 
     <span class="macro">get_length_property!</span>(
-        <span class="doccomment">/// Returns the border radius for the top-left corner of the current view.
-        </span>border_top_left_radius
+        <span class="doccomment">/// Returns the corner radius for the top-left corner of the current view.
+        </span>corner_top_left_radius
     );
 
     <span class="macro">get_length_property!</span>(
-        <span class="doccomment">/// Returns the border radius for the top-right corner of the current view.
-        </span>border_top_right_radius
+        <span class="doccomment">/// Returns the corner radius for the top-right corner of the current view.
+        </span>corner_top_right_radius
     );
 
     <span class="macro">get_length_property!</span>(
-        <span class="doccomment">/// Returns the border radius for the bottom-left corner of the current view.
-        </span>border_bottom_left_radius
+        <span class="doccomment">/// Returns the corner radius for the bottom-left corner of the current view.
+        </span>corner_bottom_left_radius
     );
 
     <span class="macro">get_length_property!</span>(
-        <span class="doccomment">/// Returns the border radius for the bottom-right corner of the current view.
-        </span>border_bottom_right_radius
+        <span class="doccomment">/// Returns the corner radius for the bottom-right corner of the current view.
+        </span>corner_bottom_right_radius
     );
 
-    <span class="doccomment">/// Returns the border corner shape for the top-left corner of the current view.
-    </span><span class="kw">pub fn </span>border_top_left_shape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BorderCornerShape {
-        <span class="self">self</span>.style.border_top_left_shape.get(<span class="self">self</span>.current).copied().unwrap_or_default()
+    <span class="doccomment">/// Returns the corner shape for the top-left corner of the current view.
+    </span><span class="kw">pub fn </span>corner_top_left_shape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CornerShape {
+        <span class="self">self</span>.style.corner_top_left_shape.get(<span class="self">self</span>.current).copied().unwrap_or_default()
     }
 
-    <span class="doccomment">/// Returns the border corner shape for the top-left corner of the current view.
-    </span><span class="kw">pub fn </span>border_top_right_shape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BorderCornerShape {
-        <span class="self">self</span>.style.border_top_right_shape.get(<span class="self">self</span>.current).copied().unwrap_or_default()
+    <span class="doccomment">/// Returns the corner shape for the top-left corner of the current view.
+    </span><span class="kw">pub fn </span>corner_top_right_shape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CornerShape {
+        <span class="self">self</span>.style.corner_top_right_shape.get(<span class="self">self</span>.current).copied().unwrap_or_default()
     }
 
-    <span class="doccomment">/// Returns the border corner shape for the top-left corner of the current view.
-    </span><span class="kw">pub fn </span>border_bottom_left_shape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BorderCornerShape {
-        <span class="self">self</span>.style.border_bottom_left_shape.get(<span class="self">self</span>.current).copied().unwrap_or_default()
+    <span class="doccomment">/// Returns the corner shape for the top-left corner of the current view.
+    </span><span class="kw">pub fn </span>corner_bottom_left_shape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CornerShape {
+        <span class="self">self</span>.style.corner_bottom_left_shape.get(<span class="self">self</span>.current).copied().unwrap_or_default()
     }
 
-    <span class="doccomment">/// Returns the border corner shape for the top-left corner of the current view.
-    </span><span class="kw">pub fn </span>border_bottom_right_shape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BorderCornerShape {
-        <span class="self">self</span>.style.border_bottom_right_shape.get(<span class="self">self</span>.current).copied().unwrap_or_default()
+    <span class="doccomment">/// Returns the corner shape for the top-left corner of the current view.
+    </span><span class="kw">pub fn </span>corner_bottom_right_shape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CornerShape {
+        <span class="self">self</span>.style.corner_bottom_right_shape.get(<span class="self">self</span>.current).copied().unwrap_or_default()
+    }
+
+    <span class="doccomment">/// Returns the corner smoothing for the top-left corner of the current view.
+    </span><span class="kw">pub fn </span>corner_top_left_smoothing(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.style.corner_top_left_smoothing.get(<span class="self">self</span>.current).copied().unwrap_or_default()
+    }
+
+    <span class="doccomment">/// Returns the corner shape for the top-left corner of the current view.
+    </span><span class="kw">pub fn </span>corner_top_right_smoothing(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.style.corner_top_right_smoothing.get(<span class="self">self</span>.current).copied().unwrap_or_default()
+    }
+
+    <span class="doccomment">/// Returns the corner shape for the top-left corner of the current view.
+    </span><span class="kw">pub fn </span>corner_bottom_left_smoothing(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.style.corner_bottom_left_smoothing.get(<span class="self">self</span>.current).copied().unwrap_or_default()
+    }
+
+    <span class="doccomment">/// Returns the corner shape for the top-left corner of the current view.
+    </span><span class="kw">pub fn </span>corner_bottom_right_smoothing(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+        <span class="self">self</span>.style.corner_bottom_right_smoothing.get(<span class="self">self</span>.current).copied().unwrap_or_default()
     }
 
     <span class="macro">get_units_property!</span>(
@@ -1754,6 +1655,11 @@
     <span class="macro">get_color_property!</span>(background_color);
     <span class="macro">get_color_property!</span>(border_color);
 
+    <span class="doccomment">/// Returns the border style of the current view.
+    </span><span class="kw">pub fn </span>border_style(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BorderStyleKeyword {
+        <span class="self">self</span>.style.border_style.get(<span class="self">self</span>.current).copied().unwrap_or_default()
+    }
+
     <span class="macro">get_color_property!</span>(selection_color);
     <span class="macro">get_color_property!</span>(caret_color);
     <span class="macro">get_color_property!</span>(font_color);
@@ -1763,12 +1669,24 @@
         <span class="self">self</span>.style.text_wrap.get(<span class="self">self</span>.current).copied().unwrap_or(<span class="bool-val">true</span>)
     }
 
-    <span class="kw">pub fn </span>text_align(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TextAlign&gt; {
-        <span class="self">self</span>.style.text_align.get(<span class="self">self</span>.current).copied()
+    <span class="doccomment">/// Returns the text alignment of the current view.
+    </span><span class="kw">pub fn </span>text_align(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextAlign {
+        <span class="self">self</span>.style.text_align.get(<span class="self">self</span>.current).copied().unwrap_or_default()
     }
 
-    <span class="kw">pub fn </span>box_shadows(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Vec&lt;BoxShadow&gt;&gt; {
-        <span class="self">self</span>.style.box_shadow.get(<span class="self">self</span>.current)
+    <span class="doccomment">/// Returns the text overflow preference of the current view.
+    </span><span class="kw">pub fn </span>text_overflow(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TextOverflow {
+        <span class="self">self</span>.style.text_overflow.get(<span class="self">self</span>.current).copied().unwrap_or_default()
+    }
+
+    <span class="doccomment">/// Returns the line clamp Of the current view.
+    </span><span class="kw">pub fn </span>line_clamp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+        <span class="self">self</span>.style.line_clamp.get(<span class="self">self</span>.current).copied().map(|lc| lc.<span class="number">0 </span><span class="kw">as </span>usize)
+    }
+
+    <span class="doccomment">/// Returns a reference to the shadows of the current view.
+    </span><span class="kw">pub fn </span>shadows(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Vec&lt;Shadow&gt;&gt; {
+        <span class="self">self</span>.style.shadow.get(<span class="self">self</span>.current)
     }
 
     <span class="kw">pub fn </span>backdrop_filter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Filter&gt; {
@@ -1784,688 +1702,336 @@
     }
 
     <span class="doccomment">/// Get the vector path of the current view.
-    </span><span class="kw">pub fn </span>build_path(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; Path {
-        <span class="comment">// Length proportional to radius of a cubic bezier handle for 90deg arcs.
-        </span><span class="kw">const </span>KAPPA90: f32 = <span class="number">0.552_284_8</span>;
+    </span><span class="kw">pub fn </span>build_path(<span class="kw-2">&amp;</span><span class="self">self</span>, bounds: BoundingBox, outset: (f32, f32)) -&gt; Path {
+        <span class="kw">let </span>corner_top_left_radius = <span class="self">self</span>.corner_top_left_radius();
+        <span class="kw">let </span>corner_top_right_radius = <span class="self">self</span>.corner_top_right_radius();
+        <span class="kw">let </span>corner_bottom_right_radius = <span class="self">self</span>.corner_bottom_right_radius();
+        <span class="kw">let </span>corner_bottom_left_radius = <span class="self">self</span>.corner_bottom_left_radius();
 
-        <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
+        <span class="kw">let </span>corner_top_left_shape = <span class="self">self</span>.corner_top_left_shape();
+        <span class="kw">let </span>corner_top_right_shape = <span class="self">self</span>.corner_top_right_shape();
+        <span class="kw">let </span>corner_bottom_right_shape = <span class="self">self</span>.corner_bottom_right_shape();
+        <span class="kw">let </span>corner_bottom_left_shape = <span class="self">self</span>.corner_bottom_left_shape();
 
-        <span class="kw">let </span>border_width = <span class="self">self</span>.border_width();
+        <span class="kw">let </span>corner_top_left_smoothing = <span class="self">self</span>.corner_top_left_smoothing();
+        <span class="kw">let </span>corner_top_right_smoothing = <span class="self">self</span>.corner_top_right_smoothing();
+        <span class="kw">let </span>corner_bottom_right_smoothing = <span class="self">self</span>.corner_bottom_right_smoothing();
+        <span class="kw">let </span>corner_bottom_left_smoothing = <span class="self">self</span>.corner_bottom_left_smoothing();
 
-        <span class="kw">let </span>border_top_left_radius = <span class="self">self</span>.border_top_left_radius();
-        <span class="kw">let </span>border_top_right_radius = <span class="self">self</span>.border_top_right_radius();
-        <span class="kw">let </span>border_bottom_right_radius = <span class="self">self</span>.border_bottom_right_radius();
-        <span class="kw">let </span>border_bottom_left_radius = <span class="self">self</span>.border_bottom_left_radius();
+        <span class="kw">let </span>rect: Rect = bounds.into();
 
-        <span class="kw">let </span>border_top_left_shape = <span class="self">self</span>.border_top_left_shape();
-        <span class="kw">let </span>border_top_right_shape = <span class="self">self</span>.border_top_right_shape();
-        <span class="kw">let </span>border_bottom_right_shape = <span class="self">self</span>.border_bottom_right_shape();
-        <span class="kw">let </span>border_bottom_left_shape = <span class="self">self</span>.border_bottom_left_shape();
+        <span class="kw">let </span><span class="kw-2">mut </span>rr = RRect::new_rect_radii(
+            rect,
+            <span class="kw-2">&amp;</span>[
+                Point::new(corner_top_left_radius, corner_top_left_radius),
+                Point::new(corner_top_right_radius, corner_top_right_radius),
+                Point::new(corner_bottom_right_radius, corner_bottom_right_radius),
+                Point::new(corner_bottom_left_radius, corner_bottom_left_radius),
+            ],
+        );
+
+        rr = rr.with_outset(outset);
+
+        <span class="kw">let </span>x = rr.bounds().x();
+        <span class="kw">let </span>y = rr.bounds().y();
+        <span class="kw">let </span>width = rr.width();
+        <span class="kw">let </span>height = rr.height();
 
         <span class="comment">//TODO: Cache the path and regenerate if the bounds change
         </span><span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
 
-        <span class="kw">if </span>bounds.w == bounds.h
-            &amp;&amp; border_bottom_left_radius == bounds.w / <span class="number">2.0
-            </span>&amp;&amp; border_bottom_right_radius == bounds.w / <span class="number">2.0
-            </span>&amp;&amp; border_top_left_radius == bounds.h / <span class="number">2.0
-            </span>&amp;&amp; border_top_right_radius == bounds.h / <span class="number">2.0
+        <span class="kw">if </span>width == height
+            &amp;&amp; corner_bottom_left_radius == width / <span class="number">2.0
+            </span>&amp;&amp; corner_bottom_right_radius == width / <span class="number">2.0
+            </span>&amp;&amp; corner_top_left_radius == height / <span class="number">2.0
+            </span>&amp;&amp; corner_top_right_radius == height / <span class="number">2.0
         </span>{
-            path.circle(bounds.center().<span class="number">0</span>, bounds.center().<span class="number">1</span>, bounds.w / <span class="number">2.0 </span>- border_width / <span class="number">2.0</span>);
+            path.add_circle((width / <span class="number">2.0</span>, bounds.h / <span class="number">2.0</span>), width / <span class="number">2.0</span>, PathDirection::CW);
         } <span class="kw">else </span>{
-            <span class="kw">let </span>x = bounds.x + border_width / <span class="number">2.0</span>;
-            <span class="kw">let </span>y = bounds.y + border_width / <span class="number">2.0</span>;
-            <span class="kw">let </span>w = bounds.w - border_width;
-            <span class="kw">let </span>h = bounds.h - border_width;
-            <span class="kw">let </span>halfw = w.abs() * <span class="number">0.5</span>;
-            <span class="kw">let </span>halfh = h.abs() * <span class="number">0.5</span>;
+            <span class="kw">let </span>top_right = rr.radii(Corner::UpperRight).x;
 
-            <span class="kw">let </span>rx_bl = border_bottom_left_radius.min(halfw) * w.signum();
-            <span class="kw">let </span>ry_bl = border_bottom_left_radius.min(halfh) * h.signum();
+            <span class="kw">if </span>top_right &gt; <span class="number">0.0 </span>{
+                <span class="kw">let </span>(a, b, c, d, l, p, radius) = compute_smooth_corner(
+                    top_right,
+                    corner_top_right_smoothing,
+                    bounds.width(),
+                    bounds.height(),
+                );
 
-            <span class="kw">let </span>rx_br = border_bottom_right_radius.min(halfw) * w.signum();
-            <span class="kw">let </span>ry_br = border_bottom_right_radius.min(halfh) * h.signum();
-
-            <span class="kw">let </span>rx_tr = border_top_right_radius.min(halfw) * w.signum();
-            <span class="kw">let </span>ry_tr = border_top_right_radius.min(halfh) * h.signum();
-
-            <span class="kw">let </span>rx_tl = border_top_left_radius.min(halfw) * w.signum();
-            <span class="kw">let </span>ry_tl = border_top_left_radius.min(halfh) * h.signum();
-
-            path.move_to(x, y + ry_tl);
-            path.line_to(x, y + h - ry_bl);
-            <span class="kw">if </span>border_bottom_left_radius != <span class="number">0.0 </span>{
-                <span class="kw">if </span>border_bottom_left_shape == BorderCornerShape::Round {
-                    path.bezier_to(
-                        x,
-                        y + h - ry_bl * (<span class="number">1.0 </span>- KAPPA90),
-                        x + rx_bl * (<span class="number">1.0 </span>- KAPPA90),
-                        y + h,
-                        x + rx_bl,
-                        y + h,
+                path.move_to((f32::max(width / <span class="number">2.0</span>, width - p), <span class="number">0.0</span>));
+                <span class="kw">if </span>corner_top_right_shape == CornerShape::Round {
+                    path.cubic_to(
+                        (width - (p - a), <span class="number">0.0</span>),
+                        (width - (p - a - b), <span class="number">0.0</span>),
+                        (width - (p - a - b - c), d),
+                    )
+                    .r_arc_to_rotated(
+                        (radius, radius),
+                        <span class="number">0.0</span>,
+                        ArcSize::Small,
+                        PathDirection::CW,
+                        (l, l),
+                    )
+                    .cubic_to(
+                        (width, p - a - b),
+                        (width, p - a),
+                        (width, f32::min(height / <span class="number">2.0</span>, p)),
                     );
                 } <span class="kw">else </span>{
-                    path.line_to(x + rx_bl, y + h);
+                    path.line_to((width, f32::min(height / <span class="number">2.0</span>, p)));
                 }
+            } <span class="kw">else </span>{
+                path.move_to((width / <span class="number">2.0</span>, <span class="number">0.0</span>))
+                    .line_to((width, <span class="number">0.0</span>))
+                    .line_to((width, height / <span class="number">2.0</span>));
             }
 
-            path.line_to(x + w - rx_br, y + h);
+            <span class="kw">let </span>bottom_right = rr.radii(Corner::LowerRight).x;
+            <span class="kw">if </span>bottom_right &gt; <span class="number">0.0 </span>{
+                <span class="kw">let </span>(a, b, c, d, l, p, radius) = compute_smooth_corner(
+                    bottom_right,
+                    corner_bottom_right_smoothing,
+                    width,
+                    height,
+                );
 
-            <span class="kw">if </span>border_bottom_right_radius != <span class="number">0.0 </span>{
-                <span class="kw">if </span>border_bottom_right_shape == BorderCornerShape::Round {
-                    path.bezier_to(
-                        x + w - rx_br * (<span class="number">1.0 </span>- KAPPA90),
-                        y + h,
-                        x + w,
-                        y + h - ry_br * (<span class="number">1.0 </span>- KAPPA90),
-                        x + w,
-                        y + h - ry_br,
+                path.line_to((width, f32::max(height / <span class="number">2.0</span>, height - p)));
+                <span class="kw">if </span>corner_bottom_right_shape == CornerShape::Round {
+                    path.cubic_to(
+                        (width, height - (p - a)),
+                        (width, height - (p - a - b)),
+                        (width - d, height - (p - a - b - c)),
+                    )
+                    .r_arc_to_rotated(
+                        (radius, radius),
+                        <span class="number">0.0</span>,
+                        ArcSize::Small,
+                        PathDirection::CW,
+                        (-l, l),
+                    )
+                    .cubic_to(
+                        (width - (p - a - b), height),
+                        (width - (p - a), height),
+                        (f32::max(width / <span class="number">2.0</span>, width - p), height),
                     );
                 } <span class="kw">else </span>{
-                    path.line_to(x + w, y + h - ry_br);
+                    path.line_to((f32::max(width / <span class="number">2.0</span>, width - p), height));
                 }
+            } <span class="kw">else </span>{
+                path.line_to((width, height)).line_to((width / <span class="number">2.0</span>, height));
             }
 
-            path.line_to(x + w, y + ry_tr);
+            <span class="kw">let </span>bottom_left = rr.radii(Corner::LowerLeft).x;
+            <span class="kw">if </span>bottom_left &gt; <span class="number">0.0 </span>{
+                <span class="kw">let </span>(a, b, c, d, l, p, radius) =
+                    compute_smooth_corner(bottom_left, corner_bottom_left_smoothing, width, height);
 
-            <span class="kw">if </span>border_top_right_radius != <span class="number">0.0 </span>{
-                <span class="kw">if </span>border_top_right_shape == BorderCornerShape::Round {
-                    path.bezier_to(
-                        x + w,
-                        y + ry_tr * (<span class="number">1.0 </span>- KAPPA90),
-                        x + w - rx_tr * (<span class="number">1.0 </span>- KAPPA90),
-                        y,
-                        x + w - rx_tr,
-                        y,
+                path.line_to((f32::min(width / <span class="number">2.0</span>, p), height));
+                <span class="kw">if </span>corner_bottom_left_shape == CornerShape::Round {
+                    path.cubic_to(
+                        (p - a, height),
+                        (p - a - b, height),
+                        (p - a - b - c, height - d),
+                    )
+                    .r_arc_to_rotated(
+                        (radius, radius),
+                        <span class="number">0.0</span>,
+                        ArcSize::Small,
+                        PathDirection::CW,
+                        (-l, -l),
+                    )
+                    .cubic_to(
+                        (<span class="number">0.0</span>, height - (p - a - b)),
+                        (<span class="number">0.0</span>, height - (p - a)),
+                        (<span class="number">0.0</span>, f32::max(height / <span class="number">2.0</span>, height - p)),
                     );
                 } <span class="kw">else </span>{
-                    path.line_to(x + w - rx_tr, y);
+                    path.line_to((<span class="number">0.0</span>, f32::max(height / <span class="number">2.0</span>, height - p)));
                 }
+            } <span class="kw">else </span>{
+                path.line_to((<span class="number">0.0</span>, height)).line_to((<span class="number">0.0</span>, height / <span class="number">2.0</span>));
             }
 
-            path.line_to(x + rx_tl, y);
+            <span class="kw">let </span>top_left = rr.radii(Corner::UpperLeft).x;
+            <span class="kw">if </span>top_left &gt; <span class="number">0.0 </span>{
+                <span class="kw">let </span>(a, b, c, d, l, p, radius) =
+                    compute_smooth_corner(top_left, corner_top_left_smoothing, width, height);
 
-            <span class="kw">if </span>border_top_left_radius != <span class="number">0.0 </span>{
-                <span class="kw">if </span>border_top_left_shape == BorderCornerShape::Round {
-                    path.bezier_to(
-                        x + rx_tl * (<span class="number">1.0 </span>- KAPPA90),
-                        y,
-                        x,
-                        y + ry_tl * (<span class="number">1.0 </span>- KAPPA90),
-                        x,
-                        y + ry_tl,
-                    );
+                path.line_to((<span class="number">0.0</span>, f32::min(height / <span class="number">2.0</span>, p)));
+                <span class="kw">if </span>corner_top_left_shape == CornerShape::Round {
+                    path.cubic_to((<span class="number">0.0</span>, p - a), (<span class="number">0.0</span>, p - a - b), (d, p - a - b - c))
+                        .r_arc_to_rotated(
+                            (radius, radius),
+                            <span class="number">0.0</span>,
+                            ArcSize::Small,
+                            PathDirection::CW,
+                            (l, -l),
+                        )
+                        .cubic_to((p - a - b, <span class="number">0.0</span>), (p - a, <span class="number">0.0</span>), (f32::min(width / <span class="number">2.0</span>, p), <span class="number">0.0</span>));
                 } <span class="kw">else </span>{
-                    path.line_to(x, y + ry_tl);
+                    path.line_to((f32::min(width / <span class="number">2.0</span>, p), <span class="number">0.0</span>));
                 }
+            } <span class="kw">else </span>{
+                path.line_to((<span class="number">0.0</span>, <span class="number">0.0</span>));
             }
 
             path.close();
         }
 
+        path.offset((x, y));
+
         path
     }
 
-    <span class="doccomment">/// Draw backdrop filters for the current view.
-    </span><span class="kw">pub fn </span>draw_backdrop_filter(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas, path: <span class="kw-2">&amp;mut </span>Path) {
-        <span class="kw">let </span>window_width = <span class="self">self</span>.cache.get_width(Entity::root());
-        <span class="kw">let </span>window_height = <span class="self">self</span>.cache.get_height(Entity::root());
-        <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
-
-        <span class="kw">let </span>blur_radius = <span class="self">self</span>.backdrop_filter().map(|filter| <span class="kw">match </span>filter {
-            Filter::Blur(r) =&gt; r.to_px().unwrap_or_default(),
-        });
-
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(blur_radius) = blur_radius {
-            <span class="kw">let </span>sigma = blur_radius / <span class="number">2.0</span>;
-
-            <span class="kw">let </span>filter_image =
-                <span class="self">self</span>.cache.filter_image.get(<span class="self">self</span>.current).cloned().unwrap_or_default();
-
-            <span class="kw">fn </span>create_images(canvas: <span class="kw-2">&amp;mut </span>Canvas, w: usize, h: usize) -&gt; (ImageId, ImageId) {
-                (
-                    canvas
-                        .create_image_empty(
-                            w,
-                            h,
-                            femtovg::PixelFormat::Rgba8,
-                            femtovg::ImageFlags::FLIP_Y | femtovg::ImageFlags::PREMULTIPLIED,
-                        )
-                        .unwrap(),
-                    canvas
-                        .create_image_empty(
-                            w,
-                            h,
-                            femtovg::PixelFormat::Rgba8,
-                            femtovg::ImageFlags::FLIP_Y | femtovg::ImageFlags::PREMULTIPLIED,
-                        )
-                        .unwrap(),
-                )
-            }
-
-            <span class="kw">let </span>(source, target) = <span class="kw">match </span>filter_image {
-                <span class="prelude-val">Some</span>((s, t)) =&gt; {
-                    <span class="kw">let </span>image_size = canvas.image_size(s).unwrap();
-                    <span class="kw">if </span>image_size.<span class="number">0 </span>!= bounds.w <span class="kw">as </span>usize || image_size.<span class="number">1 </span>!= bounds.h <span class="kw">as </span>usize {
-                        canvas.delete_image(s);
-                        canvas.delete_image(t);
-
-                        create_images(canvas, bounds.w <span class="kw">as </span>usize, bounds.h <span class="kw">as </span>usize)
-                    } <span class="kw">else </span>{
-                        (s, t)
-                    }
-                }
-
-                <span class="prelude-val">None </span>=&gt; create_images(canvas, bounds.w <span class="kw">as </span>usize, bounds.h <span class="kw">as </span>usize),
-            };
-
-            <span class="self">self</span>.cache.filter_image.insert(<span class="self">self</span>.current, <span class="prelude-val">Some</span>((source, target)));
-
-            <span class="comment">// TODO: Cache these
-            </span><span class="kw">let </span>screenshot = canvas.screenshot().unwrap();
-
-            <span class="kw">let </span>screenshot_image =
-                <span class="self">self</span>.cache.screenshot_image.get(<span class="self">self</span>.current).cloned().unwrap_or_default();
-
-            <span class="kw">let </span>screenshot_image_id = <span class="kw">if let </span><span class="prelude-val">Some</span>(s) = screenshot_image {
-                <span class="kw">let </span>image_size = canvas.image_size(s).unwrap();
-                <span class="kw">if </span>image_size.<span class="number">0 </span>!= screenshot.width() || image_size.<span class="number">1 </span>!= screenshot.height() {
-                    canvas.delete_image(s);
-                    canvas.create_image(screenshot.as_ref(), femtovg::ImageFlags::empty()).unwrap()
-                } <span class="kw">else </span>{
-                    canvas
-                        .update_image(s, screenshot.as_ref(), <span class="number">0</span>, <span class="number">0</span>)
-                        .expect(<span class="string">"Failed to update image"</span>);
-                    s
-                }
-            } <span class="kw">else </span>{
-                canvas.create_image(screenshot.as_ref(), femtovg::ImageFlags::empty()).unwrap()
-            };
-
-            <span class="self">self</span>.cache.screenshot_image.insert(<span class="self">self</span>.current, <span class="prelude-val">Some</span>(screenshot_image_id));
-
-            <span class="comment">// Draw canvas to source image
-            </span>canvas.save();
-            canvas.set_render_target(femtovg::RenderTarget::Image(source));
-            canvas.reset_scissor();
-            canvas.reset_transform();
-            canvas.clear_rect(
-                <span class="number">0</span>,
-                <span class="number">0</span>,
-                bounds.w <span class="kw">as </span>u32,
-                bounds.h <span class="kw">as </span>u32,
-                femtovg::Color::rgba(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),
-            );
-            <span class="kw">let </span><span class="kw-2">mut </span>p = femtovg::Path::new();
-            p.rect(<span class="number">0.0</span>, <span class="number">0.0</span>, bounds.w, bounds.h);
-            canvas.fill_path(
-                <span class="kw-2">&amp;</span>p,
-                <span class="kw-2">&amp;</span>Paint::image(
-                    screenshot_image_id,
-                    -bounds.x,
-                    -bounds.y,
-                    window_width,
-                    window_height,
-                    <span class="number">0.0</span>,
-                    <span class="number">1.0</span>,
-                ),
-            );
-
-            <span class="kw">let </span>blurred_image = <span class="kw">if </span>blur_radius &gt; <span class="number">0.0 </span>{
-                canvas.filter_image(target, femtovg::ImageFilter::GaussianBlur { sigma }, source);
-                target
-            } <span class="kw">else </span>{
-                source
-            };
-            canvas.restore();
-            canvas.set_render_target(femtovg::RenderTarget::Screen);
-
-            canvas.fill_path(
-                path,
-                <span class="kw-2">&amp;</span>Paint::image(blurred_image, bounds.x, bounds.y, bounds.w, bounds.h, <span class="number">0.0</span>, <span class="number">1.0</span>),
-            );
-        }
-    }
-
     <span class="doccomment">/// Draw background color or background image (including gradients) for the current view.
-    </span><span class="kw">pub fn </span>draw_background(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas, path: <span class="kw-2">&amp;mut </span>Path) {
+    </span><span class="kw">pub fn </span>draw_background(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
+        <span class="kw">let </span>path = <span class="self">self</span>.build_path(<span class="self">self</span>.bounds(), (<span class="number">0.0</span>, <span class="number">0.0</span>));
         <span class="kw">let </span>background_color = <span class="self">self</span>.background_color();
-        <span class="kw">let </span>paint = Paint::color(background_color.into());
-        canvas.fill_path(path, <span class="kw-2">&amp;</span>paint);
-
-        <span class="self">self</span>.draw_background_images(canvas, path);
-    }
-
-    <span class="kw">pub fn </span>draw_text_and_selection(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
-        <span class="kw">if </span><span class="self">self</span>.text_context.has_buffer(<span class="self">self</span>.current) {
-            <span class="kw">let </span><span class="kw-2">mut </span>bounds = <span class="self">self</span>.bounds();
-            <span class="kw">let </span>border_width = <span class="self">self</span>.border_width();
-
-            bounds = bounds.shrink(border_width);
-
-            <span class="kw">let </span>child_left = <span class="self">self</span>.child_left();
-            <span class="kw">let </span>child_right = <span class="self">self</span>.child_right();
-            <span class="kw">let </span>child_top = <span class="self">self</span>.child_top();
-            <span class="kw">let </span>child_bottom = <span class="self">self</span>.child_bottom();
-
-            <span class="comment">// shrink the bounding box based on pixel values
-            </span><span class="kw">let </span>left = child_left.to_px(<span class="self">self</span>.bounds().w, <span class="number">0.0</span>);
-            <span class="kw">let </span>right = child_right.to_px(<span class="self">self</span>.bounds().w, <span class="number">0.0</span>);
-            <span class="kw">let </span>top = child_top.to_px(<span class="self">self</span>.bounds().h, <span class="number">0.0</span>);
-            <span class="kw">let </span>bottom = child_bottom.to_px(<span class="self">self</span>.bounds().h, <span class="number">0.0</span>);
-
-            bounds = bounds.shrink_sides(left, top, right, bottom);
-
-            <span class="comment">// Draw text
-
-            </span><span class="kw">let </span><span class="kw-2">mut </span>justify_x = <span class="kw">match </span>(child_left, child_right) {
-                (Stretch(left), Stretch(right)) =&gt; {
-                    <span class="kw">if </span>left + right == <span class="number">0.0 </span>{
-                        <span class="number">0.5
-                    </span>} <span class="kw">else </span>{
-                        left / (left + right)
-                    }
-                }
-                (Stretch(<span class="kw">_</span>), <span class="kw">_</span>) =&gt; <span class="number">1.0</span>,
-                <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
-            };
-
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(text_align) = <span class="self">self</span>.text_align() {
-                justify_x = <span class="kw">match </span>text_align {
-                    TextAlign::Left =&gt; <span class="number">0.0</span>,
-                    TextAlign::Right =&gt; <span class="number">1.0</span>,
-                    TextAlign::Center =&gt; <span class="number">0.5</span>,
-                    <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
-                };
-            }
-
-            <span class="kw">let </span>justify_y = <span class="kw">match </span>(child_top, child_bottom) {
-                (Stretch(top), Stretch(bottom)) =&gt; {
-                    <span class="kw">if </span>top + bottom == <span class="number">0.0 </span>{
-                        <span class="number">0.5
-                    </span>} <span class="kw">else </span>{
-                        top / (top + bottom)
-                    }
-                }
-                (Stretch(<span class="kw">_</span>), <span class="kw">_</span>) =&gt; <span class="number">1.0</span>,
-                <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
-            };
-
-            <span class="comment">// let origin_x = box_x + box_w * justify_x;
-            // let origin_y = box_y + (box_h * justify_y).round();
-
-            // let justify_x = 0.0;
-            // let justify_y = 0.0;
-            // let origin_x = box_x;
-            // let origin_y = box_y;
-
-            </span><span class="self">self</span>.text_context.sync_styles(<span class="self">self</span>.current, <span class="self">self</span>.style);
-
-            <span class="self">self</span>.draw_text_selection(canvas, bounds, (justify_x, justify_y));
-            <span class="self">self</span>.draw_text_caret(canvas, bounds, (justify_x, justify_y), <span class="number">1.0</span>);
-            <span class="self">self</span>.draw_text(canvas, bounds, (justify_x, justify_y));
+        <span class="kw">if </span>background_color.a() != <span class="number">0 </span>{
+            <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
+            paint.set_color(skia_safe::Color::from_argb(
+                background_color.a(),
+                background_color.r(),
+                background_color.g(),
+                background_color.b(),
+            ));
+            paint.set_anti_alias(<span class="bool-val">true</span>);
+            canvas.draw_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
         }
+
+        <span class="self">self</span>.draw_background_images(canvas, <span class="kw-2">&amp;</span>path);
     }
 
     <span class="doccomment">/// Draw the border of the current view.
-    </span><span class="kw">pub fn </span>draw_border(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas, path: <span class="kw-2">&amp;mut </span>Path) {
+    </span><span class="kw">pub fn </span>draw_border(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
         <span class="kw">let </span>border_color = <span class="self">self</span>.border_color();
         <span class="kw">let </span>border_width = <span class="self">self</span>.border_width();
+        <span class="kw">let </span>border_style = <span class="self">self</span>.border_style();
 
-        <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::color(border_color.into());
-        paint.set_line_width(border_width);
-        canvas.stroke_path(path, <span class="kw-2">&amp;</span>paint);
-    }
-
-    <span class="doccomment">/// Draw the outline of the current view.
-    </span><span class="kw">pub fn </span>draw_outline(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
-        <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
-
-        <span class="kw">let </span>border_top_left_radius = <span class="self">self</span>.border_top_left_radius();
-        <span class="kw">let </span>border_top_right_radius = <span class="self">self</span>.border_top_right_radius();
-        <span class="kw">let </span>border_bottom_right_radius = <span class="self">self</span>.border_bottom_right_radius();
-        <span class="kw">let </span>border_bottom_left_radius = <span class="self">self</span>.border_bottom_left_radius();
-
-        <span class="kw">let </span>outline_width = <span class="self">self</span>.outline_width();
-        <span class="kw">let </span>outline_offset = <span class="self">self</span>.outline_offset();
-        <span class="kw">let </span>outline_color = <span class="self">self</span>.outline_color();
-
-        <span class="kw">let </span><span class="kw-2">mut </span>outline_path = Path::new();
-        <span class="kw">let </span>half_outline_width = outline_width / <span class="number">2.0</span>;
-        outline_path.rounded_rect_varying(
-            bounds.x - half_outline_width - outline_offset,
-            bounds.y - half_outline_width - outline_offset,
-            bounds.w + outline_width + <span class="number">2.0 </span>* outline_offset,
-            bounds.h + outline_width + <span class="number">2.0 </span>* outline_offset,
-            border_top_left_radius * <span class="number">1.5</span>,
-            border_top_right_radius * <span class="number">1.5</span>,
-            border_bottom_right_radius * <span class="number">1.5</span>,
-            border_bottom_left_radius * <span class="number">1.5</span>,
-        );
-        <span class="kw">let </span><span class="kw-2">mut </span>outline_paint = Paint::color(outline_color.into());
-        outline_paint.set_line_width(outline_width);
-        canvas.stroke_path(<span class="kw-2">&amp;</span>outline_path, <span class="kw-2">&amp;</span>outline_paint);
-    }
-
-    <span class="doccomment">/// Draw inset box shadows for the current view.
-    </span><span class="kw">pub fn </span>draw_inset_box_shadows(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas, path: <span class="kw-2">&amp;mut </span>Path) {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(box_shadows) = <span class="self">self</span>.box_shadows() {
-            <span class="kw">if </span>box_shadows.is_empty() {
-                <span class="kw">return</span>;
-            }
-
-            <span class="kw">let </span><span class="kw-2">mut </span>shadow_images =
-                <span class="self">self</span>.cache.shadow_images.get(<span class="self">self</span>.current).cloned().unwrap_or_default();
-
-            <span class="kw">if </span>shadow_images.len() &lt; box_shadows.len() {
-                shadow_images.resize(box_shadows.len(), <span class="prelude-val">None</span>);
-            } <span class="kw">else </span>{
-                <span class="kw">let </span>excess = shadow_images.split_off(box_shadows.len());
-                <span class="kw">for </span>(s, t) <span class="kw">in </span>excess.into_iter().flatten() {
-                    canvas.delete_image(s);
-                    canvas.delete_image(t);
-                }
-            }
-
-            <span class="kw">for </span>(index, box_shadow) <span class="kw">in
-                </span>box_shadows.iter().enumerate().rev().filter(|(<span class="kw">_</span>, shadow)| shadow.inset)
-            {
-                <span class="kw">let </span>color = box_shadow.color.unwrap_or_default();
-                <span class="kw">let </span>x_offset = box_shadow.x_offset.to_px().unwrap_or(<span class="number">0.0</span>) * <span class="self">self</span>.scale_factor();
-                <span class="kw">let </span>y_offset = box_shadow.y_offset.to_px().unwrap_or(<span class="number">0.0</span>) * <span class="self">self</span>.scale_factor();
-                <span class="kw">let </span>spread_radius =
-                    box_shadow.spread_radius.as_ref().and_then(|l| l.to_px()).unwrap_or(<span class="number">0.0</span>)
-                        * <span class="self">self</span>.scale_factor();
-
-                <span class="kw">let </span>blur_radius =
-                    box_shadow.blur_radius.as_ref().and_then(|br| br.to_px()).unwrap_or(<span class="number">0.0</span>);
-                <span class="kw">let </span>sigma = blur_radius / <span class="number">2.0</span>;
-                <span class="kw">let </span>d = (sigma * <span class="number">5.0</span>).ceil() + <span class="number">2.0 </span>* spread_radius + <span class="number">20.0</span>;
-
-                <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
-
-                <span class="kw">let </span>(source, target) =
-                    shadow_images[index].map(|(s, t)| (<span class="prelude-val">Some</span>(s), <span class="prelude-val">Some</span>(t))).unwrap_or((<span class="prelude-val">None</span>, <span class="prelude-val">None</span>));
-
-                <span class="kw">fn </span>create_images(canvas: <span class="kw-2">&amp;mut </span>Canvas, w: usize, h: usize) -&gt; (ImageId, ImageId) {
-                    (
-                        canvas
-                            .create_image_empty(
-                                w,
-                                h,
-                                femtovg::PixelFormat::Rgba8,
-                                femtovg::ImageFlags::FLIP_Y | femtovg::ImageFlags::PREMULTIPLIED,
-                            )
-                            .unwrap(),
-                        canvas
-                            .create_image_empty(
-                                w,
-                                h,
-                                femtovg::PixelFormat::Rgba8,
-                                femtovg::ImageFlags::FLIP_Y | femtovg::ImageFlags::PREMULTIPLIED,
-                            )
-                            .unwrap(),
-                    )
+        <span class="kw">if </span>border_width &gt; <span class="number">0.0 </span>&amp;&amp; border_color.a() &gt; <span class="number">0 </span>&amp;&amp; border_style != BorderStyleKeyword::None {
+            <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
+            <span class="kw">let </span>path = <span class="self">self</span>.build_path(bounds, (-border_width / <span class="number">2.0</span>, -border_width / <span class="number">2.0</span>));
+            <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
+            paint.set_style(PaintStyle::Stroke);
+            paint.set_color(border_color);
+            paint.set_stroke_width(border_width);
+            <span class="kw">match </span>border_style {
+                BorderStyleKeyword::Dashed =&gt; {
+                    paint.set_path_effect(PathEffect::dash(
+                        <span class="kw-2">&amp;</span>[border_width * <span class="number">2.0</span>, border_width],
+                        <span class="number">0.0</span>,
+                    ));
                 }
 
-                <span class="kw">let </span>(source, target) = <span class="kw">match </span>(source, target) {
-                    (<span class="prelude-val">Some</span>(s), <span class="prelude-val">Some</span>(t)) =&gt; {
-                        <span class="kw">if </span>canvas.image_size(s).unwrap().<span class="number">0 </span>!= (bounds.w + d) <span class="kw">as </span>usize {
-                            canvas.delete_image(s);
-                            canvas.delete_image(t);
+                BorderStyleKeyword::Dotted =&gt; {
+                    paint.set_path_effect(PathEffect::dash(<span class="kw-2">&amp;</span>[<span class="number">0.0</span>, border_width * <span class="number">2.0</span>], <span class="number">0.0</span>));
+                    paint.set_stroke_cap(skia_safe::PaintCap::Round);
+                }
 
-                            create_images(canvas, (bounds.w + d) <span class="kw">as </span>usize, (bounds.h + d) <span class="kw">as </span>usize)
-                        } <span class="kw">else </span>{
-                            (s, t)
-                        }
-                    }
-
-                    (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) =&gt; {
-                        create_images(canvas, (bounds.w + d) <span class="kw">as </span>usize, (bounds.h + d) <span class="kw">as </span>usize)
-                    }
-
-                    <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
-                };
-
-                shadow_images[index] = <span class="prelude-val">Some</span>((source, target));
-
-                canvas.save();
-                canvas.set_render_target(femtovg::RenderTarget::Image(source));
-                canvas.reset_scissor();
-                canvas.reset_transform();
-                canvas.clear_rect(
-                    <span class="number">0</span>,
-                    <span class="number">0</span>,
-                    (bounds.w + d) <span class="kw">as </span>u32,
-                    (bounds.h + d) <span class="kw">as </span>u32,
-                    femtovg::Color::rgba(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),
-                );
-
-                <span class="kw">let </span>scalex = <span class="number">1.0 </span>- (<span class="number">2.0 </span>* spread_radius / bounds.w);
-                <span class="kw">let </span>scaley = <span class="number">1.0 </span>- (<span class="number">2.0 </span>* spread_radius / bounds.h);
-                canvas.translate(
-                    (-bounds.x - bounds.w / <span class="number">2.0</span>) * scalex,
-                    (-bounds.y - bounds.h / <span class="number">2.0</span>) * scaley,
-                );
-                canvas.scale(scalex, scaley);
-                canvas.translate(
-                    (bounds.w / <span class="number">2.0 </span>+ d / <span class="number">2.0</span>) / scalex,
-                    (bounds.h / <span class="number">2.0 </span>+ d / <span class="number">2.0</span>) / scaley,
-                );
-                <span class="kw">let </span>paint = Paint::color(color.into());
-                <span class="kw">let </span><span class="kw-2">mut </span>shadow_path = path.clone();
-                shadow_path.rect(
-                    bounds.x - d / <span class="number">2.0</span>,
-                    bounds.y - d / <span class="number">2.0</span>,
-                    bounds.w + d,
-                    bounds.h + d,
-                );
-
-                shadow_path.solidity(femtovg::Solidity::Hole);
-                canvas.fill_path(<span class="kw-2">&amp;</span>shadow_path, <span class="kw-2">&amp;</span>paint);
-                canvas.restore();
-
-                <span class="kw">let </span>target_image = <span class="kw">if </span>blur_radius &gt; <span class="number">0.0 </span>{
-                    canvas.filter_image(
-                        target,
-                        femtovg::ImageFilter::GaussianBlur { sigma },
-                        source,
-                    );
-                    target
-                } <span class="kw">else </span>{
-                    source
-                };
-
-                canvas.set_render_target(femtovg::RenderTarget::Screen);
-                canvas.save();
-
-                <span class="kw">let </span>paint = Paint::image(
-                    target_image,
-                    bounds.x - d / <span class="number">2.0 </span>+ x_offset - <span class="number">1.5</span>,
-                    bounds.y - d / <span class="number">2.0 </span>+ y_offset - <span class="number">1.5</span>,
-                    bounds.w + d + <span class="number">3.0</span>,
-                    bounds.h + d + <span class="number">3.0</span>,
-                    <span class="number">0f32</span>,
-                    <span class="number">1f32</span>,
-                );
-
-                canvas.fill_path(path, <span class="kw-2">&amp;</span>paint);
-
-                canvas.restore();
+                <span class="kw">_ </span>=&gt; {}
             }
-            <span class="self">self</span>.cache.shadow_images.insert(<span class="self">self</span>.current, shadow_images);
+
+            paint.set_anti_alias(<span class="bool-val">true</span>);
+            canvas.draw_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
         }
     }
 
-    <span class="doccomment">/// Draw non-inset box shadows for the current view.
-    </span><span class="kw">pub fn </span>draw_shadows(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas, path: <span class="kw-2">&amp;mut </span>Path) {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(box_shadows) = <span class="self">self</span>.box_shadows() {
-            <span class="kw">if </span>box_shadows.is_empty() {
+    <span class="doccomment">/// Draw the outline of the current view.
+    </span><span class="kw">pub fn </span>draw_outline(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
+        <span class="kw">let </span>outline_width = <span class="self">self</span>.outline_width();
+        <span class="kw">let </span>outline_color = <span class="self">self</span>.outline_color();
+
+        <span class="kw">if </span>outline_width &gt; <span class="number">0.0 </span>&amp;&amp; outline_color.a() != <span class="number">0 </span>{
+            <span class="kw">let </span>outline_offset = <span class="self">self</span>.outline_offset();
+
+            <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
+
+            <span class="kw">let </span>half_outline_width = outline_width / <span class="number">2.0</span>;
+            <span class="kw">let </span>outline_path = <span class="self">self</span>.build_path(
+                bounds,
+                (half_outline_width + outline_offset, half_outline_width + outline_offset),
+            );
+
+            <span class="kw">let </span><span class="kw-2">mut </span>outline_paint = Paint::default();
+            outline_paint.set_color(outline_color);
+            outline_paint.set_stroke_width(outline_width);
+            outline_paint.set_style(PaintStyle::Stroke);
+            outline_paint.set_anti_alias(<span class="bool-val">true</span>);
+            canvas.draw_path(<span class="kw-2">&amp;</span>outline_path, <span class="kw-2">&amp;</span>outline_paint);
+        }
+    }
+
+    <span class="doccomment">/// Draw shadows for the current view.
+    </span><span class="kw">pub fn </span>draw_shadows(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(shadows) = <span class="self">self</span>.shadows() {
+            <span class="kw">if </span>shadows.is_empty() {
                 <span class="kw">return</span>;
             }
 
-            <span class="kw">let </span><span class="kw-2">mut </span>shadow_images =
-                <span class="self">self</span>.cache.shadow_images.get(<span class="self">self</span>.current).cloned().unwrap_or_default();
+            <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
 
-            <span class="kw">if </span>shadow_images.len() &lt; box_shadows.len() {
-                shadow_images.resize(box_shadows.len(), <span class="prelude-val">None</span>);
-            } <span class="kw">else </span>{
-                <span class="kw">let </span>excess = shadow_images.split_off(box_shadows.len());
-                <span class="kw">for </span>(s, t) <span class="kw">in </span>excess.into_iter().flatten() {
-                    canvas.delete_image(s);
-                    canvas.delete_image(t);
-                }
-            }
+            <span class="kw">let </span>path = <span class="self">self</span>.build_path(bounds, (<span class="number">0.0</span>, <span class="number">0.0</span>));
 
-            <span class="kw">let </span>opacity = <span class="self">self</span>.opacity();
+            <span class="kw">for </span>shadow <span class="kw">in </span>shadows.iter().rev() {
+                <span class="kw">let </span>shadow_color = shadow.color.unwrap_or_default();
 
-            <span class="kw">for </span>(index, box_shadow) <span class="kw">in
-                </span>box_shadows.iter().enumerate().rev().filter(|(<span class="kw">_</span>, shadow)| !shadow.inset)
-            {
-                <span class="kw">let </span>color = box_shadow.color.unwrap_or_default();
-                <span class="kw">let </span>color = Color::rgba(
-                    color.r(),
-                    color.g(),
-                    color.b(),
-                    (opacity * color.a() <span class="kw">as </span>f32) <span class="kw">as </span>u8,
-                );
-                <span class="kw">let </span>x_offset = box_shadow.x_offset.to_px().unwrap_or(<span class="number">0.0</span>) * <span class="self">self</span>.scale_factor();
-                <span class="kw">let </span>y_offset = box_shadow.y_offset.to_px().unwrap_or(<span class="number">0.0</span>) * <span class="self">self</span>.scale_factor();
+                <span class="kw">let </span>shadow_x_offset = shadow.x_offset.to_px().unwrap_or(<span class="number">0.0</span>) * <span class="self">self</span>.scale_factor();
+                <span class="kw">let </span>shadow_y_offset = shadow.y_offset.to_px().unwrap_or(<span class="number">0.0</span>) * <span class="self">self</span>.scale_factor();
                 <span class="kw">let </span>spread_radius =
-                    box_shadow.spread_radius.as_ref().and_then(|l| l.to_px()).unwrap_or(<span class="number">0.0</span>)
+                    shadow.spread_radius.as_ref().and_then(|l| l.to_px()).unwrap_or(<span class="number">0.0</span>)
                         * <span class="self">self</span>.scale_factor();
 
                 <span class="kw">let </span>blur_radius =
-                    box_shadow.blur_radius.as_ref().and_then(|br| br.to_px()).unwrap_or(<span class="number">0.0</span>);
-                <span class="kw">let </span>sigma = blur_radius / <span class="number">2.0</span>;
-                <span class="kw">let </span>d = (sigma * <span class="number">5.0</span>).ceil() + <span class="number">2.0 </span>* spread_radius;
+                    shadow.blur_radius.as_ref().and_then(|br| br.to_px()).unwrap_or(<span class="number">0.0</span>);
 
-                <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
-
-                <span class="kw">let </span>(source, target) =
-                    shadow_images[index].map(|(s, t)| (<span class="prelude-val">Some</span>(s), <span class="prelude-val">Some</span>(t))).unwrap_or((<span class="prelude-val">None</span>, <span class="prelude-val">None</span>));
-
-                <span class="kw">fn </span>create_images(canvas: <span class="kw-2">&amp;mut </span>Canvas, w: usize, h: usize) -&gt; (ImageId, ImageId) {
-                    (
-                        canvas
-                            .create_image_empty(
-                                w,
-                                h,
-                                femtovg::PixelFormat::Rgba8,
-                                femtovg::ImageFlags::FLIP_Y | femtovg::ImageFlags::PREMULTIPLIED,
-                            )
-                            .unwrap(),
-                        canvas
-                            .create_image_empty(
-                                w,
-                                h,
-                                femtovg::PixelFormat::Rgba8,
-                                femtovg::ImageFlags::FLIP_Y | femtovg::ImageFlags::PREMULTIPLIED,
-                            )
-                            .unwrap(),
-                    )
+                <span class="kw">if </span>shadow_color.a() == <span class="number">0
+                    </span>|| (shadow_x_offset == <span class="number">0.0
+                        </span>&amp;&amp; shadow_y_offset == <span class="number">0.0
+                        </span>&amp;&amp; spread_radius == <span class="number">0.0
+                        </span>&amp;&amp; blur_radius == <span class="number">0.0</span>)
+                {
+                    <span class="kw">continue</span>;
                 }
 
-                <span class="kw">let </span>(source, target) = <span class="kw">match </span>(source, target) {
-                    (<span class="prelude-val">Some</span>(s), <span class="prelude-val">Some</span>(t)) =&gt; {
-                        <span class="kw">let </span>image_size = canvas.image_size(s).unwrap();
-                        <span class="kw">if </span>image_size.<span class="number">0 </span>!= (bounds.w + d) <span class="kw">as </span>usize
-                            || image_size.<span class="number">1 </span>!= (bounds.h + d) <span class="kw">as </span>usize
-                        {
-                            canvas.delete_image(s);
-                            canvas.delete_image(t);
+                <span class="kw">let </span><span class="kw-2">mut </span>shadow_paint = Paint::default();
 
-                            create_images(canvas, (bounds.w + d) <span class="kw">as </span>usize, (bounds.h + d) <span class="kw">as </span>usize)
-                        } <span class="kw">else </span>{
-                            (s, t)
-                        }
-                    }
+                <span class="kw">let </span>outset = <span class="kw">if </span>shadow.inset { -spread_radius } <span class="kw">else </span>{ spread_radius };
 
-                    (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) =&gt; {
-                        create_images(canvas, (bounds.w + d) <span class="kw">as </span>usize, (bounds.h + d) <span class="kw">as </span>usize)
-                    }
+                shadow_paint.set_style(PaintStyle::Fill);
 
-                    <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
-                };
+                <span class="kw">let </span><span class="kw-2">mut </span>shadow_path = <span class="self">self</span>.build_path(bounds, (outset, outset));
 
-                shadow_images[index] = <span class="prelude-val">Some</span>((source, target));
+                shadow_paint.set_color(shadow_color);
+
+                <span class="kw">if </span>blur_radius &gt; <span class="number">0.0 </span>{
+                    shadow_paint.set_mask_filter(MaskFilter::blur(
+                        BlurStyle::Normal,
+                        blur_radius / <span class="number">2.0</span>,
+                        <span class="bool-val">false</span>,
+                    ));
+                }
+
+                shadow_path.offset((shadow_x_offset, shadow_y_offset));
+
+                <span class="kw">if </span>shadow.inset {
+                    shadow_path = path.op(<span class="kw-2">&amp;</span>shadow_path, skia_safe::PathOp::Difference).unwrap();
+                }
 
                 canvas.save();
-                canvas.set_render_target(femtovg::RenderTarget::Image(source));
-                canvas.reset_scissor();
-                canvas.reset_transform();
-                canvas.clear_rect(
-                    <span class="number">0</span>,
-                    <span class="number">0</span>,
-                    (bounds.w + d) <span class="kw">as </span>u32,
-                    (bounds.h + d) <span class="kw">as </span>u32,
-                    femtovg::Color::rgba(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),
+                canvas.clip_path(
+                    <span class="kw-2">&amp;</span>path,
+                    <span class="kw">if </span>shadow.inset { ClipOp::Intersect } <span class="kw">else </span>{ ClipOp::Difference },
+                    <span class="bool-val">true</span>,
                 );
-
-                <span class="kw">let </span>scalex = <span class="number">1.0 </span>+ (<span class="number">2.0 </span>* spread_radius / bounds.w);
-                <span class="kw">let </span>scaley = <span class="number">1.0 </span>+ (<span class="number">2.0 </span>* spread_radius / bounds.h);
-                canvas.translate(
-                    (-bounds.x - bounds.w / <span class="number">2.0</span>) * scalex,
-                    (-bounds.y - bounds.h / <span class="number">2.0</span>) * scaley,
-                );
-                canvas.scale(scalex, scaley);
-                canvas.translate(
-                    (bounds.w / <span class="number">2.0 </span>+ d / <span class="number">2.0</span>) / scalex,
-                    (bounds.h / <span class="number">2.0 </span>+ d / <span class="number">2.0</span>) / scaley,
-                );
-                <span class="kw">let </span>paint = Paint::color(color.into());
-                canvas.fill_path(<span class="kw-2">&amp;</span>path.clone(), <span class="kw-2">&amp;</span>paint);
-                canvas.restore();
-
-                <span class="kw">let </span>target_image = <span class="kw">if </span>blur_radius &gt; <span class="number">0.0 </span>{
-                    canvas.filter_image(
-                        target,
-                        femtovg::ImageFilter::GaussianBlur { sigma },
-                        source,
-                    );
-                    target
-                } <span class="kw">else </span>{
-                    source
-                };
-
-                canvas.set_render_target(femtovg::RenderTarget::Screen);
-                canvas.save();
-                canvas.translate(x_offset, y_offset);
-                <span class="kw">let </span><span class="kw-2">mut </span>shadow_path = Path::new();
-                shadow_path.rect(
-                    bounds.x - d / <span class="number">2.0</span>,
-                    bounds.y - d / <span class="number">2.0</span>,
-                    bounds.w + d,
-                    bounds.h + d,
-                );
-
-                canvas.fill_path(
-                    <span class="kw-2">&amp;</span>shadow_path,
-                    <span class="kw-2">&amp;</span>Paint::image(
-                        target_image,
-                        bounds.x - d / <span class="number">2.0</span>,
-                        bounds.y - d / <span class="number">2.0</span>,
-                        bounds.w + d,
-                        bounds.h + d,
-                        <span class="number">0f32</span>,
-                        <span class="number">1f32</span>,
-                    ),
-                );
-
+                canvas.draw_path(<span class="kw-2">&amp;</span>shadow_path, <span class="kw-2">&amp;</span>shadow_paint);
                 canvas.restore();
             }
-            <span class="self">self</span>.cache.shadow_images.insert(<span class="self">self</span>.current, shadow_images);
         }
     }
 
     <span class="doccomment">/// Draw background images (including gradients) for the current view.
-    </span><span class="kw">fn </span>draw_background_images(<span class="kw-2">&amp;</span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas, path: <span class="kw-2">&amp;mut </span>Path) {
+    </span><span class="kw">fn </span>draw_background_images(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas, path: <span class="kw-2">&amp;</span>Path) {
         <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
-
-        <span class="kw">let </span>parent = <span class="self">self</span>.tree.get_layout_parent(<span class="self">self</span>.current).unwrap_or(Entity::root());
-
-        <span class="kw">let </span>parent_width = <span class="self">self</span>.cache.get_width(parent);
-        <span class="kw">let </span>parent_height = <span class="self">self</span>.cache.get_height(parent);
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(images) = <span class="self">self</span>.background_images() {
             <span class="kw">let </span>image_sizes = <span class="self">self</span>.background_size();
@@ -2474,57 +2040,81 @@
                 <span class="kw">match </span>image {
                     ImageOrGradient::Gradient(gradient) =&gt; <span class="kw">match </span>gradient {
                         Gradient::Linear(linear_gradient) =&gt; {
-                            <span class="kw">let </span>(start_x, start_y, end_x, end_y, parent_length) =
-                                <span class="kw">match </span>linear_gradient.direction {
-                                    LineDirection::Horizontal(horizontal_keyword) =&gt; {
-                                        <span class="kw">match </span>horizontal_keyword {
-                                            HorizontalPositionKeyword::Left =&gt; {
-                                                (bounds.w, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, parent_width)
-                                            }
+                            <span class="kw">let </span>(start, end, parent_length) = <span class="kw">match </span>linear_gradient.direction {
+                                LineDirection::Horizontal(horizontal_keyword) =&gt; {
+                                    <span class="kw">match </span>horizontal_keyword {
+                                        HorizontalPositionKeyword::Left =&gt; (
+                                            bounds.center_right(),
+                                            bounds.center_left(),
+                                            bounds.width(),
+                                        ),
 
-                                            HorizontalPositionKeyword::Right =&gt; {
-                                                (<span class="number">0.0</span>, <span class="number">0.0</span>, bounds.w, <span class="number">0.0</span>, parent_width)
-                                            }
-                                        }
+                                        HorizontalPositionKeyword::Right =&gt; (
+                                            bounds.center_left(),
+                                            bounds.center_right(),
+                                            bounds.width(),
+                                        ),
                                     }
+                                }
 
-                                    LineDirection::Vertical(vertical_keyword) =&gt; {
-                                        <span class="kw">match </span>vertical_keyword {
-                                            VerticalPositionKeyword::Top =&gt; {
-                                                (<span class="number">0.0</span>, bounds.h, <span class="number">0.0</span>, <span class="number">0.0</span>, parent_height)
-                                            }
+                                LineDirection::Vertical(vertical_keyword) =&gt; <span class="kw">match </span>vertical_keyword
+                                {
+                                    VerticalPositionKeyword::Top =&gt; (
+                                        bounds.center_bottom(),
+                                        bounds.center_top(),
+                                        bounds.height(),
+                                    ),
 
-                                            VerticalPositionKeyword::Bottom =&gt; {
-                                                (<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, bounds.h, parent_height)
-                                            }
-                                        }
+                                    VerticalPositionKeyword::Bottom =&gt; (
+                                        bounds.center_top(),
+                                        bounds.center_bottom(),
+                                        bounds.height(),
+                                    ),
+                                },
+
+                                LineDirection::Corner { horizontal, vertical } =&gt; {
+                                    <span class="kw">match </span>(horizontal, vertical) {
+                                        (
+                                            HorizontalPositionKeyword::Right,
+                                            VerticalPositionKeyword::Bottom,
+                                        ) =&gt; (
+                                            bounds.top_left(),
+                                            bounds.bottom_right(),
+                                            bounds.diagonal(),
+                                        ),
+
+                                        (
+                                            HorizontalPositionKeyword::Right,
+                                            VerticalPositionKeyword::Top,
+                                        ) =&gt; (
+                                            bounds.bottom_left(),
+                                            bounds.top_right(),
+                                            bounds.diagonal(),
+                                        ),
+
+                                        <span class="kw">_ </span>=&gt; (bounds.top_left(), bounds.bottom_right(), <span class="number">0.0</span>),
                                     }
+                                }
 
-                                    LineDirection::Corner { horizontal, vertical } =&gt; {
-                                        <span class="kw">match </span>(horizontal, vertical) {
-                                            (
-                                                HorizontalPositionKeyword::Right,
-                                                VerticalPositionKeyword::Bottom,
-                                            ) =&gt; (<span class="number">0.0</span>, <span class="number">0.0</span>, bounds.w, bounds.h, parent_width),
+                                LineDirection::Angle(angle) =&gt; {
+                                    <span class="kw">let </span>angle_rad = angle.to_radians();
+                                    <span class="kw">let </span>start_x =
+                                        bounds.x + ((angle_rad.sin() * bounds.w) - bounds.w) / -<span class="number">2.0</span>;
+                                    <span class="kw">let </span>end_x =
+                                        bounds.x + ((angle_rad.sin() * bounds.w) + bounds.w) / <span class="number">2.0</span>;
+                                    <span class="kw">let </span>start_y =
+                                        bounds.y + ((angle_rad.cos() * bounds.h) + bounds.h) / <span class="number">2.0</span>;
+                                    <span class="kw">let </span>end_y =
+                                        bounds.y + ((angle_rad.cos() * bounds.h) - bounds.h) / -<span class="number">2.0</span>;
 
-                                            <span class="kw">_ </span>=&gt; (<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>),
-                                        }
-                                    }
+                                    <span class="kw">let </span>x = (end_x - start_x).abs();
+                                    <span class="kw">let </span>y = (end_y - start_y).abs();
 
-                                    LineDirection::Angle(angle) =&gt; {
-                                        <span class="kw">let </span>angle_rad = angle.to_radians();
-                                        <span class="kw">let </span>start_x =
-                                            ((angle_rad.sin() * bounds.w) - bounds.w) / -<span class="number">2.0</span>;
-                                        <span class="kw">let </span>end_x = ((angle_rad.sin() * bounds.w) + bounds.w) / <span class="number">2.0</span>;
-                                        <span class="kw">let </span>start_y =
-                                            ((angle_rad.cos() * bounds.h) + bounds.h) / <span class="number">2.0</span>;
-                                        <span class="kw">let </span>end_y =
-                                            ((angle_rad.cos() * bounds.h) - bounds.h) / -<span class="number">2.0</span>;
+                                    <span class="kw">let </span>dist = (x * x + y * y).sqrt();
 
-                                        <span class="comment">// TODO: Figure out what the parent length should be.
-                                        </span>(start_x, start_y, end_x, end_y, parent_width)
-                                    }
-                                };
+                                    ((start_x, start_y), (end_x, end_y), dist)
+                                }
+                            };
 
                             <span class="kw">let </span>num_stops = linear_gradient.stops.len();
 
@@ -2539,8 +2129,7 @@
                                     } <span class="kw">else </span>{
                                         index <span class="kw">as </span>f32 / (num_stops - <span class="number">1</span>) <span class="kw">as </span>f32
                                     };
-                                    <span class="kw">let </span>col: femtovg::Color = stop.color.into();
-                                    (pos, col)
+                                    (pos, skia_safe::Color::from(stop.color))
                                 })
                                 .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
@@ -2558,15 +2147,22 @@
                                 }
                             }
 
-                            <span class="kw">let </span>paint = Paint::linear_gradient_stops(
-                                bounds.x + start_x,
-                                bounds.y + start_y,
-                                bounds.x + end_x,
-                                bounds.y + end_y,
-                                stops,
+                            <span class="kw">let </span>(offsets, colors): (Vec&lt;f32&gt;, Vec&lt;skia_safe::Color&gt;) =
+                                stops.into_iter().unzip();
+
+                            <span class="kw">let </span>shader = Shader::linear_gradient(
+                                (Point::from(start), Point::from(end)),
+                                GradientShaderColors::Colors(<span class="kw-2">&amp;</span>colors[..]),
+                                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>offsets[..]),
+                                TileMode::Clamp,
+                                <span class="prelude-val">None</span>,
+                                <span class="prelude-val">None</span>,
                             );
 
-                            canvas.fill_path(path, <span class="kw-2">&amp;</span>paint);
+                            <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
+                            paint.set_shader(shader);
+
+                            canvas.draw_path(path, <span class="kw-2">&amp;</span>paint);
                         }
 
                         Gradient::Radial(radial_gradient) =&gt; {
@@ -2578,13 +2174,13 @@
                                 .enumerate()
                                 .map(|(index, stop)| {
                                     <span class="kw">let </span>pos = <span class="kw">if let </span><span class="prelude-val">Some</span>(pos) = <span class="kw-2">&amp;</span>stop.position {
-                                        pos.to_pixels(parent_width, <span class="self">self</span>.scale_factor())
-                                            / parent_width
+                                        pos.to_pixels(bounds.width(), <span class="self">self</span>.scale_factor())
+                                            / bounds.width()
                                     } <span class="kw">else </span>{
                                         index <span class="kw">as </span>f32 / (num_stops - <span class="number">1</span>) <span class="kw">as </span>f32
                                     };
-                                    <span class="kw">let </span>col: femtovg::Color = stop.color.into();
-                                    (pos, col)
+
+                                    (pos, skia_safe::Color::from(stop.color))
                                 })
                                 .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
@@ -2601,49 +2197,64 @@
                                     stops.push((<span class="number">1.0</span>, last.<span class="number">1</span>));
                                 }
                             }
-                            <span class="kw">let </span>paint = Paint::radial_gradient_stops(
-                                bounds.center().<span class="number">0</span>,
-                                bounds.center().<span class="number">1</span>,
-                                <span class="number">0.0</span>,
+
+                            <span class="kw">let </span>(offsets, colors): (Vec&lt;f32&gt;, Vec&lt;skia_safe::Color&gt;) =
+                                stops.into_iter().unzip();
+
+                            <span class="kw">let </span>shader = Shader::radial_gradient(
+                                Point::from(bounds.center()),
                                 bounds.w.max(bounds.h),
-                                stops,
+                                GradientShaderColors::Colors(<span class="kw-2">&amp;</span>colors[..]),
+                                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>offsets[..]),
+                                TileMode::Clamp,
+                                <span class="prelude-val">None</span>,
+                                <span class="prelude-val">None</span>,
                             );
 
-                            canvas.fill_path(path, <span class="kw-2">&amp;</span>paint);
+                            <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
+                            paint.set_shader(shader);
+                            canvas.draw_path(path, <span class="kw-2">&amp;</span>paint);
                         }
 
                         <span class="kw">_ </span>=&gt; {}
                     },
 
                     ImageOrGradient::Image(image_name) =&gt; {
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>(image) = <span class="self">self</span>.resource_manager.images.get(image_name) {
-                            <span class="kw">match </span>image.image {
-                                ImageOrId::Id(id, dim) =&gt; {
-                                    <span class="kw">let </span>(width, height) =
-                                        <span class="kw">if let </span><span class="prelude-val">Some</span>(background_size) = image_sizes.get(index) {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(image_id) = <span class="self">self</span>.resource_manager.image_ids.get(image_name) {
+                            <span class="kw">if let </span><span class="prelude-val">Some</span>(image) = <span class="self">self</span>.resource_manager.images.get(image_id) {
+                                <span class="kw">match </span><span class="kw-2">&amp;</span>image.image {
+                                    ImageOrSvg::Image(image) =&gt; {
+                                        <span class="kw">let </span>image_width = image.width();
+                                        <span class="kw">let </span>image_height = image.height();
+                                        <span class="kw">let </span>(width, height) = <span class="kw">if let </span><span class="prelude-val">Some</span>(background_size) =
+                                            image_sizes.get(index)
+                                        {
                                             <span class="kw">match </span>background_size {
                                                 BackgroundSize::Explicit { width, height } =&gt; {
                                                     <span class="kw">let </span>w = <span class="kw">match </span>width {
-                                                    LengthPercentageOrAuto::LengthPercentage(
-                                                        length,
-                                                    ) =&gt; length
-                                                        .to_pixels(bounds.w, <span class="self">self</span>.scale_factor()),
-                                                    LengthPercentageOrAuto::Auto =&gt; dim.<span class="number">0 </span><span class="kw">as </span>f32,
-                                                };
+                                                LengthPercentageOrAuto::LengthPercentage(
+                                                    length,
+                                                ) =&gt; {
+                                                    length.to_pixels(bounds.w, <span class="self">self</span>.scale_factor())
+                                                }
+                                                LengthPercentageOrAuto::Auto =&gt; image_width <span class="kw">as </span>f32,
+                                            };
 
                                                     <span class="kw">let </span>h = <span class="kw">match </span>height {
-                                                    LengthPercentageOrAuto::LengthPercentage(
-                                                        length,
-                                                    ) =&gt; length
-                                                        .to_pixels(bounds.h, <span class="self">self</span>.scale_factor()),
-                                                    LengthPercentageOrAuto::Auto =&gt; dim.<span class="number">1 </span><span class="kw">as </span>f32,
-                                                };
+                                                LengthPercentageOrAuto::LengthPercentage(
+                                                    length,
+                                                ) =&gt; {
+                                                    length.to_pixels(bounds.h, <span class="self">self</span>.scale_factor())
+                                                }
+                                                LengthPercentageOrAuto::Auto =&gt; image_height <span class="kw">as </span>f32,
+                                            };
 
                                                     (w, h)
                                                 }
 
                                                 BackgroundSize::Contain =&gt; {
-                                                    <span class="kw">let </span>image_ratio = dim.<span class="number">0 </span><span class="kw">as </span>f32 / dim.<span class="number">1 </span><span class="kw">as </span>f32;
+                                                    <span class="kw">let </span>image_ratio =
+                                                        image_width <span class="kw">as </span>f32 / image_height <span class="kw">as </span>f32;
                                                     <span class="kw">let </span>container_ratio = bounds.w / bounds.h;
 
                                                     <span class="kw">let </span>(w, h) = <span class="kw">if </span>image_ratio &gt; container_ratio {
@@ -2656,7 +2267,8 @@
                                                 }
 
                                                 BackgroundSize::Cover =&gt; {
-                                                    <span class="kw">let </span>image_ratio = dim.<span class="number">0 </span><span class="kw">as </span>f32 / dim.<span class="number">1 </span><span class="kw">as </span>f32;
+                                                    <span class="kw">let </span>image_ratio =
+                                                        image_width <span class="kw">as </span>f32 / image_height <span class="kw">as </span>f32;
                                                     <span class="kw">let </span>container_ratio = bounds.w / bounds.h;
 
                                                     <span class="kw">let </span>(w, h) = <span class="kw">if </span>image_ratio &lt; container_ratio {
@@ -2669,17 +2281,68 @@
                                                 }
                                             }
                                         } <span class="kw">else </span>{
-                                            (dim.<span class="number">0 </span><span class="kw">as </span>f32, dim.<span class="number">1 </span><span class="kw">as </span>f32)
+                                            (image_width <span class="kw">as </span>f32, image_height <span class="kw">as </span>f32)
                                         };
 
-                                    <span class="kw">let </span>paint = Paint::image(
-                                        id, bounds.x, bounds.y, width, height, <span class="number">0.0</span>, <span class="number">1.0</span>,
-                                    );
+                                        <span class="kw">let </span>matrix = Matrix::rect_to_rect(
+                                            Rect::new(
+                                                <span class="number">0.0</span>,
+                                                <span class="number">0.0</span>,
+                                                image.width() <span class="kw">as </span>f32,
+                                                image.height() <span class="kw">as </span>f32,
+                                            ),
+                                            Rect::new(
+                                                bounds.left(),
+                                                bounds.top(),
+                                                bounds.left() + width,
+                                                bounds.top() + height,
+                                            ),
+                                            <span class="prelude-val">None</span>,
+                                        );
 
-                                    canvas.fill_path(path, <span class="kw-2">&amp;</span>paint);
+                                        <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
+                                        paint.set_anti_alias(<span class="bool-val">true</span>);
+                                        paint.set_shader(image.to_shader(
+                                            (TileMode::Repeat, TileMode::Repeat),
+                                            SamplingOptions::default(),
+                                            <span class="kw-2">&amp;</span>matrix,
+                                        ));
+
+                                        canvas.draw_path(path, <span class="kw-2">&amp;</span>paint);
+                                    }
+
+                                    ImageOrSvg::Svg(svg) =&gt; {
+                                        canvas.save_layer(<span class="kw-2">&amp;</span>SaveLayerRec::default());
+                                        canvas.translate((bounds.x, bounds.y));
+                                        <span class="kw">let </span>(scale_x, scale_y) = (
+                                            bounds.width() / svg.inner().fContainerSize.fWidth,
+                                            bounds.height() / svg.inner().fContainerSize.fHeight,
+                                        );
+
+                                        <span class="kw">if </span>scale_x.is_finite() &amp;&amp; scale_y.is_finite() {
+                                            canvas.scale((scale_x, scale_y));
+                                        } <span class="kw">else </span>{
+                                            svg.clone().set_container_size((
+                                                bounds.width(),
+                                                bounds.height(),
+                                            ));
+                                        }
+
+                                        svg.render(canvas);
+
+                                        <span class="kw">if let </span><span class="prelude-val">Some</span>(color) =
+                                            <span class="self">self</span>.style.fill.get(<span class="self">self</span>.current).copied()
+                                        {
+                                            <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
+
+                                            paint.set_anti_alias(<span class="bool-val">true</span>);
+                                            paint.set_blend_mode(skia_safe::BlendMode::SrcIn);
+                                            paint.set_color(color);
+                                            canvas.draw_paint(<span class="kw-2">&amp;</span>paint);
+                                        }
+                                        canvas.restore();
+                                    }
                                 }
-
-                                <span class="kw">_ </span>=&gt; {}
                             }
                         }
                     }
@@ -2689,65 +2352,67 @@
     }
 
     <span class="doccomment">/// Draw any text for the current view.
-    </span><span class="kw">pub fn </span>draw_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas, bounds: BoundingBox, justify: (f32, f32)) {
-        <span class="kw">if let </span><span class="prelude-val">Ok</span>(draw_commands) =
-            <span class="self">self</span>.text_context.fill_to_cmds(canvas, <span class="self">self</span>.current, bounds, justify, <span class="kw-2">*</span><span class="self">self</span>.text_config)
-        {
-            <span class="kw">let </span>opacity = <span class="self">self</span>.opacity();
-            <span class="kw">for </span>(color, cmds) <span class="kw">in </span>draw_commands.into_iter() {
-                <span class="kw">let </span>font_color = Color::rgba(
-                    color.r(),
-                    color.g(),
-                    color.b(),
-                    (color.a() <span class="kw">as </span>f32 * opacity) <span class="kw">as </span>u8,
-                );
-                <span class="kw">let </span>temp_paint = Paint::color(femtovg::Color::rgba(
-                    font_color.r(),
-                    font_color.g(),
-                    font_color.b(),
-                    font_color.a(),
-                ));
-                canvas.draw_glyph_commands(cmds, <span class="kw-2">&amp;</span>temp_paint, <span class="number">1.0</span>);
-            }
-        }
-    }
+    </span><span class="kw">pub fn </span>draw_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(paragraph) = <span class="self">self</span>.text_context.text_paragraphs.get(<span class="self">self</span>.current) {
+            <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
 
-    <span class="doccomment">/// Draw the selection box for the text of the current view.
-    </span><span class="kw">pub fn </span>draw_text_selection(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        canvas: <span class="kw-2">&amp;mut </span>Canvas,
-        bounds: BoundingBox,
-        justify: (f32, f32),
-    ) {
-        <span class="kw">let </span>selections = <span class="self">self</span>.text_context.layout_selection(<span class="self">self</span>.current, bounds, justify);
-        <span class="kw">if </span>!selections.is_empty() {
-            <span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
-            <span class="kw">for </span>(x, y, w, h) <span class="kw">in </span>selections {
-                path.rect(x, y, w, h);
-            }
-            <span class="kw">let </span>selection_color = <span class="self">self</span>.selection_color();
-            canvas.fill_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>Paint::color(selection_color.into()));
-        }
-    }
+            <span class="kw">let </span><span class="kw-2">mut </span>vertical_flex_sum = <span class="number">0.0</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>horizontal_flex_sum = <span class="number">0.0</span>;
 
-    <span class="doccomment">/// Draw text caret for the current view.
-    </span><span class="kw">pub fn </span>draw_text_caret(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        canvas: <span class="kw-2">&amp;mut </span>Canvas,
-        bounds: BoundingBox,
-        justify: (f32, f32),
-        width: f32,
-    ) {
-        <span class="kw">let </span>caret_color = <span class="self">self</span>.caret_color();
-        <span class="kw">if let </span><span class="prelude-val">Some</span>((x, y, w, h)) = <span class="self">self</span>.text_context.layout_caret(
-            <span class="self">self</span>.current,
-            bounds,
-            justify,
-            <span class="self">self</span>.logical_to_physical(width),
-        ) {
-            <span class="kw">let </span><span class="kw-2">mut </span>path = Path::new();
-            path.rect(x, y, w * <span class="self">self</span>.scale_factor(), h);
-            canvas.fill_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>Paint::color(caret_color.into()));
+            <span class="kw">let </span><span class="kw-2">mut </span>padding_top = <span class="kw">match </span><span class="self">self</span>.child_top() {
+                Units::Pixels(val) =&gt; val,
+                Units::Stretch(val) =&gt; {
+                    vertical_flex_sum += val;
+                    <span class="number">0.0
+                </span>}
+                <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
+            };
+
+            <span class="kw">let </span>padding_bottom = <span class="kw">match </span><span class="self">self</span>.child_bottom() {
+                Units::Pixels(val) =&gt; val,
+                Units::Stretch(val) =&gt; {
+                    vertical_flex_sum += val;
+                    <span class="number">0.0
+                </span>}
+                <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
+            };
+
+            <span class="kw">let </span>vertical_free_space =
+                bounds.height() - paragraph.height() - padding_top - padding_bottom;
+
+            <span class="kw">if let </span>Units::Stretch(val) = <span class="self">self</span>.child_top() {
+                padding_top = (vertical_free_space * val / vertical_flex_sum).round()
+            }
+
+            <span class="kw">let </span><span class="kw-2">mut </span>padding_left = <span class="kw">match </span><span class="self">self</span>.child_left() {
+                Units::Pixels(val) =&gt; val,
+                Units::Stretch(val) =&gt; {
+                    horizontal_flex_sum += val;
+                    <span class="number">0.0
+                </span>}
+                <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
+            };
+
+            <span class="kw">let </span>padding_right = <span class="kw">match </span><span class="self">self</span>.child_right() {
+                Units::Pixels(val) =&gt; val,
+                Units::Stretch(val) =&gt; {
+                    horizontal_flex_sum += val;
+                    <span class="number">0.0
+                </span>}
+                <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
+            };
+
+            <span class="kw">let </span>horizontal_free_space =
+                bounds.width() - paragraph.max_width() - padding_left - padding_right;
+
+            <span class="kw">if let </span>Units::Stretch(val) = <span class="self">self</span>.child_left() {
+                padding_left = (horizontal_free_space * val / horizontal_flex_sum).round()
+            }
+
+            paragraph.paint(
+                canvas,
+                ((bounds.x + padding_left).round(), (bounds.y + padding_top).round()),
+            );
         }
     }
 }
@@ -2777,5 +2442,42 @@
 
         <span class="prelude-val">None
     </span>}
+}
+
+<span class="comment">// Helper function for computing a rounded corner with variable smoothing
+</span><span class="kw">fn </span>compute_smooth_corner(
+    corner_radius: f32,
+    smoothing: f32,
+    width: f32,
+    height: f32,
+) -&gt; (f32, f32, f32, f32, f32, f32, f32) {
+    <span class="kw">let </span>max_p = f32::min(width, height) / <span class="number">2.0</span>;
+    <span class="kw">let </span>corner_radius = f32::min(corner_radius, max_p);
+
+    <span class="kw">let </span>p = f32::min((<span class="number">1.0 </span>+ smoothing) * corner_radius, max_p);
+
+    <span class="kw">let </span>angle_alpha: f32;
+    <span class="kw">let </span>angle_beta: f32;
+
+    <span class="kw">if </span>corner_radius &lt;= max_p / <span class="number">2.0 </span>{
+        angle_alpha = <span class="number">45.0 </span>* smoothing;
+        angle_beta = <span class="number">90.0 </span>* (<span class="number">1.0 </span>- smoothing);
+    } <span class="kw">else </span>{
+        <span class="kw">let </span>diff_ratio = (corner_radius - max_p / <span class="number">2.0</span>) / (max_p / <span class="number">2.0</span>);
+
+        angle_alpha = <span class="number">45.0 </span>* smoothing * (<span class="number">1.0 </span>- diff_ratio);
+        angle_beta = <span class="number">90.0 </span>* (<span class="number">1.0 </span>- smoothing * (<span class="number">1.0 </span>- diff_ratio));
+    }
+
+    <span class="kw">let </span>angle_theta = (<span class="number">90.0 </span>- angle_beta) / <span class="number">2.0</span>;
+    <span class="kw">let </span>dist_p3_p4 = corner_radius * (angle_theta / <span class="number">2.0</span>).to_radians().tan();
+
+    <span class="kw">let </span>l = (angle_beta / <span class="number">2.0</span>).to_radians().sin() * corner_radius * SQRT_2;
+    <span class="kw">let </span>c = dist_p3_p4 * angle_alpha.to_radians().cos();
+    <span class="kw">let </span>d = c * angle_alpha.to_radians().tan();
+    <span class="kw">let </span>b = (p - l - c - d) / <span class="number">3.0</span>;
+    <span class="kw">let </span>a = <span class="number">2.0 </span>* b;
+
+    (a, b, c, d, l, p, corner_radius)
 }
 </code></pre></div></section></main></body></html>

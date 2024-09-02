@@ -451,6 +451,13 @@
 <a href="#451" id="451">451</a>
 <a href="#452" id="452">452</a>
 <a href="#453" id="453">453</a>
+<a href="#454" id="454">454</a>
+<a href="#455" id="455">455</a>
+<a href="#456" id="456">456</a>
+<a href="#457" id="457">457</a>
+<a href="#458" id="458">458</a>
+<a href="#459" id="459">459</a>
+<a href="#460" id="460">460</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{animation::Interpolator, cache::CachedData, prelude::<span class="kw-2">*</span>};
 <span class="kw">use </span>morphorm::Node;
 <span class="kw">use </span>skia_safe::{
@@ -458,7 +465,7 @@
 };
 <span class="kw">use </span>std::cmp::Ordering;
 <span class="kw">use </span>std::collections::BinaryHeap;
-<span class="kw">use </span>vizia_storage::{DrawChildIterator, DrawTreeIterator, LayoutTreeIterator};
+<span class="kw">use </span>vizia_storage::{DrawChildIterator, LayoutTreeIterator};
 <span class="kw">use </span>vizia_style::BlendMode;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>transform_system(cx: <span class="kw-2">&amp;mut </span>Context) {
@@ -595,13 +602,13 @@
     window_entity: Entity,
     surface: <span class="kw-2">&amp;mut </span>Surface,
     dirty_surface: <span class="kw-2">&amp;mut </span>Surface,
-) {
+) -&gt; bool {
     <span class="kw">if </span>cx.windows.is_empty() {
-        <span class="kw">return</span>;
+        <span class="kw">return </span><span class="bool-val">false</span>;
     }
 
     <span class="kw">if </span>!cx.entity_manager.is_alive(window_entity) {
-        <span class="kw">return</span>;
+        <span class="kw">return </span><span class="bool-val">false</span>;
     }
 
     transform_system(cx);
@@ -609,14 +616,11 @@
     <span class="kw">let </span>window = cx.windows.get_mut(<span class="kw-2">&amp;</span>window_entity).unwrap();
 
     <span class="kw">let </span><span class="kw-2">mut </span>dirty_rect = std::mem::take(<span class="kw-2">&amp;mut </span>window.dirty_rect);
-    <span class="kw">let </span><span class="kw-2">mut </span>redraw_list = std::mem::take(<span class="kw-2">&amp;mut </span>window.redraw_list);
+    <span class="kw">let </span>redraw_list = std::mem::take(<span class="kw-2">&amp;mut </span>window.redraw_list);
 
-    <span class="kw">let </span>children = redraw_list
-        .iter()
-        .flat_map(|entity| DrawTreeIterator::subtree(<span class="kw-2">&amp;</span>cx.tree, <span class="kw-2">*</span>entity))
-        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-
-    redraw_list.extend(children);
+    <span class="kw">if </span>redraw_list.is_empty() {
+        <span class="kw">return </span><span class="bool-val">false</span>;
+    }
 
     <span class="kw">for </span><span class="kw-2">&amp;</span>entity <span class="kw">in </span><span class="kw-2">&amp;</span>redraw_list {
         <span class="comment">// Skip binding views
@@ -642,7 +646,17 @@
                     dirty_rect = <span class="prelude-val">Some</span>(draw_bounds);
                 }
             }
+
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(dr) = cx.cache.draw_bounds.get_mut(entity) {
+                <span class="kw-2">*</span>dr = draw_bounds;
+            } <span class="kw">else </span>{
+                cx.cache.draw_bounds.insert(entity, draw_bounds);
+            }
         }
+    }
+
+    <span class="kw">if </span>dirty_rect.is_none() {
+        <span class="kw">return </span><span class="bool-val">false</span>;
     }
 
     <span class="kw">let </span>canvas = dirty_surface.canvas();
@@ -697,21 +711,11 @@
     //     surface.canvas().draw_rect(rect, &amp;paint);
     // }
 
-    </span><span class="kw">for </span>entity <span class="kw">in </span>redraw_list {
-        <span class="kw">if </span>entity.visible(<span class="kw-2">&amp;</span>cx.style) {
-            <span class="kw">let </span>draw_bounds = draw_bounds(<span class="kw-2">&amp;</span>cx.style, <span class="kw-2">&amp;</span>cx.cache, <span class="kw-2">&amp;</span>cx.tree, entity);
-
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(dr) = cx.cache.draw_bounds.get_mut(entity) {
-                <span class="kw-2">*</span>dr = draw_bounds;
-            } <span class="kw">else </span>{
-                cx.cache.draw_bounds.insert(entity, draw_bounds);
-            }
-        }
-    }
-
-    window.redraw_list.clear();
+    </span>window.redraw_list.clear();
     window.dirty_rect = <span class="prelude-val">None</span>;
-}
+
+    <span class="bool-val">true
+</span>}
 
 <span class="kw">fn </span>draw_entity(
     cx: <span class="kw-2">&amp;mut </span>DrawContext,
@@ -863,7 +867,17 @@
     <span class="kw">let </span>rect: Rect = layout_bounds.into();
     <span class="kw">let </span>tr = matrix.map_rect(rect).<span class="number">0</span>;
 
-    <span class="kw">let </span>dirty_bounds: BoundingBox = tr.into();
+    <span class="kw">let </span><span class="kw-2">mut </span>dirty_bounds: BoundingBox = tr.into();
+
+    <span class="comment">//
+    </span><span class="kw">if </span>style.overflowx.get(entity).copied().unwrap_or_default() == Overflow::Visible
+        || style.overflowy.get(entity).copied().unwrap_or_default() == Overflow::Visible
+    {
+        <span class="kw">let </span>child_iter = DrawChildIterator::new(tree, entity);
+        <span class="kw">for </span>child <span class="kw">in </span>child_iter {
+            dirty_bounds = dirty_bounds.union(<span class="kw-2">&amp;</span>draw_bounds(style, cache, tree, child));
+        }
+    }
 
     <span class="kw">let </span>z_index = style.z_index.get(entity).copied().unwrap_or_default();
 

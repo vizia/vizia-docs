@@ -925,6 +925,7 @@
 <a href="#925" id="925">925</a>
 <a href="#926" id="926">926</a>
 <a href="#927" id="927">927</a>
+<a href="#928" id="928">928</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
     convert::{winit_key_code_to_code, winit_key_to_key},
     window::{WinState, Window},
@@ -1433,8 +1434,9 @@
                 <span class="kw">for </span>window <span class="kw">in </span><span class="self">self</span>.windows.values_mut() {
                     window.make_current();
                     <span class="comment">//self.cx.needs_refresh(window.entity);
-                    </span><span class="self">self</span>.cx.draw(window.entity, <span class="kw-2">&amp;mut </span>window.surface, <span class="kw-2">&amp;mut </span>window.dirty_surface);
-                    window.swap_buffers();
+                    </span><span class="kw">if </span><span class="self">self</span>.cx.draw(window.entity, <span class="kw-2">&amp;mut </span>window.surface, <span class="kw-2">&amp;mut </span>window.dirty_surface) {
+                        window.swap_buffers();
+                    }
 
                     <span class="comment">// Un-cloak
                     </span><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]

@@ -530,6 +530,7 @@
 <a href="#530" id="530">530</a>
 <a href="#531" id="531">531</a>
 <a href="#532" id="532">532</a>
+<a href="#533" id="533">533</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::window::create_surface;
 <span class="kw">use </span><span class="kw">crate</span>::window::ViziaWindow;
 <span class="kw">use </span>baseview::{Window, WindowHandle, WindowScalePolicy};
@@ -824,9 +825,10 @@
     }
 
     <span class="kw">pub fn </span>render(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="self">self</span>.cx.draw(Entity::root(), <span class="kw-2">&amp;mut </span><span class="self">self</span>.surface, <span class="kw-2">&amp;mut </span><span class="self">self</span>.dirty_surface);
-        <span class="self">self</span>.gr_context.flush_and_submit();
-        <span class="self">self</span>.should_redraw = <span class="bool-val">false</span>;
+        <span class="kw">if </span><span class="self">self</span>.cx.draw(Entity::root(), <span class="kw-2">&amp;mut </span><span class="self">self</span>.surface, <span class="kw-2">&amp;mut </span><span class="self">self</span>.dirty_surface) {
+            <span class="self">self</span>.gr_context.flush_and_submit();
+            <span class="self">self</span>.should_redraw = <span class="bool-val">false</span>;
+        }
     }
 
     <span class="kw">pub fn </span>handle_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: baseview::Event, should_quit: <span class="kw-2">&amp;mut </span>bool) {

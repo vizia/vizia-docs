@@ -270,12 +270,37 @@
 <a href="#270" id="270">270</a>
 <a href="#271" id="271">271</a>
 <a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::icons::ICON_CHECK;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// A checkbox used to display and toggle a boolean state.
 ///
-/// Pressing on the checkbox with the primary mouse button triggers the [`on_toggle`](Checkbox::on_toggle) callback.
+/// Pressing the checkbox triggers the [`on_toggle`](Checkbox::on_toggle) callback.
 ///
 /// # Examples
 ///
@@ -357,7 +382,7 @@
 ///
 /// ## Custom checkbox
 ///
-/// The `text` modifier combined with a `map` on the lens can be used to customize the icon used by the checkbox.
+/// The `with_icons` constructor can be used to create a checkbox with custom icons for both checked and unchecked states.
 ///
 /// ```
 /// # use vizia_core::prelude::*;
@@ -378,9 +403,8 @@
 /// # AppData { value: false }.build(cx);
 /// # use vizia_core::icons::ICON_X;
 ///
-/// Checkbox::new(cx, AppData::value)
-///     .on_toggle(|cx| cx.emit(AppEvent::ToggleValue))
-///     .text(AppData::value.map(|flag| if *flag {ICON_X} else {""}));
+/// Checkbox::with_icons(cx, AppData::value, None, Some(ICON_X))
+///     .on_toggle(|cx| cx.emit(AppEvent::ToggleValue));
 /// ```
 </span><span class="kw">pub struct </span>Checkbox {
     on_toggle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext)&gt;&gt;,
@@ -422,7 +446,33 @@
             .navigable(<span class="bool-val">true</span>)
     }
 
-    <span class="kw">pub fn </span>with_icons&lt;T&gt;(
+    <span class="doccomment">/// Creates a new checkbox with custom icons for both checked and unchecked states.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use vizia_core::prelude::*;
+    /// #
+    /// # #[derive(Lens)]
+    /// # struct AppData {
+    /// #     value: bool,
+    /// # }
+    /// #
+    /// # impl Model for AppData {}
+    /// #
+    /// # enum AppEvent {
+    /// #     ToggleValue,
+    /// # }
+    /// #
+    /// # let cx = &amp;mut Context::default();
+    /// #
+    /// # AppData { value: false }.build(cx);
+    /// # use vizia_core::icons::ICON_X;
+    ///
+    /// Checkbox::with_icons(cx, AppData::value, None, Some(ICON_X))
+    ///     .on_toggle(|cx| cx.emit(AppEvent::ToggleValue));
+    /// ```
+    </span><span class="kw">pub fn </span>with_icons&lt;T&gt;(
         cx: <span class="kw-2">&amp;mut </span>Context,
         checked: <span class="kw">impl </span>Lens&lt;Target = bool&gt;,
         icon_default: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>Res&lt;T&gt; + <span class="lifetime">'static </span>+ Clone&gt;,

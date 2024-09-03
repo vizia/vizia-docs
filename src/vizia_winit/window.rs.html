@@ -633,6 +633,10 @@
 <a href="#633" id="633">633</a>
 <a href="#634" id="634">634</a>
 <a href="#635" id="635">635</a>
+<a href="#636" id="636">636</a>
+<a href="#637" id="637">637</a>
+<a href="#638" id="638">638</a>
+<a href="#639" id="639">639</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::window_modifiers::WindowModifiers;
 <span class="kw">use </span>glutin::context::GlProfile;
 <span class="kw">use </span>vizia_core::context::TreeProps;
@@ -1030,7 +1034,11 @@
             }
 
             WindowEvent::SetPosition(pos) =&gt; {
-                <span class="kw">let </span>parent_window_position = cx.window_position();
+                <span class="kw">let </span>parent_window_position = <span class="kw">if </span>cx.current() == Entity::root() {
+                    WindowPosition::new(<span class="number">0</span>, <span class="number">0</span>)
+                } <span class="kw">else </span>{
+                    cx.window_position()
+                };
                 <span class="self">self</span>.window().set_outer_position(LogicalPosition::new(
                     parent_window_position.x + pos.x,
                     parent_window_position.y + pos.y,

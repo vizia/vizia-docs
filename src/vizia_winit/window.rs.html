@@ -631,6 +631,8 @@
 <a href="#631" id="631">631</a>
 <a href="#632" id="632">632</a>
 <a href="#633" id="633">633</a>
+<a href="#634" id="634">634</a>
+<a href="#635" id="635">635</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::window_modifiers::WindowModifiers;
 <span class="kw">use </span>glutin::context::GlProfile;
 <span class="kw">use </span>vizia_core::context::TreeProps;
@@ -914,10 +916,12 @@
     .expect(<span class="string">"Could not create skia surface"</span>)
 }
 
+<span class="kw">type </span>WindowCallback = <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext)&gt;&gt;;
+
 <span class="kw">pub struct </span>Window {
     <span class="kw">pub </span>window: <span class="prelude-ty">Option</span>&lt;Arc&lt;winit::window::Window&gt;&gt;,
-    <span class="kw">pub </span>on_close: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext)&gt;&gt;,
-    <span class="kw">pub </span>on_create: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext)&gt;&gt;,
+    <span class="kw">pub </span>on_close: WindowCallback,
+    <span class="kw">pub </span>on_create: WindowCallback,
     <span class="kw">pub </span>should_close: bool,
     <span class="kw">pub</span>(<span class="kw">crate</span>) custom_cursors: Arc&lt;HashMap&lt;CursorIcon, CustomCursor&gt;&gt;,
 }

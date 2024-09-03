@@ -185,12 +185,8 @@
 <a href="#185" id="185">185</a>
 <a href="#186" id="186">186</a>
 <a href="#187" id="187">187</a>
-<a href="#188" id="188">188</a>
-<a href="#189" id="189">189</a>
-<a href="#190" id="190">190</a>
-<a href="#191" id="191">191</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{accessibility::IntoNode, events::ViewHandler, prelude::<span class="kw-2">*</span>};
-<span class="kw">use </span>accesskit::{Checked, NodeBuilder, NodeId, Rect, TreeUpdate};
+<span class="kw">use </span>accesskit::{NodeBuilder, NodeId, Rect, Toggled, TreeUpdate};
 <span class="kw">use </span>hashbrown::HashMap;
 <span class="kw">use </span>vizia_storage::LayoutTreeIterator;
 
@@ -227,19 +223,15 @@
                     <span class="kw">continue</span>;
                 }
 
-                <span class="kw">let </span><span class="kw-2">mut </span>nodes = <span class="macro">vec!</span>[(
-                    node.node_id(),
-                    node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes),
-                )];
+                <span class="kw">let </span><span class="kw-2">mut </span>nodes = <span class="macro">vec!</span>[(node.node_id(), node.node_builder.build())];
 
                 <span class="comment">// If child nodes were generated then append them to the nodes list
                 </span><span class="kw">if </span>!node.children.is_empty() {
-                    nodes.extend(node.children.into_iter().map(|child_node| {
-                        (
-                            child_node.node_id(),
-                            child_node.node_builder.build(<span class="kw-2">&amp;mut </span>cx.style.accesskit_node_classes),
-                        )
-                    }));
+                    nodes.extend(
+                        node.children.into_iter().map(|child_node| {
+                            (child_node.node_id(), child_node.node_builder.build())
+                        }),
+                    );
                 }
 
                 cx.tree_updates.push(<span class="prelude-val">Some</span>(TreeUpdate {
@@ -348,9 +340,9 @@
             .map(|pseudoclass| pseudoclass.contains(PseudoClassFlags::CHECKED))
         {
             <span class="kw">if </span>checked {
-                node_builder.set_checked(Checked::True);
+                node_builder.set_toggled(Toggled::True);
             } <span class="kw">else </span>{
-                node_builder.set_checked(Checked::False);
+                node_builder.set_toggled(Toggled::False);
             }
         }
     }

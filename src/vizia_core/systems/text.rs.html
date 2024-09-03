@@ -278,6 +278,21 @@
 <a href="#278" id="278">278</a>
 <a href="#279" id="279">279</a>
 <a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::{
     font_arguments::VariationPosition,
     textlayout::{
@@ -346,10 +361,19 @@
                 .copied()
                 .unwrap_or(bounds.shrink_sides(padding_left, <span class="number">0.0</span>, padding_right, <span class="number">0.0</span>));
 
-            <span class="kw">if </span>!cx.style.width.get(entity).copied().unwrap_or_default().is_auto() {
-                paragraph.layout(text_bounds.width());
-                <span class="comment">// paragraph.layout(bounds.width() - padding_left - padding_right);
-            </span>}
+            <span class="kw">if </span>!cx.style.width.get(entity).copied().unwrap_or_default().is_auto()
+                &amp;&amp; !cx.style.height.get(entity).copied().unwrap_or_default().is_auto()
+            {
+                <span class="kw">if </span>cx.style.text_overflow.get(entity).copied().unwrap_or_default()
+                    == TextOverflow::Clip
+                {
+                    paragraph.layout(f32::MAX);
+                    paragraph
+                        .layout(text_bounds.width().max(paragraph.min_intrinsic_width() + <span class="number">1.0</span>));
+                } <span class="kw">else </span>{
+                    paragraph.layout(text_bounds.width());
+                }
+            }
 
             layout_span(<span class="kw-2">&amp;</span>cx.style, <span class="kw-2">&amp;mut </span>cx.cache, <span class="kw-2">&amp;</span>cx.tree, entity, paragraph, bounds);
 
@@ -425,7 +449,7 @@
     // Overflow
     </span><span class="kw">match </span>style.text_overflow.get(entity) {
         <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>TextOverflow::Ellipsis) =&gt; {
-            paragraph_style.set_ellipsis(<span class="string">"..."</span>);
+            paragraph_style.set_ellipsis(<span class="string">"…"</span>);
         }
 
         <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>TextOverflow::Clip) =&gt; {
@@ -440,6 +464,12 @@
     <span class="comment">// Line Clamp
     </span><span class="kw">if let </span><span class="prelude-val">Some</span>(line_clamp) = style.line_clamp.get(entity) {
         paragraph_style.set_max_lines(line_clamp.<span class="number">0 </span><span class="kw">as </span>usize);
+    }
+
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(text_wrap) = style.text_wrap.get(entity).copied() {
+        <span class="kw">if </span>!text_wrap {
+            paragraph_style.set_max_lines(<span class="number">1</span>);
+        }
     }
 
     <span class="comment">// Text Align

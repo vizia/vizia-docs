@@ -26,18 +26,12 @@
 <a href="#26" id="26">26</a>
 <a href="#27" id="27">27</a>
 <a href="#28" id="28">28</a>
-<a href="#29" id="29">29</a>
-<a href="#30" id="30">30</a>
-<a href="#31" id="31">31</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>lazy_static::lazy_static;
-<span class="kw">use </span>std::collections::VecDeque;
-<span class="kw">use </span>std::sync::Mutex;
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::VecDeque;
+<span class="kw">use </span>std::sync::{LazyLock, Mutex};
 <span class="kw">use </span>vizia_core::context::EventProxy;
 <span class="kw">use </span>vizia_core::events::Event;
 
-<span class="macro">lazy_static!</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span><span class="kw-2">ref </span>PROXY_QUEUE: Mutex&lt;VecDeque&lt;Event&gt;&gt; = Mutex::new(VecDeque::new());
-}
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>PROXY_QUEUE: LazyLock&lt;Mutex&lt;VecDeque&lt;Event&gt;&gt;&gt; = LazyLock::new(Mutex::default);
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>queue_put(event: Event) {
     PROXY_QUEUE.lock().unwrap().push_back(event)
@@ -48,7 +42,7 @@
 }
 
 <span class="attr">#[derive(Clone)]
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>BaseviewProxy();
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>BaseviewProxy;
 
 <span class="kw">impl </span>EventProxy <span class="kw">for </span>BaseviewProxy {
     <span class="kw">fn </span>send(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Event) -&gt; <span class="prelude-ty">Result</span>&lt;(), ()&gt; {

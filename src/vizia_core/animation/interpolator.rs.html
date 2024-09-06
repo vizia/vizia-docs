@@ -354,14 +354,6 @@
 <a href="#354" id="354">354</a>
 <a href="#355" id="355">355</a>
 <a href="#356" id="356">356</a>
-<a href="#357" id="357">357</a>
-<a href="#358" id="358">358</a>
-<a href="#359" id="359">359</a>
-<a href="#360" id="360">360</a>
-<a href="#361" id="361">361</a>
-<a href="#362" id="362">362</a>
-<a href="#363" id="363">363</a>
-<a href="#364" id="364">364</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>morphorm::Units;
 <span class="kw">use </span>vizia_style::{
     Angle, BackgroundSize, ClipPath, Color, ColorStop, Display, Filter, FontSize, Gradient, Length,
@@ -387,8 +379,8 @@
 
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>i32 {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
-        ((start + (end - start)) <span class="kw">as </span>f32 * t).round() <span class="kw">as </span>i32
-    }
+        ((start + (end - start)) <span class="kw">as </span>f32 * t).round() <span class="kw">as </span><span class="self">Self
+    </span>}
 }
 
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>(f32, f32) {
@@ -400,17 +392,17 @@
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>Units {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>s = <span class="kw">match </span>start {
-            Units::Pixels(val) =&gt; val,
-            Units::Percentage(val) =&gt; val,
-            Units::Stretch(val) =&gt; val,
-            Units::Auto =&gt; <span class="kw">return </span><span class="kw-2">*</span>end,
+            <span class="self">Self</span>::Pixels(val) =&gt; val,
+            <span class="self">Self</span>::Percentage(val) =&gt; val,
+            <span class="self">Self</span>::Stretch(val) =&gt; val,
+            <span class="self">Self</span>::Auto =&gt; <span class="kw">return </span><span class="kw-2">*</span>end,
         };
 
         <span class="kw">match </span>end {
-            Units::Pixels(e) =&gt; Units::Pixels(f32::interpolate(s, e, t)),
-            Units::Percentage(e) =&gt; Units::Percentage(f32::interpolate(s, e, t)),
-            Units::Stretch(e) =&gt; Units::Stretch(f32::interpolate(s, e, t)),
-            Units::Auto =&gt; <span class="kw-2">*</span>end,
+            <span class="self">Self</span>::Pixels(e) =&gt; <span class="self">Self</span>::Pixels(f32::interpolate(s, e, t)),
+            <span class="self">Self</span>::Percentage(e) =&gt; <span class="self">Self</span>::Percentage(f32::interpolate(s, e, t)),
+            <span class="self">Self</span>::Stretch(e) =&gt; <span class="self">Self</span>::Stretch(f32::interpolate(s, e, t)),
+            <span class="self">Self</span>::Auto =&gt; <span class="kw-2">*</span>end,
         }
     }
 }
@@ -427,7 +419,7 @@
 
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>Opacity {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
-        Opacity(start.<span class="number">0 </span>+ (end.<span class="number">0 </span>- start.<span class="number">0</span>) * t)
+        <span class="self">Self</span>(start.<span class="number">0 </span>+ (end.<span class="number">0 </span>- start.<span class="number">0</span>) * t)
     }
 }
 
@@ -437,7 +429,7 @@
         <span class="kw">let </span>g = (end.g() <span class="kw">as </span>f64 - start.g() <span class="kw">as </span>f64).mul_add(t <span class="kw">as </span>f64, start.g() <span class="kw">as </span>f64) <span class="kw">as </span>u8;
         <span class="kw">let </span>b = (end.b() <span class="kw">as </span>f64 - start.b() <span class="kw">as </span>f64).mul_add(t <span class="kw">as </span>f64, start.b() <span class="kw">as </span>f64) <span class="kw">as </span>u8;
         <span class="kw">let </span>a = (end.a() <span class="kw">as </span>f64 - start.a() <span class="kw">as </span>f64).mul_add(t <span class="kw">as </span>f64, start.a() <span class="kw">as </span>f64) <span class="kw">as </span>u8;
-        Color::rgba(r, g, b, a)
+        <span class="self">Self</span>::rgba(r, g, b, a)
     }
 }
 
@@ -447,16 +439,14 @@
         <span class="kw">let </span>g = (end.g() <span class="kw">as </span>f64 - start.g() <span class="kw">as </span>f64).mul_add(t <span class="kw">as </span>f64, start.g() <span class="kw">as </span>f64) <span class="kw">as </span>u8;
         <span class="kw">let </span>b = (end.b() <span class="kw">as </span>f64 - start.b() <span class="kw">as </span>f64).mul_add(t <span class="kw">as </span>f64, start.b() <span class="kw">as </span>f64) <span class="kw">as </span>u8;
         <span class="kw">let </span>a = (end.a() <span class="kw">as </span>f64 - start.a() <span class="kw">as </span>f64).mul_add(t <span class="kw">as </span>f64, start.a() <span class="kw">as </span>f64) <span class="kw">as </span>u8;
-        RGBA::rgba(r, g, b, a)
+        <span class="self">Self</span>::rgba(r, g, b, a)
     }
 }
 
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>Filter {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">match </span>(start, end) {
-            (Filter::Blur(start), Filter::Blur(end)) =&gt; {
-                Filter::Blur(Length::interpolate(start, end, t))
-            }
+            (<span class="self">Self</span>::Blur(start), <span class="self">Self</span>::Blur(end)) =&gt; <span class="self">Self</span>::Blur(Length::interpolate(start, end, t)),
         }
     }
 }
@@ -464,11 +454,11 @@
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>LengthValue {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">match </span>(end, start) {
-            (LengthValue::Px(end_val), LengthValue::Px(start_val)) =&gt; {
-                LengthValue::Px(f32::interpolate(start_val, end_val, t))
+            (<span class="self">Self</span>::Px(end_val), <span class="self">Self</span>::Px(start_val)) =&gt; {
+                <span class="self">Self</span>::Px(f32::interpolate(start_val, end_val, t))
             }
 
-            <span class="kw">_ </span>=&gt; LengthValue::default(),
+            <span class="kw">_ </span>=&gt; <span class="self">Self</span>::default(),
         }
     }
 }
@@ -476,11 +466,11 @@
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>Length {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">match </span>(end, start) {
-            (Length::Value(end_val), Length::Value(start_val)) =&gt; {
-                Length::Value(LengthValue::interpolate(start_val, end_val, t))
+            (<span class="self">Self</span>::Value(end_val), <span class="self">Self</span>::Value(start_val)) =&gt; {
+                <span class="self">Self</span>::Value(LengthValue::interpolate(start_val, end_val, t))
             }
 
-            <span class="kw">_ </span>=&gt; Length::default(),
+            <span class="kw">_ </span>=&gt; <span class="self">Self</span>::default(),
         }
     }
 }
@@ -488,16 +478,15 @@
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>LengthOrPercentage {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">match </span>(start, end) {
-            (LengthOrPercentage::Length(start_val), LengthOrPercentage::Length(end_val)) =&gt; {
-                LengthOrPercentage::Length(Length::interpolate(start_val, end_val, t))
+            (<span class="self">Self</span>::Length(start_val), <span class="self">Self</span>::Length(end_val)) =&gt; {
+                <span class="self">Self</span>::Length(Length::interpolate(start_val, end_val, t))
             }
 
-            (
-                LengthOrPercentage::Percentage(start_val),
-                LengthOrPercentage::Percentage(end_val),
-            ) =&gt; LengthOrPercentage::Percentage(f32::interpolate(start_val, end_val, t)),
+            (<span class="self">Self</span>::Percentage(start_val), <span class="self">Self</span>::Percentage(end_val)) =&gt; {
+                <span class="self">Self</span>::Percentage(f32::interpolate(start_val, end_val, t))
+            }
 
-            <span class="kw">_ </span>=&gt; LengthOrPercentage::default(),
+            <span class="kw">_ </span>=&gt; <span class="self">Self</span>::default(),
         }
     }
 }
@@ -505,12 +494,9 @@
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>LengthPercentageOrAuto {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">match </span>(start, end) {
-            (
-                LengthPercentageOrAuto::LengthPercentage(start_val),
-                LengthPercentageOrAuto::LengthPercentage(end_val),
-            ) =&gt; LengthPercentageOrAuto::LengthPercentage(LengthOrPercentage::interpolate(
-                start_val, end_val, t,
-            )),
+            (<span class="self">Self</span>::LengthPercentage(start_val), <span class="self">Self</span>::LengthPercentage(end_val)) =&gt; {
+                <span class="self">Self</span>::LengthPercentage(LengthOrPercentage::interpolate(start_val, end_val, t))
+            }
 
             <span class="kw">_ </span>=&gt; end.clone(),
         }
@@ -520,16 +506,15 @@
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>PercentageOrNumber {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">match </span>(start, end) {
-            (PercentageOrNumber::Number(start_val), PercentageOrNumber::Number(end_val)) =&gt; {
-                PercentageOrNumber::Number(f32::interpolate(start_val, end_val, t))
+            (<span class="self">Self</span>::Number(start_val), <span class="self">Self</span>::Number(end_val)) =&gt; {
+                <span class="self">Self</span>::Number(f32::interpolate(start_val, end_val, t))
             }
 
-            (
-                PercentageOrNumber::Percentage(start_val),
-                PercentageOrNumber::Percentage(end_val),
-            ) =&gt; PercentageOrNumber::Percentage(f32::interpolate(start_val, end_val, t)),
+            (<span class="self">Self</span>::Percentage(start_val), <span class="self">Self</span>::Percentage(end_val)) =&gt; {
+                <span class="self">Self</span>::Percentage(f32::interpolate(start_val, end_val, t))
+            }
 
-            <span class="kw">_ </span>=&gt; PercentageOrNumber::default(),
+            <span class="kw">_ </span>=&gt; <span class="self">Self</span>::default(),
         }
     }
 }
@@ -538,7 +523,7 @@
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>x = LengthOrPercentage::interpolate(<span class="kw-2">&amp;</span>start.x, <span class="kw-2">&amp;</span>end.x, t);
         <span class="kw">let </span>y = LengthOrPercentage::interpolate(<span class="kw-2">&amp;</span>start.y, <span class="kw-2">&amp;</span>end.y, t);
-        Translate { x, y }
+        <span class="self">Self </span>{ x, y }
     }
 }
 
@@ -546,14 +531,14 @@
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>x = PercentageOrNumber::interpolate(<span class="kw-2">&amp;</span>start.x, <span class="kw-2">&amp;</span>end.x, t);
         <span class="kw">let </span>y = PercentageOrNumber::interpolate(<span class="kw-2">&amp;</span>start.y, <span class="kw-2">&amp;</span>end.y, t);
-        Scale { x, y }
+        <span class="self">Self </span>{ x, y }
     }
 }
 
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>Angle {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>r = start.to_radians() + (end.to_radians() - start.to_radians()) * t;
-        Angle::Rad(r)
+        <span class="self">Self</span>::Rad(r)
     }
 }
 
@@ -585,17 +570,16 @@
             .iter()
             .zip(end.iter())
             .map(|(start, end)| T::interpolate(start, end, t))
-            .collect::&lt;Vec&lt;T&gt;&gt;()
+            .collect::&lt;<span class="self">Self</span>&gt;()
     }
 }
 
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>ImageOrGradient {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">match </span>(start, end) {
-            (
-                ImageOrGradient::Gradient(gradient_start),
-                ImageOrGradient::Gradient(gradient_end),
-            ) =&gt; ImageOrGradient::Gradient(Gradient::interpolate(gradient_start, gradient_end, t)),
+            (<span class="self">Self</span>::Gradient(gradient_start), <span class="self">Self</span>::Gradient(gradient_end)) =&gt; {
+                <span class="self">Self</span>::Gradient(Gradient::interpolate(gradient_start, gradient_end, t))
+            }
             <span class="kw">_ </span>=&gt; end.clone(),
         }
     }
@@ -605,12 +589,12 @@
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">match </span>(start, end) {
             (
-                BackgroundSize::Explicit { width: start_width, height: start_height },
-                BackgroundSize::Explicit { width: end_width, height: end_height },
+                <span class="self">Self</span>::Explicit { width: start_width, height: start_height },
+                <span class="self">Self</span>::Explicit { width: end_width, height: end_height },
             ) =&gt; {
                 <span class="kw">let </span>width = LengthPercentageOrAuto::interpolate(start_width, end_width, t);
                 <span class="kw">let </span>height = LengthPercentageOrAuto::interpolate(start_height, end_height, t);
-                BackgroundSize::Explicit { width, height }
+                <span class="self">Self</span>::Explicit { width, height }
             }
 
             <span class="kw">_ </span>=&gt; end.clone(),
@@ -621,8 +605,8 @@
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>Gradient {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">match </span>(start, end) {
-            (Gradient::Linear(start_gradient), Gradient::Linear(end_gradient)) =&gt; {
-                Gradient::Linear(LinearGradient::interpolate(start_gradient, end_gradient, t))
+            (<span class="self">Self</span>::Linear(start_gradient), <span class="self">Self</span>::Linear(end_gradient)) =&gt; {
+                <span class="self">Self</span>::Linear(LinearGradient::interpolate(start_gradient, end_gradient, t))
             }
 
             <span class="kw">_ </span>=&gt; end.clone(),
@@ -633,8 +617,8 @@
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>LineDirection {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">match </span>(start, end) {
-            (LineDirection::Angle(start_angle), LineDirection::Angle(end_angle)) =&gt; {
-                LineDirection::Angle(Angle::interpolate(start_angle, end_angle, t))
+            (<span class="self">Self</span>::Angle(start_angle), <span class="self">Self</span>::Angle(end_angle)) =&gt; {
+                <span class="self">Self</span>::Angle(Angle::interpolate(start_angle, end_angle, t))
             }
 
             <span class="kw">_ </span>=&gt; <span class="kw-2">*</span>end,
@@ -645,7 +629,7 @@
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>LinearGradient {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">if </span>start.stops.len() == end.stops.len() {
-            LinearGradient {
+            <span class="self">Self </span>{
                 direction: LineDirection::interpolate(<span class="kw-2">&amp;</span>start.direction, <span class="kw-2">&amp;</span>end.direction, t),
                 stops: start
                     .stops
@@ -679,7 +663,7 @@
 
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>Shadow {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
-        Shadow {
+        <span class="self">Self </span>{
             x_offset: Length::interpolate(<span class="kw-2">&amp;</span>start.x_offset, <span class="kw-2">&amp;</span>end.x_offset, t),
             y_offset: Length::interpolate(<span class="kw-2">&amp;</span>start.y_offset, <span class="kw-2">&amp;</span>end.y_offset, t),
             blur_radius: Option::interpolate(<span class="kw-2">&amp;</span>start.blur_radius, <span class="kw-2">&amp;</span>end.blur_radius, t),
@@ -703,13 +687,13 @@
 
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>FontSize {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
-        FontSize(f32::interpolate(<span class="kw-2">&amp;</span>start.<span class="number">0</span>, <span class="kw-2">&amp;</span>end.<span class="number">0</span>, t))
+        <span class="self">Self</span>(f32::interpolate(<span class="kw-2">&amp;</span>start.<span class="number">0</span>, <span class="kw-2">&amp;</span>end.<span class="number">0</span>, t))
     }
 }
 
 <span class="kw">impl</span>&lt;T: Interpolator&gt; Interpolator <span class="kw">for </span>Rect&lt;T&gt; {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
-        Rect(
+        <span class="self">Self</span>(
             T::interpolate(<span class="kw-2">&amp;</span>start.<span class="number">0</span>, <span class="kw-2">&amp;</span>end.<span class="number">0</span>, t),
             T::interpolate(<span class="kw-2">&amp;</span>start.<span class="number">1</span>, <span class="kw-2">&amp;</span>end.<span class="number">1</span>, t),
             T::interpolate(<span class="kw-2">&amp;</span>start.<span class="number">2</span>, <span class="kw-2">&amp;</span>end.<span class="number">2</span>, t),
@@ -721,7 +705,7 @@
 <span class="kw">impl </span>Interpolator <span class="kw">for </span>ClipPath {
     <span class="kw">fn </span>interpolate(start: <span class="kw-2">&amp;</span><span class="self">Self</span>, end: <span class="kw-2">&amp;</span><span class="self">Self</span>, t: f32) -&gt; <span class="self">Self </span>{
         <span class="kw">match </span>(start, end) {
-            (ClipPath::Shape(s), ClipPath::Shape(e)) =&gt; ClipPath::Shape(Rect::interpolate(s, e, t)),
+            (<span class="self">Self</span>::Shape(s), <span class="self">Self</span>::Shape(e)) =&gt; <span class="self">Self</span>::Shape(Rect::interpolate(s, e, t)),
             <span class="kw">_ </span>=&gt; end.clone(),
         }
     }

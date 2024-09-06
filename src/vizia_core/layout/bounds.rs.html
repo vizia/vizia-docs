@@ -361,31 +361,6 @@
 <a href="#361" id="361">361</a>
 <a href="#362" id="362">362</a>
 <a href="#363" id="363">363</a>
-<a href="#364" id="364">364</a>
-<a href="#365" id="365">365</a>
-<a href="#366" id="366">366</a>
-<a href="#367" id="367">367</a>
-<a href="#368" id="368">368</a>
-<a href="#369" id="369">369</a>
-<a href="#370" id="370">370</a>
-<a href="#371" id="371">371</a>
-<a href="#372" id="372">372</a>
-<a href="#373" id="373">373</a>
-<a href="#374" id="374">374</a>
-<a href="#375" id="375">375</a>
-<a href="#376" id="376">376</a>
-<a href="#377" id="377">377</a>
-<a href="#378" id="378">378</a>
-<a href="#379" id="379">379</a>
-<a href="#380" id="380">380</a>
-<a href="#381" id="381">381</a>
-<a href="#382" id="382">382</a>
-<a href="#383" id="383">383</a>
-<a href="#384" id="384">384</a>
-<a href="#385" id="385">385</a>
-<a href="#386" id="386">386</a>
-<a href="#387" id="387">387</a>
-<a href="#388" id="388">388</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::Rect;
 
 <span class="doccomment">/// Represents an axis-aligned bounding box.
@@ -412,8 +387,8 @@
 <span class="kw">impl </span>BoundingBox {
     <span class="doccomment">/// Construct a [`BoundingBox`] from checked minimum and maximum values.
     </span><span class="attr">#[inline(always)]
-    </span><span class="kw">pub fn </span>from_min_max(min_x: f32, min_y: f32, max_x: f32, max_y: f32) -&gt; BoundingBox {
-        BoundingBox { x: min_x, y: min_y, w: max_x - min_x, h: max_y - min_y }
+    </span><span class="kw">pub fn </span>from_min_max(min_x: f32, min_y: f32, max_x: f32, max_y: f32) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ x: min_x, y: min_y, w: max_x - min_x, h: max_y - min_y }
     }
 
     <span class="doccomment">/// Left side of bounds equivalent to `x`.
@@ -509,8 +484,8 @@
     <span class="doccomment">/// Shrinks by some `amount` in both directions and returns a new [`BoundingBox`].
     </span><span class="attr">#[inline(always)]
     #[must_use]
-    </span><span class="kw">pub fn </span>shrink(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; BoundingBox {
-        BoundingBox::from_min_max(
+    </span><span class="kw">pub fn </span>shrink(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::from_min_max(
             <span class="self">self</span>.left() + amount,
             <span class="self">self</span>.top() + amount,
             <span class="self">self</span>.right() - amount,
@@ -521,30 +496,20 @@
     <span class="doccomment">/// Shrinks by some `amount` horizontally and returns a new [`BoundingBox`].
     </span><span class="attr">#[inline(always)]
     #[must_use]
-    </span><span class="kw">pub fn </span>shrink_horizontal(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; BoundingBox {
-        BoundingBox::from_min_max(
-            <span class="self">self</span>.left() + amount,
-            <span class="self">self</span>.top(),
-            <span class="self">self</span>.right() - amount,
-            <span class="self">self</span>.bottom(),
-        )
+    </span><span class="kw">pub fn </span>shrink_horizontal(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::from_min_max(<span class="self">self</span>.left() + amount, <span class="self">self</span>.top(), <span class="self">self</span>.right() - amount, <span class="self">self</span>.bottom())
     }
 
     <span class="doccomment">/// Shrinks by some `amount` vertically and returns a new [`BoundingBox`].
     </span><span class="attr">#[inline(always)]
     #[must_use]
-    </span><span class="kw">pub fn </span>shrink_vertical(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; BoundingBox {
-        BoundingBox::from_min_max(
-            <span class="self">self</span>.left(),
-            <span class="self">self</span>.top() + amount,
-            <span class="self">self</span>.right(),
-            <span class="self">self</span>.bottom() - amount,
-        )
+    </span><span class="kw">pub fn </span>shrink_vertical(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::from_min_max(<span class="self">self</span>.left(), <span class="self">self</span>.top() + amount, <span class="self">self</span>.right(), <span class="self">self</span>.bottom() - amount)
     }
 
     <span class="doccomment">/// Shrinks each side by the given separate amounts and returns a new [`BoundingBox`].
-    </span><span class="kw">pub fn </span>shrink_sides(<span class="kw-2">&amp;</span><span class="self">self</span>, left: f32, top: f32, right: f32, bottom: f32) -&gt; BoundingBox {
-        BoundingBox::from_min_max(
+    </span><span class="kw">pub fn </span>shrink_sides(<span class="kw-2">&amp;</span><span class="self">self</span>, left: f32, top: f32, right: f32, bottom: f32) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::from_min_max(
             <span class="self">self</span>.left() + left,
             <span class="self">self</span>.top() + top,
             <span class="self">self</span>.right() - right,
@@ -552,8 +517,8 @@
         )
     }
 
-    <span class="kw">pub fn </span>expand_sides(<span class="kw-2">&amp;</span><span class="self">self</span>, left: f32, top: f32, right: f32, bottom: f32) -&gt; BoundingBox {
-        BoundingBox::from_min_max(
+    <span class="kw">pub fn </span>expand_sides(<span class="kw-2">&amp;</span><span class="self">self</span>, left: f32, top: f32, right: f32, bottom: f32) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::from_min_max(
             <span class="self">self</span>.left() - left,
             <span class="self">self</span>.top() - top,
             <span class="self">self</span>.right() + right,
@@ -561,20 +526,15 @@
         )
     }
 
-    <span class="kw">pub fn </span>offset(<span class="kw-2">&amp;</span><span class="self">self</span>, x: f32, y: f32) -&gt; BoundingBox {
-        BoundingBox::from_min_max(
-            <span class="self">self</span>.left() + x,
-            <span class="self">self</span>.top() + y,
-            <span class="self">self</span>.right() + x,
-            <span class="self">self</span>.bottom() + y,
-        )
+    <span class="kw">pub fn </span>offset(<span class="kw-2">&amp;</span><span class="self">self</span>, x: f32, y: f32) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::from_min_max(<span class="self">self</span>.left() + x, <span class="self">self</span>.top() + y, <span class="self">self</span>.right() + x, <span class="self">self</span>.bottom() + y)
     }
 
     <span class="doccomment">/// Expands by some `amount` in both directions and returns a new [`BoundingBox`].
     </span><span class="attr">#[inline(always)]
     #[must_use]
-    </span><span class="kw">pub fn </span>expand(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; BoundingBox {
-        BoundingBox::from_min_max(
+    </span><span class="kw">pub fn </span>expand(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::from_min_max(
             <span class="self">self</span>.left() - amount,
             <span class="self">self</span>.top() - amount,
             <span class="self">self</span>.right() + amount,
@@ -585,25 +545,15 @@
     <span class="doccomment">/// Expands by some `amount` horizontally and returns a new [`BoundingBox`].
     </span><span class="attr">#[inline(always)]
     #[must_use]
-    </span><span class="kw">pub fn </span>expand_horizontal(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; BoundingBox {
-        BoundingBox::from_min_max(
-            <span class="self">self</span>.left() - amount,
-            <span class="self">self</span>.top(),
-            <span class="self">self</span>.right() + amount,
-            <span class="self">self</span>.bottom(),
-        )
+    </span><span class="kw">pub fn </span>expand_horizontal(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::from_min_max(<span class="self">self</span>.left() - amount, <span class="self">self</span>.top(), <span class="self">self</span>.right() + amount, <span class="self">self</span>.bottom())
     }
 
     <span class="doccomment">/// Expands by some `amount` vertically and returns a new [`BoundingBox`].
     </span><span class="attr">#[inline(always)]
     #[must_use]
-    </span><span class="kw">pub fn </span>expand_vertical(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; BoundingBox {
-        BoundingBox::from_min_max(
-            <span class="self">self</span>.left(),
-            <span class="self">self</span>.top() - amount,
-            <span class="self">self</span>.right(),
-            <span class="self">self</span>.bottom() + amount,
-        )
+    </span><span class="kw">pub fn </span>expand_vertical(<span class="kw-2">&amp;</span><span class="self">self</span>, amount: f32) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::from_min_max(<span class="self">self</span>.left(), <span class="self">self</span>.top() - amount, <span class="self">self</span>.right(), <span class="self">self</span>.bottom() + amount)
     }
 
     <span class="kw">pub fn </span>intersection(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="self">Self </span>{
@@ -611,7 +561,7 @@
         <span class="kw">let </span>right = <span class="self">self</span>.right().min(other.right());
         <span class="kw">let </span>top = <span class="self">self</span>.top().max(other.top());
         <span class="kw">let </span>bottom = <span class="self">self</span>.bottom().min(other.bottom());
-        BoundingBox::from_min_max(left, top, right, bottom)
+        <span class="self">Self</span>::from_min_max(left, top, right, bottom)
     }
 
     <span class="kw">pub fn </span>union(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="self">Self </span>{
@@ -619,7 +569,7 @@
         <span class="kw">let </span>right = <span class="self">self</span>.right().max(other.right());
         <span class="kw">let </span>top = <span class="self">self</span>.top().min(other.top());
         <span class="kw">let </span>bottom = <span class="self">self</span>.bottom().max(other.bottom());
-        BoundingBox::from_min_max(left, top, right, bottom)
+        <span class="self">Self</span>::from_min_max(left, top, right, bottom)
     }
 
     <span class="kw">pub fn </span>intersects(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
@@ -655,13 +605,13 @@
 
 <span class="kw">impl </span>From&lt;BoundingBox&gt; <span class="kw">for </span>skia_safe::Rect {
     <span class="kw">fn </span>from(bb: BoundingBox) -&gt; <span class="self">Self </span>{
-        skia_safe::Rect { left: bb.left(), top: bb.top(), right: bb.right(), bottom: bb.bottom() }
+        <span class="self">Self </span>{ left: bb.left(), top: bb.top(), right: bb.right(), bottom: bb.bottom() }
     }
 }
 
 <span class="kw">impl </span>From&lt;skia_safe::Rect&gt; <span class="kw">for </span>BoundingBox {
     <span class="kw">fn </span>from(bb: Rect) -&gt; <span class="self">Self </span>{
-        BoundingBox { x: bb.left(), y: bb.top(), w: bb.width(), h: bb.height() }
+        <span class="self">Self </span>{ x: bb.left(), y: bb.top(), w: bb.width(), h: bb.height() }
     }
 }
 

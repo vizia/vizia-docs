@@ -106,10 +106,6 @@
 <a href="#106" id="106">106</a>
 <a href="#107" id="107">107</a>
 <a href="#108" id="108">108</a>
-<a href="#109" id="109">109</a>
-<a href="#110" id="110">110</a>
-<a href="#111" id="111">111</a>
-<a href="#112" id="112">112</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::fmt::Formatter;
 <span class="kw">use </span>std::sync::Mutex;
@@ -139,10 +135,10 @@
 <span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>ProxyEmitError {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
         <span class="kw">match </span><span class="self">self </span>{
-            ProxyEmitError::Unsupported =&gt; {
+            <span class="self">Self</span>::Unsupported =&gt; {
                 f.write_str(<span class="string">"The current runtime does not support proxying events"</span>)
             }
-            ProxyEmitError::EventLoopClosed =&gt; {
+            <span class="self">Self</span>::EventLoopClosed =&gt; {
                 f.write_str(<span class="string">"Sending an event to an event loop which has been closed"</span>)
             }
         }
@@ -152,7 +148,7 @@
 <span class="kw">impl </span>std::error::Error <span class="kw">for </span>ProxyEmitError {}
 
 <span class="kw">impl </span>ContextProxy {
-    <span class="kw">pub fn </span>emit&lt;M: Any + Send&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProxyEmitError&gt; {
+    <span class="kw">pub fn </span>emit&lt;M: Any + Send&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, message: M) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProxyEmitError&gt; {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(proxy) = <span class="kw-2">&amp;</span><span class="self">self</span>.event_proxy {
             <span class="kw">let </span>event = Event::new(message)
                 .target(<span class="self">self</span>.current)
@@ -165,11 +161,7 @@
         }
     }
 
-    <span class="kw">pub fn </span>emit_to&lt;M: Any + Send&gt;(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        target: Entity,
-        message: M,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProxyEmitError&gt; {
+    <span class="kw">pub fn </span>emit_to&lt;M: Any + Send&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, target: Entity, message: M) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProxyEmitError&gt; {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(proxy) = <span class="kw-2">&amp;</span><span class="self">self</span>.event_proxy {
             <span class="kw">let </span>event = Event::new(message)
                 .target(target)
@@ -182,12 +174,12 @@
         }
     }
 
-    <span class="kw">pub fn </span>redraw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProxyEmitError&gt; {
+    <span class="kw">pub fn </span>redraw(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProxyEmitError&gt; {
         <span class="self">self</span>.emit(InternalEvent::Redraw)
     }
 
     <span class="kw">pub fn </span>load_image(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         path: String,
         data: <span class="kw-2">&amp;</span>[u8],
         policy: ImageRetentionPolicy,
@@ -201,7 +193,7 @@
 
     <span class="kw">pub fn </span>spawn&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, target: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">'static </span>+ Send + FnOnce(<span class="kw-2">&amp;mut </span>ContextProxy),
+        </span>F: <span class="lifetime">'static </span>+ Send + FnOnce(<span class="kw-2">&amp;mut </span><span class="self">Self</span>),
     {
         <span class="kw">let </span><span class="kw-2">mut </span>cxp = <span class="self">self</span>.clone();
         std::thread::spawn(<span class="kw">move </span>|| target(<span class="kw-2">&amp;mut </span>cxp));

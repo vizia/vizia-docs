@@ -284,12 +284,6 @@
 <a href="#284" id="284">284</a>
 <a href="#285" id="285">285</a>
 <a href="#286" id="286">286</a>
-<a href="#287" id="287">287</a>
-<a href="#288" id="288">288</a>
-<a href="#289" id="289">289</a>
-<a href="#290" id="290">290</a>
-<a href="#291" id="291">291</a>
-<a href="#292" id="292">292</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::binding::RatioLens;
@@ -356,7 +350,7 @@
             container_height: <span class="number">0.0</span>,
         }
         .build(cx, <span class="kw">move </span>|cx| {
-            ScrollContent::new(cx, content).bind(ScrollView::root, |handle, data| {
+            ScrollContent::new(cx, content).bind(<span class="self">Self</span>::root, |handle, data| {
                 <span class="kw">let </span>scale_factor = handle.scale_factor();
                 <span class="kw">let </span>data = data.get(<span class="kw-2">&amp;</span>handle);
                 <span class="kw">let </span>left = ((data.inner_width - data.container_width) * data.scroll_x).round()
@@ -369,8 +363,8 @@
             <span class="kw">if </span>scroll_y {
                 Scrollbar::new(
                     cx,
-                    ScrollView::scroll_y,
-                    RatioLens::new(ScrollView::container_height, ScrollView::inner_height),
+                    <span class="self">Self</span>::scroll_y,
+                    RatioLens::new(<span class="self">Self</span>::container_height, <span class="self">Self</span>::inner_height),
                     Orientation::Vertical,
                     |cx, value| {
                         cx.emit(ScrollEvent::SetY(value));
@@ -383,8 +377,8 @@
             <span class="kw">if </span>scroll_x {
                 Scrollbar::new(
                     cx,
-                    ScrollView::scroll_x,
-                    RatioLens::new(ScrollView::container_width, ScrollView::inner_width),
+                    <span class="self">Self</span>::scroll_x,
+                    RatioLens::new(<span class="self">Self</span>::container_width, <span class="self">Self</span>::inner_width),
                     Orientation::Horizontal,
                     |cx, value| {
                         cx.emit(ScrollEvent::SetX(value));
@@ -394,14 +388,8 @@
                 .scroll_to_cursor(<span class="self">Self</span>::scroll_to_cursor);
             }
         })
-        .toggle_class(
-            <span class="string">"h-scroll"</span>,
-            ScrollView::root.map(|data| data.container_width &lt; data.inner_width),
-        )
-        .toggle_class(
-            <span class="string">"v-scroll"</span>,
-            ScrollView::root.map(|data| data.container_height &lt; data.inner_height),
-        )
+        .toggle_class(<span class="string">"h-scroll"</span>, <span class="self">Self</span>::root.map(|data| data.container_width &lt; data.inner_width))
+        .toggle_class(<span class="string">"v-scroll"</span>, <span class="self">Self</span>::root.map(|data| data.container_height &lt; data.inner_height))
     }
 
     <span class="kw">fn </span>reset(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {

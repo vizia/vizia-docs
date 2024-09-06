@@ -818,7 +818,7 @@
             .unwrap();
 
         <span class="comment">// Build our window
-        </span><span class="prelude-val">Ok</span>(WinState {
+        </span><span class="prelude-val">Ok</span>(<span class="self">Self </span>{
             entity,
             gl_config,
             gl_context,
@@ -839,7 +839,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>.window
     }
 
-    <span class="kw">pub fn </span>make_current(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="kw">pub fn </span>make_current(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="self">self</span>.gl_context.make_current(<span class="kw-2">&amp;</span><span class="self">self</span>.gl_surface).unwrap();
     }
 
@@ -1159,7 +1159,7 @@
 
     <span class="kw">fn </span>min_inner_size&lt;S: Into&lt;WindowSize&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, size: <span class="kw">impl </span>Res&lt;<span class="prelude-ty">Option</span>&lt;S&gt;&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        <span class="kw">let </span>size = size.get(<span class="kw-2">&amp;</span><span class="self">self</span>).map(|size| size.into());
+        <span class="kw">let </span>size = size.get(<span class="kw-2">&amp;</span><span class="self">self</span>).map(S::into);
         <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
             win_state.window_description.min_inner_size = size;
         }
@@ -1169,7 +1169,7 @@
 
     <span class="kw">fn </span>max_inner_size&lt;S: Into&lt;WindowSize&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, size: <span class="kw">impl </span>Res&lt;<span class="prelude-ty">Option</span>&lt;S&gt;&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        <span class="kw">let </span>size = size.get(<span class="kw-2">&amp;</span><span class="self">self</span>).map(|size| size.into());
+        <span class="kw">let </span>size = size.get(<span class="kw-2">&amp;</span><span class="self">self</span>).map(S::into);
         <span class="kw">if let </span><span class="prelude-val">Some</span>(win_state) = <span class="self">self</span>.context().windows.get_mut(<span class="kw-2">&amp;</span>entity) {
             win_state.window_description.max_inner_size = size;
         }

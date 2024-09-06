@@ -200,14 +200,14 @@
 <span class="macro">impl_res_simple!</span>(SpinboxIcons);
 
 <span class="kw">impl </span>Spinbox {
-    <span class="kw">pub fn </span>new&lt;L&gt;(cx: <span class="kw-2">&amp;mut </span>Context, lens: L) -&gt; Handle&lt;Spinbox&gt;
+    <span class="kw">pub fn </span>new&lt;L&gt;(cx: <span class="kw-2">&amp;mut </span>Context, lens: L) -&gt; Handle&lt;<span class="self">Self</span>&gt;
     <span class="kw">where
         </span>L: Lens&lt;Target: Data + ToStringLocalized&gt;,
     {
         <span class="self">Self</span>::custom(cx, <span class="kw">move </span>|cx| Label::new(cx, lens))
     }
 
-    <span class="kw">pub fn </span>custom&lt;F, V&gt;(cx: <span class="kw-2">&amp;mut </span>Context, content: F) -&gt; Handle&lt;Spinbox&gt;
+    <span class="kw">pub fn </span>custom&lt;F, V&gt;(cx: <span class="kw-2">&amp;mut </span>Context, content: F) -&gt; Handle&lt;<span class="self">Self</span>&gt;
     <span class="kw">where
         </span>F: Fn(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;V&gt;,
         V: <span class="lifetime">'static </span>+ View,
@@ -219,13 +219,13 @@
             on_increment: <span class="prelude-val">None</span>,
         }
         .build(cx, <span class="kw">move </span>|cx| {
-            Binding::new(cx, Spinbox::orientation, <span class="kw">move </span>|cx, spinbox_kind| {
+            Binding::new(cx, <span class="self">Self</span>::orientation, <span class="kw">move </span>|cx, spinbox_kind| {
                 <span class="kw">match </span>spinbox_kind.get(cx) {
                     Orientation::Horizontal =&gt; {
                         Button::new(cx, |cx| {
                             Svg::new(
                                 cx,
-                                Spinbox::icons.map(|icons| <span class="kw">match </span>icons {
+                                <span class="self">Self</span>::icons.map(|icons| <span class="kw">match </span>icons {
                                     SpinboxIcons::PlusMinus =&gt; ICON_MINUS,
                                     SpinboxIcons::Chevrons =&gt; ICON_CHEVRON_LEFT,
                                 }),
@@ -240,7 +240,7 @@
                         Button::new(cx, |cx| {
                             Svg::new(
                                 cx,
-                                Spinbox::icons.map(|icons| <span class="kw">match </span>icons {
+                                <span class="self">Self</span>::icons.map(|icons| <span class="kw">match </span>icons {
                                     SpinboxIcons::PlusMinus =&gt; ICON_PLUS,
                                     SpinboxIcons::Chevrons =&gt; ICON_CHEVRON_UP,
                                 }),
@@ -253,13 +253,13 @@
                 }
             });
             (content)(cx).class(<span class="string">"spinbox-value"</span>);
-            Binding::new(cx, Spinbox::orientation, <span class="kw">move </span>|cx, spinbox_kind| {
+            Binding::new(cx, <span class="self">Self</span>::orientation, <span class="kw">move </span>|cx, spinbox_kind| {
                 <span class="kw">match </span>spinbox_kind.get(cx) {
                     Orientation::Horizontal =&gt; {
                         Button::new(cx, |cx| {
                             Svg::new(
                                 cx,
-                                Spinbox::icons.map(|icons| <span class="kw">match </span>icons {
+                                <span class="self">Self</span>::icons.map(|icons| <span class="kw">match </span>icons {
                                     SpinboxIcons::PlusMinus =&gt; ICON_PLUS,
                                     SpinboxIcons::Chevrons =&gt; ICON_CHEVRON_RIGHT,
                                 }),
@@ -274,7 +274,7 @@
                         Button::new(cx, |cx| {
                             Svg::new(
                                 cx,
-                                Spinbox::icons.map(|icons| <span class="kw">match </span>icons {
+                                <span class="self">Self</span>::icons.map(|icons| <span class="kw">match </span>icons {
                                     SpinboxIcons::PlusMinus =&gt; ICON_MINUS,
                                     SpinboxIcons::Chevrons =&gt; ICON_CHEVRON_DOWN,
                                 }),
@@ -287,8 +287,8 @@
                 }
             });
         })
-        .toggle_class(<span class="string">"horizontal"</span>, Spinbox::orientation.map(|o| o == <span class="kw-2">&amp;</span>Orientation::Horizontal))
-        .toggle_class(<span class="string">"vertical"</span>, Spinbox::orientation.map(|o| o == <span class="kw-2">&amp;</span>Orientation::Vertical))
+        .toggle_class(<span class="string">"horizontal"</span>, <span class="self">Self</span>::orientation.map(|o| o == <span class="kw-2">&amp;</span>Orientation::Horizontal))
+        .toggle_class(<span class="string">"vertical"</span>, <span class="self">Self</span>::orientation.map(|o| o == <span class="kw-2">&amp;</span>Orientation::Vertical))
         .navigable(<span class="bool-val">true</span>)
     }
 }

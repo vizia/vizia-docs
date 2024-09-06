@@ -402,7 +402,7 @@
 </span><span class="macro">macro_rules!</span> impl_res_simple {
     (<span class="macro-nonterminal">$t</span>:ty) =&gt; {
         <span class="kw">impl </span>ResGet&lt;<span class="macro-nonterminal">$t</span>&gt; <span class="kw">for </span><span class="macro-nonterminal">$t </span>{
-            <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="macro-nonterminal">$t</span>&gt;&gt; {
+            <span class="kw">fn </span>get_ref(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="macro-nonterminal">$t</span>&gt;&gt; {
                 <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
             }
 
@@ -461,7 +461,7 @@
     <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, L::Target&gt;&gt; {
         <span class="self">self</span>.view(
             cx.data()
-                .unwrap_or_else(|| <span class="macro">panic!</span>(<span class="string">"Failed to get data from context for lens: {:?}"</span>, <span class="self">self</span>)),
+                .unwrap_or_else(|| <span class="macro">panic!</span>(<span class="string">"Failed to get data from context for lens: {self:?}"</span>)),
         )
     }
 
@@ -532,7 +532,7 @@
 <span class="macro">impl_res_clone!</span>(FamilyOwned);
 <span class="macro">impl_res_simple!</span>(TextDecorationLine);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'i</span>&gt; ResGet&lt;FontFamily&lt;<span class="lifetime">'i</span>&gt;&gt; <span class="kw">for </span>FontFamily&lt;<span class="lifetime">'i</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'i</span>&gt; ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>FontFamily&lt;<span class="lifetime">'i</span>&gt; {
     <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
         <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
     }
@@ -542,9 +542,9 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'i</span>&gt; Res&lt;FontFamily&lt;<span class="lifetime">'i</span>&gt;&gt; <span class="kw">for </span>FontFamily&lt;<span class="lifetime">'i</span>&gt; {}
+<span class="kw">impl</span>&lt;<span class="lifetime">'i</span>&gt; Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>FontFamily&lt;<span class="lifetime">'i</span>&gt; {}
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'i</span>&gt; ResGet&lt;BackgroundImage&lt;<span class="lifetime">'i</span>&gt;&gt; <span class="kw">for </span>BackgroundImage&lt;<span class="lifetime">'i</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'i</span>&gt; ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>BackgroundImage&lt;<span class="lifetime">'i</span>&gt; {
     <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
         <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
     }
@@ -554,7 +554,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'i</span>&gt; Res&lt;BackgroundImage&lt;<span class="lifetime">'i</span>&gt;&gt; <span class="kw">for </span>BackgroundImage&lt;<span class="lifetime">'i</span>&gt; {}
+<span class="kw">impl</span>&lt;<span class="lifetime">'i</span>&gt; Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>BackgroundImage&lt;<span class="lifetime">'i</span>&gt; {}
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'s</span>&gt; ResGet&lt;<span class="kw-2">&amp;</span><span class="lifetime">'s </span>str&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'s </span>str {
     <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
@@ -580,7 +580,7 @@
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'s</span>&gt; Res&lt;<span class="kw-2">&amp;</span><span class="lifetime">'s </span>String&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'s </span>String {}
 
-<span class="kw">impl </span>ResGet&lt;String&gt; <span class="kw">for </span>String {
+<span class="kw">impl </span>ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>String {
     <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
         <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
     }
@@ -590,116 +590,9 @@
     }
 }
 
-<span class="kw">impl </span>Res&lt;String&gt; <span class="kw">for </span>String {}
+<span class="kw">impl </span>Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>String {}
 
-<span class="kw">impl </span>ResGet&lt;Transform&gt; <span class="kw">for </span>Transform {
-    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
-        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
-    }
-
-    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; Transform {
-        <span class="self">self</span>.clone()
-    }
-}
-
-<span class="kw">impl </span>Res&lt;Transform&gt; <span class="kw">for </span>Transform {}
-
-<span class="kw">impl </span>ResGet&lt;Color&gt; <span class="kw">for </span>Color {
-    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
-        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
-    }
-
-    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; Color {
-        <span class="kw-2">*</span><span class="self">self
-    </span>}
-}
-
-<span class="kw">impl </span>Res&lt;Color&gt; <span class="kw">for </span>Color {}
-
-<span class="kw">impl </span>ResGet&lt;LinearGradient&gt; <span class="kw">for </span>LinearGradient {
-    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
-        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
-    }
-
-    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; LinearGradient {
-        <span class="self">self</span>.clone()
-    }
-}
-
-<span class="kw">impl </span>Res&lt;LinearGradient&gt; <span class="kw">for </span>LinearGradient {}
-
-<span class="kw">impl </span>ResGet&lt;Units&gt; <span class="kw">for </span>Units {
-    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
-        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
-    }
-
-    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; Units {
-        <span class="kw-2">*</span><span class="self">self
-    </span>}
-}
-
-<span class="kw">impl </span>Res&lt;Units&gt; <span class="kw">for </span>Units {}
-
-<span class="kw">impl </span>ResGet&lt;Visibility&gt; <span class="kw">for </span>Visibility {
-    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
-        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
-    }
-
-    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; Visibility {
-        <span class="kw-2">*</span><span class="self">self
-    </span>}
-}
-
-<span class="kw">impl </span>Res&lt;Visibility&gt; <span class="kw">for </span>Visibility {}
-
-<span class="kw">impl </span>ResGet&lt;Display&gt; <span class="kw">for </span>Display {
-    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
-        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
-    }
-
-    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; Display {
-        <span class="kw-2">*</span><span class="self">self
-    </span>}
-}
-
-<span class="kw">impl </span>Res&lt;Display&gt; <span class="kw">for </span>Display {}
-
-<span class="kw">impl </span>ResGet&lt;LayoutType&gt; <span class="kw">for </span>LayoutType {
-    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
-        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
-    }
-
-    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; LayoutType {
-        <span class="kw-2">*</span><span class="self">self
-    </span>}
-}
-<span class="kw">impl </span>Res&lt;LayoutType&gt; <span class="kw">for </span>LayoutType {}
-
-<span class="kw">impl </span>ResGet&lt;PositionType&gt; <span class="kw">for </span>PositionType {
-    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
-        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
-    }
-
-    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; PositionType {
-        <span class="kw-2">*</span><span class="self">self
-    </span>}
-}
-
-<span class="kw">impl </span>Res&lt;PositionType&gt; <span class="kw">for </span>PositionType {}
-
-<span class="kw">impl</span>&lt;T: Clone + ResGet&lt;T&gt;&gt; ResGet&lt;<span class="prelude-ty">Option</span>&lt;T&gt;&gt; <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;T&gt; {
-    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
-        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
-    }
-
-    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
-        <span class="self">self</span>.clone()
-    }
-}
-
-<span class="kw">impl</span>&lt;T: Clone + ResGet&lt;T&gt;&gt; Res&lt;<span class="prelude-ty">Option</span>&lt;T&gt;&gt; <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;T&gt; {}
-
-<span class="kw">impl </span>ResGet&lt;Length&gt; <span class="kw">for </span>Length {
+<span class="kw">impl </span>ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Transform {
     <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
         <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
     }
@@ -709,21 +602,9 @@
     }
 }
 
-<span class="kw">impl </span>Res&lt;Length&gt; <span class="kw">for </span>Length {}
+<span class="kw">impl </span>Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Transform {}
 
-<span class="kw">impl </span>ResGet&lt;LengthOrPercentage&gt; <span class="kw">for </span>LengthOrPercentage {
-    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
-        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
-    }
-
-    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.clone()
-    }
-}
-
-<span class="kw">impl </span>Res&lt;LengthOrPercentage&gt; <span class="kw">for </span>LengthOrPercentage {}
-
-<span class="kw">impl </span>ResGet&lt;RGBA&gt; <span class="kw">for </span>RGBA {
+<span class="kw">impl </span>ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Color {
     <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
         <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
     }
@@ -733,19 +614,138 @@
     </span>}
 }
 
-<span class="kw">impl </span>Res&lt;RGBA&gt; <span class="kw">for </span>RGBA {}
+<span class="kw">impl </span>Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Color {}
 
-<span class="kw">impl</span>&lt;T: Clone + ResGet&lt;T&gt;&gt; ResGet&lt;Vec&lt;T&gt;&gt; <span class="kw">for </span>Vec&lt;T&gt; {
+<span class="kw">impl </span>ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>LinearGradient {
     <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
         <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
     }
 
-    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; Vec&lt;T&gt; {
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.clone()
     }
 }
 
-<span class="kw">impl</span>&lt;T: Clone + ResGet&lt;T&gt;&gt; Res&lt;Vec&lt;T&gt;&gt; <span class="kw">for </span>Vec&lt;T&gt; {}
+<span class="kw">impl </span>Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>LinearGradient {}
+
+<span class="kw">impl </span>ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Units {
+    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
+        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
+    }
+
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="self">Self </span>{
+        <span class="kw-2">*</span><span class="self">self
+    </span>}
+}
+
+<span class="kw">impl </span>Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Units {}
+
+<span class="kw">impl </span>ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Visibility {
+    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
+        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
+    }
+
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="self">Self </span>{
+        <span class="kw-2">*</span><span class="self">self
+    </span>}
+}
+
+<span class="kw">impl </span>Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Visibility {}
+
+<span class="kw">impl </span>ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Display {
+    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
+        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
+    }
+
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="self">Self </span>{
+        <span class="kw-2">*</span><span class="self">self
+    </span>}
+}
+
+<span class="kw">impl </span>Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Display {}
+
+<span class="kw">impl </span>ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>LayoutType {
+    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
+        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
+    }
+
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="self">Self </span>{
+        <span class="kw-2">*</span><span class="self">self
+    </span>}
+}
+<span class="kw">impl </span>Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>LayoutType {}
+
+<span class="kw">impl </span>ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>PositionType {
+    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
+        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
+    }
+
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="self">Self </span>{
+        <span class="kw-2">*</span><span class="self">self
+    </span>}
+}
+
+<span class="kw">impl </span>Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>PositionType {}
+
+<span class="kw">impl</span>&lt;T: Clone + ResGet&lt;T&gt;&gt; ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;T&gt; {
+    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
+        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
+    }
+
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.clone()
+    }
+}
+
+<span class="kw">impl</span>&lt;T: Clone + ResGet&lt;T&gt;&gt; Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;T&gt; {}
+
+<span class="kw">impl </span>ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Length {
+    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
+        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
+    }
+
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.clone()
+    }
+}
+
+<span class="kw">impl </span>Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Length {}
+
+<span class="kw">impl </span>ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>LengthOrPercentage {
+    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
+        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
+    }
+
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.clone()
+    }
+}
+
+<span class="kw">impl </span>Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>LengthOrPercentage {}
+
+<span class="kw">impl </span>ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>RGBA {
+    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
+        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
+    }
+
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="self">Self </span>{
+        <span class="kw-2">*</span><span class="self">self
+    </span>}
+}
+
+<span class="kw">impl </span>Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>RGBA {}
+
+<span class="kw">impl</span>&lt;T: Clone + ResGet&lt;T&gt;&gt; ResGet&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Vec&lt;T&gt; {
+    <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {
+        <span class="prelude-val">Some</span>(LensValue::Borrowed(<span class="self">self</span>))
+    }
+
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.clone()
+    }
+}
+
+<span class="kw">impl</span>&lt;T: Clone + ResGet&lt;T&gt;&gt; Res&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Vec&lt;T&gt; {}
 
 <span class="kw">impl</span>&lt;T: Clone + ResGet&lt;T&gt;, <span class="kw">const </span>N: usize&gt; ResGet&lt;[T; N]&gt; <span class="kw">for </span>[T; N] {
     <span class="kw">fn </span>get_ref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw">impl </span>DataContext) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>&gt;&gt; {

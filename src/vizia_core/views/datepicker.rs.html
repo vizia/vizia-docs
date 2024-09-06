@@ -431,7 +431,7 @@
         .build(cx, <span class="kw">move </span>|cx| {
             HStack::new(cx, |cx| {
                 Spinbox::custom(cx, |cx| {
-                    PickList::new(cx, Datepicker::months, Datepicker::selected_month, <span class="bool-val">false</span>)
+                    PickList::new(cx, <span class="self">Self</span>::months, <span class="self">Self</span>::selected_month, <span class="bool-val">false</span>)
                         .on_select(|ex, index| ex.emit(DatepickerEvent::SelectMonth(index)))
                         .width(Stretch(<span class="number">1.0</span>))
                 })
@@ -439,7 +439,7 @@
                 .on_increment(|ex| ex.emit(DatepickerEvent::IncrementMonth))
                 .on_decrement(|ex| ex.emit(DatepickerEvent::DecrementMonth));
                 Spinbox::custom(cx, |cx| {
-                    Textbox::new(cx, Datepicker::view_date.map(|date| date.year()))
+                    Textbox::new(cx, <span class="self">Self</span>::view_date.map(Datelike::year))
                         .on_edit(|ex, v| ex.emit(DatepickerEvent::SelectYear(v)))
                 })
                 .icons(SpinboxIcons::PlusMinus)
@@ -467,7 +467,7 @@
                         HStack::new(cx, |cx| {
                             <span class="kw">for </span>x <span class="kw">in </span><span class="number">0</span>..<span class="number">7 </span>{
                                 Label::new(cx, <span class="string">""</span>).bind(
-                                    Datepicker::view_date,
+                                    <span class="self">Self</span>::view_date,
                                     <span class="kw">move </span>|handle, view_date| {
                                         <span class="kw">let </span>view_date = view_date.get(<span class="kw-2">&amp;</span>handle);
 

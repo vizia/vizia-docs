@@ -395,9 +395,6 @@
 <a href="#395" id="395">395</a>
 <a href="#396" id="396">396</a>
 <a href="#397" id="397">397</a>
-<a href="#398" id="398">398</a>
-<a href="#399" id="399">399</a>
-<a href="#400" id="400">400</a>
 </pre></div><pre class="rust"><code><span class="kw">pub trait </span>NormalizedMap: <span class="lifetime">'static </span>+ Clone {
     <span class="kw">fn </span>normalized_to_display(<span class="kw-2">&amp;</span><span class="self">self</span>, normalized: f32) -&gt; String;
 
@@ -420,12 +417,12 @@
 <span class="kw">impl </span>DisplayDecimals {
     <span class="kw">pub fn </span>display_value(<span class="kw-2">&amp;</span><span class="self">self</span>, value: f32) -&gt; String {
         <span class="kw">match </span><span class="self">self </span>{
-            DisplayDecimals::Zero =&gt; <span class="macro">format!</span>(<span class="string">"{:.0}"</span>, value),
-            DisplayDecimals::One =&gt; <span class="macro">format!</span>(<span class="string">"{:.1}"</span>, value),
-            DisplayDecimals::Two =&gt; <span class="macro">format!</span>(<span class="string">"{:.2}"</span>, value),
-            DisplayDecimals::Three =&gt; <span class="macro">format!</span>(<span class="string">"{:.3}"</span>, value),
-            DisplayDecimals::Four =&gt; <span class="macro">format!</span>(<span class="string">"{:.4}"</span>, value),
-            DisplayDecimals::Five =&gt; <span class="macro">format!</span>(<span class="string">"{:.5}"</span>, value),
+            <span class="self">Self</span>::Zero =&gt; <span class="macro">format!</span>(<span class="string">"{value:.0}"</span>),
+            <span class="self">Self</span>::One =&gt; <span class="macro">format!</span>(<span class="string">"{value:.1}"</span>),
+            <span class="self">Self</span>::Two =&gt; <span class="macro">format!</span>(<span class="string">"{value:.2}"</span>),
+            <span class="self">Self</span>::Three =&gt; <span class="macro">format!</span>(<span class="string">"{value:.3}"</span>),
+            <span class="self">Self</span>::Four =&gt; <span class="macro">format!</span>(<span class="string">"{value:.4}"</span>),
+            <span class="self">Self</span>::Five =&gt; <span class="macro">format!</span>(<span class="string">"{value:.5}"</span>),
         }
     }
 }
@@ -448,11 +445,11 @@
         <span class="kw">let </span>map = |x: f32| -&gt; f32 { (x * (max - min)) + min };
 
         <span class="kw">match </span><span class="self">self </span>{
-            ValueScaling::Linear =&gt; map(normalized),
+            <span class="self">Self</span>::Linear =&gt; map(normalized),
 
-            ValueScaling::Power(exponent) =&gt; map(normalized.powf(<span class="kw-2">*</span>exponent)),
+            <span class="self">Self</span>::Power(exponent) =&gt; map(normalized.powf(<span class="kw-2">*</span>exponent)),
 
-            ValueScaling::Frequency =&gt; {
+            <span class="self">Self</span>::Frequency =&gt; {
                 <span class="kw">let </span>minl = min.log2();
                 <span class="kw">let </span>range = max.log2() - minl;
                 <span class="number">2.0f32</span>.powf((normalized * range) + minl)
@@ -470,11 +467,11 @@
         <span class="kw">let </span>unmap = |x: f32| -&gt; f32 { (x - min) / (max - min) };
 
         <span class="kw">match </span><span class="self">self </span>{
-            ValueScaling::Linear =&gt; unmap(value),
+            <span class="self">Self</span>::Linear =&gt; unmap(value),
 
-            ValueScaling::Power(exponent) =&gt; unmap(value).powf(<span class="number">1.0 </span>/ <span class="kw-2">*</span>exponent),
+            <span class="self">Self</span>::Power(exponent) =&gt; unmap(value).powf(<span class="number">1.0 </span>/ <span class="kw-2">*</span>exponent),
 
-            ValueScaling::Frequency =&gt; {
+            <span class="self">Self</span>::Frequency =&gt; {
                 <span class="kw">let </span>minl = min.log2();
                 <span class="kw">let </span>range = max.log2() - minl;
                 (value.log2() - minl) / range
@@ -625,10 +622,7 @@
 
 <span class="kw">impl </span>Default <span class="kw">for </span>FrequencyDisplayMode {
     <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-        FrequencyDisplayMode::HzThenKHz {
-            under_1k: DisplayDecimals::One,
-            over_1k: DisplayDecimals::Two,
-        }
+        <span class="self">Self</span>::HzThenKHz { under_1k: DisplayDecimals::One, over_1k: DisplayDecimals::Two }
     }
 }
 
@@ -779,7 +773,7 @@
             (display_map)(int)
         } <span class="kw">else </span>{
             <span class="comment">// Display the plain integer instead.
-            </span><span class="macro">format!</span>(<span class="string">"{}"</span>, int)
+            </span><span class="macro">format!</span>(<span class="string">"{int}"</span>)
         }
     }
 

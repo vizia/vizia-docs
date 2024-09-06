@@ -815,7 +815,7 @@
     </span><span class="kw">fn </span>class(<span class="kw-2">mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>entity = <span class="self">self</span>.entity();
         <span class="kw">if let </span><span class="prelude-val">Some</span>(class_list) = <span class="self">self</span>.context().style.classes.get_mut(entity) {
-            class_list.insert(name.to_string());
+            class_list.insert(name.to_owned());
         }
 
         <span class="self">self</span>.context().needs_restyle(entity);
@@ -1434,11 +1434,11 @@
 
 <span class="kw">impl </span>LinearGradientBuilder {
     <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
-        LinearGradientBuilder { direction: LineDirection::default(), stops: Vec::new() }
+        <span class="self">Self </span>{ direction: LineDirection::default(), stops: Vec::new() }
     }
 
     <span class="kw">pub fn </span>with_direction(direction: <span class="kw">impl </span>Into&lt;LineDirection&gt;) -&gt; <span class="self">Self </span>{
-        LinearGradientBuilder { direction: direction.into(), stops: Vec::new() }
+        <span class="self">Self </span>{ direction: direction.into(), stops: Vec::new() }
     }
 
     <span class="kw">fn </span>build(<span class="self">self</span>) -&gt; Gradient {

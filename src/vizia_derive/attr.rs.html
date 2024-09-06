@@ -265,8 +265,6 @@
 <a href="#265" id="265">265</a>
 <a href="#266" id="266">266</a>
 <a href="#267" id="267">267</a>
-<a href="#268" id="268">268</a>
-<a href="#269" id="269">269</a>
 </pre></div><pre class="rust"><code><span class="comment">// Adapted from Druid attr.rs
 
 // Copyright 2019 The Druid Authors.
@@ -317,7 +315,7 @@
 
 <span class="kw">impl </span>FieldIdent {
     <span class="kw">pub fn </span>unwrap_named(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; syn::Ident {
-        <span class="kw">if let </span>FieldIdent::Named(s) = <span class="self">self </span>{
+        <span class="kw">if let </span><span class="self">Self</span>::Named(s) = <span class="self">self </span>{
             syn::Ident::new(s, Span::call_site())
         } <span class="kw">else </span>{
             <span class="macro">panic!</span>(<span class="string">"Unwrap named called on unnamed FieldIdent"</span>);
@@ -361,7 +359,7 @@
             .map(|(i, field)| Field::&lt;DataAttr&gt;::parse_ast(field, i))
             .collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(Fields { kind, fields })
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ kind, fields })
     }
 }
 
@@ -378,7 +376,7 @@
             .map(|(i, field)| Field::&lt;LensAttrs&gt;::parse_ast(field, i))
             .collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(Fields { kind, fields })
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ kind, fields })
     }
 }
 
@@ -433,7 +431,7 @@
                 })<span class="question-mark">?</span>;
             }
         }
-        <span class="prelude-val">Ok</span>(Field { ident, ty, vis, attrs: data_attr })
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ ident, ty, vis, attrs: data_attr })
     }
 
     <span class="kw">pub fn </span>same_fn_path_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TokenStream {
@@ -496,7 +494,7 @@
                 })<span class="question-mark">?</span>;
             }
         }
-        <span class="prelude-val">Ok</span>(Field { ident, ty, vis, attrs: LensAttrs { ignore, lens_name_override } })
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ ident, ty, vis, attrs: LensAttrs { ignore, lens_name_override } })
     }
 }
 
@@ -517,9 +515,7 @@
 }
 
 <span class="kw">fn </span>parse_lit_into_expr_path(lit: <span class="kw-2">&amp;</span>syn::Lit) -&gt; <span class="prelude-ty">Result</span>&lt;ExprPath, Error&gt; {
-    <span class="kw">let </span>string = <span class="kw">if let </span>syn::Lit::Str(lit) = lit {
-        lit
-    } <span class="kw">else </span>{
+    <span class="kw">let </span>syn::Lit::Str(string) = lit <span class="kw">else </span>{
         <span class="kw">return </span><span class="prelude-val">Err</span>(Error::new(lit.span(), <span class="string">"expected str, found... something else"</span>));
     };
 

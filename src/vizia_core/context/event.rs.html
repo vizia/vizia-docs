@@ -1604,7 +1604,7 @@
 
     <span class="doccomment">/// Returns the [Entity] id associated with the given identifier.
     </span><span class="kw">pub fn </span>resolve_entity_identifier(<span class="kw-2">&amp;</span><span class="self">self</span>, id: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;Entity&gt; {
-        <span class="self">self</span>.entity_identifiers.get(id).cloned()
+        <span class="self">self</span>.entity_identifiers.get(id).copied()
     }
 
     <span class="doccomment">/// Returns the [Entity] id of the current view.
@@ -2005,7 +2005,7 @@
 
     <span class="doccomment">/// Returns true if the current view is disabled.
     </span><span class="kw">pub fn </span>is_disabled(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.style.disabled.get(<span class="self">self</span>.current()).cloned().unwrap_or_default()
+        <span class="self">self</span>.style.disabled.get(<span class="self">self</span>.current()).copied().unwrap_or_default()
     }
 
     <span class="doccomment">/// Returns true if the current view is checked.
@@ -2037,7 +2037,7 @@
     </span><span class="kw">pub fn </span>unlock_cursor_icon(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="kw-2">*</span><span class="self">self</span>.cursor_icon_locked = <span class="bool-val">false</span>;
         <span class="kw">let </span>hovered = <span class="kw-2">*</span><span class="self">self</span>.hovered;
-        <span class="kw">let </span>cursor = <span class="self">self</span>.style.cursor.get(hovered).cloned().unwrap_or_default();
+        <span class="kw">let </span>cursor = <span class="self">self</span>.style.cursor.get(hovered).copied().unwrap_or_default();
         <span class="self">self</span>.emit(WindowEvent::SetCursor(cursor));
     }
 
@@ -2082,13 +2082,13 @@
         <span class="kw">let </span>current = <span class="self">self</span>.current();
         <span class="kw">if let </span><span class="prelude-val">Some</span>(class_list) = <span class="self">self</span>.style.classes.get_mut(current) {
             <span class="kw">if </span>applied {
-                class_list.insert(class_name.to_string());
+                class_list.insert(class_name.to_owned());
             } <span class="kw">else </span>{
                 class_list.remove(class_name);
             }
         } <span class="kw">else if </span>applied {
             <span class="kw">let </span><span class="kw-2">mut </span>class_list = HashSet::new();
-            class_list.insert(class_name.to_string());
+            class_list.insert(class_name.to_owned());
             <span class="self">self</span>.style.classes.insert(current, class_list);
         }
 
@@ -2216,14 +2216,14 @@
     </span><span class="doccomment">/// Returns the background color of the view.
     ///
     /// Returns a transparent color if the view does not have a background color.
-    </span><span class="kw">pub fn </span>background_color(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; Color {
+    </span><span class="kw">pub fn </span>background_color(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Color {
         <span class="self">self</span>.style.background_color.get(<span class="self">self</span>.current).copied().unwrap_or_default()
     }
 
     <span class="comment">// Setters
 
     </span><span class="kw">pub fn </span>set_id(<span class="kw-2">&amp;mut </span><span class="self">self</span>, id: <span class="kw-2">&amp;</span>str) {
-        <span class="self">self</span>.style.ids.insert(<span class="self">self</span>.current, id.to_string())
+        <span class="self">self</span>.style.ids.insert(<span class="self">self</span>.current, id.to_owned())
     }
 
     <span class="comment">// Pseudoclass Setters
@@ -2345,7 +2345,7 @@
 
     </span><span class="doccomment">/// Sets the accessibility name of the view.
     </span><span class="kw">pub fn </span>set_name(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) {
-        <span class="self">self</span>.style.name.insert(<span class="self">self</span>.current, name.to_string());
+        <span class="self">self</span>.style.name.insert(<span class="self">self</span>.current, name.to_owned());
     }
 
     <span class="doccomment">/// Sets the accessibility role of the view.
@@ -2377,7 +2377,7 @@
 
     <span class="doccomment">/// Sets a text value used for accessbility for the current view.
     </span><span class="kw">pub fn </span>text_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) {
-        <span class="self">self</span>.style.text_value.insert(<span class="self">self</span>.current, text.to_string());
+        <span class="self">self</span>.style.text_value.insert(<span class="self">self</span>.current, text.to_owned());
     }
 
     <span class="doccomment">/// Sets a numeric value used for accessibility for the current view.
@@ -2667,7 +2667,7 @@
     </span>}
 
     <span class="doccomment">/// Returns true if the timer with the provided timer id is currently running.
-    </span><span class="kw">pub fn </span>timer_is_running(<span class="kw-2">&amp;mut </span><span class="self">self</span>, timer: Timer) -&gt; bool {
+    </span><span class="kw">pub fn </span>timer_is_running(<span class="kw-2">&amp;</span><span class="self">self</span>, timer: Timer) -&gt; bool {
         <span class="kw">for </span>timer_state <span class="kw">in </span><span class="self">self</span>.running_timers.iter() {
             <span class="kw">if </span>timer_state.id == timer {
                 <span class="kw">return </span><span class="bool-val">true</span>;

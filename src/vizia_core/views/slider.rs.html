@@ -734,7 +734,7 @@
             on_changing: <span class="prelude-val">None</span>,
         }
         .build(cx, <span class="kw">move </span>|cx| {
-            Binding::new(cx, <span class="self">Self</span>::internal, <span class="kw">move </span>|cx, slider_data| {
+            Binding::new(cx, Slider::&lt;L&gt;::internal, <span class="kw">move </span>|cx, slider_data| {
                 ZStack::new(cx, <span class="kw">move </span>|cx| {
                     <span class="kw">let </span>slider_data = slider_data.get(cx);
                     <span class="kw">let </span>thumb_size = slider_data.thumb_size;
@@ -802,7 +802,7 @@
         .numeric_value(lens.map(|val| (<span class="kw-2">*</span>val <span class="kw">as </span>f64 * <span class="number">100.0</span>).round() / <span class="number">100.0</span>))
         .text_value(lens.map(|val| {
             <span class="kw">let </span>v = (<span class="kw-2">*</span>val <span class="kw">as </span>f64 * <span class="number">100.0</span>).round() / <span class="number">100.0</span>;
-            <span class="macro">format!</span>(<span class="string">"{v}"</span>)
+            <span class="macro">format!</span>(<span class="string">"{}"</span>, v)
         }))
         .navigable(<span class="bool-val">true</span>)
     }
@@ -1148,7 +1148,7 @@
         <span class="self">Self </span>{ on_changing: <span class="prelude-val">None </span>}
             .build(cx, <span class="kw">move </span>|cx| {
                 Binding::new(cx, lens, <span class="kw">move </span>|cx, lens| {
-                    Textbox::new(cx, lens.map(|v| <span class="macro">format!</span>(<span class="string">"{v:.2}"</span>))).on_submit(|cx, txt, <span class="kw">_</span>| {
+                    Textbox::new(cx, lens.map(|v| <span class="macro">format!</span>(<span class="string">"{:.2}"</span>, v))).on_submit(|cx, txt, <span class="kw">_</span>| {
                         <span class="kw">if let </span><span class="prelude-val">Ok</span>(val) = txt.parse() {
                             cx.emit(NamedSliderEvent::Change(val));
                         }

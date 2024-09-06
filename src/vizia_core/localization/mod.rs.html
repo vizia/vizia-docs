@@ -346,6 +346,8 @@
 <a href="#346" id="346">346</a>
 <a href="#347" id="347">347</a>
 <a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Provides types for adapting an application to a particular language or regional peculiarities.
 //!
 //! # Language Translation
@@ -526,11 +528,7 @@
     /// })
     /// .run();
     </span><span class="kw">pub fn </span>new(key: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            key: key.to_owned(),
-            args: HashMap::new(),
-            map: Rc::new(std::string::ToString::to_string),
-        }
+        <span class="self">Self </span>{ key: key.to_owned(), args: HashMap::new(), map: Rc::new(|s| s.to_string()) }
     }
 
     <span class="doccomment">/// Sets a mapping function to apply to the translated text.
@@ -599,12 +597,15 @@
         <span class="kw">let </span>cx = cx.as_context().expect(<span class="string">"Failed to get context"</span>);
         <span class="kw">let </span>locale = <span class="kw-2">&amp;</span>cx.environment().locale;
         <span class="kw">let </span>bundle = cx.resource_manager.current_translation(locale);
-
-        <span class="kw">let </span><span class="prelude-val">Some</span>(message) = bundle.get_message(<span class="kw-2">&amp;</span><span class="self">self</span>.key) <span class="kw">else </span>{
+        <span class="kw">let </span>message = <span class="kw">if let </span><span class="prelude-val">Some</span>(msg) = bundle.get_message(<span class="kw-2">&amp;</span><span class="self">self</span>.key) {
+            msg
+        } <span class="kw">else </span>{
             <span class="kw">return </span>(<span class="self">self</span>.map)(<span class="kw-2">&amp;</span><span class="self">self</span>.key);
         };
 
-        <span class="kw">let </span><span class="prelude-val">Some</span>(value) = message.value() <span class="kw">else </span>{
+        <span class="kw">let </span>value = <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = message.value() {
+            value
+        } <span class="kw">else </span>{
             <span class="kw">return </span>(<span class="self">self</span>.map)(<span class="kw-2">&amp;</span><span class="self">self</span>.key);
         };
 
@@ -615,7 +616,7 @@
         <span class="kw">if </span>err.is_empty() {
             (<span class="self">self</span>.map)(<span class="kw-2">&amp;</span>res)
         } <span class="kw">else </span>{
-            <span class="macro">format!</span>(<span class="string">"{res} {{ERROR: {err:?}}}"</span>)
+            <span class="macro">format!</span>(<span class="string">"{} {{ERROR: {:?}}}"</span>, res, err)
         }
     }
 }
@@ -623,7 +624,7 @@
 <span class="kw">impl </span>Res&lt;String&gt; <span class="kw">for </span>Localized {
     <span class="kw">fn </span>set_or_bind&lt;F&gt;(<span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context, entity: Entity, closure: F)
     <span class="kw">where
-        </span>F: <span class="lifetime">'static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, <span class="self">Self</span>),
+        </span>F: <span class="lifetime">'static </span>+ Clone + Fn(<span class="kw-2">&amp;mut </span>Context, Localized),
     {
         <span class="kw">let </span>self2 = <span class="self">self</span>.clone();
         Binding::new(cx, Environment::locale, <span class="kw">move </span>|cx, <span class="kw">_</span>| {
@@ -672,13 +673,16 @@
 
         <span class="kw">let </span>locale = <span class="kw-2">&amp;</span>cx.environment().locale;
         <span class="kw">let </span>bundle = cx.resource_manager.current_translation(locale);
-
-        <span class="kw">let </span><span class="prelude-val">Some</span>(message) = bundle.get_message(<span class="kw-2">&amp;</span><span class="self">self</span>.key) <span class="kw">else </span>{
+        <span class="kw">let </span>message = <span class="kw">if let </span><span class="prelude-val">Some</span>(msg) = bundle.get_message(<span class="kw-2">&amp;</span><span class="self">self</span>.key) {
+            msg
+        } <span class="kw">else </span>{
             <span class="comment">// Warn here of missing key
             </span><span class="kw">return </span>(<span class="self">self</span>.map)(<span class="kw-2">&amp;</span><span class="self">self</span>.key);
         };
 
-        <span class="kw">let </span><span class="prelude-val">Some</span>(value) = message.value() <span class="kw">else </span>{
+        <span class="kw">let </span>value = <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = message.value() {
+            value
+        } <span class="kw">else </span>{
             <span class="comment">// Warn here of missing value
             </span><span class="kw">return </span>(<span class="self">self</span>.map)(<span class="kw-2">&amp;</span><span class="self">self</span>.key);
         };
@@ -690,7 +694,7 @@
         <span class="kw">if </span>err.is_empty() {
             (<span class="self">self</span>.map)(<span class="kw-2">&amp;</span>res)
         } <span class="kw">else </span>{
-            <span class="macro">format!</span>(<span class="string">"{res} {{ERROR: {err:?}}}"</span>)
+            <span class="macro">format!</span>(<span class="string">"{} {{ERROR: {:?}}}"</span>, res, err)
         }
     }
 }

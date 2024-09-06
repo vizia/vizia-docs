@@ -285,6 +285,9 @@
 <a href="#285" id="285">285</a>
 <a href="#286" id="286">286</a>
 <a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 
 <span class="kw">use </span>skia_safe::Surface;
@@ -306,7 +309,11 @@
     }
 
     <span class="doccomment">/// Helper function for mutating the state of a window.
-    </span><span class="kw">pub fn </span>mutate_window&lt;W: Any, F: Fn(<span class="kw-2">&amp;mut </span><span class="self">Self</span>, <span class="kw-2">&amp;mut </span>W)&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, window_entity: Entity, f: F) {
+    </span><span class="kw">pub fn </span>mutate_window&lt;W: Any, F: Fn(<span class="kw-2">&amp;mut </span>BackendContext, <span class="kw-2">&amp;mut </span>W)&gt;(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        window_entity: Entity,
+        f: F,
+    ) {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>window_event_handler) = <span class="self">self</span>.<span class="number">0</span>.views.remove(<span class="kw-2">&amp;</span>window_entity) {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(window) = window_event_handler.downcast_mut::&lt;W&gt;() {
                 f(<span class="self">self</span>, window);
@@ -456,10 +463,9 @@
     <span class="doccomment">/// You should not call this method unless you are writing a windowing backend, in which case
     /// you should consult the existing windowing backends for usage information.
     </span><span class="kw">pub fn </span>set_event_proxy(<span class="kw-2">&amp;mut </span><span class="self">self</span>, proxy: Box&lt;<span class="kw">dyn </span>EventProxy&gt;) {
-        <span class="macro">assert!</span>(
-            <span class="self">self</span>.<span class="number">0</span>.event_proxy.is_none(),
-            <span class="string">"Set the event proxy twice. This should never happen."
-        </span>);
+        <span class="kw">if </span><span class="self">self</span>.<span class="number">0</span>.event_proxy.is_some() {
+            <span class="macro">panic!</span>(<span class="string">"Set the event proxy twice. This should never happen."</span>);
+        }
 
         <span class="self">self</span>.<span class="number">0</span>.event_proxy = <span class="prelude-val">Some</span>(proxy);
     }

@@ -1250,7 +1250,7 @@
 };
 <span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::f32::consts::SQRT_2;
-<span class="kw">use </span>vizia_style::{Length, LengthPercentageOrAuto};
+<span class="kw">use </span>vizia_style::LengthPercentageOrAuto;
 
 <span class="kw">use </span>hashbrown::HashMap;
 
@@ -1884,7 +1884,7 @@
     }
 
     <span class="doccomment">/// Draw background color or background image (including gradients) for the current view.
-    </span><span class="kw">pub fn </span>draw_background(<span class="kw-2">&amp;</span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
+    </span><span class="kw">pub fn </span>draw_background(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
         <span class="kw">let </span>path = <span class="self">self</span>.build_path(<span class="self">self</span>.bounds(), (<span class="number">0.0</span>, <span class="number">0.0</span>));
         <span class="kw">let </span>background_color = <span class="self">self</span>.background_color();
         <span class="kw">if </span>background_color.a() != <span class="number">0 </span>{
@@ -1903,7 +1903,7 @@
     }
 
     <span class="doccomment">/// Draw the border of the current view.
-    </span><span class="kw">pub fn </span>draw_border(<span class="kw-2">&amp;</span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
+    </span><span class="kw">pub fn </span>draw_border(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
         <span class="kw">let </span>border_color = <span class="self">self</span>.border_color();
         <span class="kw">let </span>border_width = <span class="self">self</span>.border_width();
         <span class="kw">let </span>border_style = <span class="self">self</span>.border_style();
@@ -1937,7 +1937,7 @@
     }
 
     <span class="doccomment">/// Draw the outline of the current view.
-    </span><span class="kw">pub fn </span>draw_outline(<span class="kw-2">&amp;</span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
+    </span><span class="kw">pub fn </span>draw_outline(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
         <span class="kw">let </span>outline_width = <span class="self">self</span>.outline_width();
         <span class="kw">let </span>outline_color = <span class="self">self</span>.outline_color();
 
@@ -1962,7 +1962,7 @@
     }
 
     <span class="doccomment">/// Draw shadows for the current view.
-    </span><span class="kw">pub fn </span>draw_shadows(<span class="kw-2">&amp;</span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
+    </span><span class="kw">pub fn </span>draw_shadows(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(shadows) = <span class="self">self</span>.shadows() {
             <span class="kw">if </span>shadows.is_empty() {
                 <span class="kw">return</span>;
@@ -1978,11 +1978,11 @@
                 <span class="kw">let </span>shadow_x_offset = shadow.x_offset.to_px().unwrap_or(<span class="number">0.0</span>) * <span class="self">self</span>.scale_factor();
                 <span class="kw">let </span>shadow_y_offset = shadow.y_offset.to_px().unwrap_or(<span class="number">0.0</span>) * <span class="self">self</span>.scale_factor();
                 <span class="kw">let </span>spread_radius =
-                    shadow.spread_radius.as_ref().and_then(Length::to_px).unwrap_or(<span class="number">0.0</span>)
+                    shadow.spread_radius.as_ref().and_then(|l| l.to_px()).unwrap_or(<span class="number">0.0</span>)
                         * <span class="self">self</span>.scale_factor();
 
                 <span class="kw">let </span>blur_radius =
-                    shadow.blur_radius.as_ref().and_then(Length::to_px).unwrap_or(<span class="number">0.0</span>);
+                    shadow.blur_radius.as_ref().and_then(|br| br.to_px()).unwrap_or(<span class="number">0.0</span>);
 
                 <span class="kw">if </span>shadow_color.a() == <span class="number">0
                     </span>|| (shadow_x_offset == <span class="number">0.0
@@ -2030,7 +2030,7 @@
     }
 
     <span class="doccomment">/// Draw background images (including gradients) for the current view.
-    </span><span class="kw">fn </span>draw_background_images(<span class="kw-2">&amp;</span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas, path: <span class="kw-2">&amp;</span>Path) {
+    </span><span class="kw">fn </span>draw_background_images(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas, path: <span class="kw-2">&amp;</span>Path) {
         <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(images) = <span class="self">self</span>.background_images() {
@@ -2352,7 +2352,7 @@
     }
 
     <span class="doccomment">/// Draw any text for the current view.
-    </span><span class="kw">pub fn </span>draw_text(<span class="kw-2">&amp;</span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
+    </span><span class="kw">pub fn </span>draw_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(paragraph) = <span class="self">self</span>.text_context.text_paragraphs.get(<span class="self">self</span>.current) {
             <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
 

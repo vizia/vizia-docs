@@ -179,11 +179,11 @@
                             <span class="kw">let </span>l = lens.idx(index);
                             <span class="kw">let </span>builder = (content2)(cx, l).header;
                             TabHeader::new(cx, index, builder)
-                                .bind(<span class="self">Self</span>::selected_index, <span class="kw">move </span>|handle, selected_index| {
+                                .bind(TabView::selected_index, <span class="kw">move </span>|handle, selected_index| {
                                     <span class="kw">let </span>selected_index = selected_index.get(handle.cx);
                                     handle.checked(selected_index == index);
                                 })
-                                .toggle_class(<span class="string">"vertical"</span>, <span class="self">Self</span>::is_vertical);
+                                .toggle_class(<span class="string">"vertical"</span>, TabView::is_vertical);
                         }
                     })
                     <span class="comment">//})
@@ -192,13 +192,13 @@
                 </span>})
                 .class(<span class="string">"tabview-header"</span>)
                 .z_index(<span class="number">1</span>)
-                .toggle_class(<span class="string">"vertical"</span>, <span class="self">Self</span>::is_vertical);
+                .toggle_class(<span class="string">"vertical"</span>, TabView::is_vertical);
 
-                Divider::new(cx).toggle_class(<span class="string">"vertical"</span>, <span class="self">Self</span>::is_vertical);
+                Divider::new(cx).toggle_class(<span class="string">"vertical"</span>, TabView::is_vertical);
 
                 <span class="comment">// Tab content
                 </span>VStack::new(cx, |cx| {
-                    Binding::new(cx, <span class="self">Self</span>::selected_index, <span class="kw">move </span>|cx, selected| {
+                    Binding::new(cx, TabView::selected_index, <span class="kw">move </span>|cx, selected| {
                         <span class="kw">let </span>selected = selected.get(cx);
                         <span class="kw">let </span>l = lens.idx(selected);
                         ((content)(cx, l).content)(cx);
@@ -207,7 +207,7 @@
                 .overflow(Overflow::Hidden)
                 .class(<span class="string">"tabview-content-wrapper"</span>);
             })
-            .toggle_class(<span class="string">"vertical"</span>, <span class="self">Self</span>::is_vertical)
+            .toggle_class(<span class="string">"vertical"</span>, TabView::is_vertical)
     }
 }
 

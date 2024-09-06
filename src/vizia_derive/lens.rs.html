@@ -447,6 +447,12 @@
 <a href="#447" id="447">447</a>
 <a href="#448" id="448">448</a>
 <a href="#449" id="449">449</a>
+<a href="#450" id="450">450</a>
+<a href="#451" id="451">451</a>
+<a href="#452" id="452">452</a>
+<a href="#453" id="453">453</a>
+<a href="#454" id="454">454</a>
+<a href="#455" id="455">455</a>
 </pre></div><pre class="rust"><code><span class="comment">// Adapted from Druid lens.rs
 
 // Copyright 2019 The Druid Authors.
@@ -546,13 +552,17 @@
     </span><span class="kw">let </span>defs = fields.iter().filter(|f| !f.attrs.ignore).map(|f| {
         <span class="kw">let </span>field_name = <span class="kw-2">&amp;</span>f.ident.unwrap_named();
         <span class="kw">let </span>struct_docs = <span class="macro">format!</span>(
-            <span class="string">"Lens for the field `{field_name}` on [`{struct_type}`](super::{struct_type})."
-        </span>);
+            <span class="string">"Lens for the field `{field}` on [`{ty}`](super::{ty})."</span>,
+            field = field_name,
+            ty = struct_type,
+        );
 
         <span class="kw">let </span>fn_docs = <span class="macro">format!</span>(
-            <span class="string">"Creates a new lens for the field `{field_name}` on [`{struct_type}`](super::{struct_type}). \
-            Use [`{struct_type}::{field_name}`](super::{struct_type}::{field_name}) instead."
-        </span>);
+            <span class="string">"Creates a new lens for the field `{field}` on [`{ty}`](super::{ty}). \
+            Use [`{ty}::{field}`](super::{ty}::{field}) instead."</span>,
+            field = field_name,
+            ty = struct_type,
+        );
 
         <span class="macro">quote!</span> {
             <span class="attr">#[doc = #struct_docs]
@@ -638,8 +648,8 @@
         }
     });
 
-    <span class="kw">let </span>mod_docs = <span class="macro">format!</span>(<span class="string">"Derived lenses for [`{struct_type}`]."</span>);
-    <span class="kw">let </span>root_docs = <span class="macro">format!</span>(<span class="string">"Lens for the whole [`{struct_type}`](super::{struct_type}) struct."</span>);
+    <span class="kw">let </span>mod_docs = <span class="macro">format!</span>(<span class="string">"Derived lenses for [`{}`]."</span>, struct_type);
+    <span class="kw">let </span>root_docs = <span class="macro">format!</span>(<span class="string">"Lens for the whole [`{ty}`](super::{ty}) struct."</span>, ty = struct_type);
     <span class="comment">//let lens_docs = format!("# Lenses for [`{ty}`](super::{ty})", ty = struct_type);
 
     </span><span class="kw">let </span>expanded = <span class="macro">quote!</span> {
@@ -759,7 +769,9 @@
     </span><span class="kw">let </span>module_vis = <span class="kw-2">&amp;</span>input.vis;
     <span class="kw">let </span>struct_vis = increase_visibility(module_vis);
 
-    <span class="kw">let </span>syn::Data::Enum(syn::DataEnum { variants, .. }) = <span class="kw-2">&amp;</span>input.data <span class="kw">else </span>{
+    <span class="kw">let </span>variants = <span class="kw">if let </span>syn::Data::Enum(syn::DataEnum { variants, .. }) = <span class="kw-2">&amp;</span>input.data {
+        variants
+    } <span class="kw">else </span>{
         <span class="macro">panic!</span>(<span class="string">"I don't know what this case being triggered means. Please open an issue!"</span>)
     };
 
@@ -776,8 +788,9 @@
             <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         })
         .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-
-    <span class="macro">assert!</span>(!usable_variants.is_empty(), <span class="string">"This enum has no variants which can have Lenses built. A valid variant has exactly one unnamed field. If you think this is unreasonable, please work on https://github.com/rust-lang/rfcs/pull/2593"</span>);
+    <span class="kw">if </span>usable_variants.is_empty() {
+        <span class="macro">panic!</span>(<span class="string">"This enum has no variants which can have Lenses built. A valid variant has exactly one unnamed field. If you think this is unreasonable, please work on https://github.com/rust-lang/rfcs/pull/2593"</span>)
+    }
 
     <span class="kw">let </span>twizzled_name = <span class="kw">if </span>is_camel_case(<span class="kw-2">&amp;</span>enum_type.to_string()) {
         <span class="kw">let </span>temp_name = <span class="macro">format!</span>(<span class="string">"{}_derived_lenses"</span>, to_snake_case(<span class="kw-2">&amp;</span>enum_type.to_string()));
@@ -789,10 +802,9 @@
         ));
     };
 
-    <span class="macro">assert!</span>(
-        input.generics.params.is_empty(),
-        <span class="string">"Lens implementations can only be derived from non-generic enums (for now)"
-    </span>);
+    <span class="kw">if </span>!input.generics.params.is_empty() {
+        <span class="macro">panic!</span>(<span class="string">"Lens implementations can only be derived from non-generic enums (for now)"</span>);
+    }
 
     <span class="kw">let </span>defs = usable_variants.iter().map(|(variant_name, <span class="kw">_</span>)| {
         <span class="macro">quote!</span> {
@@ -815,7 +827,7 @@
     });
 
     <span class="kw">let </span>impls = usable_variants.iter().map(|(variant_name, variant_type)| {
-        <span class="kw">let </span>name = <span class="macro">format!</span>(<span class="string">"{enum_type}:{variant_name}"</span>);
+        <span class="kw">let </span>name = <span class="macro">format!</span>(<span class="string">"{}:{}"</span>, enum_type, variant_name);
         <span class="macro">quote!</span> {
             <span class="kw">impl </span>::vizia::prelude::Lens <span class="kw">for </span>#twizzled_name::#variant_name {
                 <span class="kw">type </span>Source = #enum_type;

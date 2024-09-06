@@ -810,7 +810,7 @@
     }
 
     <span class="kw">fn </span>map&lt;O: <span class="lifetime">'static</span>, F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>::Target) -&gt; O&gt;(<span class="self">self</span>, map: F) -&gt; Map&lt;<span class="self">Self</span>, O&gt; {
-        <span class="kw">let </span>id = MAP_MANAGER.with_borrow_mut(vizia_id::IdManager::create);
+        <span class="kw">let </span>id = MAP_MANAGER.with_borrow_mut(|f| f.create());
         <span class="kw">let </span>entity = CURRENT.with_borrow(|f| <span class="kw-2">*</span>f);
         MAPS.with_borrow_mut(|f| {
             f.insert(id, (entity, Box::new(MapState { closure: Rc::new(map) })))
@@ -819,7 +819,7 @@
     }
 
     <span class="kw">fn </span>map_ref&lt;O: <span class="lifetime">'static</span>, F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>::Target) -&gt; <span class="kw-2">&amp;</span>O&gt;(<span class="self">self</span>, map: F) -&gt; MapRef&lt;<span class="self">Self</span>, O&gt; {
-        <span class="kw">let </span>id = MAP_MANAGER.with_borrow_mut(vizia_id::IdManager::create);
+        <span class="kw">let </span>id = MAP_MANAGER.with_borrow_mut(|f| f.create());
         <span class="kw">let </span>entity = CURRENT.with_borrow(|f| <span class="kw-2">*</span>f);
         MAPS.with_borrow_mut(|f| {
             f.insert(id, (entity, Box::new(MapRefState { closure: Rc::new(map) })))
@@ -1087,7 +1087,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; StaticLens&lt;T&gt; {
     <span class="kw">pub fn </span>new(data: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>T) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{ data }
+        StaticLens { data }
     }
 }
 

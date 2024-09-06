@@ -2113,8 +2113,8 @@
 }
 
 <span class="kw">impl </span>Default <span class="kw">for </span>Abilities {
-    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>::HOVERABLE
+    <span class="kw">fn </span>default() -&gt; Abilities {
+        Abilities::HOVERABLE
     }
 }
 
@@ -2130,7 +2130,7 @@
 
 <span class="kw">impl </span>Default <span class="kw">for </span>SystemFlags {
     <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>::all()
+        SystemFlags::all()
     }
 }
 
@@ -2149,14 +2149,14 @@
 <span class="kw">impl </span>AsRef&lt;str&gt; <span class="kw">for </span>FamilyOwned {
     <span class="kw">fn </span>as_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
         <span class="kw">match </span><span class="self">self </span>{
-            <span class="self">Self</span>::Generic(generic) =&gt; <span class="kw">match </span>generic {
+            FamilyOwned::Generic(generic) =&gt; <span class="kw">match </span>generic {
                 GenericFontFamily::Serif =&gt; <span class="string">"serif"</span>,
                 GenericFontFamily::SansSerif =&gt; <span class="string">"sans-serif"</span>,
                 GenericFontFamily::Cursive =&gt; <span class="macro">todo!</span>(),
                 GenericFontFamily::Fantasy =&gt; <span class="macro">todo!</span>(),
                 GenericFontFamily::Monospace =&gt; <span class="string">"Cascadia Mono"</span>,
             },
-            <span class="self">Self</span>::Named(family) =&gt; family.as_str(),
+            FamilyOwned::Named(family) =&gt; family.as_str(),
         }
     }
 }

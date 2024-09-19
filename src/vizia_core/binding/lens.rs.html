@@ -694,7 +694,6 @@
 <a href="#694" id="694">694</a>
 <a href="#695" id="695">695</a>
 <a href="#696" id="696">696</a>
-<a href="#697" id="697">697</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::TypeId;
 <span class="kw">use </span>std::borrow::Borrow;
 <span class="kw">use </span>std::fmt::{Debug, Formatter};
@@ -909,22 +908,21 @@
     </span>}
 }
 
-<span class="kw">impl</span>&lt;L: Lens, O: <span class="lifetime">'static</span>&gt; Lens <span class="kw">for </span>MapRef&lt;L, O&gt; {
+<span class="kw">impl</span>&lt;L: Lens, O: <span class="lifetime">'static </span>+ Clone&gt; Lens <span class="kw">for </span>MapRef&lt;L, O&gt; {
     <span class="kw">type </span>Source = L::Source;
     <span class="kw">type </span>Target = O;
 
     <span class="kw">fn </span>view&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>::Source) -&gt; <span class="prelude-ty">Option</span>&lt;LensValue&lt;<span class="lifetime">'a</span>, <span class="self">Self</span>::Target&gt;&gt; {
-        <span class="kw">let </span>LensValue::Borrowed(target) = <span class="self">self</span>.lens.view(source)<span class="question-mark">? </span><span class="kw">else </span>{
-            <span class="macro">unreachable!</span>();
-        };
-
         <span class="kw">let </span>closure = MAPS.with_borrow(|f| {
             <span class="kw">let </span>(<span class="kw">_</span>, any) = f.get(<span class="kw-2">&amp;</span><span class="self">self</span>.id)<span class="question-mark">?</span>;
             <span class="kw">let </span>MapRefState { closure } = any.downcast_ref()<span class="question-mark">?</span>;
             <span class="prelude-val">Some</span>(closure.clone())
         })<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Some</span>(LensValue::Borrowed(closure(target)))
+        <span class="kw">match </span><span class="self">self</span>.lens.view(source)<span class="question-mark">? </span>{
+            LensValue::Borrowed(target) =&gt; <span class="prelude-val">Some</span>(LensValue::Borrowed(closure(target))),
+            LensValue::Owned(target) =&gt; <span class="prelude-val">Some</span>(LensValue::Owned(closure(<span class="kw-2">&amp;</span>target).clone())),
+        }
     }
 }
 

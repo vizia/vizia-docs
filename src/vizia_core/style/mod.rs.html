@@ -1994,6 +1994,7 @@
 <a href="#1994" id="1994">1994</a>
 <a href="#1995" id="1995">1995</a>
 <a href="#1996" id="1996">1996</a>
+<a href="#1997" id="1997">1997</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Styling determines the appearance of a view.
 //!
 //! # Styling Views
@@ -2844,8 +2845,7 @@
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_theme(<span class="kw-2">&amp;mut </span><span class="self">self</span>, stylesheet: <span class="kw-2">&amp;</span>str) {
-        <span class="kw">if let </span><span class="prelude-val">Ok</span>(stylesheet) = StyleSheet::parse(<span class="string">"test.css"</span>, stylesheet, ParserOptions::default())
-        {
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(stylesheet) = StyleSheet::parse(stylesheet, ParserOptions::new()) {
             <span class="kw">let </span>rules = stylesheet.rules.<span class="number">0</span>;
 
             <span class="kw">for </span>rule <span class="kw">in </span>rules {
@@ -2901,6 +2901,8 @@
                     <span class="kw">_ </span>=&gt; {}
                 }
             }
+        } <span class="kw">else </span>{
+            <span class="macro">println!</span>(<span class="string">"Failed to parse stylesheet"</span>);
         }
     }
 

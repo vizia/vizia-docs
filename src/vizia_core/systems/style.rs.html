@@ -862,17 +862,38 @@
 <a href="#862" id="862">862</a>
 <a href="#863" id="863">863</a>
 <a href="#864" id="864">864</a>
+<a href="#865" id="865">865</a>
+<a href="#866" id="866">866</a>
+<a href="#867" id="867">867</a>
+<a href="#868" id="868">868</a>
+<a href="#869" id="869">869</a>
+<a href="#870" id="870">870</a>
+<a href="#871" id="871">871</a>
+<a href="#872" id="872">872</a>
+<a href="#873" id="873">873</a>
+<a href="#874" id="874">874</a>
+<a href="#875" id="875">875</a>
+<a href="#876" id="876">876</a>
+<a href="#877" id="877">877</a>
+<a href="#878" id="878">878</a>
+<a href="#879" id="879">879</a>
+<a href="#880" id="880">880</a>
+<a href="#881" id="881">881</a>
+<a href="#882" id="882">882</a>
+<a href="#883" id="883">883</a>
+<a href="#884" id="884">884</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{events::ViewHandler, prelude::<span class="kw-2">*</span>};
 <span class="kw">use </span>hashbrown::HashMap;
 <span class="kw">use </span>vizia_storage::{LayoutParentIterator, TreeBreadthIterator};
 <span class="kw">use </span>vizia_style::{
-    matches_selector_list,
+    matches_selector,
     selectors::{
         attr::{AttrSelectorOperation, CaseSensitivity, NamespaceConstraint},
-        parser::Component,
-        SelectorImpl,
+        context::{MatchingForInvalidation, NeedsSelectorFlags, SelectorCaches},
+        matching::ElementSelectorFlags,
+        parser::{Component, NthType},
+        OpaqueElement, SelectorImpl,
     },
-    selectors::{matching::ElementSelectorFlags, OpaqueElement},
     Element, MatchingContext, MatchingMode, PseudoClass, QuirksMode, SelectorIdent, Selectors,
 };
 
@@ -1034,15 +1055,11 @@
         <span class="bool-val">false
     </span>}
 
-    <span class="kw">fn </span>match_non_ts_pseudo_class&lt;F&gt;(
+    <span class="kw">fn </span>match_non_ts_pseudo_class(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         pc: <span class="kw-2">&amp;</span>&lt;<span class="self">Self</span>::Impl <span class="kw">as </span>SelectorImpl&gt;::NonTSPseudoClass,
         _context: <span class="kw-2">&amp;mut </span>MatchingContext&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>::Impl&gt;,
-        _flags_setter: <span class="kw-2">&amp;mut </span>F,
-    ) -&gt; bool
-    <span class="kw">where
-        </span>F: FnMut(<span class="kw-2">&amp;</span><span class="self">Self</span>, ElementSelectorFlags),
-    {
+    ) -&gt; bool {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(psudeo_class_flag) = <span class="self">self</span>.store.pseudo_classes.get(<span class="self">self</span>.entity) {
             <span class="kw">match </span>pc {
                 PseudoClass::Hover =&gt; psudeo_class_flag.contains(PseudoClassFlags::HOVER),
@@ -1095,6 +1112,23 @@
             <span class="bool-val">false
         </span>}
     }
+
+    <span class="kw">fn </span>first_element_child(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="prelude-val">None
+    </span>}
+
+    <span class="kw">fn </span>apply_selector_flags(<span class="kw-2">&amp;</span><span class="self">self</span>, _flags: ElementSelectorFlags) {}
+
+    <span class="kw">fn </span>has_custom_state(<span class="kw-2">&amp;</span><span class="self">self</span>, _name: <span class="kw-2">&amp;</span>&lt;<span class="self">Self</span>::Impl <span class="kw">as </span>SelectorImpl&gt;::Identifier) -&gt; bool {
+        <span class="bool-val">false
+    </span>}
+
+    <span class="kw">fn </span>add_element_unique_hashes(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        _filter: <span class="kw-2">&amp;mut </span>vizia_style::selectors::bloom::BloomFilter,
+    ) -&gt; bool {
+        <span class="bool-val">false
+    </span>}
 }
 
 <span class="doccomment">/// Link inheritable inline properties to their parent.
@@ -1575,17 +1609,28 @@
     matched_rules: <span class="kw-2">&amp;mut </span>Vec&lt;(Rule, u32)&gt;,
 ) {
     <span class="kw">for </span>(rule, selector_list) <span class="kw">in </span>cx.style.rules.iter() {
-        <span class="kw">let </span><span class="kw-2">mut </span>context =
-            MatchingContext::new(MatchingMode::Normal, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, QuirksMode::NoQuirks);
-
-        <span class="kw">let </span>(matches, specificity) = matches_selector_list(
-            selector_list,
-            <span class="kw-2">&amp;</span>Node { entity, store: <span class="kw-2">&amp;</span>cx.style, tree: <span class="kw-2">&amp;</span>cx.tree, views: <span class="kw-2">&amp;</span>cx.views },
-            <span class="kw-2">&amp;mut </span>context,
+        <span class="kw">let </span><span class="kw-2">mut </span>cache = SelectorCaches::default();
+        <span class="kw">let </span><span class="kw-2">mut </span>context = MatchingContext::new(
+            MatchingMode::Normal,
+            <span class="prelude-val">None</span>,
+            <span class="kw-2">&amp;mut </span>cache,
+            QuirksMode::NoQuirks,
+            NeedsSelectorFlags::No,
+            MatchingForInvalidation::No,
         );
 
-        <span class="kw">if </span>matches {
-            matched_rules.push((<span class="kw-2">*</span>rule, specificity));
+        <span class="kw">for </span>selector <span class="kw">in </span>selector_list.slice() {
+            <span class="kw">let </span>matches = matches_selector(
+                selector,
+                <span class="number">0</span>,
+                <span class="prelude-val">None</span>,
+                <span class="kw-2">&amp;</span>Node { entity, store: <span class="kw-2">&amp;</span>cx.style, tree: <span class="kw-2">&amp;</span>cx.tree, views: <span class="kw-2">&amp;</span>cx.views },
+                <span class="kw-2">&amp;mut </span>context,
+            );
+            <span class="kw">if </span>matches {
+                matched_rules.push((<span class="kw-2">*</span>rule, selector.specificity()));
+                <span class="kw">break</span>;
+            }
         }
     }
 
@@ -1669,19 +1714,14 @@
 
                         <span class="kw">for </span>rule <span class="kw">in </span>entry.rules.iter() {
                             <span class="kw">if let </span><span class="prelude-val">Some</span>(selectors) = cx.style.rules.get(<span class="kw-2">&amp;</span>rule.<span class="number">0</span>) {
-                                <span class="kw">for </span>selector <span class="kw">in </span>selectors.<span class="number">0</span>.iter() {
+                                <span class="kw">for </span>selector <span class="kw">in </span>selectors.slice() {
                                     <span class="kw">for </span>component <span class="kw">in </span>selector.iter() {
                                         <span class="kw">match </span><span class="kw-2">*</span>component {
-                                            Component::FirstChild
-                                            | Component::LastChild
-                                            | Component::NthChild(<span class="kw">_</span>, <span class="kw">_</span>)
-                                            | Component::FirstOfType
-                                            | Component::LastOfType
-                                            | Component::NthLastChild(<span class="kw">_</span>, <span class="kw">_</span>)
-                                            | Component::NthOfType(<span class="kw">_</span>, <span class="kw">_</span>)
-                                            | Component::NthLastOfType(<span class="kw">_</span>, <span class="kw">_</span>)
-                                            | Component::OnlyChild
-                                            | Component::OnlyOfType =&gt; {
+                                            Component::Nth(n)
+                                                <span class="kw">if </span>n.ty == NthType::Child
+                                                    || n.ty == NthType::LastChild
+                                                    || n.ty == NthType::OnlyChild =&gt;
+                                            {
                                                 matched_rules.clear();
                                                 compute_match = <span class="bool-val">true</span>;
                                                 <span class="kw">continue </span><span class="lifetime">'cache</span>;

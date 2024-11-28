@@ -19,12 +19,25 @@
 <a href="#18" id="18">18</a>
 <a href="#19" id="19">19</a>
 <a href="#20" id="20">20</a>
-<a href="#21" id="21">21</a></pre></div><pre class="rust"><code><span class="doccomment">//! # Vizia
+<a href="#21" id="21">21</a>
+<a href="#22" id="22">22</a>
+<a href="#23" id="23">23</a>
+<a href="#24" id="24">24</a>
+<a href="#25" id="25">25</a>
+<a href="#26" id="26">26</a>
+<a href="#27" id="27">27</a>
+<a href="#28" id="28">28</a>
+<a href="#29" id="29">29</a></pre></div><pre class="rust"><code><span class="doccomment">//! # Vizia
 
 </span><span class="kw">extern crate </span><span class="self">self </span><span class="kw">as </span>vizia;
 
-<span class="attr">#[cfg(feature = <span class="string">"winit"</span>)]
+<span class="attr">#[cfg(all(not(feature = <span class="string">"baseview"</span>), feature = <span class="string">"winit"</span>))]
 </span><span class="kw">pub use </span>vizia_winit::application::{Application, ApplicationError};
+
+<span class="attr">#[cfg(all(not(feature = <span class="string">"winit"</span>), feature = <span class="string">"baseview"</span>))]
+</span><span class="kw">pub use </span>vizia_baseview::{
+    Application, ApplicationError, ParentWindow, WindowHandle, WindowScalePolicy,
+};
 
 <span class="kw">pub use </span>vizia_core::<span class="kw-2">*</span>;
 
@@ -32,12 +45,15 @@
 </span><span class="kw">pub mod </span>prelude {
     <span class="kw">pub use </span>vizia_core::prelude::<span class="kw-2">*</span>;
 
-    <span class="attr">#[cfg(feature = <span class="string">"winit"</span>)]
+    <span class="attr">#[cfg(all(not(feature = <span class="string">"baseview"</span>), feature = <span class="string">"winit"</span>))]
     </span><span class="kw">pub use </span>vizia_winit::{
         application::{Application, ApplicationError},
         window::Window,
         window_modifiers::WindowModifiers,
         ModifyWindow,
     };
+
+    <span class="attr">#[cfg(all(not(feature = <span class="string">"winit"</span>), feature = <span class="string">"baseview"</span>))]
+    </span><span class="kw">pub use </span>vizia_baseview::{Application, ApplicationError, WindowHandle, WindowScalePolicy};
 }
 </code></pre></div></section></main></body></html>

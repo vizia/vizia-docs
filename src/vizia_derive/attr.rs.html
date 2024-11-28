@@ -267,7 +267,16 @@
 <a href="#266" id="266">266</a>
 <a href="#267" id="267">267</a>
 <a href="#268" id="268">268</a>
-<a href="#269" id="269">269</a></pre></div><pre class="rust"><code><span class="comment">// Adapted from Druid attr.rs
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a></pre></div><pre class="rust"><code><span class="comment">// Adapted from Druid attr.rs
 
 // Copyright 2019 The Druid Authors.
 //
@@ -295,7 +304,6 @@
 <span class="kw">const </span>LENS_NAME_OVERRIDE_ATTR_PATH: <span class="kw-2">&amp;</span>str = <span class="string">"name"</span>;
 
 <span class="doccomment">/// The fields for a struct or an enum variant.
-</span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub struct </span>Fields&lt;Attrs&gt; {
     <span class="kw">pub </span>kind: FieldKind,
     fields: Vec&lt;Field&lt;Attrs&gt;&gt;,
@@ -325,20 +333,30 @@
     }
 }
 
-<span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>Field&lt;Attrs&gt; {
+<span class="kw">pub struct </span>Field&lt;Attrs&gt; {
     <span class="kw">pub </span>ident: FieldIdent,
     <span class="kw">pub </span>ty: syn::Type,
     <span class="kw">pub </span>vis: syn::Visibility,
     <span class="kw">pub </span>attrs: Attrs,
 }
 
-<span class="attr">#[derive(Debug, PartialEq)]
-</span><span class="kw">pub enum </span>DataAttr {
+<span class="kw">pub enum </span>DataAttr {
     Empty,
     Ignore,
     SameFn(ExprPath),
     Eq,
+}
+
+<span class="kw">impl </span>PartialEq <span class="kw">for </span>DataAttr {
+    <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(
+            (<span class="self">self</span>, other),
+            (DataAttr::Empty, DataAttr::Empty)
+                | (DataAttr::Ignore, DataAttr::Ignore)
+                | (DataAttr::SameFn(<span class="kw">_</span>), DataAttr::SameFn(<span class="kw">_</span>))
+                | (DataAttr::Eq, DataAttr::Eq)
+        )
+    }
 }
 
 <span class="attr">#[derive(Debug)]

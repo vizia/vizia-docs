@@ -935,7 +935,11 @@
 <a href="#934" id="934">934</a>
 <a href="#935" id="935">935</a>
 <a href="#936" id="936">936</a>
-<a href="#937" id="937">937</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
+<a href="#937" id="937">937</a>
+<a href="#938" id="938">938</a>
+<a href="#939" id="939">939</a>
+<a href="#940" id="940">940</a>
+<a href="#941" id="941">941</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
     convert::{winit_key_code_to_code, winit_key_to_key},
     window::{WinState, Window},
     window_modifiers::WindowModifiers,
@@ -1662,8 +1666,12 @@
         <span class="self">self
     </span>}
 
-    <span class="kw">fn </span>visible(<span class="kw-2">mut </span><span class="self">self</span>, flag: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.window_description.visible = flag;
+    <span class="kw">fn </span>visible(<span class="kw-2">mut </span><span class="self">self</span>, flag: <span class="kw">impl </span>Res&lt;bool&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.window_description.visible = flag.get(<span class="kw-2">&amp;</span><span class="self">self</span>.cx.<span class="number">0</span>);
+
+        flag.set_or_bind(<span class="kw-2">&amp;mut </span><span class="self">self</span>.cx.<span class="number">0</span>, Entity::root(), |cx, flag| {
+            cx.emit(WindowEvent::SetVisible(flag.get(cx)));
+        });
 
         <span class="self">self
     </span>}

@@ -531,7 +531,16 @@
 <a href="#530" id="530">530</a>
 <a href="#531" id="531">531</a>
 <a href="#532" id="532">532</a>
-<a href="#533" id="533">533</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::window::create_surface;
+<a href="#533" id="533">533</a>
+<a href="#534" id="534">534</a>
+<a href="#535" id="535">535</a>
+<a href="#536" id="536">536</a>
+<a href="#537" id="537">537</a>
+<a href="#538" id="538">538</a>
+<a href="#539" id="539">539</a>
+<a href="#540" id="540">540</a>
+<a href="#541" id="541">541</a>
+<a href="#542" id="542">542</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::window::create_surface;
 <span class="kw">use </span><span class="kw">crate</span>::window::ViziaWindow;
 <span class="kw">use </span>baseview::{Window, WindowHandle, WindowScalePolicy};
 <span class="kw">use </span>gl_rs <span class="kw">as </span>gl;
@@ -739,7 +748,17 @@
         }
 
         <span class="comment">// Events
-        </span><span class="kw">while </span><span class="self">self</span>.event_manager.flush_events(<span class="self">self</span>.cx.context()) {}
+        </span><span class="self">self</span>.event_manager.flush_events(<span class="self">self</span>.cx.context(), |window_event| <span class="kw">match </span>window_event {
+            <span class="comment">// For some reason calling window.close() crashes baseview on macos
+            // WindowEvent::WindowClose =&gt; *should_close = true,
+            </span>WindowEvent::FocusIn =&gt; {
+                <span class="attr">#[cfg(not(target_os = <span class="string">"linux"</span>))] </span><span class="comment">// not implemented for linux yet
+                </span><span class="kw">if </span>!window.has_focus() {
+                    window.focus();
+                }
+            }
+            <span class="kw">_ </span>=&gt; {}
+        });
 
         <span class="comment">// if *cx.window_size() != self.current_window_size
         //     || cx.user_scale_factor() != self.current_user_scale_factor
@@ -825,10 +844,9 @@
     }
 
     <span class="kw">pub fn </span>render(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="kw">if </span><span class="self">self</span>.cx.draw(Entity::root(), <span class="kw-2">&amp;mut </span><span class="self">self</span>.surface, <span class="kw-2">&amp;mut </span><span class="self">self</span>.dirty_surface) {
-            <span class="self">self</span>.gr_context.flush_and_submit();
-            <span class="self">self</span>.should_redraw = <span class="bool-val">false</span>;
-        }
+        <span class="self">self</span>.cx.draw(Entity::root(), <span class="kw-2">&amp;mut </span><span class="self">self</span>.surface, <span class="kw-2">&amp;mut </span><span class="self">self</span>.dirty_surface);
+        <span class="self">self</span>.gr_context.flush_and_submit();
+        <span class="self">self</span>.should_redraw = <span class="bool-val">false</span>;
     }
 
     <span class="kw">pub fn </span>handle_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: baseview::Event, should_quit: <span class="kw-2">&amp;mut </span>bool) {

@@ -167,7 +167,10 @@
 <a href="#166" id="166">166</a>
 <a href="#167" id="167">167</a>
 <a href="#168" id="168">168</a>
-<a href="#169" id="169">169</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::LocalizationContext;
+<a href="#169" id="169">169</a>
+<a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::LocalizationContext;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>std::{
     any::{Any, TypeId},
@@ -259,7 +262,7 @@
     </span>}
 
     <span class="doccomment">/// Mody the internal data of the view.
-    </span><span class="kw">pub fn </span>modify&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; <span class="self">Self
+    </span><span class="kw">pub fn </span>modify&lt;F&gt;(<span class="kw-2">mut </span><span class="self">self</span>, f: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: FnOnce(<span class="kw-2">&amp;mut </span>V),
         V: <span class="lifetime">'static</span>,
@@ -272,6 +275,9 @@
         {
             (f)(view);
         }
+
+        <span class="comment">// Send an event to force the modification to happen within the same event loop.
+        </span><span class="self">self</span>.context().emit(WindowEvent::Redraw);
 
         <span class="self">self
     </span>}

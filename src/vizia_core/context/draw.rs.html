@@ -1239,7 +1239,16 @@
 <a href="#1238" id="1238">1238</a>
 <a href="#1239" id="1239">1239</a>
 <a href="#1240" id="1240">1240</a>
-<a href="#1241" id="1241">1241</a></pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::canvas::SaveLayerRec;
+<a href="#1241" id="1241">1241</a>
+<a href="#1242" id="1242">1242</a>
+<a href="#1243" id="1243">1243</a>
+<a href="#1244" id="1244">1244</a>
+<a href="#1245" id="1245">1245</a>
+<a href="#1246" id="1246">1246</a>
+<a href="#1247" id="1247">1247</a>
+<a href="#1248" id="1248">1248</a>
+<a href="#1249" id="1249">1249</a>
+<a href="#1250" id="1250">1250</a></pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::canvas::SaveLayerRec;
 <span class="kw">use </span>skia_safe::gradient_shader::GradientShaderColors;
 <span class="kw">use </span>skia_safe::path::ArcSize;
 <span class="kw">use </span>skia_safe::rrect::Corner;
@@ -1306,6 +1315,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) text_context: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>TextContext,
     <span class="kw">pub</span>(<span class="kw">crate</span>) modifiers: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Modifiers,
     <span class="kw">pub</span>(<span class="kw">crate</span>) mouse: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>MouseState&lt;Entity&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) windows: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>HashMap&lt;Entity, WindowState&gt;,
 }
 
 <span class="macro">macro_rules!</span> get_units_property {
@@ -1364,6 +1374,14 @@
     <span class="doccomment">/// Returns the bounds of the current view.
     </span><span class="kw">pub fn </span>bounds(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BoundingBox {
         <span class="self">self</span>.cache.get_bounds(<span class="self">self</span>.current)
+    }
+
+    <span class="doccomment">/// Marks the current view as needing to be redrawn.
+    </span><span class="kw">pub fn </span>needs_redraw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let </span>parent_window = <span class="self">self</span>.tree.get_parent_window(<span class="self">self</span>.current).unwrap_or(Entity::root());
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(window_state) = <span class="self">self</span>.windows.get_mut(<span class="kw-2">&amp;</span>parent_window) {
+            window_state.redraw_list.insert(<span class="self">self</span>.current);
+        }
     }
 
     <span class="doccomment">/// Returns the z-index of the current view.

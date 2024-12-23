@@ -655,7 +655,23 @@
 <a href="#654" id="654">654</a>
 <a href="#655" id="655">655</a>
 <a href="#656" id="656">656</a>
-<a href="#657" id="657">657</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
+<a href="#657" id="657">657</a>
+<a href="#658" id="658">658</a>
+<a href="#659" id="659">659</a>
+<a href="#660" id="660">660</a>
+<a href="#661" id="661">661</a>
+<a href="#662" id="662">662</a>
+<a href="#663" id="663">663</a>
+<a href="#664" id="664">664</a>
+<a href="#665" id="665">665</a>
+<a href="#666" id="666">666</a>
+<a href="#667" id="667">667</a>
+<a href="#668" id="668">668</a>
+<a href="#669" id="669">669</a>
+<a href="#670" id="670">670</a>
+<a href="#671" id="671">671</a>
+<a href="#672" id="672">672</a>
+<a href="#673" id="673">673</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
 <span class="kw">use </span><span class="kw">crate</span>::events::EventMeta;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="attr">#[cfg(debug_assertions)]
@@ -695,116 +711,132 @@
 
     <span class="doccomment">/// Flush the event queue, dispatching events to their targets.
     /// Returns whether there are still more events to process, i.e. the event handlers sent events.
-    </span><span class="kw">pub fn </span>flush_events(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context) -&gt; bool {
-        <span class="comment">// Clear the event queue in the event manager.
-        </span><span class="self">self</span>.event_queue.clear();
+    </span><span class="kw">pub fn </span>flush_events(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        cx: <span class="kw-2">&amp;mut </span>Context,
+        <span class="kw-2">mut </span>window_event_callback: <span class="kw">impl </span>FnMut(<span class="kw-2">&amp;</span>WindowEvent),
+    ) {
+        <span class="kw">while </span>{
+            <span class="comment">// Clear the event queue in the event manager.
+            </span><span class="self">self</span>.event_queue.clear();
 
-        <span class="comment">// Move events from cx to event manager. This is so the cx can be passed
-        // mutably to the view when handling events.
-        </span><span class="self">self</span>.event_queue.extend(cx.event_queue.drain(<span class="number">0</span>..));
+            <span class="comment">// Move events from cx to event manager. This is so the cx can be passed
+            // mutably to the view when handling events.
+            </span><span class="self">self</span>.event_queue.extend(cx.event_queue.drain(<span class="number">0</span>..));
 
-        <span class="comment">// Loop over the events in the event queue.
-        </span><span class="lifetime">'events</span>: <span class="kw">for </span>event <span class="kw">in </span><span class="self">self</span>.event_queue.iter_mut() {
-            <span class="comment">// Handle internal events.
-            </span>event.take(|internal_event, <span class="kw">_</span>| <span class="kw">match </span>internal_event {
-                InternalEvent::Redraw =&gt; cx.needs_redraw(Entity::root()),
-                InternalEvent::LoadImage { path, image, policy } =&gt; {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(image) = image.lock().unwrap().take() {
-                        ResourceContext::new(cx).load_image(path, image, policy);
+            <span class="comment">// Loop over the events in the event queue.
+            </span><span class="lifetime">'events</span>: <span class="kw">for </span>event <span class="kw">in </span><span class="self">self</span>.event_queue.iter_mut() {
+                <span class="comment">// Handle internal events.
+                </span>event.take(|internal_event, <span class="kw">_</span>| <span class="kw">match </span>internal_event {
+                    InternalEvent::Redraw =&gt; cx.needs_redraw(Entity::root()),
+                    InternalEvent::LoadImage { path, image, policy } =&gt; {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(image) = image.lock().unwrap().take() {
+                            ResourceContext::new(cx).load_image(path, image, policy);
+                        }
+                    }
+                });
+
+                <span class="comment">// Send events to any global listeners.
+                </span><span class="kw">let </span><span class="kw-2">mut </span>global_listeners = <span class="macro">vec!</span>[];
+                std::mem::swap(<span class="kw-2">&amp;mut </span>cx.global_listeners, <span class="kw-2">&amp;mut </span>global_listeners);
+                <span class="kw">for </span>listener <span class="kw">in </span><span class="kw-2">&amp;</span>global_listeners {
+                    cx.with_current(Entity::root(), |cx| {
+                        listener(<span class="kw-2">&amp;mut </span>EventContext::new(cx), event)
+                    });
+                }
+                std::mem::swap(<span class="kw-2">&amp;mut </span>cx.global_listeners, <span class="kw-2">&amp;mut </span>global_listeners);
+
+                <span class="comment">// Send events to any local listeners.
+                </span><span class="kw">let </span>listeners = cx.listeners.keys().copied().collect::&lt;Vec&lt;Entity&gt;&gt;();
+                <span class="kw">for </span>entity <span class="kw">in </span>listeners {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(listener) = cx.listeners.remove(<span class="kw-2">&amp;</span>entity) {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>event_handler) = cx.views.remove(<span class="kw-2">&amp;</span>entity) {
+                            cx.with_current(entity, |cx| {
+                                (listener)(
+                                    event_handler.as_mut(),
+                                    <span class="kw-2">&amp;mut </span>EventContext::new(cx),
+                                    event,
+                                );
+                            });
+
+                            cx.views.insert(entity, event_handler);
+                        }
+
+                        cx.listeners.insert(entity, listener);
+                    }
+
+                    <span class="kw">if </span>event.meta.consumed {
+                        <span class="kw">continue </span><span class="lifetime">'events</span>;
                     }
                 }
-            });
 
-            <span class="comment">// Send events to any global listeners.
-            </span><span class="kw">let </span><span class="kw-2">mut </span>global_listeners = <span class="macro">vec!</span>[];
-            std::mem::swap(<span class="kw-2">&amp;mut </span>cx.global_listeners, <span class="kw-2">&amp;mut </span>global_listeners);
-            <span class="kw">for </span>listener <span class="kw">in </span><span class="kw-2">&amp;</span>global_listeners {
-                cx.with_current(Entity::root(), |cx| listener(<span class="kw-2">&amp;mut </span>EventContext::new(cx), event));
-            }
-            std::mem::swap(<span class="kw-2">&amp;mut </span>cx.global_listeners, <span class="kw-2">&amp;mut </span>global_listeners);
-
-            <span class="comment">// Send events to any local listeners.
-            </span><span class="kw">let </span>listeners = cx.listeners.keys().copied().collect::&lt;Vec&lt;Entity&gt;&gt;();
-            <span class="kw">for </span>entity <span class="kw">in </span>listeners {
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(listener) = cx.listeners.remove(<span class="kw-2">&amp;</span>entity) {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>event_handler) = cx.views.remove(<span class="kw-2">&amp;</span>entity) {
-                        cx.with_current(entity, |cx| {
-                            (listener)(event_handler.as_mut(), <span class="kw-2">&amp;mut </span>EventContext::new(cx), event);
-                        });
-
-                        cx.views.insert(entity, event_handler);
+                <span class="comment">// Handle state updates for window events.
+                </span>event.map(|window_event, meta| {
+                    <span class="kw">if </span>cx.windows.contains_key(<span class="kw-2">&amp;</span>meta.origin) {
+                        internal_state_updates(cx, window_event, meta);
                     }
+                });
 
-                    cx.listeners.insert(entity, listener);
-                }
-
-                <span class="kw">if </span>event.meta.consumed {
+                <span class="comment">// Skip to next event if the current event was consumed when handling internal state updates.
+                </span><span class="kw">if </span>event.meta.consumed {
                     <span class="kw">continue </span><span class="lifetime">'events</span>;
                 }
-            }
 
-            <span class="comment">// Handle state updates for window events.
-            </span>event.map(|window_event, meta| {
-                <span class="kw">if </span>cx.windows.contains_key(<span class="kw-2">&amp;</span>meta.origin) {
-                    internal_state_updates(cx, window_event, meta);
+                <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new(cx);
+
+                <span class="comment">// Copy the target to prevent multiple mutable borrows error.
+                </span><span class="kw">let </span>target = event.meta.target;
+
+                <span class="comment">// Send event to target.
+                </span>visit_entity(cx, target, event);
+
+                <span class="comment">// Skip to next event if the current event was consumed.
+                </span><span class="kw">if </span>event.meta.consumed {
+                    <span class="kw">continue </span><span class="lifetime">'events</span>;
                 }
-            });
 
-            <span class="comment">// Skip to next event if the current event was consumed when handling internal state updates.
-            </span><span class="kw">if </span>event.meta.consumed {
-                <span class="kw">continue </span><span class="lifetime">'events</span>;
-            }
+                <span class="comment">// Propagate up from target to root (not including the target).
+                </span><span class="kw">if </span>event.meta.propagation == Propagation::Up {
+                    <span class="comment">// Create a parent iterator and skip the first element which is the target.
+                    </span><span class="kw">let </span>iter = target.parent_iter(cx.tree).skip(<span class="number">1</span>);
 
-            <span class="kw">let </span>cx = <span class="kw-2">&amp;mut </span>EventContext::new(cx);
+                    <span class="kw">for </span>entity <span class="kw">in </span>iter {
+                        <span class="comment">// Send event to all ancestors of the target.
+                        </span>visit_entity(cx, entity, event);
 
-            <span class="comment">// Copy the target to prevent multiple mutable borrows error.
-            </span><span class="kw">let </span>target = event.meta.target;
-
-            <span class="comment">// Send event to target.
-            </span>visit_entity(cx, target, event);
-
-            <span class="comment">// Skip to next event if the current event was consumed.
-            </span><span class="kw">if </span>event.meta.consumed {
-                <span class="kw">continue </span><span class="lifetime">'events</span>;
-            }
-
-            <span class="comment">// Propagate up from target to root (not including the target).
-            </span><span class="kw">if </span>event.meta.propagation == Propagation::Up {
-                <span class="comment">// Create a parent iterator and skip the first element which is the target.
-                </span><span class="kw">let </span>iter = target.parent_iter(cx.tree).skip(<span class="number">1</span>);
-
-                <span class="kw">for </span>entity <span class="kw">in </span>iter {
-                    <span class="comment">// Send event to all ancestors of the target.
-                    </span>visit_entity(cx, entity, event);
-
-                    <span class="comment">// Skip to the next event if the current event was consumed.
-                    </span><span class="kw">if </span>event.meta.consumed {
-                        <span class="kw">continue </span><span class="lifetime">'events</span>;
+                        <span class="comment">// Skip to the next event if the current event was consumed.
+                        </span><span class="kw">if </span>event.meta.consumed {
+                            <span class="kw">continue </span><span class="lifetime">'events</span>;
+                        }
                     }
                 }
-            }
 
-            <span class="comment">// Propagate the event down the subtree from the target (not including the target).
-            </span><span class="kw">if </span>event.meta.propagation == Propagation::Subtree {
-                <span class="comment">// Create a branch (subtree) iterator and skip the first element which is the target.
-                </span><span class="kw">let </span>iter = target.branch_iter(cx.tree).skip(<span class="number">1</span>);
+                <span class="comment">// Propagate the event down the subtree from the target (not including the target).
+                </span><span class="kw">if </span>event.meta.propagation == Propagation::Subtree {
+                    <span class="comment">// Create a branch (subtree) iterator and skip the first element which is the target.
+                    </span><span class="kw">let </span>iter = target.branch_iter(cx.tree).skip(<span class="number">1</span>);
 
-                <span class="kw">for </span>entity <span class="kw">in </span>iter {
-                    <span class="comment">// Send event to all entities in the subtree after the target.
-                    </span>visit_entity(cx, entity, event);
+                    <span class="kw">for </span>entity <span class="kw">in </span>iter {
+                        <span class="comment">// Send event to all entities in the subtree after the target.
+                        </span>visit_entity(cx, entity, event);
 
-                    <span class="comment">// Skip to the next event if the current event was consumed.
-                    </span><span class="kw">if </span>event.meta.consumed {
-                        <span class="kw">continue </span><span class="lifetime">'events</span>;
+                        <span class="comment">// Skip to the next event if the current event was consumed.
+                        </span><span class="kw">if </span>event.meta.consumed {
+                            <span class="kw">continue </span><span class="lifetime">'events</span>;
+                        }
                     }
                 }
+
+                event.map(|window_event: <span class="kw-2">&amp;</span>WindowEvent, <span class="kw">_</span>| {
+                    (window_event_callback)(window_event);
+                });
             }
-        }
 
-        binding_system(cx);
+            binding_system(cx);
 
-        <span class="comment">// Return true if there are new events in the queue.
-        </span>!cx.event_queue.is_empty()
+            <span class="comment">// Return true if there are new events in the queue.
+            </span>!cx.event_queue.is_empty()
+        } {}
     }
 }
 

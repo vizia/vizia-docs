@@ -1995,7 +1995,23 @@
 <a href="#1994" id="1994">1994</a>
 <a href="#1995" id="1995">1995</a>
 <a href="#1996" id="1996">1996</a>
-<a href="#1997" id="1997">1997</a></pre></div><pre class="rust"><code><span class="doccomment">//! Styling determines the appearance of a view.
+<a href="#1997" id="1997">1997</a>
+<a href="#1998" id="1998">1998</a>
+<a href="#1999" id="1999">1999</a>
+<a href="#2000" id="2000">2000</a>
+<a href="#2001" id="2001">2001</a>
+<a href="#2002" id="2002">2002</a>
+<a href="#2003" id="2003">2003</a>
+<a href="#2004" id="2004">2004</a>
+<a href="#2005" id="2005">2005</a>
+<a href="#2006" id="2006">2006</a>
+<a href="#2007" id="2007">2007</a>
+<a href="#2008" id="2008">2008</a>
+<a href="#2009" id="2009">2009</a>
+<a href="#2010" id="2010">2010</a>
+<a href="#2011" id="2011">2011</a>
+<a href="#2012" id="2012">2012</a>
+<a href="#2013" id="2013">2013</a></pre></div><pre class="rust"><code><span class="doccomment">//! Styling determines the appearance of a view.
 //!
 //! # Styling Views
 //! Vizia provides two ways to style views:
@@ -2071,8 +2087,8 @@
     FontWeight, FontWeightKeyword, FontWidth, GenericFontFamily, Gradient, HorizontalPosition,
     HorizontalPositionKeyword, Length, LengthOrPercentage, LengthValue, LineClamp, LineDirection,
     LinearGradient, Matrix, Opacity, Overflow, PointerEvents, Position, Scale, Shadow, TextAlign,
-    TextDecorationLine, TextDecorationStyle, TextOverflow, Transform, Transition, Translate,
-    VerticalPosition, VerticalPositionKeyword, Visibility, RGBA,
+    TextDecorationLine, TextDecorationStyle, TextOverflow, TextStroke, TextStrokeStyle, Transform,
+    Transition, Translate, VerticalPosition, VerticalPositionKeyword, Visibility, RGBA,
 };
 
 <span class="kw">use </span>vizia_style::{
@@ -2288,6 +2304,8 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) line_clamp: StyleSet&lt;LineClamp&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) text_align: StyleSet&lt;TextAlign&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) text_decoration_line: StyleSet&lt;TextDecorationLine&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) text_stroke_width: StyleSet&lt;Length&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) text_stroke_style: StyleSet&lt;TextStrokeStyle&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) underline_style: StyleSet&lt;TextDecorationLine&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) overline_style: StyleSet&lt;TextDecorationStyle&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) strikethrough_style: StyleSet&lt;TextDecorationStyle&gt;,
@@ -3650,6 +3668,16 @@
             Property::TextDecorationLine(line) =&gt; {
                 <span class="self">self</span>.text_decoration_line.insert_rule(rule_id, line);
             }
+            Property::TextStroke(stroke) =&gt; {
+                <span class="self">self</span>.text_stroke_width.insert_rule(rule_id, stroke.width);
+                <span class="self">self</span>.text_stroke_style.insert_rule(rule_id, stroke.style);
+            }
+            Property::TextStrokeWidth(stroke_width) =&gt; {
+                <span class="self">self</span>.text_stroke_width.insert_rule(rule_id, stroke_width);
+            }
+            Property::TextStrokeStyle(stroke_style) =&gt; {
+                <span class="self">self</span>.text_stroke_style.insert_rule(rule_id, stroke_style);
+            }
             Property::Fill(fill) =&gt; {
                 <span class="self">self</span>.fill.insert_rule(rule_id, fill);
             }
@@ -3787,6 +3815,8 @@
         <span class="self">self</span>.caret_color.remove(entity);
         <span class="self">self</span>.selection_color.remove(entity);
         <span class="self">self</span>.text_decoration_line.remove(entity);
+        <span class="self">self</span>.text_stroke_width.remove(entity);
+        <span class="self">self</span>.text_stroke_style.remove(entity);
 
         <span class="comment">// Cursor
         </span><span class="self">self</span>.cursor.remove(entity);
@@ -3982,6 +4012,8 @@
         <span class="self">self</span>.selection_color.clear_rules();
         <span class="self">self</span>.caret_color.clear_rules();
         <span class="self">self</span>.text_decoration_line.clear_rules();
+        <span class="self">self</span>.text_stroke_width.clear_rules();
+        <span class="self">self</span>.text_stroke_style.clear_rules();
 
         <span class="self">self</span>.cursor.clear_rules();
 

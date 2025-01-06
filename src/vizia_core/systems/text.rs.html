@@ -293,7 +293,16 @@
 <a href="#292" id="292">292</a>
 <a href="#293" id="293">293</a>
 <a href="#294" id="294">294</a>
-<a href="#295" id="295">295</a></pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::{
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a></pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::{
     font_arguments::VariationPosition,
     textlayout::{
         FontCollection, Paragraph, ParagraphBuilder, ParagraphStyle, RectHeightStyle,
@@ -527,14 +536,23 @@
                     .unwrap_or(<span class="kw-2">&amp;</span>[FamilyOwned::Generic(GenericFontFamily::SansSerif)]),
             );
 
+            <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
             <span class="comment">// Font Color
             </span><span class="kw">if let </span><span class="prelude-val">Some</span>(font_color) = style.font_color.get(entity) {
-                <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
                 paint.set_color(<span class="kw-2">*</span>font_color);
                 paint.set_anti_alias(<span class="bool-val">false</span>);
                 paint.set_blend_mode(BlendMode::SrcOver);
-                text_style.set_foreground_paint(<span class="kw-2">&amp;</span>paint);
             }
+
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(text_stroke) = style.text_stroke_width.get(entity) {
+                paint.set_stroke_width(text_stroke.to_px().unwrap_or(<span class="number">0.0</span>));
+                paint.set_style(
+                    (<span class="kw-2">*</span>style.text_stroke_style.get(entity).unwrap_or(<span class="kw-2">&amp;</span>TextStrokeStyle::default()))
+                        .into(),
+                );
+            }
+
+            text_style.set_foreground_paint(<span class="kw-2">&amp;</span>paint);
 
             <span class="kw">if let </span><span class="prelude-val">Some</span>(background_color) = style.background_color.get(entity) {
                 <span class="kw">if </span>style.text_span.get(entity).is_some() {

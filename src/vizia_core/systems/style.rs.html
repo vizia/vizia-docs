@@ -882,7 +882,21 @@
 <a href="#881" id="881">881</a>
 <a href="#882" id="882">882</a>
 <a href="#883" id="883">883</a>
-<a href="#884" id="884">884</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{events::ViewHandler, prelude::<span class="kw-2">*</span>};
+<a href="#884" id="884">884</a>
+<a href="#885" id="885">885</a>
+<a href="#886" id="886">886</a>
+<a href="#887" id="887">887</a>
+<a href="#888" id="888">888</a>
+<a href="#889" id="889">889</a>
+<a href="#890" id="890">890</a>
+<a href="#891" id="891">891</a>
+<a href="#892" id="892">892</a>
+<a href="#893" id="893">893</a>
+<a href="#894" id="894">894</a>
+<a href="#895" id="895">895</a>
+<a href="#896" id="896">896</a>
+<a href="#897" id="897">897</a>
+<a href="#898" id="898">898</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{events::ViewHandler, prelude::<span class="kw-2">*</span>};
 <span class="kw">use </span>hashbrown::HashMap;
 <span class="kw">use </span>vizia_storage::{LayoutParentIterator, TreeBreadthIterator};
 <span class="kw">use </span>vizia_style::{
@@ -1149,6 +1163,8 @@
                 | cx.style.font_slant.inherit_inline(entity, parent)
                 | cx.style.font_width.inherit_inline(entity, parent)
                 | cx.style.text_decoration_line.inherit_inline(entity, parent)
+                | cx.style.text_stroke_width.inherit_inline(entity, parent)
+                | cx.style.text_stroke_style.inherit_inline(entity, parent)
                 | cx.style.font_variation_settings.inherit_inline(entity, parent)
             {
                 cx.style.needs_text_update(entity);
@@ -1168,6 +1184,8 @@
                 | cx.style.font_slant.inherit_shared(entity, parent)
                 | cx.style.font_width.inherit_shared(entity, parent)
                 | cx.style.text_decoration_line.inherit_shared(entity, parent)
+                | cx.style.text_stroke_width.inherit_shared(entity, parent)
+                | cx.style.text_stroke_style.inherit_shared(entity, parent)
                 | cx.style.font_variation_settings.inherit_shared(entity, parent)
             {
                 cx.style.needs_text_update(entity);
@@ -1480,6 +1498,16 @@
     }
 
     <span class="kw">if </span>style.text_decoration_line.link(entity, matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
+        should_reflow = <span class="bool-val">true</span>;
+    }
+
+    <span class="kw">if </span>style.text_stroke_width.link(entity, matched_rules) {
+        should_redraw = <span class="bool-val">true</span>;
+        should_reflow = <span class="bool-val">true</span>;
+    }
+
+    <span class="kw">if </span>style.text_stroke_style.link(entity, matched_rules) {
         should_redraw = <span class="bool-val">true</span>;
         should_reflow = <span class="bool-val">true</span>;
     }

@@ -145,7 +145,43 @@
 <a href="#144" id="144">144</a>
 <a href="#145" id="145">145</a>
 <a href="#146" id="146">146</a>
-<a href="#147" id="147">147</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
+<a href="#162" id="162">162</a>
+<a href="#163" id="163">163</a>
+<a href="#164" id="164">164</a>
+<a href="#165" id="165">165</a>
+<a href="#166" id="166">166</a>
+<a href="#167" id="167">167</a>
+<a href="#168" id="168">168</a>
+<a href="#169" id="169">169</a>
+<a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
+<a href="#181" id="181">181</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::Deref;
+
+<span class="kw">use crate</span>::{icons::ICON_PLUS, prelude::<span class="kw-2">*</span>};
 
 <span class="kw">pub enum </span>TabEvent {
     SetSelected(usize),
@@ -171,7 +207,7 @@
             .build(cx, <span class="kw">move </span>|cx| {
                 <span class="kw">let </span>content2 = content.clone();
                 <span class="comment">// Tab headers
-                </span>ScrollView::new(cx, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="kw">move </span>|cx| {
+                </span>ScrollView::new(cx, <span class="kw">move </span>|cx| {
                     <span class="comment">//VStack::new(cx, move |cx| {
                     </span>Binding::new(cx, lens.map(|list| list.len()), <span class="kw">move </span>|cx, list_length| {
                         <span class="kw">let </span>list_length = list_length.get(cx);
@@ -273,7 +309,7 @@
     <span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context),
     {
-        <span class="self">Self </span>{ index }.build(cx, |cx| (content)(cx)).navigable(<span class="bool-val">true</span>)
+        <span class="self">Self </span>{ index }.build(cx, |cx| (content)(cx))
     }
 }
 
@@ -290,6 +326,38 @@
 
             <span class="kw">_ </span>=&gt; {}
         });
+    }
+}
+
+<span class="kw">pub struct </span>TabBar {}
+
+<span class="kw">impl </span>TabBar {
+    <span class="kw">pub fn </span>new&lt;L: Lens, T: <span class="lifetime">'static</span>&gt;(
+        cx: <span class="kw-2">&amp;mut </span>Context,
+        list: L,
+        item_content: <span class="kw">impl </span><span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context, usize, MapRef&lt;L, T&gt;),
+    ) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>L::Target: Deref&lt;Target = [T]&gt; + Data,
+    {
+        <span class="self">Self </span>{}
+            .build(cx, |cx| {
+                List::new(cx, list, item_content)
+                    .selectable(Selectable::Single)
+                    .layout_type(LayoutType::Row);
+                Button::new(cx, |cx| Svg::new(cx, ICON_PLUS).size(Stretch(<span class="number">1.0</span>)))
+                    .variant(ButtonVariant::Text)
+                    .padding(Pixels(<span class="number">0.0</span>))
+                    .size(Pixels(<span class="number">16.0</span>));
+            })
+            .alignment(Alignment::Left)
+            .layout_type(LayoutType::Row)
+    }
+}
+
+<span class="kw">impl </span>View <span class="kw">for </span>TabBar {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+        <span class="prelude-val">Some</span>(<span class="string">"tabbar"</span>)
     }
 }
 </code></pre></div></section></main></body></html>

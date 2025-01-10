@@ -305,7 +305,9 @@
 <a href="#304" id="304">304</a>
 <a href="#305" id="305">305</a>
 <a href="#306" id="306">306</a>
-<a href="#307" id="307">307</a></pre></div><pre class="rust"><code><span class="kw">use </span>chrono::{Datelike, NaiveDate, Weekday};
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a></pre></div><pre class="rust"><code><span class="kw">use </span>chrono::{Datelike, NaiveDate, Weekday};
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
@@ -435,15 +437,17 @@
                         .on_select(|ex, index| ex.emit(DatepickerEvent::SelectMonth(index)))
                         .width(Stretch(<span class="number">1.0</span>))
                 })
-                .width(Pixels(<span class="number">150.0</span>))
+                .width(Pixels(<span class="number">140.0</span>))
                 .on_increment(|ex| ex.emit(DatepickerEvent::IncrementMonth))
                 .on_decrement(|ex| ex.emit(DatepickerEvent::DecrementMonth));
                 Spinbox::custom(cx, |cx| {
                     Textbox::new(cx, Datepicker::view_date.map(|date| date.year()))
+                        .width(Stretch(<span class="number">1.0</span>))
+                        .padding(Pixels(<span class="number">1.0</span>))
                         .on_edit(|ex, v| ex.emit(DatepickerEvent::SelectYear(v)))
                 })
+                .width(Pixels(<span class="number">100.0</span>))
                 .icons(SpinboxIcons::PlusMinus)
-                .width(Auto)
                 .on_increment(|ex| ex.emit(DatepickerEvent::IncrementYear))
                 .on_decrement(|ex| ex.emit(DatepickerEvent::DecrementYear));
             })

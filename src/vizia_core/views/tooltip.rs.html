@@ -424,9 +424,10 @@
 <a href="#423" id="423">423</a>
 <a href="#424" id="424">424</a>
 <a href="#425" id="425">425</a>
-<a href="#426" id="426">426</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::TreeProps;
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::TreeProps;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::vg;
-<span class="kw">use crate</span>::{modifiers::ModalModel, prelude::<span class="kw-2">*</span>};
 
 <span class="doccomment">/// A tooltip view.
 ///
@@ -481,8 +482,8 @@
     /// ```
     </span><span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;mut </span>Context, content: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;mut </span>Context)) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self </span>{
-            placement: Placement::Bottom,
-            shift: Placement::Bottom,
+            placement: Placement::Top,
+            shift: Placement::Top,
             show_arrow: <span class="bool-val">true</span>,
             arrow_size: Length::Value(LengthValue::Px(<span class="number">8.0</span>)),
         }
@@ -500,14 +501,7 @@
         .space(Pixels(<span class="number">0.0</span>))
         .on_build(|ex| {
             ex.add_listener(<span class="kw">move </span>|tooltip: <span class="kw-2">&amp;mut </span>Tooltip, ex, event| {
-                <span class="kw">let </span>flag = ModalModel::tooltip_visible.get(ex);
-                event.map(|window_event, meta| <span class="kw">match </span>window_event {
-                    WindowEvent::MouseDown(<span class="kw">_</span>) =&gt; {
-                        <span class="kw">if </span>flag &amp;&amp; meta.origin != ex.current() {
-                            ex.toggle_class(<span class="string">"vis"</span>, <span class="bool-val">false</span>);
-                        }
-                    }
-
+                event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
                     WindowEvent::MouseMove(x, y) =&gt; {
                         <span class="kw">if </span>tooltip.placement == Placement::Cursor &amp;&amp; !x.is_nan() &amp;&amp; !y.is_nan() {
                             <span class="kw">let </span>scale = ex.scale_factor();
@@ -727,24 +721,32 @@
 }
 
 <span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, Tooltip&gt; {
-    <span class="comment">// TODO: Change this to use Res when lens value PR is merged
-    </span><span class="doccomment">/// Sets the position where the tooltip should appear relative to its parent element.
+    <span class="doccomment">/// Sets the position where the tooltip should appear relative to its parent element.
     /// Defaults to `Placement::Bottom`.
-    </span><span class="kw">pub fn </span>placement(<span class="self">self</span>, placement: Placement) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.modify(|tooltip| {
-            tooltip.placement = placement;
-            tooltip.shift = placement;
+    </span><span class="kw">pub fn </span>placement&lt;U: Into&lt;Placement&gt;&gt;(<span class="self">self</span>, placement: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(placement, |handle, val| {
+            <span class="kw">let </span>placement = val.get(<span class="kw-2">&amp;</span>handle).into();
+            handle.modify(|tooltip| {
+                tooltip.placement = placement;
+                tooltip.shift = placement;
+            });
         })
     }
 
-    <span class="comment">// TODO: Change this to use Res when lens value PR is merged
-    </span><span class="doccomment">/// Sets whether the tooltip should include an arrow. Defaults to true.
-    </span><span class="kw">pub fn </span>arrow(<span class="self">self</span>, show_arrow: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.modify(|tooltip| tooltip.show_arrow = show_arrow)
+    <span class="doccomment">/// Sets whether the tooltip should include an arrow. Defaults to true.
+    </span><span class="kw">pub fn </span>arrow&lt;U: Into&lt;bool&gt;&gt;(<span class="self">self</span>, show_arrow: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(show_arrow, |handle, val| {
+            <span class="kw">let </span>show_arrow = val.get(<span class="kw-2">&amp;</span>handle).into();
+            handle.modify(|tooltip| tooltip.show_arrow = show_arrow);
+        })
     }
 
-    <span class="kw">pub fn </span>arrow_size(<span class="self">self</span>, size: <span class="kw">impl </span>Into&lt;Length&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.modify(|tooltip| tooltip.arrow_size = size.into())
+    <span class="comment">// Sets the size of the tooltip arrow if enabled.
+    </span><span class="kw">pub fn </span>arrow_size&lt;U: Into&lt;Length&gt;&gt;(<span class="self">self</span>, size: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(size, |handle, val| {
+            <span class="kw">let </span>size = val.get(<span class="kw-2">&amp;</span>handle).into();
+            handle.modify(|tooltip| tooltip.arrow_size = size);
+        })
     }
 }
 
@@ -782,7 +784,7 @@
                 <span class="kw">_ </span>=&gt; (Stretch(<span class="number">1.0</span>), Stretch(<span class="number">1.0</span>)),
             };
 
-            handle = handle.top(t).bottom(b).left(l).right(r);
+            handle = handle.top(t).bottom(b).left(l).right(r).position_type(PositionType::Absolute);
 
             handle.bind(Tooltip::arrow_size, <span class="kw">move </span>|handle, arrow_size| {
                 <span class="kw">let </span>arrow_size = arrow_size.get(<span class="kw-2">&amp;</span>handle).to_px().unwrap_or(<span class="number">8.0</span>);

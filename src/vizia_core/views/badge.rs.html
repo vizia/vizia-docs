@@ -113,7 +113,22 @@
 <a href="#112" id="112">112</a>
 <a href="#113" id="113">113</a>
 <a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// Enum which represents the placement of a badge on its parent.
 </span><span class="attr">#[derive(Default, Debug, Clone, Copy, Data, PartialEq)]
@@ -129,7 +144,10 @@
     BottomRight,
 }
 
-<span class="attr">#[derive(Lens)]
+<span class="macro">impl_res_simple!</span>(BadgePlacement);
+
+<span class="doccomment">/// A Badge view for showing notifications, counts, or status information.
+</span><span class="attr">#[derive(Lens)]
 </span><span class="kw">pub struct </span>Badge {
     placement: <span class="prelude-ty">Option</span>&lt;BadgePlacement&gt;,
 }
@@ -191,12 +209,21 @@
     }
 
     <span class="doccomment">/// Creates an empty badge.
+    ///
+    /// ```
+    /// # use vizia_core::prelude::*;
+    /// # let cx = &amp;mut Context::default();
+    /// Avatar::new(cx, |cx|{
+    ///     Svg::new(cx, ICON_USER);
+    /// })
+    /// .badge(|cx| Badge::empty(cx).class("error"));
+    /// ```
     </span><span class="kw">pub fn </span>empty(cx: <span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::common(cx, |<span class="kw">_</span>| {})
     }
 
-    <span class="doccomment">/// Creates a new badge.
-    /// # Example
+    <span class="doccomment">/// Creates a new badge with the provided content.
+    ///
     /// ```
     /// # use vizia_core::prelude::*;
     /// # let cx = &amp;mut Context::default();
@@ -223,9 +250,12 @@
 }
 
 <span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, Badge&gt; {
-    <span class="doccomment">/// Sets the placement of a badge relative to its parent when used with the `badge` modifier.
-    </span><span class="kw">pub fn </span>placement(<span class="self">self</span>, placement: BadgePlacement) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.modify(|badge| badge.placement = <span class="prelude-val">Some</span>(placement))
+    <span class="doccomment">/// Sets the placement of a badge relative to its parent. Accepts a value of, or lens to, a [BadgePlacement].
+    </span><span class="kw">pub fn </span>placement&lt;U: Into&lt;BadgePlacement&gt;&gt;(<span class="self">self</span>, placement: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(placement, |handle, val| {
+            <span class="kw">let </span>placement = val.get(<span class="kw-2">&amp;</span>handle).into();
+            handle.modify(|badge| badge.placement = <span class="prelude-val">Some</span>(placement));
+        })
     }
 }
 </code></pre></div></section></main></body></html>

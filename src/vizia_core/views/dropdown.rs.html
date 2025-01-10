@@ -179,11 +179,7 @@
 <a href="#178" id="178">178</a>
 <a href="#179" id="179">179</a>
 <a href="#180" id="180">180</a>
-<a href="#181" id="181">181</a>
-<a href="#182" id="182">182</a>
-<a href="#183" id="183">183</a>
-<a href="#184" id="184">184</a>
-<a href="#185" id="185">185</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#181" id="181">181</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// A dropdown is used to display some state with the ability to open a popup with options to change that state.
 ///
@@ -322,36 +318,32 @@
         F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context),
     {
         <span class="self">Self </span>{}.build(cx, <span class="kw">move </span>|cx| {
-            cx.add_listener(<span class="kw">move </span>|_dropdown: <span class="kw-2">&amp;mut </span><span class="self">Self</span>, cx, event| {
-                event.map(|window_event, meta| <span class="kw">match </span>window_event {
-                    WindowEvent::PressDown { mouse: <span class="kw">_ </span>} =&gt; {
-                        <span class="kw">if </span>meta.origin != cx.current() {
-                            <span class="comment">// Check if the mouse was pressed outside of any descendants
-                            </span><span class="kw">if </span>!cx.hovered.is_descendant_of(cx.tree, cx.current) {
-                                cx.emit(PopupEvent::Close);
-                            }
-                        }
-                    }
+            <span class="comment">// cx.add_listener(move |_dropdown: &amp;mut Self, cx, event| {
+            //     event.map(|window_event, meta| match window_event {
+            //         WindowEvent::PressDown { mouse: _ } =&gt; {
+            //             if meta.origin != cx.current() {
+            //                 // Check if the mouse was pressed outside of any descendants
+            //                 if !cx.hovered.is_descendant_of(cx.tree, cx.current) {
+            //                     cx.emit(PopupEvent::Close);
+            //                 }
+            //             }
+            //         }
 
-                    WindowEvent::KeyDown(code, <span class="kw">_</span>) =&gt; {
-                        <span class="kw">if </span><span class="kw-2">*</span>code == Code::Escape {
-                            cx.emit(PopupEvent::Close);
-                        }
-                    }
+            //         WindowEvent::KeyDown(code, _) =&gt; {
+            //             if *code == Code::Escape {
+            //                 cx.emit(PopupEvent::Close);
+            //             }
+            //         }
 
-                    <span class="kw">_ </span>=&gt; {}
-                });
-            });
+            //         _ =&gt; {}
+            //     });
+            // });
 
-            PopupData::default().build(cx);
+            </span>PopupData::default().build(cx);
 
             (trigger)(cx);
-            <span class="comment">// .class("dropdown-title")
-            // .width(Stretch(1.0))
-            // .checked(PopupData::is_open)
-            // .navigable(true)
-            // .on_press(|cx| cx.emit(PopupEvent::Switch));
-            </span>Binding::new(cx, PopupData::is_open, <span class="kw">move </span>|cx, is_open| {
+
+            Binding::new(cx, PopupData::is_open, <span class="kw">move </span>|cx, is_open| {
                 <span class="kw">if </span>is_open.get(cx) {
                     Popup::new(cx, |cx| {
                         (content)(cx);

@@ -939,7 +939,9 @@
 <a href="#938" id="938">938</a>
 <a href="#939" id="939">939</a>
 <a href="#940" id="940">940</a>
-<a href="#941" id="941">941</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
+<a href="#941" id="941">941</a>
+<a href="#942" id="942">942</a>
+<a href="#943" id="943">943</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
     convert::{winit_key_code_to_code, winit_key_to_key},
     window::{WinState, Window},
     window_modifiers::WindowModifiers,
@@ -1336,6 +1338,8 @@
             winit::event::WindowEvent::HoveredFile(<span class="kw">_</span>) =&gt; {}
             winit::event::WindowEvent::HoveredFileCancelled =&gt; {}
             winit::event::WindowEvent::Focused(is_focused) =&gt; {
+                <span class="self">self</span>.cx.emit_window_event(window.entity, WindowEvent::WindowFocused(is_focused));
+
                 <span class="self">self</span>.cx.<span class="number">0</span>.window_has_focus = is_focused;
                 <span class="comment">// #[cfg(feature = "accesskit")]
                 // accesskit.update_if_active(|| TreeUpdate {

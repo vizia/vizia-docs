@@ -37,24 +37,26 @@
 <a href="#36" id="36">36</a>
 <a href="#37" id="37">37</a>
 <a href="#38" id="38">38</a>
-<a href="#39" id="39">39</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#39" id="39">39</a>
+<a href="#40" id="40">40</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">pub struct </span>Divider {}
+<span class="doccomment">/// The Divider view provides a thin, unobtrusive line for visually separating views.
+</span><span class="kw">pub struct </span>Divider {}
 
 <span class="kw">impl </span>Divider {
-    <span class="doccomment">/// Creates a dividing line. Orientation is determined by context (default horizontal).
+    <span class="doccomment">/// Creates a dividing line. Orientation is determined by context.
     </span><span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self </span>{}.build(cx, |<span class="kw">_</span>| {})
     }
 
     <span class="doccomment">/// Creates a horizontal dividing line.
     </span><span class="kw">pub fn </span>horizontal(cx: <span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
-        <span class="self">Self </span>{}.build(cx, |<span class="kw">_</span>| {}).class(<span class="string">"horizontal"</span>)
+        <span class="self">Self</span>::new(cx).class(<span class="string">"horizontal"</span>)
     }
 
     <span class="doccomment">/// Creates a vertical dividing line.
     </span><span class="kw">pub fn </span>vertical(cx: <span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
-        <span class="self">Self </span>{}.build(cx, |<span class="kw">_</span>| {}).class(<span class="string">"vertical"</span>)
+        <span class="self">Self</span>::new(cx).class(<span class="string">"vertical"</span>)
     }
 }
 
@@ -69,9 +71,9 @@
         <span class="self">self</span>.bind(orientation, <span class="kw">move </span>|handle, orientation| {
             <span class="kw">let </span>orientation = orientation.get(<span class="kw-2">&amp;</span>handle);
             <span class="kw">if </span>orientation == Orientation::Horizontal {
-                handle.class(<span class="string">"horizontal"</span>);
+                handle.toggle_class(<span class="string">"horizontal"</span>, <span class="bool-val">true</span>).toggle_class(<span class="string">"vertical"</span>, <span class="bool-val">false</span>);
             } <span class="kw">else </span>{
-                handle.class(<span class="string">"vertical"</span>);
+                handle.toggle_class(<span class="string">"horizontal"</span>, <span class="bool-val">false</span>).toggle_class(<span class="string">"vertical"</span>, <span class="bool-val">true</span>);
             }
         })
     }

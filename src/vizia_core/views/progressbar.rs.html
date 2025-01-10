@@ -107,42 +107,11 @@
 <a href="#106" id="106">106</a>
 <a href="#107" id="107">107</a>
 <a href="#108" id="108">108</a>
-<a href="#109" id="109">109</a>
-<a href="#110" id="110">110</a>
-<a href="#111" id="111">111</a>
-<a href="#112" id="112">112</a>
-<a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a>
-<a href="#116" id="116">116</a>
-<a href="#117" id="117">117</a>
-<a href="#118" id="118">118</a>
-<a href="#119" id="119">119</a>
-<a href="#120" id="120">120</a>
-<a href="#121" id="121">121</a>
-<a href="#122" id="122">122</a>
-<a href="#123" id="123">123</a>
-<a href="#124" id="124">124</a>
-<a href="#125" id="125">125</a>
-<a href="#126" id="126">126</a>
-<a href="#127" id="127">127</a>
-<a href="#128" id="128">128</a>
-<a href="#129" id="129">129</a>
-<a href="#130" id="130">130</a>
-<a href="#131" id="131">131</a>
-<a href="#132" id="132">132</a>
-<a href="#133" id="133">133</a>
-<a href="#134" id="134">134</a>
-<a href="#135" id="135">135</a>
-<a href="#136" id="136">136</a>
-<a href="#137" id="137">137</a>
-<a href="#138" id="138">138</a>
-<a href="#139" id="139">139</a>
-<a href="#140" id="140">140</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#109" id="109">109</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="doccomment">/// A simple ProgressBar that can be used to show progress of something.
+<span class="doccomment">/// A simple progress bar that can be used to show the progress of something.
 ///
-/// the input lens need to be a [f32] with range of `0.0..1.0`
+/// The input lens need to be a lens to an [f32] with range of `0.0..1.0`.
 ///
 /// # Example
 ///
@@ -189,22 +158,6 @@
 ///     ProgressBar::horizontal(cx, AppData::progress);
 ///     Label::new(cx, AppData::progress.map(|v| format!("{:.0}%", v * 100.0)));
 /// });
-/// ```
-///
-/// ### A Horizontal ProgressBar with dynamic bar background color using a lens
-/// we can dynamically change the background color of the bar using `bar_color` method on Handle
-/// ```
-/// # use vizia_core::prelude::*;
-/// # use vizia_derive::*;
-/// # let mut cx = &amp;mut Context::default();
-/// # #[derive(Lens, Default)]
-/// # pub struct AppData {
-/// #     progress: f32,
-/// #     color: Color,
-/// # }
-/// # impl Model for AppData {}
-/// # AppData::default().build(cx);
-/// ProgressBar::horizontal(cx, AppData::progress).bar_color(AppData::color);
 /// ```
 </span><span class="kw">pub struct </span>ProgressBar;
 
@@ -260,21 +213,6 @@
         <span class="self">Self</span>.build(cx, |cx| {
             <span class="kw">let </span>progress = lens.map(|v| Units::Percentage(v * <span class="number">100.0</span>));
             Element::new(cx).top(Stretch(<span class="number">1.0</span>)).height(progress).class(<span class="string">"progressbar-bar"</span>);
-        })
-    }
-}
-
-<span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, ProgressBar&gt; {
-    <span class="doccomment">/// Set the color of the bar inside the ProgressBar.
-    ///
-    /// you also pass a lens to this method if you want to be able to change the color
-    /// dynamically.
-    </span><span class="kw">pub fn </span>bar_color(<span class="self">self</span>, color: <span class="kw">impl </span>Res&lt;Color&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.bind(color, |<span class="kw-2">mut </span>h, c| {
-            <span class="kw">let </span>first_child = h.entity.first_child(<span class="kw-2">&amp;</span>h.cx.tree).unwrap();
-            h.entity = first_child;
-            <span class="kw">let </span>val = c.get(<span class="kw-2">&amp;</span>h);
-            h.background_color(val);
         })
     }
 }

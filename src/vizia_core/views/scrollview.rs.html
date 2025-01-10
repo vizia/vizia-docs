@@ -297,7 +297,61 @@
 <a href="#296" id="296">296</a>
 <a href="#297" id="297">297</a>
 <a href="#298" id="298">298</a>
-<a href="#299" id="299">299</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::binding::RatioLens;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -313,7 +367,7 @@
     </span>ScrollX(f32),
     <span class="doccomment">/// Adds given progress to scroll position for the y axis and clamps between 0 and 1
     </span>ScrollY(f32),
-    <span class="doccomment">/// Sets the Size for the inner VStack which holds the content
+    <span class="doccomment">/// Sets the size for the inner scroll-content view which holds the content
     </span>ChildGeo(f32, f32),
 }
 
@@ -338,75 +392,66 @@
     </span><span class="kw">pub </span>container_height: f32,
 
     <span class="kw">pub </span>scroll_to_cursor: bool,
+
+    <span class="kw">pub </span>show_horizontal_scrollbar: bool,
+    <span class="kw">pub </span>show_vertical_scrollbar: bool,
 }
 
 <span class="kw">impl </span>ScrollView {
-    <span class="kw">pub fn </span>new&lt;F&gt;(
-        cx: <span class="kw-2">&amp;mut </span>Context,
-        initial_x: f32,
-        initial_y: f32,
-        scroll_x: bool,
-        scroll_y: bool,
-        content: F,
-    ) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+    <span class="kw">pub fn </span>new&lt;F&gt;(cx: <span class="kw-2">&amp;mut </span>Context, content: F) -&gt; Handle&lt;<span class="self">Self</span>&gt;
     <span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ FnOnce(<span class="kw-2">&amp;mut </span>Context),
     {
         <span class="self">Self </span>{
             scroll_to_cursor: <span class="bool-val">false</span>,
-            scroll_x: initial_x,
-            scroll_y: initial_y,
+            scroll_x: <span class="number">0.0</span>,
+            scroll_y: <span class="number">0.0</span>,
             on_scroll: <span class="prelude-val">None</span>,
             inner_width: <span class="number">0.0</span>,
             inner_height: <span class="number">0.0</span>,
             container_width: <span class="number">0.0</span>,
             container_height: <span class="number">0.0</span>,
+            show_horizontal_scrollbar: <span class="bool-val">true</span>,
+            show_vertical_scrollbar: <span class="bool-val">true</span>,
         }
         .build(cx, <span class="kw">move </span>|cx| {
             ScrollContent::new(cx, content);
 
-            <span class="comment">// .bind(ScrollView::scroll_y, |handle, data| {
-            //     let scale_factor = handle.scale_factor();
-            //     let data = data.get(&amp;handle);
-            //     // let left = ((data.inner_width - data.container_width) * data.scroll_x).round()
-            //     //     / scale_factor;
-            //     // let top = ((data.inner_height - data.container_height) * data.scroll_y).round()
-            //     //     / scale_factor;
-            //     // handle.left(Units::Pixels(-left.abs())).top(Units::Pixels(-top.abs()));
-            //     println!("sy {}", data);
-            // });
+            Binding::new(cx, ScrollView::show_vertical_scrollbar, |cx, show_scrollbar| {
+                <span class="kw">if </span>show_scrollbar.get(cx) {
+                    Scrollbar::new(
+                        cx,
+                        ScrollView::scroll_y,
+                        RatioLens::new(ScrollView::container_height, ScrollView::inner_height),
+                        Orientation::Vertical,
+                        |cx, value| {
+                            cx.emit(ScrollEvent::SetY(value));
+                        },
+                    )
+                    .position_type(PositionType::Absolute)
+                    .scroll_to_cursor(<span class="self">Self</span>::scroll_to_cursor);
+                }
+            });
 
-            </span><span class="kw">if </span>scroll_y {
-                Scrollbar::new(
-                    cx,
-                    ScrollView::scroll_y,
-                    RatioLens::new(ScrollView::container_height, ScrollView::inner_height),
-                    Orientation::Vertical,
-                    |cx, value| {
-                        cx.emit(ScrollEvent::SetY(value));
-                    },
-                )
-                .position_type(PositionType::Absolute)
-                .scroll_to_cursor(<span class="self">Self</span>::scroll_to_cursor);
-            }
-
-            <span class="kw">if </span>scroll_x {
-                Scrollbar::new(
-                    cx,
-                    ScrollView::scroll_x,
-                    RatioLens::new(ScrollView::container_width, ScrollView::inner_width),
-                    Orientation::Horizontal,
-                    |cx, value| {
-                        cx.emit(ScrollEvent::SetX(value));
-                    },
-                )
-                .position_type(PositionType::Absolute)
-                .scroll_to_cursor(<span class="self">Self</span>::scroll_to_cursor);
-            }
+            Binding::new(cx, ScrollView::show_vertical_scrollbar, |cx, show_scrollbar| {
+                <span class="kw">if </span>show_scrollbar.get(cx) {
+                    Scrollbar::new(
+                        cx,
+                        ScrollView::scroll_x,
+                        RatioLens::new(ScrollView::container_width, ScrollView::inner_width),
+                        Orientation::Horizontal,
+                        |cx, value| {
+                            cx.emit(ScrollEvent::SetX(value));
+                        },
+                    )
+                    .position_type(PositionType::Absolute)
+                    .scroll_to_cursor(<span class="self">Self</span>::scroll_to_cursor);
+                }
+            });
         })
         .bind(ScrollView::root, |handle, data| {
             <span class="kw">let </span>data = data.get(<span class="kw-2">&amp;</span>handle);
-            handle.vertical_scroll(data.scroll_y).horizontal_scroll(data.scroll_x);
+            handle.horizontal_scroll(data.scroll_x).vertical_scroll(data.scroll_y);
         })
         .toggle_class(
             <span class="string">"h-scroll"</span>,
@@ -467,6 +512,40 @@
                 }
 
                 ScrollEvent::ChildGeo(w, h) =&gt; {
+                    <span class="kw">let </span>bounds = cx.bounds();
+                    <span class="kw">let </span>scale_factor = cx.scale_factor();
+
+                    <span class="kw">if </span><span class="self">self</span>.inner_width != <span class="number">0.0
+                        </span>&amp;&amp; <span class="self">self</span>.inner_height != <span class="number">0.0
+                        </span>&amp;&amp; <span class="self">self</span>.container_width != <span class="number">0.0
+                        </span>&amp;&amp; <span class="self">self</span>.container_height != <span class="number">0.0
+                    </span>{
+                        <span class="kw">let </span>top = ((<span class="self">self</span>.inner_height - <span class="self">self</span>.container_height) * <span class="self">self</span>.scroll_y)
+                            .round()
+                            / scale_factor;
+                        <span class="kw">let </span>left = ((<span class="self">self</span>.inner_width - <span class="self">self</span>.container_width) * <span class="self">self</span>.scroll_x)
+                            .round()
+                            / scale_factor;
+
+                        <span class="self">self</span>.container_width = bounds.width();
+                        <span class="self">self</span>.container_height = bounds.height();
+                        <span class="self">self</span>.inner_width = <span class="kw-2">*</span>w;
+                        <span class="self">self</span>.inner_height = <span class="kw-2">*</span>h;
+
+                        <span class="self">self</span>.scroll_y = ((top * scale_factor)
+                            / (<span class="self">self</span>.inner_height - <span class="self">self</span>.container_height))
+                            .clamp(<span class="number">0.0</span>, <span class="number">1.0</span>);
+                        <span class="self">self</span>.scroll_x = ((left * scale_factor)
+                            / (<span class="self">self</span>.inner_width - <span class="self">self</span>.container_width))
+                            .clamp(<span class="number">0.0</span>, <span class="number">1.0</span>);
+
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_scroll {
+                            (callback)(cx, <span class="self">self</span>.scroll_x, <span class="self">self</span>.scroll_y);
+                        }
+
+                        <span class="self">self</span>.reset();
+                    }
+
                     <span class="self">self</span>.inner_width = <span class="kw-2">*</span>w;
                     <span class="self">self</span>.inner_height = <span class="kw-2">*</span>h;
                     <span class="self">self</span>.reset();
@@ -485,23 +564,38 @@
                 {
                     <span class="kw">let </span>bounds = cx.bounds();
                     <span class="kw">let </span>scale_factor = cx.scale_factor();
-                    <span class="kw">let </span>top = ((<span class="self">self</span>.inner_height - <span class="self">self</span>.container_height) * <span class="self">self</span>.scroll_y).round()
-                        / scale_factor;
-                    <span class="kw">let </span>left = ((<span class="self">self</span>.inner_width - <span class="self">self</span>.container_width) * <span class="self">self</span>.scroll_x).round()
-                        / scale_factor;
-                    <span class="self">self</span>.container_width = bounds.width();
-                    <span class="self">self</span>.container_height = bounds.height();
-                    <span class="self">self</span>.scroll_y = ((top * scale_factor)
-                        / (<span class="self">self</span>.inner_height - <span class="self">self</span>.container_height))
-                        .clamp(<span class="number">0.0</span>, <span class="number">1.0</span>);
-                    <span class="self">self</span>.scroll_x = ((left * scale_factor)
-                        / (<span class="self">self</span>.inner_width - <span class="self">self</span>.container_width))
-                        .clamp(<span class="number">0.0</span>, <span class="number">1.0</span>);
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_scroll {
-                        (callback)(cx, <span class="self">self</span>.scroll_x, <span class="self">self</span>.scroll_y);
+
+                    <span class="kw">if </span><span class="self">self</span>.inner_width != <span class="number">0.0
+                        </span>&amp;&amp; <span class="self">self</span>.inner_height != <span class="number">0.0
+                        </span>&amp;&amp; <span class="self">self</span>.container_width != <span class="number">0.0
+                        </span>&amp;&amp; <span class="self">self</span>.container_height != <span class="number">0.0
+                    </span>{
+                        <span class="kw">let </span>top = ((<span class="self">self</span>.inner_height - <span class="self">self</span>.container_height) * <span class="self">self</span>.scroll_y)
+                            .round()
+                            / scale_factor;
+                        <span class="kw">let </span>left = ((<span class="self">self</span>.inner_width - <span class="self">self</span>.container_width) * <span class="self">self</span>.scroll_x)
+                            .round()
+                            / scale_factor;
+
+                        <span class="self">self</span>.container_width = bounds.width();
+                        <span class="self">self</span>.container_height = bounds.height();
+
+                        <span class="self">self</span>.scroll_y = ((top * scale_factor)
+                            / (<span class="self">self</span>.inner_height - <span class="self">self</span>.container_height))
+                            .clamp(<span class="number">0.0</span>, <span class="number">1.0</span>);
+                        <span class="self">self</span>.scroll_x = ((left * scale_factor)
+                            / (<span class="self">self</span>.inner_width - <span class="self">self</span>.container_width))
+                            .clamp(<span class="number">0.0</span>, <span class="number">1.0</span>);
+
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_scroll {
+                            (callback)(cx, <span class="self">self</span>.scroll_x, <span class="self">self</span>.scroll_y);
+                        }
+
+                        <span class="self">self</span>.reset();
                     }
 
-                    <span class="self">self</span>.reset();
+                    <span class="self">self</span>.container_width = bounds.width();
+                    <span class="self">self</span>.container_height = bounds.height();
                 }
             }
 
@@ -552,17 +646,31 @@
         <span class="self">self</span>.modify(|scrollview: <span class="kw-2">&amp;mut </span>ScrollView| scrollview.scroll_to_cursor = scroll_to_cursor)
     }
 
-    <span class="kw">pub fn </span>scrollx(<span class="self">self</span>, scrollx: <span class="kw">impl </span>Res&lt;f32&gt;) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>scroll_x(<span class="self">self</span>, scrollx: <span class="kw">impl </span>Res&lt;f32&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.bind(scrollx, |handle, scrollx| {
             <span class="kw">let </span>sx = scrollx.get(<span class="kw-2">&amp;</span>handle);
             handle.modify(|scrollview| scrollview.scroll_x = sx);
         })
     }
 
-    <span class="kw">pub fn </span>scrolly(<span class="self">self</span>, scrollx: <span class="kw">impl </span>Res&lt;f32&gt;) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>scroll_y(<span class="self">self</span>, scrollx: <span class="kw">impl </span>Res&lt;f32&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.bind(scrollx, |handle, scrolly| {
             <span class="kw">let </span>sy = scrolly.get(<span class="kw-2">&amp;</span>handle);
             handle.modify(|scrollview| scrollview.scroll_y = sy);
+        })
+    }
+
+    <span class="kw">pub fn </span>show_horizontal_scrollbar(<span class="self">self</span>, flag: <span class="kw">impl </span>Res&lt;bool&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(flag, |handle, show_scrollbar| {
+            <span class="kw">let </span>s = show_scrollbar.get(<span class="kw-2">&amp;</span>handle);
+            handle.modify(|scrollview| scrollview.show_horizontal_scrollbar = s);
+        })
+    }
+
+    <span class="kw">pub fn </span>show_vertical_scrollbar(<span class="self">self</span>, flag: <span class="kw">impl </span>Res&lt;bool&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(flag, |handle, show_scrollbar| {
+            <span class="kw">let </span>s = show_scrollbar.get(<span class="kw-2">&amp;</span>handle);
+            handle.modify(|scrollview| scrollview.show_vertical_scrollbar = s);
         })
     }
 }

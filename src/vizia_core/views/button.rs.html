@@ -274,11 +274,7 @@
 <a href="#273" id="273">273</a>
 <a href="#274" id="274">274</a>
 <a href="#275" id="275">275</a>
-<a href="#276" id="276">276</a>
-<a href="#277" id="277">277</a>
-<a href="#278" id="278">278</a>
-<a href="#279" id="279">279</a>
-<a href="#280" id="280">280</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#276" id="276">276</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// A simple push button with a contained view.
 ///
@@ -443,39 +439,40 @@
 }
 
 <span class="kw">impl </span>ButtonModifiers <span class="kw">for </span>Handle&lt;<span class="lifetime">'_</span>, Button&gt; {
-    <span class="kw">fn </span>variant&lt;U: Into&lt;ButtonVariant&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, variant: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
-        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        variant.set_or_bind(<span class="self">self</span>.context(), entity, |cx, val| {
-            <span class="kw">let </span>var: ButtonVariant = val.get(cx).into();
+    <span class="kw">fn </span>variant&lt;U: Into&lt;ButtonVariant&gt;&gt;(<span class="self">self</span>, variant: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(variant, |handle, val| {
+            <span class="kw">let </span>var: ButtonVariant = val.get(<span class="kw-2">&amp;</span>handle).into();
             <span class="kw">match </span>var {
                 ButtonVariant::Normal =&gt; {
-                    cx.toggle_class(<span class="string">"accent"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"outline"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"text"</span>, <span class="bool-val">false</span>);
+                    handle
+                        .toggle_class(<span class="string">"accent"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"outline"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"text"</span>, <span class="bool-val">false</span>);
                 }
 
                 ButtonVariant::Accent =&gt; {
-                    cx.toggle_class(<span class="string">"accent"</span>, <span class="bool-val">true</span>);
-                    cx.toggle_class(<span class="string">"outline"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"text"</span>, <span class="bool-val">false</span>);
+                    handle
+                        .toggle_class(<span class="string">"accent"</span>, <span class="bool-val">true</span>)
+                        .toggle_class(<span class="string">"outline"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"text"</span>, <span class="bool-val">false</span>);
                 }
 
                 ButtonVariant::Outline =&gt; {
-                    cx.toggle_class(<span class="string">"accent"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"outline"</span>, <span class="bool-val">true</span>);
-                    cx.toggle_class(<span class="string">"text"</span>, <span class="bool-val">false</span>);
+                    handle
+                        .toggle_class(<span class="string">"accent"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"outline"</span>, <span class="bool-val">true</span>)
+                        .toggle_class(<span class="string">"text"</span>, <span class="bool-val">false</span>);
                 }
 
                 ButtonVariant::Text =&gt; {
-                    cx.toggle_class(<span class="string">"accent"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"outline"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"text"</span>, <span class="bool-val">true</span>);
+                    handle
+                        .toggle_class(<span class="string">"accent"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"outline"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"text"</span>, <span class="bool-val">true</span>);
                 }
             }
-        });
-
-        <span class="self">self
-    </span>}
+        })
+    }
 }
 
 <span class="kw">pub struct </span>ButtonGroup {}
@@ -486,14 +483,8 @@
     /// # Example
     /// ```
     /// # use vizia_core::prelude::*;
-    /// #
-    /// # enum AppEvent {
-    /// #     Share,
-    /// # }
     ///
     /// # let cx = &amp;mut Context::default();
-    /// #
-    /// use vizia::icons::ICON_SHARE;
     ///
     /// ButtonGroup::new(cx, |cx| {
     ///     Button::new(cx, |cx| Label::new(cx, "ONE"));
@@ -524,38 +515,39 @@
 }
 
 <span class="kw">impl </span>ButtonModifiers <span class="kw">for </span>Handle&lt;<span class="lifetime">'_</span>, ButtonGroup&gt; {
-    <span class="kw">fn </span>variant&lt;U: Into&lt;ButtonVariant&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, variant: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
-        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        variant.set_or_bind(<span class="self">self</span>.context(), entity, |cx, val| {
-            <span class="kw">let </span>var: ButtonVariant = val.get(cx).into();
+    <span class="kw">fn </span>variant&lt;U: Into&lt;ButtonVariant&gt;&gt;(<span class="self">self</span>, variant: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(variant, |handle, val| {
+            <span class="kw">let </span>var: ButtonVariant = val.get(<span class="kw-2">&amp;</span>handle).into();
             <span class="kw">match </span>var {
                 ButtonVariant::Normal =&gt; {
-                    cx.toggle_class(<span class="string">"accent"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"outline"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"text"</span>, <span class="bool-val">false</span>);
+                    handle
+                        .toggle_class(<span class="string">"accent"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"outline"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"text"</span>, <span class="bool-val">false</span>);
                 }
 
                 ButtonVariant::Accent =&gt; {
-                    cx.toggle_class(<span class="string">"accent"</span>, <span class="bool-val">true</span>);
-                    cx.toggle_class(<span class="string">"outline"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"text"</span>, <span class="bool-val">false</span>);
+                    handle
+                        .toggle_class(<span class="string">"accent"</span>, <span class="bool-val">true</span>)
+                        .toggle_class(<span class="string">"outline"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"text"</span>, <span class="bool-val">false</span>);
                 }
 
                 ButtonVariant::Outline =&gt; {
-                    cx.toggle_class(<span class="string">"accent"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"outline"</span>, <span class="bool-val">true</span>);
-                    cx.toggle_class(<span class="string">"text"</span>, <span class="bool-val">false</span>);
+                    handle
+                        .toggle_class(<span class="string">"accent"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"outline"</span>, <span class="bool-val">true</span>)
+                        .toggle_class(<span class="string">"text"</span>, <span class="bool-val">false</span>);
                 }
 
                 ButtonVariant::Text =&gt; {
-                    cx.toggle_class(<span class="string">"accent"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"outline"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"text"</span>, <span class="bool-val">true</span>);
+                    handle
+                        .toggle_class(<span class="string">"accent"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"outline"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"text"</span>, <span class="bool-val">true</span>);
                 }
             }
-        });
-
-        <span class="self">self
-    </span>}
+        })
+    }
 }
 </code></pre></div></section></main></body></html>

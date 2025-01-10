@@ -224,7 +224,8 @@
 <a href="#223" id="223">223</a>
 <a href="#224" id="224">224</a>
 <a href="#225" id="225">225</a>
-<a href="#226" id="226">226</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::{Deref, Range};
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::{Deref, Range};
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
@@ -353,7 +354,7 @@
                 data.build(cx);
             });
 
-            ScrollView::new(cx, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="kw">move </span>|cx| {
+            ScrollView::new(cx, <span class="kw">move </span>|cx| {
                 Binding::new(cx, num_items, <span class="kw">move </span>|cx, lens| {
                     <span class="kw">let </span>num_items = lens.get(cx);
                     cx.emit(ScrollEvent::SetY(<span class="number">0.0</span>));
@@ -392,6 +393,7 @@
                     .height(Pixels(num_items <span class="kw">as </span>f32 * item_height));
                 })
             })
+            .show_horizontal_scrollbar(<span class="bool-val">false</span>)
             .scroll_to_cursor(<span class="bool-val">true</span>)
             .on_scroll(|cx, <span class="kw">_</span>, y| {
                 <span class="kw">if </span>y.is_finite() {

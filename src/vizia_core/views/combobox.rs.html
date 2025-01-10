@@ -263,106 +263,12 @@
 <a href="#262" id="262">262</a>
 <a href="#263" id="263">263</a>
 <a href="#264" id="264">264</a>
-<a href="#265" id="265">265</a>
-<a href="#266" id="266">266</a>
-<a href="#267" id="267">267</a>
-<a href="#268" id="268">268</a>
-<a href="#269" id="269">269</a>
-<a href="#270" id="270">270</a>
-<a href="#271" id="271">271</a>
-<a href="#272" id="272">272</a>
-<a href="#273" id="273">273</a>
-<a href="#274" id="274">274</a>
-<a href="#275" id="275">275</a>
-<a href="#276" id="276">276</a>
-<a href="#277" id="277">277</a>
-<a href="#278" id="278">278</a>
-<a href="#279" id="279">279</a>
-<a href="#280" id="280">280</a>
-<a href="#281" id="281">281</a>
-<a href="#282" id="282">282</a>
-<a href="#283" id="283">283</a>
-<a href="#284" id="284">284</a>
-<a href="#285" id="285">285</a>
-<a href="#286" id="286">286</a>
-<a href="#287" id="287">287</a>
-<a href="#288" id="288">288</a>
-<a href="#289" id="289">289</a>
-<a href="#290" id="290">290</a>
-<a href="#291" id="291">291</a>
-<a href="#292" id="292">292</a>
-<a href="#293" id="293">293</a>
-<a href="#294" id="294">294</a>
-<a href="#295" id="295">295</a>
-<a href="#296" id="296">296</a>
-<a href="#297" id="297">297</a>
-<a href="#298" id="298">298</a>
-<a href="#299" id="299">299</a>
-<a href="#300" id="300">300</a>
-<a href="#301" id="301">301</a>
-<a href="#302" id="302">302</a>
-<a href="#303" id="303">303</a>
-<a href="#304" id="304">304</a>
-<a href="#305" id="305">305</a>
-<a href="#306" id="306">306</a>
-<a href="#307" id="307">307</a>
-<a href="#308" id="308">308</a>
-<a href="#309" id="309">309</a>
-<a href="#310" id="310">310</a>
-<a href="#311" id="311">311</a>
-<a href="#312" id="312">312</a>
-<a href="#313" id="313">313</a>
-<a href="#314" id="314">314</a>
-<a href="#315" id="315">315</a>
-<a href="#316" id="316">316</a>
-<a href="#317" id="317">317</a>
-<a href="#318" id="318">318</a>
-<a href="#319" id="319">319</a>
-<a href="#320" id="320">320</a>
-<a href="#321" id="321">321</a>
-<a href="#322" id="322">322</a>
-<a href="#323" id="323">323</a>
-<a href="#324" id="324">324</a>
-<a href="#325" id="325">325</a>
-<a href="#326" id="326">326</a>
-<a href="#327" id="327">327</a>
-<a href="#328" id="328">328</a>
-<a href="#329" id="329">329</a>
-<a href="#330" id="330">330</a>
-<a href="#331" id="331">331</a>
-<a href="#332" id="332">332</a>
-<a href="#333" id="333">333</a>
-<a href="#334" id="334">334</a>
-<a href="#335" id="335">335</a>
-<a href="#336" id="336">336</a>
-<a href="#337" id="337">337</a>
-<a href="#338" id="338">338</a>
-<a href="#339" id="339">339</a>
-<a href="#340" id="340">340</a>
-<a href="#341" id="341">341</a>
-<a href="#342" id="342">342</a>
-<a href="#343" id="343">343</a>
-<a href="#344" id="344">344</a>
-<a href="#345" id="345">345</a>
-<a href="#346" id="346">346</a>
-<a href="#347" id="347">347</a>
-<a href="#348" id="348">348</a>
-<a href="#349" id="349">349</a>
-<a href="#350" id="350">350</a>
-<a href="#351" id="351">351</a>
-<a href="#352" id="352">352</a>
-<a href="#353" id="353">353</a>
-<a href="#354" id="354">354</a>
-<a href="#355" id="355">355</a>
-<a href="#356" id="356">356</a>
-<a href="#357" id="357">357</a>
-<a href="#358" id="358">358</a>
-<a href="#359" id="359">359</a>
-<a href="#360" id="360">360</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomData;
+<a href="#265" id="265">265</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomData;
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="attr">#[derive(Lens)]
+<span class="doccomment">/// A ComboBox view which combines a textbox with a picklist, allowing users to filter to only the options matching a query.
+</span><span class="attr">#[derive(Lens)]
 </span><span class="kw">pub struct </span>ComboBox&lt;
     L1: Lens&lt;Target = Vec&lt;T&gt;&gt;,
     L2: Lens&lt;Target = usize&gt;,
@@ -380,15 +286,13 @@
     </span>selected: L2,
     <span class="comment">// Whether the popup list is visible.
     </span>is_open: bool,
-    <span class="comment">// Index of value hovered (or selected by arrow keys).
-    </span>hovered: usize,
+
     p: PhantomData&lt;T&gt;,
 }
 
 <span class="kw">pub enum </span>ComboBoxEvent {
     SetOption(usize),
     SetFilterText(String),
-    SetHovered(usize),
     Close,
 }
 
@@ -406,7 +310,6 @@
             selected,
             p: PhantomData,
             is_open: <span class="bool-val">false</span>,
-            hovered: selected.get(cx),
             placeholder: String::from(<span class="string">"One"</span>),
         }
         .build(cx, |cx| {
@@ -449,58 +352,30 @@
                 <span class="kw">if </span>is_open.get(cx) {
                     Popup::new(cx, <span class="kw">move </span>|cx: <span class="kw-2">&amp;mut </span>Context| {
                         <span class="comment">// Binding to the filter text.
-                        </span>Binding::new(cx, <span class="self">Self</span>::filter_text, <span class="kw">move </span>|cx, _filter_text| {
-                            <span class="comment">// Binding to the list of values.
-                            </span>Binding::new(cx, list_lens, <span class="kw">move </span>|cx, list| {
-                                <span class="comment">// Seems that the layout bugs out when rebuilding the contents of a scrollview that's been scrolled to 100%.
-                                // So instead we just rebuild the whole scrollview.
-                                </span>ScrollView::new(cx, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="kw">move </span>|cx| {
-                                    <span class="kw">let </span>f = <span class="self">Self</span>::filter_text.get(cx);
-                                    <span class="comment">// List view doesn't have an option for filtering (yet) so we do it manually instead.
-                                    </span>VStack::new(cx, |cx| {
-                                        <span class="kw">let </span>ll = list
-                                            .get(cx)
-                                            .iter()
-                                            .enumerate()
-                                            .filter(|(<span class="kw">_</span>, item)| {
-                                                <span class="kw">if </span>f.is_empty() {
-                                                    <span class="bool-val">true
-                                                </span>} <span class="kw">else </span>{
-                                                    item.to_string()
-                                                        .to_ascii_lowercase()
-                                                        .contains(<span class="kw-2">&amp;</span>f.to_ascii_lowercase())
-                                                }
-                                            })
-                                            .map(|(idx, <span class="kw">_</span>)| idx)
-                                            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-
-                                        <span class="kw">for </span>index <span class="kw">in </span>ll.into_iter() {
-                                            <span class="kw">let </span>item = list.idx(index);
-                                            Label::new(cx, item)
-                                                .alignment(Alignment::Left)
-                                                .checked(
-                                                    selected
-                                                        .map(<span class="kw">move </span>|selected| <span class="kw-2">*</span>selected == index),
-                                                )
-                                                .navigable(<span class="bool-val">true</span>)
-                                                .toggle_class(
-                                                    <span class="string">"nav"</span>,
-                                                    <span class="self">Self</span>::hovered.map(<span class="kw">move </span>|nav| <span class="kw-2">*</span>nav == index),
-                                                )
-                                                .on_hover(<span class="kw">move </span>|cx| {
-                                                    cx.emit(ComboBoxEvent::SetHovered(index))
-                                                })
-                                                .on_press(<span class="kw">move </span>|cx| {
-                                                    cx.emit(ComboBoxEvent::SetOption(index));
-                                                });
-                                        }
-                                    })
-                                    .height(Auto)
-                                    .class(<span class="string">"list"</span>);
-                                })
-                                .height(Auto);
-                                <span class="comment">//.min_height(Auto);
-                            </span>});
+                        </span>Binding::new(cx, <span class="self">Self</span>::filter_text, <span class="kw">move </span>|cx, filter_text| {
+                            <span class="kw">let </span>f = filter_text.get(cx);
+                            List::new_filtered(
+                                cx,
+                                list_lens,
+                                <span class="kw">move </span>|item| {
+                                    <span class="kw">if </span>f.is_empty() {
+                                        <span class="bool-val">true
+                                    </span>} <span class="kw">else </span>{
+                                        item.to_string()
+                                            .to_ascii_lowercase()
+                                            .contains(<span class="kw-2">&amp;</span>f.to_ascii_lowercase())
+                                    }
+                                },
+                                |cx, <span class="kw">_</span>, item| {
+                                    Label::new(cx, item);
+                                },
+                            )
+                            .selectable(Selectable::Single)
+                            .selected(selected.map(|s| <span class="macro">vec!</span>[<span class="kw-2">*</span>s]))
+                            .on_select(|cx, index| {
+                                cx.emit(ComboBoxEvent::SetOption(index));
+                                cx.emit(PopupEvent::Close);
+                            });
                         });
                     })
                     .should_reposition(<span class="bool-val">false</span>)
@@ -540,9 +415,6 @@
                 <span class="comment">// Close the popup.
                 </span><span class="self">self</span>.is_open = <span class="bool-val">false</span>;
 
-                <span class="comment">// Set the hovered index to the selected index.
-                </span><span class="self">self</span>.hovered = <span class="kw-2">*</span>index;
-
                 <span class="comment">// Reset the filter text.
                 </span><span class="self">self</span>.filter_text = String::new();
 
@@ -555,41 +427,12 @@
                 );
             }
 
-            ComboBoxEvent::SetHovered(index) =&gt; {
-                <span class="self">self</span>.hovered = <span class="kw-2">*</span>index;
-            }
-
             ComboBoxEvent::SetFilterText(text) =&gt; {
                 <span class="self">self</span>.placeholder.clone_from(text);
                 <span class="self">self</span>.filter_text.clone_from(text);
 
                 <span class="comment">// Reopen the popup in case it was closed with the ESC key.
                 </span><span class="self">self</span>.is_open = <span class="bool-val">true</span>;
-
-                <span class="kw">let </span>filter = |(<span class="kw">_</span>, txt): <span class="kw-2">&amp;</span>(usize, <span class="kw-2">&amp;</span>T)| {
-                    <span class="kw">if </span><span class="self">self</span>.filter_text.is_empty() {
-                        <span class="bool-val">true
-                    </span>} <span class="kw">else </span>{
-                        txt.to_string()
-                            .to_ascii_lowercase()
-                            .contains(<span class="kw-2">&amp;</span><span class="self">self</span>.filter_text.to_ascii_lowercase())
-                    }
-                };
-
-                <span class="kw">let </span>list = <span class="self">self</span>.list_lens.get(cx);
-                <span class="kw">if let </span><span class="prelude-val">Some</span>((next_index, <span class="kw">_</span>)) =
-                    list.iter().enumerate().skip_while(|(idx, <span class="kw">_</span>)| <span class="kw-2">*</span>idx != <span class="self">self</span>.hovered).find(filter)
-                {
-                    <span class="self">self</span>.hovered = next_index;
-                } <span class="kw">else </span>{
-                    <span class="kw">let </span>list_len = list.len();
-                    <span class="self">self</span>.hovered = list
-                        .iter()
-                        .enumerate()
-                        .find(filter)
-                        .map(|(index, <span class="kw">_</span>)| index)
-                        .unwrap_or(list_len);
-                }
             }
 
             ComboBoxEvent::Close =&gt; {
@@ -601,15 +444,14 @@
             <span class="comment">// User pressed on the textbox or focused it.
             </span>TextEvent::StartEdit =&gt; {
                 <span class="self">self</span>.is_open = <span class="bool-val">true</span>;
-                <span class="self">self</span>.hovered = <span class="self">self</span>.selected.get(cx);
             }
 
             TextEvent::Submit(enter) =&gt; {
                 <span class="kw">let </span>selected = <span class="self">self</span>.selected.get(cx);
-                <span class="kw">if </span><span class="kw-2">*</span>enter &amp;&amp; <span class="self">self</span>.hovered &lt; <span class="self">self</span>.list_lens.get(cx).len() {
+                <span class="kw">if </span><span class="kw-2">*</span>enter {
                     <span class="comment">// User pressed the enter key.
-                    </span>cx.emit(ComboBoxEvent::SetOption(<span class="self">self</span>.hovered));
-                } <span class="kw">else </span>{
+                    //cx.emit(ComboBoxEvent::SetOption(self.hovered));
+                </span>} <span class="kw">else </span>{
                     <span class="comment">// User clicked outside the textbox.
                     </span>cx.emit(ComboBoxEvent::SetOption(selected));
                 }
@@ -618,78 +460,46 @@
             <span class="kw">_ </span>=&gt; {}
         });
 
-        event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
-            WindowEvent::MouseDown(button) <span class="kw">if </span><span class="kw-2">*</span>button == MouseButton::Left =&gt; {
-                <span class="kw">if </span>!<span class="self">self</span>.is_open {
-                    <span class="self">self</span>.is_open = <span class="bool-val">true</span>;
-                    <span class="self">self</span>.hovered = <span class="self">self</span>.selected.get(cx);
-                }
-            }
-
+        event.map(|window_event, meta| <span class="kw">match </span>window_event {
             WindowEvent::KeyDown(code, <span class="kw">_</span>) =&gt; <span class="kw">match </span>code {
                 Code::ArrowDown =&gt; {
-                    <span class="kw">if </span>!<span class="self">self</span>.is_open {
-                        <span class="self">self</span>.is_open = <span class="bool-val">true</span>;
-                    } <span class="kw">else </span>{
-                        <span class="kw">let </span>filter = |(<span class="kw">_</span>, txt): <span class="kw-2">&amp;</span>(usize, <span class="kw-2">&amp;</span>T)| {
-                            <span class="kw">if </span><span class="self">self</span>.filter_text.is_empty() {
-                                <span class="bool-val">true
-                            </span>} <span class="kw">else </span>{
-                                txt.to_string()
-                                    .to_ascii_lowercase()
-                                    .contains(<span class="kw-2">&amp;</span><span class="self">self</span>.filter_text.to_ascii_lowercase())
-                            }
-                        };
-
-                        <span class="kw">let </span>list = <span class="self">self</span>.list_lens.get(cx);
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>((next_index, <span class="kw">_</span>)) = list
-                            .iter()
-                            .enumerate()
-                            .filter(filter)
-                            .skip_while(|(idx, <span class="kw">_</span>)| <span class="kw-2">*</span>idx != <span class="self">self</span>.hovered)
-                            .nth(<span class="number">1</span>)
-                        {
-                            <span class="self">self</span>.hovered = next_index;
-                        } <span class="kw">else </span>{
-                            <span class="self">self</span>.hovered = list.iter().enumerate().find(filter).unwrap().<span class="number">0</span>;
-                        }
+                    <span class="comment">// Forward events to list
+                    </span><span class="kw">if </span>meta.origin != cx.current() {
+                        cx.emit_custom(
+                            Event::new(window_event.clone())
+                                .origin(cx.current())
+                                .target(Entity::root())
+                                .propagate(Propagation::Subtree),
+                        );
                     }
                 }
 
                 Code::ArrowUp =&gt; {
-                    <span class="kw">if </span>!<span class="self">self</span>.is_open {
-                        <span class="self">self</span>.is_open = <span class="bool-val">true</span>;
-                    } <span class="kw">else </span>{
-                        <span class="kw">let </span>filter = |(<span class="kw">_</span>, txt): <span class="kw-2">&amp;</span>(usize, <span class="kw-2">&amp;</span>T)| {
-                            <span class="kw">if </span><span class="self">self</span>.filter_text.is_empty() {
-                                <span class="bool-val">true
-                            </span>} <span class="kw">else </span>{
-                                txt.to_string()
-                                    .to_ascii_lowercase()
-                                    .contains(<span class="kw-2">&amp;</span><span class="self">self</span>.filter_text.to_ascii_lowercase())
-                            }
-                        };
+                    <span class="comment">// Forward events to list
+                    </span><span class="kw">if </span>meta.origin != cx.current() {
+                        cx.emit_custom(
+                            Event::new(window_event.clone())
+                                .origin(cx.current())
+                                .target(Entity::root())
+                                .propagate(Propagation::Subtree),
+                        );
+                    }
+                }
 
-                        <span class="kw">let </span>list = <span class="self">self</span>.list_lens.get(cx);
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>((next_index, <span class="kw">_</span>)) = list
-                            .iter()
-                            .enumerate()
-                            .rev()
-                            .filter(filter)
-                            .skip_while(|(idx, <span class="kw">_</span>)| <span class="kw-2">*</span>idx != <span class="self">self</span>.hovered)
-                            .nth(<span class="number">1</span>)
-                        {
-                            <span class="self">self</span>.hovered = next_index;
-                        } <span class="kw">else </span>{
-                            <span class="self">self</span>.hovered = list.iter().enumerate().rev().find(filter).unwrap().<span class="number">0</span>;
-                        }
+                Code::Enter =&gt; {
+                    <span class="kw">if </span>meta.origin != cx.current() {
+                        cx.emit_custom(
+                            Event::new(window_event.clone())
+                                .origin(cx.current())
+                                .target(Entity::root())
+                                .propagate(Propagation::Subtree),
+                        );
                     }
                 }
 
                 Code::Escape =&gt; {
                     <span class="kw">if </span><span class="self">self</span>.is_open {
                         <span class="self">self</span>.is_open = <span class="bool-val">false</span>;
-                        <span class="self">self</span>.hovered = <span class="self">self</span>.selected.get(cx);
                     } <span class="kw">else </span>{
                         cx.emit(TextEvent::Submit(<span class="bool-val">false</span>));
                     }

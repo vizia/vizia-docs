@@ -80,7 +80,51 @@
 <a href="#79" id="79">79</a>
 <a href="#80" id="80">80</a>
 <a href="#81" id="81">81</a>
-<a href="#82" id="82">82</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
+<a href="#87" id="87">87</a>
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// Enum which represents the geometric variants of an avatar view.
 </span><span class="attr">#[derive(Debug, Default, Clone, Copy, Data, PartialEq)]
@@ -91,7 +135,7 @@
     Rounded,
 }
 
-<span class="doccomment">/// An avatar is used to visually represent a person or entity and can contain text, an icon, or an image.
+<span class="doccomment">/// An avatar view is used to visually represent a person or entity and can contain text, an icon, or an image.
 ///
 /// # Example
 /// ```
@@ -104,7 +148,16 @@
 </span><span class="kw">pub struct </span>Avatar {}
 
 <span class="kw">impl </span>Avatar {
-    <span class="kw">pub fn </span>new&lt;F&gt;(cx: <span class="kw-2">&amp;mut </span>Context, content: F) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+    <span class="doccomment">/// Creates a new avatar with the given content.
+    ///
+    /// ```
+    /// # use vizia_core::prelude::*;
+    /// # let cx = &amp;mut Context::default();
+    /// Avatar::new(cx, |cx|{
+    ///     Svg::new(cx, ICON_USER);
+    /// });
+    /// ```
+    </span><span class="kw">pub fn </span>new&lt;F&gt;(cx: <span class="kw-2">&amp;mut </span>Context, content: F) -&gt; Handle&lt;<span class="self">Self</span>&gt;
     <span class="kw">where
         </span>F: FnOnce(<span class="kw-2">&amp;mut </span>Context),
     {
@@ -119,36 +172,54 @@
 }
 
 <span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, Avatar&gt; {
-    <span class="doccomment">/// Selects the style variant for the Avatar.
-    </span><span class="kw">pub fn </span>variant&lt;U: Into&lt;AvatarVariant&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, variant: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
-        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
-        variant.set_or_bind(<span class="self">self</span>.context(), entity, |cx, val| {
-            <span class="kw">let </span>var: AvatarVariant = val.get(cx).into();
+    <span class="doccomment">/// Selects the geometric variant of the Avatar. Accepts a value of, or lens to, an [AvatarVariant].
+    ///
+    /// ```
+    /// # use vizia_core::prelude::*;
+    /// # let cx = &amp;mut Context::default();
+    /// Avatar::new(cx, |cx|{
+    ///     Svg::new(cx, ICON_USER);
+    /// })
+    /// .variant(AvatarVariant::Rounded);
+    /// ```
+    </span><span class="kw">pub fn </span>variant&lt;U: Into&lt;AvatarVariant&gt;&gt;(<span class="self">self</span>, variant: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(variant, |handle, val| {
+            <span class="kw">let </span>var: AvatarVariant = val.get(<span class="kw-2">&amp;</span>handle).into();
             <span class="kw">match </span>var {
                 AvatarVariant::Circle =&gt; {
-                    cx.toggle_class(<span class="string">"circle"</span>, <span class="bool-val">true</span>);
-                    cx.toggle_class(<span class="string">"square"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"rounded"</span>, <span class="bool-val">false</span>);
+                    handle
+                        .toggle_class(<span class="string">"circle"</span>, <span class="bool-val">true</span>)
+                        .toggle_class(<span class="string">"square"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"rounded"</span>, <span class="bool-val">false</span>);
                 }
 
                 AvatarVariant::Square =&gt; {
-                    cx.toggle_class(<span class="string">"circle"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"square"</span>, <span class="bool-val">true</span>);
-                    cx.toggle_class(<span class="string">"rounded"</span>, <span class="bool-val">false</span>);
+                    handle
+                        .toggle_class(<span class="string">"circle"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"square"</span>, <span class="bool-val">true</span>)
+                        .toggle_class(<span class="string">"rounded"</span>, <span class="bool-val">false</span>);
                 }
 
                 AvatarVariant::Rounded =&gt; {
-                    cx.toggle_class(<span class="string">"circle"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"square"</span>, <span class="bool-val">false</span>);
-                    cx.toggle_class(<span class="string">"rounded"</span>, <span class="bool-val">true</span>);
+                    handle
+                        .toggle_class(<span class="string">"circle"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"square"</span>, <span class="bool-val">false</span>)
+                        .toggle_class(<span class="string">"rounded"</span>, <span class="bool-val">true</span>);
                 }
             }
-        });
-
-        <span class="self">self
-    </span>}
+        })
+    }
 
     <span class="doccomment">/// Adds a badge to the Avatar.
+    ///
+    /// ```
+    /// # use vizia_core::prelude::*;
+    /// # let cx = &amp;mut Context::default();
+    /// Avatar::new(cx, |cx|{
+    ///     Svg::new(cx, ICON_USER);
+    /// })
+    /// .badge(|cx| Badge::empty(cx).class("error"));
+    /// ```
     </span><span class="kw">pub fn </span>badge&lt;F&gt;(<span class="kw-2">mut </span><span class="self">self</span>, content: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: FnOnce(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="lifetime">'_</span>, Badge&gt;,
@@ -161,5 +232,22 @@
 
         <span class="self">self
     </span>}
+}
+
+<span class="kw">pub struct </span>AvatarGroup {}
+
+<span class="kw">impl </span>AvatarGroup {
+    <span class="kw">pub fn </span>new&lt;F&gt;(cx: <span class="kw-2">&amp;mut </span>Context, content: F) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>F: FnOnce(<span class="kw-2">&amp;mut </span>Context),
+    {
+        <span class="self">Self </span>{}.build(cx, content).size(Auto).gap(Pixels(-<span class="number">20.0</span>)).layout_type(LayoutType::Row)
+    }
+}
+
+<span class="kw">impl </span>View <span class="kw">for </span>AvatarGroup {
+    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+        <span class="prelude-val">Some</span>(<span class="string">"avatar-group"</span>)
+    }
 }
 </code></pre></div></section></main></body></html>

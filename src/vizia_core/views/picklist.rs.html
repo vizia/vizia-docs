@@ -141,32 +141,17 @@
 <a href="#140" id="140">140</a>
 <a href="#141" id="141">141</a>
 <a href="#142" id="142">142</a>
-<a href="#143" id="143">143</a>
-<a href="#144" id="144">144</a>
-<a href="#145" id="145">145</a>
-<a href="#146" id="146">146</a>
-<a href="#147" id="147">147</a>
-<a href="#148" id="148">148</a>
-<a href="#149" id="149">149</a>
-<a href="#150" id="150">150</a>
-<a href="#151" id="151">151</a>
-<a href="#152" id="152">152</a>
-<a href="#153" id="153">153</a>
-<a href="#154" id="154">154</a>
-<a href="#155" id="155">155</a>
-<a href="#156" id="156">156</a>
-<a href="#157" id="157">157</a>
-<a href="#158" id="158">158</a>
-<a href="#159" id="159">159</a>
-<a href="#160" id="160">160</a>
-<a href="#161" id="161">161</a>
-<a href="#162" id="162">162</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::Deref;
+<a href="#143" id="143">143</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::Deref;
 
-<span class="kw">use </span><span class="kw">crate</span>::icons::ICON_CHEVRON_DOWN;
+<span class="kw">use </span><span class="kw">crate</span>::context::TreeProps;
+<span class="kw">use </span><span class="kw">crate</span>::icons::{ICON_CHECK, ICON_CHEVRON_DOWN};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">pub struct </span>PickList {
+<span class="attr">#[derive(Lens)]
+</span><span class="kw">pub struct </span>PickList {
     on_select: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, usize)&gt;&gt;,
+    placeholder: String,
+    is_open: bool,
 }
 
 <span class="kw">pub enum </span>PickListEvent {
@@ -176,7 +161,7 @@
 <span class="kw">impl </span>PickList {
     <span class="kw">pub fn </span>new&lt;L1, L2, T&gt;(
         cx: <span class="kw-2">&amp;mut </span>Context,
-        list_lens: L1,
+        list: L1,
         selected: L2,
         show_handle: bool,
     ) -&gt; Handle&lt;<span class="self">Self</span>&gt;
@@ -186,53 +171,63 @@
         T: <span class="lifetime">'static </span>+ Data + ToStringLocalized,
         L2: Lens&lt;Target = usize&gt;,
     {
-        <span class="self">Self </span>{ on_select: <span class="prelude-val">None </span>}.build(cx, |cx| {
-            <span class="comment">// Dropdown List
-            </span>Dropdown::new(
-                cx,
-                <span class="kw">move </span>|cx| {
-                    Button::new(cx, |cx| {
-                        <span class="comment">// A Label and an optional Icon
-                        </span>HStack::new(cx, <span class="kw">move </span>|cx| {
-                            Label::new(cx, <span class="string">""</span>)
-                                .bind(list_lens, <span class="kw">move </span>|handle, list| {
-                                    handle.bind(selected, <span class="kw">move </span>|handle, sel| {
-                                        <span class="kw">let </span>selected_index = sel.get(<span class="kw-2">&amp;</span>handle);
+        <span class="self">Self </span>{ on_select: <span class="prelude-val">None</span>, placeholder: String::new(), is_open: <span class="bool-val">false </span>}
+            .build(cx, |cx| {
+                Button::new(cx, |cx| {
+                    <span class="comment">// A Label and an optional Icon
+                    </span>HStack::new(cx, <span class="kw">move </span>|cx| {
+                        Label::new(cx, PickList::placeholder)
+                            .bind(list, <span class="kw">move </span>|handle, list| {
+                                handle.bind(selected, <span class="kw">move </span>|handle, sel| {
+                                    <span class="kw">let </span>selected_index = sel.get(<span class="kw-2">&amp;</span>handle);
+                                    <span class="kw">let </span>list_len = list.map(|list| list.len()).get(<span class="kw-2">&amp;</span>handle);
+                                    <span class="kw">if </span>selected_index &lt; list_len {
                                         handle.text(list.idx(selected_index));
-                                    });
-                                })
+                                    } <span class="kw">else </span>{
+                                        handle.text(PickList::placeholder);
+                                    }
+                                });
+                            })
+                            .width(Stretch(<span class="number">2.0</span>))
+                            .text_wrap(<span class="bool-val">false</span>)
+                            .text_overflow(TextOverflow::Ellipsis)
+                            .hoverable(<span class="bool-val">false</span>);
+                        <span class="kw">if </span>show_handle {
+                            Svg::new(cx, ICON_CHEVRON_DOWN)
+                                .class(<span class="string">"icon"</span>)
+                                .size(Pixels(<span class="number">16.0</span>))
                                 .hoverable(<span class="bool-val">false</span>);
-                            <span class="kw">if </span>show_handle {
-                                Svg::new(cx, ICON_CHEVRON_DOWN)
-                                    .class(<span class="string">"icon"</span>)
-                                    .size(Pixels(<span class="number">16.0</span>))
-                                    .hoverable(<span class="bool-val">false</span>);
-                            }
-                        })
-                        .width(Stretch(<span class="number">1.0</span>))
-                        .horizontal_gap(Stretch(<span class="number">1.0</span>))
+                        }
                     })
                     .width(Stretch(<span class="number">1.0</span>))
-                    .on_press(|cx| cx.emit(PopupEvent::Switch));
-                },
-                <span class="kw">move </span>|cx| {
-                    ScrollView::new(cx, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="kw">move </span>|cx| {
-                        List::new(cx, list_lens, <span class="kw">move </span>|cx, index, item| {
-                            Label::new(cx, item)
-                                .alignment(Alignment::Center)
-                                .checked(selected.map(<span class="kw">move </span>|selected| <span class="kw-2">*</span>selected == index))
-                                .navigable(<span class="bool-val">true</span>)
-                                .on_press(<span class="kw">move </span>|cx| {
-                                    cx.emit(PickListEvent::SetOption(index));
-                                    cx.emit(PopupEvent::Close);
-                                });
-                        });
-                    })
-                    .height(Auto);
-                },
-            )
-            .width(Stretch(<span class="number">1.0</span>));
-        })
+                    <span class="comment">//.gap(Stretch(1.0))
+                    </span>.gap(Pixels(<span class="number">8.0</span>))
+                })
+                .width(Stretch(<span class="number">1.0</span>))
+                .on_press(|cx| cx.emit(PopupEvent::Open));
+
+                Binding::new(cx, PickList::is_open, <span class="kw">move </span>|cx, is_open| {
+                    <span class="kw">if </span>is_open.get(cx) {
+                        Popup::new(cx, |cx| {
+                            List::new(cx, list, <span class="kw">move </span>|cx, <span class="kw">_</span>, item| {
+                                Element::new(cx).class(<span class="string">"focus-indicator"</span>);
+                                Svg::new(cx, ICON_CHECK).class(<span class="string">"checkmark"</span>).size(Pixels(<span class="number">16.0</span>));
+                                Label::new(cx, item).hoverable(<span class="bool-val">false</span>);
+                            })
+                            .selectable(Selectable::Single)
+                            .selected(selected.map(|s| <span class="macro">vec!</span>[<span class="kw-2">*</span>s]))
+                            .on_select(|cx, index| {
+                                cx.emit(PickListEvent::SetOption(index));
+                                cx.emit(PopupEvent::Close);
+                            })
+                            .focused(<span class="bool-val">true</span>);
+                        })
+                        .arrow_size(Pixels(<span class="number">4.0</span>))
+                        .on_blur(|cx| cx.emit(PopupEvent::Close));
+                    }
+                });
+            })
+            .navigable(<span class="bool-val">false</span>)
     }
 }
 
@@ -249,77 +244,44 @@
                 }
             }
         });
-    }
-}
 
-<span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, PickList&gt; {
-    <span class="kw">pub fn </span>on_select&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
-    </span><span class="kw">where
-        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, usize),
-    {
-        <span class="self">self</span>.modify(|picklist: <span class="kw-2">&amp;mut </span>PickList| picklist.on_select = <span class="prelude-val">Some</span>(Box::new(callback)))
-    }
-}
+        event.map(|popup_event, meta| <span class="kw">match </span>popup_event {
+            PopupEvent::Open =&gt; {
+                <span class="self">self</span>.is_open = <span class="bool-val">true</span>;
 
-<span class="kw">pub struct </span>ScrollList {
-    on_select: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, usize)&gt;&gt;,
-}
+                meta.consume();
+            }
 
-<span class="kw">impl </span>ScrollList {
-    <span class="kw">pub fn </span>new&lt;L1, L2, T&gt;(cx: <span class="kw-2">&amp;mut </span>Context, list_lens: L1, selected: L2) -&gt; Handle&lt;<span class="self">Self</span>&gt;
-    <span class="kw">where
-        </span>L1: Lens,
-        L1::Target: Deref&lt;Target = [T]&gt; + Data,
-        T: <span class="lifetime">'static </span>+ Data + ToStringLocalized,
-        L2: Lens&lt;Target = usize&gt;,
-    {
-        <span class="self">Self </span>{ on_select: <span class="prelude-val">None </span>}
-            .build(cx, |cx| {
-                <span class="comment">// Dropdown List
+            PopupEvent::Close =&gt; {
+                <span class="self">self</span>.is_open = <span class="bool-val">false</span>;
+                <span class="kw">let </span>e = cx.first_child();
+                cx.with_current(e, |cx| cx.focus());
+                meta.consume();
+            }
 
-                </span><span class="kw">let </span>window_height = cx.cache.get_height(Entity::root());
-                <span class="kw">let </span>scale = cx.scale_factor();
-                ScrollView::new(cx, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="kw">move </span>|cx| {
-                    List::new(cx, list_lens, <span class="kw">move </span>|cx, index, item| {
-                        Label::new(cx, item)
-                            .alignment(Alignment::Center)
-                            .checked(selected.map(<span class="kw">move </span>|selected| <span class="kw-2">*</span>selected == index))
-                            .navigable(<span class="bool-val">true</span>)
-                            .on_press(<span class="kw">move </span>|cx| {
-                                cx.emit(PickListEvent::SetOption(index));
-                                <span class="comment">// cx.emit(PopupEvent::Close);s
-                            </span>});
-                    });
-                })
-                .height(Auto)
-                .max_height(Pixels(window_height / scale));
-            })
-            .height(Auto)
-    }
-}
-
-<span class="kw">impl </span>View <span class="kw">for </span>ScrollList {
-    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
-        <span class="prelude-val">Some</span>(<span class="string">"scroll-list"</span>)
-    }
-
-    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
-        event.map(|picklist_event, <span class="kw">_</span>| <span class="kw">match </span>picklist_event {
-            PickListEvent::SetOption(index) =&gt; {
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_select {
-                    (callback)(cx, <span class="kw-2">*</span>index);
-                }
+            PopupEvent::Switch =&gt; {
+                <span class="self">self</span>.is_open ^= <span class="bool-val">true</span>;
+                meta.consume();
             }
         });
     }
 }
 
-<span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, ScrollList&gt; {
-    <span class="kw">pub fn </span>on_select&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
+<span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, PickList&gt; {
+    <span class="doccomment">/// Sets the placeholder text that appears when the textbox has no value.
+    </span><span class="kw">pub fn </span>placeholder&lt;P: ToStringLocalized&gt;(<span class="self">self</span>, placeholder: <span class="kw">impl </span>Res&lt;P&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(placeholder, |handle, val| {
+            <span class="kw">let </span>txt = val.get(<span class="kw-2">&amp;</span>handle).to_string_local(<span class="kw-2">&amp;</span>handle);
+            handle.modify(|picklist| picklist.placeholder = txt);
+        })
+    }
+
+    <span class="comment">// Sets the callback triggered when an option is selected.
+    </span><span class="kw">pub fn </span>on_select&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, usize),
     {
-        <span class="self">self</span>.modify(|scroll_list: <span class="kw-2">&amp;mut </span>ScrollList| scroll_list.on_select = <span class="prelude-val">Some</span>(Box::new(callback)))
+        <span class="self">self</span>.modify(|picklist: <span class="kw-2">&amp;mut </span>PickList| picklist.on_select = <span class="prelude-val">Some</span>(Box::new(callback)))
     }
 }
 </code></pre></div></section></main></body></html>

@@ -1152,7 +1152,10 @@
 <a href="#1151" id="1151">1151</a>
 <a href="#1152" id="1152">1152</a>
 <a href="#1153" id="1153">1153</a>
-<a href="#1154" id="1154">1154</a></pre></div><pre class="rust"><code><span class="doccomment">//! Context types for retained state, used during view building, event handling, and drawing.
+<a href="#1154" id="1154">1154</a>
+<a href="#1155" id="1155">1155</a>
+<a href="#1156" id="1156">1156</a>
+<a href="#1157" id="1157">1157</a></pre></div><pre class="rust"><code><span class="doccomment">//! Context types for retained state, used during view building, event handling, and drawing.
 
 </span><span class="kw">mod </span>access;
 <span class="attr">#[doc(hidden)]
@@ -1512,6 +1515,9 @@
             <span class="self">self</span>.focused = <span class="self">self</span>.current;
         }
         <span class="self">self</span>.set_focus_pseudo_classes(new_focus, <span class="bool-val">true</span>, focus_visible);
+
+        <span class="self">self</span>.emit_custom(Event::new(WindowEvent::FocusVisibility(focus_visible)).target(old_focus));
+        <span class="self">self</span>.emit_custom(Event::new(WindowEvent::FocusVisibility(focus_visible)).target(new_focus));
 
         <span class="self">self</span>.needs_restyle(<span class="self">self</span>.focused);
         <span class="self">self</span>.needs_restyle(<span class="self">self</span>.current);

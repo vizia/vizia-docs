@@ -671,7 +671,19 @@
 <a href="#670" id="670">670</a>
 <a href="#671" id="671">671</a>
 <a href="#672" id="672">672</a>
-<a href="#673" id="673">673</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
+<a href="#673" id="673">673</a>
+<a href="#674" id="674">674</a>
+<a href="#675" id="675">675</a>
+<a href="#676" id="676">676</a>
+<a href="#677" id="677">677</a>
+<a href="#678" id="678">678</a>
+<a href="#679" id="679">679</a>
+<a href="#680" id="680">680</a>
+<a href="#681" id="681">681</a>
+<a href="#682" id="682">682</a>
+<a href="#683" id="683">683</a>
+<a href="#684" id="684">684</a>
+<a href="#685" id="685">685</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
 <span class="kw">use </span><span class="kw">crate</span>::events::EventMeta;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="attr">#[cfg(debug_assertions)]
@@ -1262,7 +1274,7 @@
                 }
             }
 
-            <span class="kw">if </span><span class="macro">matches!</span>(<span class="kw-2">*</span>code, Code::Enter | Code::NumpadEnter) {
+            <span class="kw">if </span><span class="macro">matches!</span>(<span class="kw-2">*</span>code, Code::Enter | Code::NumpadEnter | Code::Space) {
                 cx.triggered = cx.focused;
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(cx.triggered) {
                     pseudo_classes.set(PseudoClassFlags::ACTIVE, <span class="bool-val">true</span>);
@@ -1272,7 +1284,7 @@
         }
         WindowEvent::KeyUp(code, <span class="kw">_</span>) =&gt; {
             meta.target = cx.focused;
-            <span class="kw">if </span><span class="macro">matches!</span>(code, Code::Enter | Code::NumpadEnter) {
+            <span class="kw">if </span><span class="macro">matches!</span>(code, Code::Enter | Code::NumpadEnter | Code::Space) {
                 <span class="kw">if </span>cx.focused == cx.triggered {
                     cx.with_current(cx.triggered, |cx| {
                         cx.emit(WindowEvent::Press { mouse: <span class="bool-val">false </span>})
@@ -1288,13 +1300,25 @@
         WindowEvent::CharInput(<span class="kw">_</span>) =&gt; {
             meta.target = cx.focused;
         }
-        WindowEvent::FocusOut =&gt; {
-            cx.set_focus_pseudo_classes(cx.focused, <span class="bool-val">false</span>, <span class="bool-val">true</span>);
-            cx.focused = Entity::null();
-        }
-        WindowEvent::FocusIn =&gt; {
-            cx.focused = meta.target;
-            cx.set_focus_pseudo_classes(cx.focused, <span class="bool-val">true</span>, <span class="bool-val">true</span>);
+        WindowEvent::WindowFocused(is_focused) =&gt; {
+            <span class="kw">if </span><span class="kw-2">*</span>is_focused {
+                cx.set_focus_pseudo_classes(cx.focused, <span class="bool-val">true</span>, <span class="bool-val">true</span>);
+                cx.needs_restyle(cx.focused);
+                cx.needs_redraw(cx.focused);
+            } <span class="kw">else </span>{
+                cx.set_focus_pseudo_classes(cx.focused, <span class="bool-val">false</span>, <span class="bool-val">true</span>);
+                cx.needs_restyle(cx.focused);
+
+                cx.event_queue.push_back(
+                    Event::new(WindowEvent::FocusVisibility(<span class="bool-val">false</span>))
+                        .target(cx.focused)
+                        .origin(Entity::root()), <span class="comment">//.propagate(Propagation::Direct),
+                </span>);
+
+                cx.event_queue.push_back(
+                    Event::new(WindowEvent::MouseOut).target(cx.hovered).origin(Entity::root()), <span class="comment">// .propagate(Propagation::Direct),
+                </span>);
+            }
         }
         WindowEvent::MouseEnter =&gt; {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_class) = cx.style.pseudo_classes.get_mut(meta.origin) {

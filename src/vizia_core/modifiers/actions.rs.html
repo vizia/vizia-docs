@@ -786,12 +786,29 @@
 <a href="#785" id="785">785</a>
 <a href="#786" id="786">786</a>
 <a href="#787" id="787">787</a>
-<a href="#788" id="788">788</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#788" id="788">788</a>
+<a href="#789" id="789">789</a>
+<a href="#790" id="790">790</a>
+<a href="#791" id="791">791</a>
+<a href="#792" id="792">792</a>
+<a href="#793" id="793">793</a>
+<a href="#794" id="794">794</a>
+<a href="#795" id="795">795</a>
+<a href="#796" id="796">796</a>
+<a href="#797" id="797">797</a>
+<a href="#798" id="798">798</a>
+<a href="#799" id="799">799</a>
+<a href="#800" id="800">800</a>
+<a href="#801" id="801">801</a>
+<a href="#802" id="802">802</a>
+<a href="#803" id="803">803</a>
+<a href="#804" id="804">804</a>
+<a href="#805" id="805">805</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>std::any::TypeId;
 
 <span class="attr">#[derive(Lens)]
 </span><span class="kw">pub struct </span>ModalModel {
-    <span class="kw">pub </span>tooltip_visible: bool,
+    <span class="kw">pub </span>tooltip_visible: (bool, bool),
     <span class="kw">pub </span>menu_visible: bool,
 }
 
@@ -803,14 +820,14 @@
 }
 
 <span class="kw">impl </span>Model <span class="kw">for </span>ModalModel {
-    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
+    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
         event.map(|modal_event, <span class="kw">_</span>| <span class="kw">match </span>modal_event {
             ModalEvent::ShowTooltip =&gt; {
-                <span class="self">self</span>.tooltip_visible = <span class="bool-val">true</span>;
+                <span class="self">self</span>.tooltip_visible = (<span class="bool-val">true</span>, <span class="bool-val">true</span>);
             }
 
             ModalEvent::HideTooltip =&gt; {
-                <span class="self">self</span>.tooltip_visible = <span class="bool-val">false</span>;
+                <span class="self">self</span>.tooltip_visible = (<span class="bool-val">false</span>, <span class="bool-val">true</span>);
             }
 
             ModalEvent::ShowMenu =&gt; {
@@ -823,9 +840,23 @@
         });
 
         event.map(|window_event, <span class="kw">_</span>| <span class="kw">match </span>window_event {
-            WindowEvent::MouseOver =&gt; <span class="self">self</span>.tooltip_visible = <span class="bool-val">true</span>,
-            WindowEvent::MouseOut =&gt; <span class="self">self</span>.tooltip_visible = <span class="bool-val">false</span>,
-            WindowEvent::PressDown { mouse: <span class="kw">_ </span>} =&gt; <span class="self">self</span>.tooltip_visible = <span class="bool-val">false</span>,
+            WindowEvent::MouseOver =&gt; {
+                <span class="kw">if </span>!<span class="self">self</span>.tooltip_visible.<span class="number">0 </span>{
+                    <span class="self">self</span>.tooltip_visible = (<span class="bool-val">true</span>, <span class="bool-val">true</span>);
+                }
+            }
+            WindowEvent::MouseOut =&gt; <span class="self">self</span>.tooltip_visible = (<span class="bool-val">false</span>, <span class="bool-val">true</span>),
+            WindowEvent::FocusIn =&gt; {
+                <span class="kw">if </span>!<span class="self">self</span>.tooltip_visible.<span class="number">0 </span>{
+                    <span class="self">self</span>.tooltip_visible = (<span class="bool-val">true</span>, <span class="bool-val">false</span>);
+                }
+            }
+            WindowEvent::FocusOut =&gt; <span class="self">self</span>.tooltip_visible = (<span class="bool-val">false</span>, <span class="bool-val">false</span>),
+            WindowEvent::FocusVisibility(vis) <span class="kw">if </span>!(<span class="kw-2">*</span>vis) =&gt; <span class="self">self</span>.tooltip_visible = (<span class="bool-val">false</span>, <span class="bool-val">false</span>),
+            WindowEvent::KeyDown(code, <span class="kw">_</span>) <span class="kw">if </span><span class="kw-2">*</span>code == Code::Escape =&gt; {
+                <span class="self">self</span>.tooltip_visible = (<span class="bool-val">false</span>, <span class="bool-val">false</span>)
+            }
+            WindowEvent::PressDown { mouse: <span class="kw">_ </span>} =&gt; <span class="self">self</span>.tooltip_visible = (<span class="bool-val">false</span>, <span class="bool-val">true</span>),
             <span class="kw">_ </span>=&gt; {}
         });
     }
@@ -1286,7 +1317,7 @@
         .is_none()
     {
         cx.with_current(entity, |cx| {
-            ModalModel { tooltip_visible: <span class="bool-val">false</span>, menu_visible: <span class="bool-val">false </span>}.build(cx);
+            ModalModel { tooltip_visible: (<span class="bool-val">false</span>, <span class="bool-val">true</span>), menu_visible: <span class="bool-val">false </span>}.build(cx);
         });
     }
 }
@@ -1299,13 +1330,16 @@
 
         <span class="self">self</span>.cx.with_current(entity, <span class="kw">move </span>|cx| {
             Binding::new(cx, ModalModel::tooltip_visible, <span class="kw">move </span>|cx, tooltip_visible| {
-                <span class="kw">if </span>tooltip_visible.get(cx) {
+                <span class="kw">let </span>tooltip_visible = tooltip_visible.get(cx);
+                <span class="kw">if </span>tooltip_visible.<span class="number">0 </span>{
                     (content)(cx).on_build(|cx| {
-                        cx.play_animation(
-                            <span class="string">"tooltip_fade"</span>,
-                            Duration::from_millis(<span class="number">100</span>),
-                            Duration::from_millis(<span class="number">500</span>),
-                        )
+                        <span class="kw">if </span>tooltip_visible.<span class="number">1 </span>{
+                            cx.play_animation(
+                                <span class="string">"tooltip_fade"</span>,
+                                Duration::from_millis(<span class="number">100</span>),
+                                Duration::from_millis(<span class="number">500</span>),
+                            )
+                        }
                     });
                 }
             });

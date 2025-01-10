@@ -1304,29 +1304,7 @@
 <a href="#1303" id="1303">1303</a>
 <a href="#1304" id="1304">1304</a>
 <a href="#1305" id="1305">1305</a>
-<a href="#1306" id="1306">1306</a>
-<a href="#1307" id="1307">1307</a>
-<a href="#1308" id="1308">1308</a>
-<a href="#1309" id="1309">1309</a>
-<a href="#1310" id="1310">1310</a>
-<a href="#1311" id="1311">1311</a>
-<a href="#1312" id="1312">1312</a>
-<a href="#1313" id="1313">1313</a>
-<a href="#1314" id="1314">1314</a>
-<a href="#1315" id="1315">1315</a>
-<a href="#1316" id="1316">1316</a>
-<a href="#1317" id="1317">1317</a>
-<a href="#1318" id="1318">1318</a>
-<a href="#1319" id="1319">1319</a>
-<a href="#1320" id="1320">1320</a>
-<a href="#1321" id="1321">1321</a>
-<a href="#1322" id="1322">1322</a>
-<a href="#1323" id="1323">1323</a>
-<a href="#1324" id="1324">1324</a>
-<a href="#1325" id="1325">1325</a>
-<a href="#1326" id="1326">1326</a>
-<a href="#1327" id="1327">1327</a>
-<a href="#1328" id="1328">1328</a></pre></div><pre class="rust"><code><span class="comment">// use crate::accessibility::IntoNode;
+<a href="#1306" id="1306">1306</a></pre></div><pre class="rust"><code><span class="comment">// use crate::accessibility::IntoNode;
 </span><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">use </span><span class="kw">crate</span>::text::{
@@ -1510,7 +1488,7 @@
                         .size(Stretch(<span class="number">1.0</span>))
                         .space(Pixels(<span class="number">0.0</span>))
                         .hoverable(<span class="bool-val">false</span>)
-                        .position_type(PositionType::SelfDirected)
+                        .position_type(PositionType::Absolute)
                         .hidden(<span class="bool-val">true</span>)
                         .class(<span class="string">"placeholder"</span>)
                         .bind(lens, |handle, lens| {
@@ -1610,28 +1588,51 @@
     </span><span class="kw">fn </span>coordinates_global_to_text(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span>EventContext, x: f32, y: f32) -&gt; (f32, f32) {
         <span class="kw">let </span>bounds = cx.bounds();
 
-        <span class="kw">let </span>child_left = cx.style.child_left.get(cx.current).copied().unwrap_or_default();
-        <span class="kw">let </span>child_top = cx.style.child_top.get(cx.current).copied().unwrap_or_default();
-        <span class="kw">let </span>_child_right = cx.style.child_right.get(cx.current).copied().unwrap_or_default();
-        <span class="kw">let </span>_child_bottom = cx.style.child_bottom.get(cx.current).copied().unwrap_or_default();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(paragraph) = cx.text_context.text_paragraphs.get(cx.current) {
+            <span class="kw">let </span>padding_left = cx.style.padding_left.get(cx.current).copied().unwrap_or_default();
+            <span class="kw">let </span>padding_top = cx.style.padding_top.get(cx.current).copied().unwrap_or_default();
+            <span class="kw">let </span>_padding_right =
+                cx.style.padding_right.get(cx.current).copied().unwrap_or_default();
+            <span class="kw">let </span>padding_bottom =
+                cx.style.padding_bottom.get(cx.current).copied().unwrap_or_default();
 
-        <span class="kw">let </span>logical_parent_width = cx.physical_to_logical(bounds.w);
-        <span class="kw">let </span>logical_parent_height = cx.physical_to_logical(bounds.h);
+            <span class="kw">let </span>logical_parent_width = cx.physical_to_logical(bounds.w);
+            <span class="kw">let </span>logical_parent_height = cx.physical_to_logical(bounds.h);
 
-        <span class="kw">let </span>child_left = child_left.to_px(logical_parent_width, <span class="number">0.0</span>) * cx.scale_factor();
-        <span class="kw">let </span>child_top = child_top.to_px(logical_parent_height, <span class="number">0.0</span>) * cx.scale_factor();
+            <span class="kw">let </span>padding_left = padding_left.to_px(logical_parent_width, <span class="number">0.0</span>) * cx.scale_factor();
+            <span class="kw">let </span>padding_top = padding_top.to_px(logical_parent_height, <span class="number">0.0</span>) * cx.scale_factor();
+            <span class="kw">let </span>padding_bottom =
+                padding_bottom.to_px(logical_parent_height, <span class="number">0.0</span>) * cx.scale_factor();
 
-        <span class="comment">// let total_height = cx.text_context.with_buffer(cx.current, |_, buffer| {
-        //     buffer.layout_runs().len() as f32 * buffer.metrics().line_height
-        // });
+            <span class="kw">let </span>(<span class="kw-2">mut </span>top, <span class="kw">_</span>) = <span class="kw">match </span>cx.style.alignment.get(cx.current).copied().unwrap_or_default()
+            {
+                Alignment::TopLeft =&gt; (<span class="number">0.0</span>, <span class="number">0.0</span>),
+                Alignment::TopCenter =&gt; (<span class="number">0.0</span>, <span class="number">0.5</span>),
+                Alignment::TopRight =&gt; (<span class="number">0.0</span>, <span class="number">1.0</span>),
+                Alignment::Left =&gt; (<span class="number">0.5</span>, <span class="number">0.0</span>),
+                Alignment::Center =&gt; (<span class="number">0.5</span>, <span class="number">0.5</span>),
+                Alignment::Right =&gt; (<span class="number">0.5</span>, <span class="number">1.0</span>),
+                Alignment::BottomLeft =&gt; (<span class="number">1.0</span>, <span class="number">0.0</span>),
+                Alignment::BottomCenter =&gt; (<span class="number">1.0</span>, <span class="number">0.5</span>),
+                Alignment::BottomRight =&gt; (<span class="number">1.0</span>, <span class="number">1.0</span>),
+            };
 
-        // let x = x - bounds.x - self.transform.0 - child_left;
-        // let y = y - self.transform.1 - bounds.y - (bounds.h - total_height) * justify_y - child_top;
+            top <span class="kw-2">*</span>= bounds.height() - padding_top - padding_bottom - paragraph.height();
 
-        </span><span class="kw">let </span>x = x - bounds.x - child_left;
-        <span class="kw">let </span>y = y - bounds.y - child_top;
+            <span class="comment">// let total_height = cx.text_context.with_buffer(cx.current, |_, buffer| {
+            //     buffer.layout_runs().len() as f32 * buffer.metrics().line_height
+            // });
 
-        (x, y)
+            // let x = x - bounds.x - self.transform.0 - padding_left;
+            // let y = y - self.transform.1 - bounds.y - (bounds.h - total_height) * justify_y - padding_top;
+
+            </span><span class="kw">let </span>x = x - bounds.x - padding_left;
+            <span class="kw">let </span>y = y - bounds.y - padding_top - top;
+
+            (x, y)
+        } <span class="kw">else </span>{
+            (x, y)
+        }
     }
 
     <span class="doccomment">/// This function takes window-global physical coordinates.
@@ -1730,62 +1731,39 @@
                     <span class="kw">for </span>cursor_rect <span class="kw">in </span>cursor_rects {
                         <span class="kw">let </span>bounds = cx.bounds();
 
-                        <span class="kw">let </span><span class="kw-2">mut </span>vertical_flex_sum = <span class="number">0.0</span>;
-                        <span class="kw">let </span><span class="kw-2">mut </span>horizontal_flex_sum = <span class="number">0.0</span>;
+                        <span class="kw">let </span>alignment = cx.alignment();
 
-                        <span class="kw">let </span><span class="kw-2">mut </span>padding_top = <span class="kw">match </span>cx.child_top() {
+                        <span class="kw">let </span>(<span class="kw-2">mut </span>top, left) = <span class="kw">match </span>alignment {
+                            Alignment::TopLeft =&gt; (<span class="number">0.0</span>, <span class="number">0.0</span>),
+                            Alignment::TopCenter =&gt; (<span class="number">0.0</span>, <span class="number">0.5</span>),
+                            Alignment::TopRight =&gt; (<span class="number">0.0</span>, <span class="number">1.0</span>),
+                            Alignment::Left =&gt; (<span class="number">0.5</span>, <span class="number">0.0</span>),
+                            Alignment::Center =&gt; (<span class="number">0.5</span>, <span class="number">0.5</span>),
+                            Alignment::Right =&gt; (<span class="number">0.5</span>, <span class="number">1.0</span>),
+                            Alignment::BottomLeft =&gt; (<span class="number">1.0</span>, <span class="number">0.0</span>),
+                            Alignment::BottomCenter =&gt; (<span class="number">1.0</span>, <span class="number">0.5</span>),
+                            Alignment::BottomRight =&gt; (<span class="number">1.0</span>, <span class="number">1.0</span>),
+                        };
+
+                        <span class="kw">let </span>padding_top = <span class="kw">match </span>cx.padding_top() {
                             Units::Pixels(val) =&gt; val,
-                            Units::Stretch(val) =&gt; {
-                                vertical_flex_sum += val;
-                                <span class="number">0.0
-                            </span>}
                             <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
                         };
 
-                        <span class="kw">let </span>padding_bottom = <span class="kw">match </span>cx.child_bottom() {
+                        <span class="kw">let </span>padding_bottom = <span class="kw">match </span>cx.padding_bottom() {
                             Units::Pixels(val) =&gt; val,
-                            Units::Stretch(val) =&gt; {
-                                vertical_flex_sum += val;
-                                <span class="number">0.0
-                            </span>}
                             <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
                         };
 
-                        <span class="kw">let </span>vertical_free_space =
-                            bounds.height() - paragraph.height() - padding_top - padding_bottom;
+                        top <span class="kw-2">*</span>= bounds.height() - padding_top - padding_bottom - paragraph.height();
 
-                        <span class="kw">if let </span>Units::Stretch(val) = cx.child_top() {
-                            padding_top = (vertical_free_space * val / vertical_flex_sum).round()
-                        }
-
-                        <span class="kw">let </span><span class="kw-2">mut </span>padding_left = <span class="kw">match </span>cx.child_left() {
+                        <span class="kw">let </span>padding_left = <span class="kw">match </span>cx.padding_left() {
                             Units::Pixels(val) =&gt; val,
-                            Units::Stretch(val) =&gt; {
-                                horizontal_flex_sum += val;
-                                <span class="number">0.0
-                            </span>}
                             <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
                         };
 
-                        <span class="kw">let </span>padding_right = <span class="kw">match </span>cx.child_right() {
-                            Units::Pixels(val) =&gt; val,
-                            Units::Stretch(val) =&gt; {
-                                horizontal_flex_sum += val;
-                                <span class="number">0.0
-                            </span>}
-                            <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
-                        };
-
-                        <span class="kw">let </span>horizontal_free_space =
-                            bounds.width() - paragraph.max_width() - padding_left - padding_right;
-
-                        <span class="kw">if let </span>Units::Stretch(val) = cx.child_left() {
-                            padding_left =
-                                (horizontal_free_space * val / horizontal_flex_sum).round()
-                        }
-
-                        <span class="kw">let </span>x = bounds.x + padding_left + cursor_rect.rect.left;
-                        <span class="kw">let </span>y = bounds.y + padding_top + cursor_rect.rect.top;
+                        <span class="kw">let </span>x = bounds.x + padding_left + cursor_rect.rect.left + left;
+                        <span class="kw">let </span>y = bounds.y + padding_top + cursor_rect.rect.top + top;
 
                         <span class="kw">let </span>x2 = x + (cursor_rect.rect.right - cursor_rect.rect.left);
                         <span class="kw">let </span>y2 = y + (cursor_rect.rect.bottom - cursor_rect.rect.top);
@@ -1818,61 +1796,39 @@
 
                 <span class="kw">let </span>cursor_rect = rects.first().unwrap();
 
-                <span class="kw">let </span><span class="kw-2">mut </span>vertical_flex_sum = <span class="number">0.0</span>;
-                <span class="kw">let </span><span class="kw-2">mut </span>horizontal_flex_sum = <span class="number">0.0</span>;
+                <span class="kw">let </span>alignment = cx.alignment();
 
-                <span class="kw">let </span><span class="kw-2">mut </span>padding_top = <span class="kw">match </span>cx.child_top() {
+                <span class="kw">let </span>(<span class="kw-2">mut </span>top, <span class="kw">_</span>) = <span class="kw">match </span>alignment {
+                    Alignment::TopLeft =&gt; (<span class="number">0.0</span>, <span class="number">0.0</span>),
+                    Alignment::TopCenter =&gt; (<span class="number">0.0</span>, <span class="number">0.5</span>),
+                    Alignment::TopRight =&gt; (<span class="number">0.0</span>, <span class="number">1.0</span>),
+                    Alignment::Left =&gt; (<span class="number">0.5</span>, <span class="number">0.0</span>),
+                    Alignment::Center =&gt; (<span class="number">0.5</span>, <span class="number">0.5</span>),
+                    Alignment::Right =&gt; (<span class="number">0.5</span>, <span class="number">1.0</span>),
+                    Alignment::BottomLeft =&gt; (<span class="number">1.0</span>, <span class="number">0.0</span>),
+                    Alignment::BottomCenter =&gt; (<span class="number">1.0</span>, <span class="number">0.5</span>),
+                    Alignment::BottomRight =&gt; (<span class="number">1.0</span>, <span class="number">1.0</span>),
+                };
+
+                <span class="kw">let </span>padding_top = <span class="kw">match </span>cx.padding_top() {
                     Units::Pixels(val) =&gt; val,
-                    Units::Stretch(val) =&gt; {
-                        vertical_flex_sum += val;
-                        <span class="number">0.0
-                    </span>}
                     <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
                 };
 
-                <span class="kw">let </span>padding_bottom = <span class="kw">match </span>cx.child_bottom() {
+                <span class="kw">let </span>padding_bottom = <span class="kw">match </span>cx.padding_bottom() {
                     Units::Pixels(val) =&gt; val,
-                    Units::Stretch(val) =&gt; {
-                        vertical_flex_sum += val;
-                        <span class="number">0.0
-                    </span>}
                     <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
                 };
 
-                <span class="kw">let </span>vertical_free_space =
-                    bounds.height() - paragraph.height() - padding_top - padding_bottom;
+                top <span class="kw-2">*</span>= bounds.height() - padding_top - padding_bottom - paragraph.height();
 
-                <span class="kw">if let </span>Units::Stretch(val) = cx.child_top() {
-                    padding_top = (vertical_free_space * val / vertical_flex_sum).round()
-                }
-
-                <span class="kw">let </span><span class="kw-2">mut </span>padding_left = <span class="kw">match </span>cx.child_left() {
+                <span class="kw">let </span>padding_left = <span class="kw">match </span>cx.padding_left() {
                     Units::Pixels(val) =&gt; val,
-                    Units::Stretch(val) =&gt; {
-                        horizontal_flex_sum += val;
-                        <span class="number">0.0
-                    </span>}
                     <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
                 };
-
-                <span class="kw">let </span>padding_right = <span class="kw">match </span>cx.child_right() {
-                    Units::Pixels(val) =&gt; val,
-                    Units::Stretch(val) =&gt; {
-                        horizontal_flex_sum += val;
-                        <span class="number">0.0
-                    </span>}
-                    <span class="kw">_ </span>=&gt; <span class="number">0.0</span>,
-                };
-
-                <span class="kw">let </span>horizontal_free_space =
-                    bounds.width() - paragraph.max_width() - padding_left - padding_right;
-
-                <span class="kw">if let </span>Units::Stretch(val) = cx.child_left() {
-                    padding_left = (horizontal_free_space * val / horizontal_flex_sum).round()
-                }
 
                 <span class="kw">let </span>x = (bounds.x + padding_left + cursor_rect.rect.left).round();
-                <span class="kw">let </span>y = (bounds.y + padding_top + cursor_rect.rect.top).round();
+                <span class="kw">let </span>y = (bounds.y + padding_top + cursor_rect.rect.top + top).round();
 
                 <span class="kw">let </span>x2 = x + <span class="number">1.0</span>;
                 <span class="kw">let </span>y2 = y + (cursor_rect.rect.bottom - cursor_rect.rect.top);

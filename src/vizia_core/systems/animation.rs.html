@@ -92,11 +92,7 @@
 <a href="#91" id="91">91</a>
 <a href="#92" id="92">92</a>
 <a href="#93" id="93">93</a>
-<a href="#94" id="94">94</a>
-<a href="#95" id="95">95</a>
-<a href="#96" id="96">96</a>
-<a href="#97" id="97">97</a>
-<a href="#98" id="98">98</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#94" id="94">94</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>animation_system(cx: <span class="kw-2">&amp;mut </span>Context) -&gt; bool {
     cx.style.play_pending_animations();
@@ -162,23 +158,19 @@
     relayout_entities.extend(cx.style.max_height.tick(time));
     relayout_entities.extend(cx.style.min_width.tick(time));
     relayout_entities.extend(cx.style.min_height.tick(time));
-    <span class="comment">// Min/Max Space
-    </span>relayout_entities.extend(cx.style.min_left.tick(time));
-    relayout_entities.extend(cx.style.max_left.tick(time));
-    relayout_entities.extend(cx.style.min_right.tick(time));
-    relayout_entities.extend(cx.style.max_right.tick(time));
-    relayout_entities.extend(cx.style.min_top.tick(time));
-    relayout_entities.extend(cx.style.max_top.tick(time));
-    relayout_entities.extend(cx.style.min_bottom.tick(time));
-    relayout_entities.extend(cx.style.max_bottom.tick(time));
+    <span class="comment">// Min/Max Gap
+    </span>relayout_entities.extend(cx.style.max_horizontal_gap.tick(time));
+    relayout_entities.extend(cx.style.max_vertical_gap.tick(time));
+    relayout_entities.extend(cx.style.min_horizontal_gap.tick(time));
+    relayout_entities.extend(cx.style.min_vertical_gap.tick(time));
     <span class="comment">// Row/Col Between
-    </span>relayout_entities.extend(cx.style.row_between.tick(time));
-    relayout_entities.extend(cx.style.col_between.tick(time));
+    </span>relayout_entities.extend(cx.style.vertical_gap.tick(time));
+    relayout_entities.extend(cx.style.horizontal_gap.tick(time));
     <span class="comment">// Child Space
-    </span>relayout_entities.extend(cx.style.child_left.tick(time));
-    relayout_entities.extend(cx.style.child_right.tick(time));
-    relayout_entities.extend(cx.style.child_top.tick(time));
-    relayout_entities.extend(cx.style.child_bottom.tick(time));
+    </span>relayout_entities.extend(cx.style.padding_left.tick(time));
+    relayout_entities.extend(cx.style.padding_right.tick(time));
+    relayout_entities.extend(cx.style.padding_top.tick(time));
+    relayout_entities.extend(cx.style.padding_bottom.tick(time));
 
     <span class="kw">if </span>!relayout_entities.is_empty() {
         cx.style.system_flags.set(SystemFlags::RELAYOUT, <span class="bool-val">true</span>);

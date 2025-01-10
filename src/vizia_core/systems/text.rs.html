@@ -302,7 +302,9 @@
 <a href="#301" id="301">301</a>
 <a href="#302" id="302">302</a>
 <a href="#303" id="303">303</a>
-<a href="#304" id="304">304</a></pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::{
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a></pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::{
     font_arguments::VariationPosition,
     textlayout::{
         FontCollection, Paragraph, ParagraphBuilder, ParagraphStyle, RectHeightStyle,
@@ -349,7 +351,7 @@
             <span class="kw">let </span>bounds = cx.cache.get_bounds(entity);
             <span class="kw">let </span>padding_left = cx
                 .style
-                .child_left
+                .padding_left
                 .get(entity)
                 .copied()
                 .unwrap_or_default()
@@ -357,7 +359,7 @@
                 * cx.style.scale_factor();
             <span class="kw">let </span>padding_right = cx
                 .style
-                .child_right
+                .padding_right
                 .get(entity)
                 .copied()
                 .unwrap_or_default()
@@ -485,11 +487,13 @@
     </span>paragraph_style.set_text_align(
         <span class="kw">if let </span><span class="prelude-val">Some</span>(text_align) = style.text_align.get(entity) {
             <span class="kw-2">*</span>text_align
-        } <span class="kw">else if let </span><span class="prelude-val">Some</span>(Units::Stretch(<span class="kw">_</span>)) = style.child_left.get(entity) {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(Units::Stretch(<span class="kw">_</span>)) = style.child_right.get(entity) {
-                TextAlign::Center
-            } <span class="kw">else </span>{
-                TextAlign::Right
+        } <span class="kw">else if let </span><span class="prelude-val">Some</span>(alignment) = style.alignment.get(entity) {
+            <span class="kw">match </span>alignment {
+                Alignment::TopLeft | Alignment::Left | Alignment::BottomLeft =&gt; TextAlign::Left,
+                Alignment::TopCenter | Alignment::Center | Alignment::BottomCenter =&gt; {
+                    TextAlign::Center
+                }
+                Alignment::TopRight | Alignment::Right | Alignment::BottomRight =&gt; TextAlign::Right,
             }
         } <span class="kw">else </span>{
             TextAlign::Left

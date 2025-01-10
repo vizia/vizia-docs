@@ -248,7 +248,9 @@
 <a href="#247" id="247">247</a>
 <a href="#248" id="248">248</a>
 <a href="#249" id="249">249</a>
-<a href="#250" id="250">250</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::TreeProps;
+<a href="#250" id="250">250</a>
+<a href="#251" id="251">251</a>
+<a href="#252" id="252">252</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::TreeProps;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">pub struct </span>Scrollbar&lt;L1&gt; {
@@ -294,6 +296,7 @@
                     <span class="kw">let </span>value = value.get(<span class="kw-2">&amp;</span>handle);
                     <span class="kw">match </span>orientation {
                         Orientation::Horizontal =&gt; {
+                            <span class="macro">println!</span>(<span class="string">"{}"</span>, value);
                             handle.left(Units::Stretch(value)).right(Units::Stretch(<span class="number">1.0 </span>- value))
                         }
                         Orientation::Vertical =&gt; {
@@ -307,7 +310,8 @@
                         Orientation::Horizontal =&gt; handle.width(Units::Percentage(ratio * <span class="number">100.0</span>)),
                         Orientation::Vertical =&gt; handle.height(Units::Percentage(ratio * <span class="number">100.0</span>)),
                     };
-                });
+                })
+                .position_type(PositionType::Absolute);
         })
         .pointer_events(PointerEvents::Auto)
         .class(<span class="kw">match </span>orientation {

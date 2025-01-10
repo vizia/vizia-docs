@@ -92,11 +92,7 @@
 <a href="#91" id="91">91</a>
 <a href="#92" id="92">92</a>
 <a href="#93" id="93">93</a>
-<a href="#94" id="94">94</a>
-<a href="#95" id="95">95</a>
-<a href="#96" id="96">96</a>
-<a href="#97" id="97">97</a>
-<a href="#98" id="98">98</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{icons::ICON_X, prelude::<span class="kw-2">*</span>};
+<a href="#94" id="94">94</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{icons::ICON_X, prelude::<span class="kw-2">*</span>};
 <span class="kw">use </span>std::sync::Arc;
 
 <span class="doccomment">/// A visual indicator such as a tag.
@@ -122,12 +118,7 @@
     {
         <span class="self">Self </span>{ on_close: <span class="prelude-val">None </span>}
             .build(cx, <span class="kw">move </span>|cx| {
-                Label::new(cx, text)
-                    .height(Stretch(<span class="number">1.0</span>))
-                    .child_top(Stretch(<span class="number">1.0</span>))
-                    .child_bottom(Stretch(<span class="number">1.0</span>))
-                    .top(Pixels(<span class="number">0.0</span>))
-                    .bottom(Pixels(<span class="number">0.0</span>));
+                Label::new(cx, text).height(Stretch(<span class="number">1.0</span>)).alignment(Alignment::Left);
                 Binding::new(cx, Chip::on_close.map(|on_close| on_close.is_some()), |cx, val| {
                     <span class="kw">if </span>val.get(cx) {
                         <span class="kw">let </span>on_close = Chip::on_close.get(cx).unwrap();
@@ -135,11 +126,12 @@
                             .class(<span class="string">"close-icon"</span>)
                             .height(Pixels(<span class="number">16.0</span>))
                             .width(Pixels(<span class="number">16.0</span>))
-                            .child_space(Stretch(<span class="number">1.0</span>))
+                            .alignment(Alignment::Center)
                             .on_press(<span class="kw">move </span>|cx| (on_close)(cx));
                     }
                 });
             })
+            .toggle_class(<span class="string">"close"</span>, Chip::on_close.map(|on_close| on_close.is_some()))
             .layout_type(LayoutType::Row)
     }
 }

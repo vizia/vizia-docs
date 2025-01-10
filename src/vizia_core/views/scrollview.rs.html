@@ -290,7 +290,14 @@
 <a href="#289" id="289">289</a>
 <a href="#290" id="290">290</a>
 <a href="#291" id="291">291</a>
-<a href="#292" id="292">292</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::binding::RatioLens;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -356,17 +363,20 @@
             container_height: <span class="number">0.0</span>,
         }
         .build(cx, <span class="kw">move </span>|cx| {
-            ScrollContent::new(cx, content).bind(ScrollView::root, |handle, data| {
-                <span class="kw">let </span>scale_factor = handle.scale_factor();
-                <span class="kw">let </span>data = data.get(<span class="kw-2">&amp;</span>handle);
-                <span class="kw">let </span>left = ((data.inner_width - data.container_width) * data.scroll_x).round()
-                    / scale_factor;
-                <span class="kw">let </span>top = ((data.inner_height - data.container_height) * data.scroll_y).round()
-                    / scale_factor;
-                handle.left(Units::Pixels(-left.abs())).top(Units::Pixels(-top.abs()));
-            });
+            ScrollContent::new(cx, content);
 
-            <span class="kw">if </span>scroll_y {
+            <span class="comment">// .bind(ScrollView::scroll_y, |handle, data| {
+            //     let scale_factor = handle.scale_factor();
+            //     let data = data.get(&amp;handle);
+            //     // let left = ((data.inner_width - data.container_width) * data.scroll_x).round()
+            //     //     / scale_factor;
+            //     // let top = ((data.inner_height - data.container_height) * data.scroll_y).round()
+            //     //     / scale_factor;
+            //     // handle.left(Units::Pixels(-left.abs())).top(Units::Pixels(-top.abs()));
+            //     println!("sy {}", data);
+            // });
+
+            </span><span class="kw">if </span>scroll_y {
                 Scrollbar::new(
                     cx,
                     ScrollView::scroll_y,
@@ -376,7 +386,7 @@
                         cx.emit(ScrollEvent::SetY(value));
                     },
                 )
-                .position_type(PositionType::SelfDirected)
+                .position_type(PositionType::Absolute)
                 .scroll_to_cursor(<span class="self">Self</span>::scroll_to_cursor);
             }
 
@@ -390,9 +400,13 @@
                         cx.emit(ScrollEvent::SetX(value));
                     },
                 )
-                .position_type(PositionType::SelfDirected)
+                .position_type(PositionType::Absolute)
                 .scroll_to_cursor(<span class="self">Self</span>::scroll_to_cursor);
             }
+        })
+        .bind(ScrollView::root, |handle, data| {
+            <span class="kw">let </span>data = data.get(<span class="kw-2">&amp;</span>handle);
+            handle.vertical_scroll(data.scroll_y).horizontal_scroll(data.scroll_x);
         })
         .toggle_class(
             <span class="string">"h-scroll"</span>,

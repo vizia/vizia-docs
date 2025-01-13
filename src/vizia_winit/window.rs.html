@@ -641,19 +641,90 @@
 <a href="#640" id="640">640</a>
 <a href="#641" id="641">641</a>
 <a href="#642" id="642">642</a>
-<a href="#643" id="643">643</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::window_modifiers::WindowModifiers;
+<a href="#643" id="643">643</a>
+<a href="#644" id="644">644</a>
+<a href="#645" id="645">645</a>
+<a href="#646" id="646">646</a>
+<a href="#647" id="647">647</a>
+<a href="#648" id="648">648</a>
+<a href="#649" id="649">649</a>
+<a href="#650" id="650">650</a>
+<a href="#651" id="651">651</a>
+<a href="#652" id="652">652</a>
+<a href="#653" id="653">653</a>
+<a href="#654" id="654">654</a>
+<a href="#655" id="655">655</a>
+<a href="#656" id="656">656</a>
+<a href="#657" id="657">657</a>
+<a href="#658" id="658">658</a>
+<a href="#659" id="659">659</a>
+<a href="#660" id="660">660</a>
+<a href="#661" id="661">661</a>
+<a href="#662" id="662">662</a>
+<a href="#663" id="663">663</a>
+<a href="#664" id="664">664</a>
+<a href="#665" id="665">665</a>
+<a href="#666" id="666">666</a>
+<a href="#667" id="667">667</a>
+<a href="#668" id="668">668</a>
+<a href="#669" id="669">669</a>
+<a href="#670" id="670">670</a>
+<a href="#671" id="671">671</a>
+<a href="#672" id="672">672</a>
+<a href="#673" id="673">673</a>
+<a href="#674" id="674">674</a>
+<a href="#675" id="675">675</a>
+<a href="#676" id="676">676</a>
+<a href="#677" id="677">677</a>
+<a href="#678" id="678">678</a>
+<a href="#679" id="679">679</a>
+<a href="#680" id="680">680</a>
+<a href="#681" id="681">681</a>
+<a href="#682" id="682">682</a>
+<a href="#683" id="683">683</a>
+<a href="#684" id="684">684</a>
+<a href="#685" id="685">685</a>
+<a href="#686" id="686">686</a>
+<a href="#687" id="687">687</a>
+<a href="#688" id="688">688</a>
+<a href="#689" id="689">689</a>
+<a href="#690" id="690">690</a>
+<a href="#691" id="691">691</a>
+<a href="#692" id="692">692</a>
+<a href="#693" id="693">693</a>
+<a href="#694" id="694">694</a>
+<a href="#695" id="695">695</a>
+<a href="#696" id="696">696</a>
+<a href="#697" id="697">697</a>
+<a href="#698" id="698">698</a>
+<a href="#699" id="699">699</a>
+<a href="#700" id="700">700</a>
+<a href="#701" id="701">701</a>
+<a href="#702" id="702">702</a>
+<a href="#703" id="703">703</a>
+<a href="#704" id="704">704</a>
+<a href="#705" id="705">705</a>
+<a href="#706" id="706">706</a>
+<a href="#707" id="707">707</a>
+<a href="#708" id="708">708</a>
+<a href="#709" id="709">709</a>
+<a href="#710" id="710">710</a>
+<a href="#711" id="711">711</a>
+<a href="#712" id="712">712</a>
+<a href="#713" id="713">713</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::window_modifiers::WindowModifiers;
 <span class="kw">use </span>glutin::context::GlProfile;
 <span class="kw">use </span>vizia_core::context::TreeProps;
 <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
 </span><span class="kw">use </span>winit::platform::windows::WindowExtWindows;
+<span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
+</span><span class="kw">use </span>winit::{platform::windows::WindowAttributesExtWindows, raw_window_handle::RawWindowHandle};
 
+<span class="kw">use </span><span class="kw">crate</span>::convert::cursor_icon_to_cursor_icon;
 <span class="kw">use </span>hashbrown::HashMap;
 <span class="kw">use </span>std::error::Error;
 <span class="kw">use </span>std::num::NonZeroU32;
 <span class="kw">use </span>std::{ffi::CString, sync::Arc};
 <span class="kw">use </span>winit::raw_window_handle::HasWindowHandle;
-
-<span class="kw">use </span><span class="kw">crate</span>::convert::cursor_icon_to_cursor_icon;
 
 <span class="kw">use </span>gl_rs <span class="kw">as </span>gl;
 <span class="kw">use </span>glutin::config::Config;
@@ -679,7 +750,7 @@
 
 <span class="kw">use </span>vizia_core::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>winit::event_loop::ActiveEventLoop;
-<span class="kw">use </span>winit::window::{CursorGrabMode, CursorIcon, CustomCursor, WindowLevel};
+<span class="kw">use </span>winit::window::{CursorGrabMode, CursorIcon, CustomCursor, WindowAttributes, WindowLevel};
 <span class="kw">use </span>winit::{dpi::<span class="kw-2">*</span>, window::WindowId};
 
 <span class="kw">pub struct </span>WinState {
@@ -706,33 +777,46 @@
 <span class="kw">impl </span>WinState {
     <span class="kw">pub fn </span>new(
         event_loop: <span class="kw-2">&amp;</span>ActiveEventLoop,
-        window: Arc&lt;winit::window::Window&gt;,
         entity: Entity,
+        <span class="attr">#[allow(unused_mut)] </span><span class="kw-2">mut </span>window_attributes: WindowAttributes,
+        <span class="attr">#[allow(unused_variables)] </span>owner: <span class="prelude-ty">Option</span>&lt;Arc&lt;winit::window::Window&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
+        <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
+        </span><span class="kw">let </span>(window, gl_config) = {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(owner) = owner {
+                <span class="kw">let </span>RawWindowHandle::Win32(handle) = owner.window_handle().unwrap().as_raw() <span class="kw">else </span>{
+                    <span class="macro">unreachable!</span>();
+                };
+                window_attributes = window_attributes.with_owner_window(handle.hwnd.get());
+            }
+
+            <span class="comment">// The current version of winit spawns new windows with unspecified position/size.
+            // As a workaround, we'll hide the window during creation and reveal it afterward.
+            </span><span class="kw">let </span>visible = window_attributes.visible;
+            <span class="kw">let </span>window_attributes = window_attributes.with_visible(<span class="bool-val">false</span>);
+
+            <span class="kw">let </span>(window, config) = build_window(event_loop, window_attributes);
+
+            <span class="kw">let </span>window = window.expect(<span class="string">"Could not create window with OpenGL context"</span>);
+            <span class="comment">// Another problem is the white background that briefly flashes on window creation.
+            // To avoid this one we must wait until the first draw is complete before revealing
+            // our window. The visible property won't work in this case as it prevents drawing.
+            // Instead we use the "cloak" attribute, which hides the window without that issue.
+            </span>set_cloak(<span class="kw-2">&amp;</span>window, <span class="bool-val">true</span>);
+            window.set_visible(visible);
+
+            (window, config)
+        };
+
+        <span class="attr">#[cfg(not(target_os = <span class="string">"windows"</span>))]
+        </span><span class="kw">let </span>(window, gl_config) = {
+            <span class="kw">let </span>(window, config) = build_window(event_loop, window_attributes);
+            <span class="kw">let </span>window = window.expect(<span class="string">"Could not create window with OpenGL context"</span>);
+            (window, config)
+        };
+
         window.set_ime_allowed(<span class="bool-val">true</span>);
         window.set_visible(<span class="bool-val">true</span>);
-
-        <span class="kw">let </span>template = ConfigTemplateBuilder::new().with_alpha_size(<span class="number">8</span>).with_transparency(<span class="bool-val">true</span>);
-        <span class="kw">let </span>display_builder = DisplayBuilder::new();
-
-        <span class="kw">let </span>(<span class="kw">_</span>, gl_config) = display_builder
-            .build(event_loop, template, |configs| {
-                <span class="comment">// Find the config with the maximum number of samples, so our triangle will
-                // be smooth.
-                </span>configs
-                    .reduce(|accum, config| {
-                        <span class="kw">let </span>transparency_check = config.supports_transparency().unwrap_or(<span class="bool-val">false</span>)
-                            &amp; !accum.supports_transparency().unwrap_or(<span class="bool-val">false</span>);
-
-                        <span class="kw">if </span>transparency_check || config.num_samples() &lt; accum.num_samples() {
-                            config
-                        } <span class="kw">else </span>{
-                            accum
-                        }
-                    })
-                    .unwrap()
-            })
-            .unwrap();
 
         <span class="kw">let </span>raw_window_handle = window.window_handle().unwrap().as_raw();
 
@@ -826,7 +910,7 @@
             id: window.id(),
             gr_context,
             gl_surface,
-            window,
+            window: Arc::new(window),
             surface,
             dirty_surface,
             should_close: <span class="bool-val">false</span>,
@@ -888,6 +972,62 @@
         <span class="self">self</span>.gl_surface.swap_buffers(<span class="kw-2">&amp;</span><span class="self">self</span>.gl_context).expect(<span class="string">"Failed to swap buffers"</span>);
     }
 }
+
+<span class="kw">fn </span>build_window(
+    event_loop: <span class="kw-2">&amp;</span>ActiveEventLoop,
+    window_attributes: WindowAttributes,
+) -&gt; (<span class="prelude-ty">Option</span>&lt;winit::window::Window&gt;, Config) {
+    <span class="kw">let </span>template = ConfigTemplateBuilder::new().with_alpha_size(<span class="number">8</span>).with_transparency(<span class="bool-val">true</span>);
+    <span class="kw">let </span>display_builder = DisplayBuilder::new().with_window_attributes(<span class="prelude-val">Some</span>(window_attributes));
+
+    display_builder
+        .build(event_loop, template, |configs| {
+            <span class="comment">// Find the config with the maximum number of samples, so our triangle will
+            // be smooth.
+            </span>configs
+                .reduce(|accum, config| {
+                    <span class="kw">let </span>transparency_check = config.supports_transparency().unwrap_or(<span class="bool-val">false</span>)
+                        &amp; !accum.supports_transparency().unwrap_or(<span class="bool-val">false</span>);
+
+                    <span class="kw">if </span>transparency_check || config.num_samples() &lt; accum.num_samples() {
+                        config
+                    } <span class="kw">else </span>{
+                        accum
+                    }
+                })
+                .unwrap()
+        })
+        .unwrap()
+}
+
+<span class="doccomment">/// Cloaks the window such that it is not visible to the user, but will still be composited.
+///
+/// &lt;https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute&gt;
+///
+</span><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
+</span><span class="kw">pub fn </span>set_cloak(window: <span class="kw-2">&amp;</span>winit::window::Window, state: bool) -&gt; bool {
+    <span class="kw">use </span>windows_sys::Win32::{
+        Foundation::{BOOL, FALSE, HWND, TRUE},
+        Graphics::Dwm::{DwmSetWindowAttribute, DWMWA_CLOAK},
+    };
+
+    <span class="kw">let </span>RawWindowHandle::Win32(handle) = window.window_handle().unwrap().as_raw() <span class="kw">else </span>{
+        <span class="macro">unreachable!</span>();
+    };
+
+    <span class="kw">let </span>value = <span class="kw">if </span>state { TRUE } <span class="kw">else </span>{ FALSE };
+
+    <span class="kw">let </span>result = <span class="kw">unsafe </span>{
+        DwmSetWindowAttribute(
+            handle.hwnd.get() <span class="kw">as </span>HWND,
+            DWMWA_CLOAK <span class="kw">as </span>u32,
+            std::ptr::from_ref(<span class="kw-2">&amp;</span>value).cast(),
+            std::mem::size_of::&lt;BOOL&gt;() <span class="kw">as </span>u32,
+        )
+    };
+
+    result == <span class="number">0 </span><span class="comment">// success
+</span>}
 
 <span class="kw">pub fn </span>create_surface(
     window: <span class="kw-2">&amp;</span>winit::window::Window,

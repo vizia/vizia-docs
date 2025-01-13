@@ -1403,7 +1403,13 @@
 <a href="#1402" id="1402">1402</a>
 <a href="#1403" id="1403">1403</a>
 <a href="#1404" id="1404">1404</a>
-<a href="#1405" id="1405">1405</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
+<a href="#1405" id="1405">1405</a>
+<a href="#1406" id="1406">1406</a>
+<a href="#1407" id="1407">1407</a>
+<a href="#1408" id="1408">1408</a>
+<a href="#1409" id="1409">1409</a>
+<a href="#1410" id="1410">1410</a>
+<a href="#1411" id="1411">1411</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::collections::{BinaryHeap, VecDeque};
 <span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
 </span><span class="kw">use </span>std::error::Error;
@@ -1580,8 +1586,14 @@
         }
     }
 
-    <span class="kw">pub fn </span>get_view&lt;V: View&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>V&gt; {
+    <span class="doccomment">/// Returns a reference to the current view associated with the event context.
+    </span><span class="kw">pub fn </span>get_view&lt;V: View&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>V&gt; {
         <span class="self">self</span>.views.get(<span class="kw-2">&amp;</span><span class="self">self</span>.current).and_then(|view| view.downcast_ref::&lt;V&gt;())
+    }
+
+    <span class="doccomment">/// Returns a reference to the specified view by entity.
+    </span><span class="kw">pub fn </span>get_view_with&lt;V: View&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>V&gt; {
+        <span class="self">self</span>.views.get(<span class="kw-2">&amp;</span>entity).and_then(|view| view.downcast_ref::&lt;V&gt;())
     }
 
     <span class="kw">pub fn </span>close_window(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {

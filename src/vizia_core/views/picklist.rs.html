@@ -141,25 +141,29 @@
 <a href="#140" id="140">140</a>
 <a href="#141" id="141">141</a>
 <a href="#142" id="142">142</a>
-<a href="#143" id="143">143</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::Deref;
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::Deref;
 
 <span class="kw">use </span><span class="kw">crate</span>::context::TreeProps;
 <span class="kw">use </span><span class="kw">crate</span>::icons::{ICON_CHECK, ICON_CHEVRON_DOWN};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="attr">#[derive(Lens)]
+<span class="doccomment">/// A view which allows the user to select an item from a dropdown list.
+</span><span class="attr">#[derive(Lens)]
 </span><span class="kw">pub struct </span>PickList {
     on_select: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, usize)&gt;&gt;,
     placeholder: String,
     is_open: bool,
 }
 
-<span class="kw">pub enum </span>PickListEvent {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>PickListEvent {
     SetOption(usize),
 }
 
 <span class="kw">impl </span>PickList {
-    <span class="kw">pub fn </span>new&lt;L1, L2, T&gt;(
+    <span class="doccomment">/// Creates a new [PickList] view.
+    </span><span class="kw">pub fn </span>new&lt;L1, L2, T&gt;(
         cx: <span class="kw-2">&amp;mut </span>Context,
         list: L1,
         selected: L2,
@@ -276,7 +280,7 @@
         })
     }
 
-    <span class="comment">// Sets the callback triggered when an option is selected.
+    <span class="doccomment">/// Sets the callback triggered when an option is selected.
     </span><span class="kw">pub fn </span>on_select&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, usize),

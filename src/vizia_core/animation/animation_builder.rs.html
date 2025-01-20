@@ -307,11 +307,28 @@
 <a href="#306" id="306">306</a>
 <a href="#307" id="307">307</a>
 <a href="#308" id="308">308</a>
-<a href="#309" id="309">309</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">use </span>vizia_style::{BorderWidth, Property};
 
-<span class="kw">pub struct </span>AnimationBuilder&lt;<span class="lifetime">'a</span>&gt; {
+<span class="doccomment">/// A builder for constructing animations.
+</span><span class="kw">pub struct </span>AnimationBuilder&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub</span>(<span class="kw">crate</span>) keyframes: Vec&lt;KeyframeBuilder&lt;<span class="lifetime">'a</span>&gt;&gt;,
 }
 
@@ -322,11 +339,13 @@
 }
 
 <span class="kw">impl </span>AnimationBuilder&lt;<span class="lifetime">'_</span>&gt; {
-    <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Creates a new [AnimationBuilder].
+    </span><span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{ keyframes: Vec::new() }
     }
 
-    <span class="kw">pub fn </span>keyframe(
+    <span class="doccomment">/// Adds a new keyframe to the animation.
+    </span><span class="kw">pub fn </span>keyframe(
         <span class="kw-2">mut </span><span class="self">self</span>,
         time: f32,
         keyframe: <span class="kw">impl </span>FnOnce(KeyframeBuilder) -&gt; KeyframeBuilder,
@@ -338,32 +357,36 @@
     </span>}
 }
 
-<span class="kw">pub struct </span>KeyframeBuilder&lt;<span class="lifetime">'a</span>&gt; {
+<span class="doccomment">/// A builder for constructing keyframes.
+</span><span class="kw">pub struct </span>KeyframeBuilder&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub</span>(<span class="kw">crate</span>) time: f32,
     <span class="kw">pub</span>(<span class="kw">crate</span>) properties: Vec&lt;Property&lt;<span class="lifetime">'a</span>&gt;&gt;,
 }
 
-<span class="comment">// TODO: Make a macro for these
-</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; KeyframeBuilder&lt;<span class="lifetime">'a</span>&gt; {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(time: f32) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; KeyframeBuilder&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="doccomment">/// Creates a new [KeyframeBuilder].
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(time: f32) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{ time, properties: Vec::new() }
     }
 
     <span class="comment">// DISPLAY
 
+    </span><span class="doccomment">/// Set the display value for the keyframe.
     </span><span class="kw">pub fn </span>display(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;Display&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.properties.push(Property::Display(val.into()));
 
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>opacity(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;Opacity&gt;) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Set the opacity value for the keyframe.
+    </span><span class="kw">pub fn </span>opacity(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;Opacity&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.properties.push(Property::Opacity(val.into()));
 
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>clip_path(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;ClipPath&gt;) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Set the clip-path value for the keyframe.
+    </span><span class="kw">pub fn </span>clip_path(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;ClipPath&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.properties.push(Property::ClipPath(val.into()));
 
         <span class="self">self
@@ -371,31 +394,36 @@
 
     <span class="comment">// TRANSFORM
 
+    </span><span class="doccomment">/// Set the transform value for the keyframe.
     </span><span class="kw">pub fn </span>transform(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;Vec&lt;Transform&gt;&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.properties.push(Property::Transform(val.into()));
 
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>transform_origin(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;Position&gt;) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Set the transform origin value for the keyframe.
+    </span><span class="kw">pub fn </span>transform_origin(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;Position&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.properties.push(Property::TransformOrigin(val.into()));
 
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>translate(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;Translate&gt;) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Set the translate value for the keyframe.
+    </span><span class="kw">pub fn </span>translate(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;Translate&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.properties.push(Property::Translate(val.into()));
 
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>rotate(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;Angle&gt;) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Set the rotate value for the keyframe.
+    </span><span class="kw">pub fn </span>rotate(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;Angle&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.properties.push(Property::Rotate(val.into()));
 
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>scale(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;Scale&gt;) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Set the scale value for the keyframe.
+    </span><span class="kw">pub fn </span>scale(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;Scale&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.properties.push(Property::Scale(val.into()));
 
         <span class="self">self
@@ -403,37 +431,41 @@
 
     <span class="comment">// BORDER
 
+    </span><span class="doccomment">/// Set the border width value for the keyframe.
     </span><span class="kw">pub fn </span>border_width(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;BorderWidth&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.properties.push(Property::BorderWidth(val.into()));
 
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>border_color(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;Color&gt;) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Set the border color value for the keyframe.
+    </span><span class="kw">pub fn </span>border_color(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;Color&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.properties.push(Property::BorderColor(val.into()));
 
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>border_top_left_radius(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;LengthOrPercentage&gt;) -&gt; <span class="self">Self </span>{
+    <span class="comment">// CORNERS
+
+    </span><span class="kw">pub fn </span>corner_top_left_radius(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;LengthOrPercentage&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.properties.push(Property::CornerTopLeftRadius(val.into()));
 
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>border_top_right_radius(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;LengthOrPercentage&gt;) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>corner_top_right_radius(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;LengthOrPercentage&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.properties.push(Property::CornerTopRightRadius(val.into()));
 
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>border_bottom_left_radius(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;LengthOrPercentage&gt;) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>corner_bottom_left_radius(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;LengthOrPercentage&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.properties.push(Property::CornerBottomLeftRadius(val.into()));
 
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>border_bottom_right_radius(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;LengthOrPercentage&gt;) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>corner_bottom_right_radius(<span class="kw-2">mut </span><span class="self">self</span>, val: <span class="kw">impl </span>Into&lt;LengthOrPercentage&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.properties.push(Property::CornerBottomRightRadius(val.into()));
 
         <span class="self">self

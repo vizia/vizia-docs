@@ -92,7 +92,11 @@
 <a href="#91" id="91">91</a>
 <a href="#92" id="92">92</a>
 <a href="#93" id="93">93</a>
-<a href="#94" id="94">94</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{icons::ICON_X, prelude::<span class="kw-2">*</span>};
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{icons::ICON_X, prelude::<span class="kw-2">*</span>};
 <span class="kw">use </span>std::sync::Arc;
 
 <span class="doccomment">/// A visual indicator such as a tag.
@@ -145,14 +149,18 @@
 <span class="doccomment">/// Used in conjunction with the `variant` modifier for selecting the style variant of a chip.
 </span><span class="attr">#[derive(Debug, Clone, Copy, Data, PartialEq, Eq)]
 </span><span class="kw">pub enum </span>ChipVariant {
-    Filled,
-    Outline,
+    <span class="doccomment">/// A filled chip.
+    </span>Filled,
+    <span class="doccomment">/// A chip with no fill and just a border.
+    </span>Outline,
 }
 
 <span class="macro">impl_res_simple!</span>(ChipVariant);
 
 <span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, Chip&gt; {
-    <span class="kw">pub fn </span>on_close(<span class="self">self</span>, callback: <span class="kw">impl </span><span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Set the callback triggered when the close button of the chip is pressed.
+    /// The chip close button is not displayed by default. Setting this callback causes the close button to be displayed.
+    </span><span class="kw">pub fn </span>on_close(<span class="self">self</span>, callback: <span class="kw">impl </span><span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.modify(|chip: <span class="kw-2">&amp;mut </span>Chip| {
             chip.on_close = <span class="prelude-val">Some</span>(Arc::new(callback));
         })

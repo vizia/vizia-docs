@@ -171,18 +171,29 @@
 <a href="#170" id="170">170</a>
 <a href="#171" id="171">171</a>
 <a href="#172" id="172">172</a>
-<a href="#173" id="173">173</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::icons::{
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
+<a href="#181" id="181">181</a>
+<a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::icons::{
     ICON_CHEVRON_DOWN, ICON_CHEVRON_LEFT, ICON_CHEVRON_RIGHT, ICON_CHEVRON_UP, ICON_MINUS,
     ICON_PLUS,
 };
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">pub enum </span>SpinboxEvent {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>SpinboxEvent {
     Increment,
     Decrement,
 }
 
-<span class="attr">#[derive(Lens)]
+<span class="doccomment">/// A view which represents a value which can be incremented or decremented.
+</span><span class="attr">#[derive(Lens)]
 </span><span class="kw">pub struct </span>Spinbox {
     orientation: Orientation,
     icons: SpinboxIcons,
@@ -191,23 +202,28 @@
     on_increment: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;&gt;,
 }
 
-<span class="attr">#[derive(Clone, Copy, Debug, PartialEq, Data)]
+<span class="doccomment">/// And enum which represents the icons that can be used for the increment and decrement buttons of the [Spinbox].
+</span><span class="attr">#[derive(Clone, Copy, Debug, PartialEq, Data)]
 </span><span class="kw">pub enum </span>SpinboxIcons {
-    PlusMinus,
-    Chevrons,
+    <span class="doccomment">/// A plus icon for the increment button and a minus icon for the decrement button.
+    </span>PlusMinus,
+    <span class="doccomment">/// A right chevron for the increment button and a left chevron for the decrement button.
+    </span>Chevrons,
 }
 
 <span class="macro">impl_res_simple!</span>(SpinboxIcons);
 
 <span class="kw">impl </span>Spinbox {
-    <span class="kw">pub fn </span>new&lt;L&gt;(cx: <span class="kw-2">&amp;mut </span>Context, lens: L) -&gt; Handle&lt;Spinbox&gt;
+    <span class="doccomment">/// Creates a new [Spinbox] view.
+    </span><span class="kw">pub fn </span>new&lt;L&gt;(cx: <span class="kw-2">&amp;mut </span>Context, lens: L) -&gt; Handle&lt;Spinbox&gt;
     <span class="kw">where
         </span>L: Lens&lt;Target: Data + ToStringLocalized&gt;,
     {
         <span class="self">Self</span>::custom(cx, <span class="kw">move </span>|cx| Label::new(cx, lens))
     }
 
-    <span class="kw">pub fn </span>custom&lt;F, V&gt;(cx: <span class="kw-2">&amp;mut </span>Context, content: F) -&gt; Handle&lt;Spinbox&gt;
+    <span class="doccomment">/// Creates a custom [Spinbox] view with the given content to represent the value.
+    </span><span class="kw">pub fn </span>custom&lt;F, V&gt;(cx: <span class="kw-2">&amp;mut </span>Context, content: F) -&gt; Handle&lt;Spinbox&gt;
     <span class="kw">where
         </span>F: Fn(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;V&gt;,
         V: <span class="lifetime">'static </span>+ View,
@@ -294,28 +310,32 @@
 }
 
 <span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, Spinbox&gt; {
-    <span class="kw">pub fn </span>on_increment&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
+    <span class="doccomment">/// Sets the callback which is triggered when the [Spinbox] value is incremented.
+    </span><span class="kw">pub fn </span>on_increment&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync,
     {
         <span class="self">self</span>.modify(|spinbox: <span class="kw-2">&amp;mut </span>Spinbox| spinbox.on_increment = <span class="prelude-val">Some</span>(Box::new(callback)))
     }
 
-    <span class="kw">pub fn </span>on_decrement&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
+    <span class="doccomment">/// Sets the callback which is triggered when the [Spinbox] value is decremented.
+    </span><span class="kw">pub fn </span>on_decrement&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync,
     {
         <span class="self">self</span>.modify(|spinbox: <span class="kw-2">&amp;mut </span>Spinbox| spinbox.on_decrement = <span class="prelude-val">Some</span>(Box::new(callback)))
     }
 
-    <span class="kw">pub fn </span>orientation(<span class="self">self</span>, orientation: <span class="kw">impl </span>Res&lt;Orientation&gt;) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Sets the orientation of the [Spinbox].
+    </span><span class="kw">pub fn </span>orientation(<span class="self">self</span>, orientation: <span class="kw">impl </span>Res&lt;Orientation&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.bind(orientation, <span class="kw">move </span>|handle, orientation| {
             <span class="kw">let </span>orientation = orientation.get(<span class="kw-2">&amp;</span>handle);
             handle.modify(<span class="kw">move </span>|spinbox| spinbox.orientation = orientation);
         })
     }
 
-    <span class="kw">pub fn </span>icons(<span class="self">self</span>, icons: <span class="kw">impl </span>Res&lt;SpinboxIcons&gt;) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Set the icons which should be used for the increment and decrement buttons of the [Spinbox]
+    </span><span class="kw">pub fn </span>icons(<span class="self">self</span>, icons: <span class="kw">impl </span>Res&lt;SpinboxIcons&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.bind(icons, <span class="kw">move </span>|handle, icons| {
             <span class="kw">let </span>icons = icons.get(<span class="kw-2">&amp;</span>handle);
             handle.modify(<span class="kw">move </span>|spinbox| spinbox.icons = icons);

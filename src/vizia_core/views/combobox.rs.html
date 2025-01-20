@@ -260,10 +260,7 @@
 <a href="#259" id="259">259</a>
 <a href="#260" id="260">260</a>
 <a href="#261" id="261">261</a>
-<a href="#262" id="262">262</a>
-<a href="#263" id="263">263</a>
-<a href="#264" id="264">264</a>
-<a href="#265" id="265">265</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomData;
+<a href="#262" id="262">262</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomData;
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
@@ -290,10 +287,9 @@
     p: PhantomData&lt;T&gt;,
 }
 
-<span class="kw">pub enum </span>ComboBoxEvent {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>ComboBoxEvent {
     SetOption(usize),
     SetFilterText(String),
-    Close,
 }
 
 <span class="kw">impl</span>&lt;L1, L2, T&gt; ComboBox&lt;L1, L2, T&gt;
@@ -302,7 +298,8 @@
     T: <span class="lifetime">'static </span>+ Data + ToString,
     L2: Copy + Lens&lt;Target = usize&gt;,
 {
-    <span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;mut </span>Context, list_lens: L1, selected: L2) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+    <span class="doccomment">/// Creates a new [ComboBox] view.
+    </span><span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;mut </span>Context, list_lens: L1, selected: L2) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self </span>{
             filter_text: String::from(<span class="string">""</span>),
             on_select: <span class="prelude-val">None</span>,
@@ -434,10 +431,6 @@
                 <span class="comment">// Reopen the popup in case it was closed with the ESC key.
                 </span><span class="self">self</span>.is_open = <span class="bool-val">true</span>;
             }
-
-            ComboBoxEvent::Close =&gt; {
-                <span class="self">self</span>.is_open = <span class="bool-val">false</span>;
-            }
         });
 
         event.map(|textbox_event, <span class="kw">_</span>| <span class="kw">match </span>textbox_event {
@@ -519,7 +512,8 @@
     T: <span class="lifetime">'static </span>+ Data + ToString,
     L2: Lens&lt;Target = usize&gt;,
 {
-    <span class="kw">pub fn </span>on_select&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
+    <span class="doccomment">/// Set the callback triggered when an item is selected from the [ComboBox] dropdown list.
+    </span><span class="kw">pub fn </span>on_select&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, usize),
     {

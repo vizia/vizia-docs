@@ -1985,7 +1985,13 @@
 <a href="#1984" id="1984">1984</a>
 <a href="#1985" id="1985">1985</a>
 <a href="#1986" id="1986">1986</a>
-<a href="#1987" id="1987">1987</a></pre></div><pre class="rust"><code><span class="doccomment">//! Styling determines the appearance of a view.
+<a href="#1987" id="1987">1987</a>
+<a href="#1988" id="1988">1988</a>
+<a href="#1989" id="1989">1989</a>
+<a href="#1990" id="1990">1990</a>
+<a href="#1991" id="1991">1991</a>
+<a href="#1992" id="1992">1992</a>
+<a href="#1993" id="1993">1993</a></pre></div><pre class="rust"><code><span class="doccomment">//! Styling determines the appearance of a view.
 //!
 //! # Styling Views
 //! Vizia provides two ways to style views:
@@ -2111,7 +2117,7 @@
 }
 
 <span class="macro">bitflags!</span> {
-    <span class="kw">pub struct </span>SystemFlags: u8 {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>SystemFlags: u8 {
         <span class="doccomment">/// Layout system flag.
         </span><span class="kw">const </span>RELAYOUT = <span class="number">1</span>;
         <span class="kw">const </span>RESTYLE = <span class="number">1 </span>&lt;&lt; <span class="number">1</span>;
@@ -2126,16 +2132,22 @@
     }
 }
 
-<span class="attr">#[derive(Debug, Clone, PartialEq)]
+<span class="doccomment">/// An enum which represents an image or a gradient.
+</span><span class="attr">#[derive(Debug, Clone, PartialEq)]
 </span><span class="kw">pub enum </span>ImageOrGradient {
-    Image(String),
-    Gradient(Gradient),
+    <span class="doccomment">/// Represents an image by name.
+    </span>Image(String),
+    <span class="doccomment">/// A gradient.
+    </span>Gradient(Gradient),
 }
 
-<span class="attr">#[derive(Debug, Clone, PartialEq, Eq)]
+<span class="doccomment">/// A font-family.
+</span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq)]
 </span><span class="kw">pub enum </span>FamilyOwned {
-    Generic(GenericFontFamily),
-    Named(String),
+    <span class="doccomment">/// A generic font-family.
+    </span>Generic(GenericFontFamily),
+    <span class="doccomment">/// A named front-family.
+    </span>Named(String),
 }
 
 <span class="kw">impl </span>AsRef&lt;str&gt; <span class="kw">for </span>FamilyOwned {
@@ -2199,14 +2211,13 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) abilities: SparseSet&lt;Abilities&gt;,
 
     <span class="comment">// Accessibility Properties
-    </span><span class="kw">pub </span>name: StyleSet&lt;String&gt;,
-    <span class="kw">pub </span>role: SparseSet&lt;Role&gt;,
-    <span class="comment">// pub default_action_verb: SparseSet&lt;DefaultActionVerb&gt;,
-    </span><span class="kw">pub </span>live: SparseSet&lt;Live&gt;,
-    <span class="kw">pub </span>labelled_by: SparseSet&lt;Entity&gt;,
-    <span class="kw">pub </span>hidden: SparseSet&lt;bool&gt;,
-    <span class="kw">pub </span>text_value: SparseSet&lt;String&gt;,
-    <span class="kw">pub </span>numeric_value: SparseSet&lt;f64&gt;,
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) name: StyleSet&lt;String&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) role: SparseSet&lt;Role&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) live: SparseSet&lt;Live&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) labelled_by: SparseSet&lt;Entity&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) hidden: SparseSet&lt;bool&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) text_value: SparseSet&lt;String&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) numeric_value: SparseSet&lt;f64&gt;,
 
     <span class="comment">// Visibility
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) visibility: StyleSet&lt;Visibility&gt;,
@@ -2273,7 +2284,7 @@
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) shadow: AnimatableSet&lt;Vec&lt;Shadow&gt;&gt;,
 
     <span class="comment">// Text
-    </span><span class="kw">pub </span>text: SparseSet&lt;String&gt;,
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) text: SparseSet&lt;String&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) text_wrap: StyleSet&lt;bool&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) text_overflow: StyleSet&lt;TextOverflow&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) line_clamp: StyleSet&lt;LineClamp&gt;,
@@ -2366,7 +2377,8 @@
 }
 
 <span class="kw">impl </span>Style {
-    <span class="kw">pub fn </span>scale_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+    <span class="doccomment">/// Returns the scale factor of the application.
+    </span><span class="kw">pub fn </span>scale_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
         <span class="self">self</span>.dpi_factor <span class="kw">as </span>f32
     }
 
@@ -3656,7 +3668,7 @@
     }
 
     <span class="comment">// Add style data for the given entity.
-    </span><span class="kw">pub fn </span>add(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>add(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
         <span class="self">self</span>.pseudo_classes.insert(entity, PseudoClassFlags::VALID);
         <span class="self">self</span>.classes.insert(entity, HashSet::new());
         <span class="self">self</span>.abilities.insert(entity, Abilities::default());
@@ -3666,7 +3678,7 @@
     }
 
     <span class="comment">// Remove style data for the given entity.
-    </span><span class="kw">pub fn </span>remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
         <span class="self">self</span>.ids.remove(entity);
         <span class="self">self</span>.classes.remove(entity);
         <span class="self">self</span>.pseudo_classes.remove(entity);
@@ -3816,24 +3828,24 @@
         <span class="self">self</span>.fill.remove(entity);
     }
 
-    <span class="kw">pub fn </span>needs_restyle(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>needs_restyle(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
         <span class="self">self</span>.restyle.<span class="number">0</span>.insert(entity).unwrap();
     }
 
-    <span class="kw">pub fn </span>needs_relayout(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>needs_relayout(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.system_flags.set(SystemFlags::RELAYOUT, <span class="bool-val">true</span>);
     }
 
-    <span class="kw">pub fn </span>needs_access_update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>needs_access_update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
         <span class="self">self</span>.reaccess.<span class="number">0</span>.insert(entity).unwrap();
     }
 
-    <span class="kw">pub fn </span>needs_text_update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>needs_text_update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
         <span class="self">self</span>.text_construction.<span class="number">0</span>.insert(entity).unwrap();
         <span class="self">self</span>.text_layout.<span class="number">0</span>.insert(entity).unwrap();
     }
 
-    <span class="kw">pub fn </span>needs_text_layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>needs_text_layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity) {
         <span class="self">self</span>.text_layout.<span class="number">0</span>.insert(entity).unwrap();
     }
 
@@ -3844,7 +3856,7 @@
     // }
 
     // Remove all shared style data.
-    </span><span class="kw">pub fn </span>clear_style_rules(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>clear_style_rules(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.disabled.clear_rules();
         <span class="comment">// Display
         </span><span class="self">self</span>.display.clear_rules();

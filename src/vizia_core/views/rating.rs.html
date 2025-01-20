@@ -91,9 +91,13 @@
 <a href="#90" id="90">90</a>
 <a href="#91" id="91">91</a>
 <a href="#92" id="92">92</a>
-<a href="#93" id="93">93</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{icons::ICON_STAR_FILLED, prelude::<span class="kw-2">*</span>};
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{icons::ICON_STAR_FILLED, prelude::<span class="kw-2">*</span>};
 
-<span class="attr">#[derive(Lens)]
+<span class="doccomment">/// A view which represents a rating as a number of filled stars.
+</span><span class="attr">#[derive(Lens)]
 </span><span class="kw">pub struct </span>Rating {
     rating: u32,
     max_rating: u32,
@@ -108,7 +112,8 @@
 }
 
 <span class="kw">impl </span>Rating {
-    <span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;mut </span>Context, max_rating: u32, lens: <span class="kw">impl </span>Lens&lt;Target = u32&gt;) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+    <span class="doccomment">/// Creates a new [Rating] view.
+    </span><span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;mut </span>Context, max_rating: u32, lens: <span class="kw">impl </span>Lens&lt;Target = u32&gt;) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self </span>{ rating: lens.get(cx), max_rating, on_change: <span class="prelude-val">None </span>}
             .build(cx, |cx| {
                 <span class="kw">for </span>i <span class="kw">in </span><span class="number">1</span>..max_rating + <span class="number">1 </span>{
@@ -177,7 +182,8 @@
 }
 
 <span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, Rating&gt; {
-    <span class="kw">pub fn </span>on_change&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
+    <span class="doccomment">/// Set the callback which is triggered when the rating changes.
+    </span><span class="kw">pub fn </span>on_change&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, u32),
     {

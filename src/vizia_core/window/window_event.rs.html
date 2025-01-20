@@ -133,7 +133,13 @@
 <a href="#132" id="132">132</a>
 <a href="#133" id="133">133</a>
 <a href="#134" id="134">134</a>
-<a href="#135" id="135">135</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::path::PathBuf;
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::path::PathBuf;
 
 <span class="kw">use crate</span>::{entity::Entity, environment::ThemeMode, layout::cache::GeoChanged};
 <span class="kw">use </span>vizia_input::{Code, Key, MouseButton};
@@ -141,9 +147,12 @@
 <span class="kw">use </span>vizia_window::{WindowPosition, WindowSize};
 
 <span class="attr">#[derive(Debug, Clone)]
+</span><span class="doccomment">/// Data associated with a drop event.
 </span><span class="kw">pub enum </span>DropData {
-    File(PathBuf),
-    Id(Entity),
+    <span class="doccomment">/// Path to a dropped file.
+    </span>File(PathBuf),
+    <span class="doccomment">///  Entity ID of a dropped entity.
+    </span>Id(Entity),
 }
 
 <span class="kw">impl </span>From&lt;Entity&gt; <span class="kw">for </span>DropData {
@@ -176,11 +185,13 @@
     </span>MouseUp(MouseButton),
     <span class="doccomment">/// Emitted when the primary mouse button or trigger key is pressed and then released on a view
     </span>Press {
-        mouse: bool,
+        <span class="doccomment">/// Whether the press event was triggered by the mouse.
+        </span>mouse: bool,
     },
     <span class="doccomment">/// Emitted when the primary mouse button or trigger key is pressed on a view
     </span>PressDown {
-        mouse: bool,
+        <span class="doccomment">/// Whether the press down event was triggered by the mouse.
+        </span>mouse: bool,
     },
     <span class="doccomment">/// Emitted when the mouse cursor is moved
     </span>MouseMove(f32, f32),
@@ -194,13 +205,13 @@
     </span>MouseEnter,
     <span class="doccomment">/// Emitted when the mouse cursor leaves an entity.
     </span>MouseLeave,
-    <span class="comment">// Emitted when an entity gains keyboard focus.
+    <span class="doccomment">/// Emitted when an entity gains keyboard focus.
     </span>FocusIn,
-    <span class="comment">// Emitted when an entity loses keyboard focus.
+    <span class="doccomment">/// Emitted when an entity loses keyboard focus.
     </span>FocusOut,
-    <span class="comment">// Emitted when an entity's focus visibility has changed.
+    <span class="doccomment">/// Emitted when an entity's focus visibility has changed.
     </span>FocusVisibility(bool),
-    <span class="comment">// Emitted when the window gains or loses focus
+    <span class="doccomment">/// Emitted when the window gains or loses focus
     </span>WindowFocused(bool),
     <span class="doccomment">/// Emitted when a character is typed.
     </span>CharInput(char),
@@ -257,15 +268,16 @@
     </span>FocusPrev,
     <span class="doccomment">/// Prints the debug message to the console.
     </span>Debug(String),
-    ActionRequest(accesskit::ActionRequest),
+    <span class="doccomment">/// Represents an action requested by an accessibility technology.
+    </span>ActionRequest(accesskit::ActionRequest),
     <span class="doccomment">/// Reloads all application stylesheets.
     </span>ReloadStyles,
+    <span class="doccomment">/// Enables or disabled mouse and keyboard input to the window.
+    </span>SetEnabled(bool),
+    <span class="doccomment">/// Puts the window in a drag state.
+    </span>DragWindow,
 
-    SetEnabled(bool),
-
-    DragWindow,
-
-    <span class="comment">// ToDo: Move this
+    <span class="doccomment">/// Emitted when the window is destroyed.
     </span>Destroyed,
 }
 </code></pre></div></section></main></body></html>

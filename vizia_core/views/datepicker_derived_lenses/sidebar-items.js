@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["months","root","selected_month","view_date"]};

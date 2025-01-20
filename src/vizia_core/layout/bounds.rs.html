@@ -386,15 +386,31 @@
 <a href="#385" id="385">385</a>
 <a href="#386" id="386">386</a>
 <a href="#387" id="387">387</a>
-<a href="#388" id="388">388</a></pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::Rect;
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a></pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::Rect;
 
 <span class="doccomment">/// Represents an axis-aligned bounding box.
 </span><span class="attr">#[derive(Clone, Copy, Debug, PartialEq)]
 </span><span class="kw">pub struct </span>BoundingBox {
-    <span class="kw">pub </span>x: f32,
-    <span class="kw">pub </span>y: f32,
-    <span class="kw">pub </span>w: f32,
-    <span class="kw">pub </span>h: f32,
+    <span class="doccomment">/// The horizontal x position of the bounding box.
+    </span><span class="kw">pub </span>x: f32,
+    <span class="doccomment">/// The vertical y position of the bounding box.
+    </span><span class="kw">pub </span>y: f32,
+    <span class="doccomment">/// The width of the bounding box.
+    </span><span class="kw">pub </span>w: f32,
+    <span class="doccomment">/// The height of the bounding box.
+    </span><span class="kw">pub </span>h: f32,
 }
 
 <span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>BoundingBox {
@@ -552,7 +568,8 @@
         )
     }
 
-    <span class="kw">pub fn </span>expand_sides(<span class="kw-2">&amp;</span><span class="self">self</span>, left: f32, top: f32, right: f32, bottom: f32) -&gt; BoundingBox {
+    <span class="doccomment">/// Expands each side by the given separate amounts and returns a new [`BoundingBox`].
+    </span><span class="kw">pub fn </span>expand_sides(<span class="kw-2">&amp;</span><span class="self">self</span>, left: f32, top: f32, right: f32, bottom: f32) -&gt; BoundingBox {
         BoundingBox::from_min_max(
             <span class="self">self</span>.left() - left,
             <span class="self">self</span>.top() - top,
@@ -561,7 +578,8 @@
         )
     }
 
-    <span class="kw">pub fn </span>offset(<span class="kw-2">&amp;</span><span class="self">self</span>, x: f32, y: f32) -&gt; BoundingBox {
+    <span class="doccomment">/// Shifts the bounding box by the given X and Y offsets and returns a new [`BoundingBox`].
+    </span><span class="kw">pub fn </span>offset(<span class="kw-2">&amp;</span><span class="self">self</span>, x: f32, y: f32) -&gt; BoundingBox {
         BoundingBox::from_min_max(
             <span class="self">self</span>.left() + x,
             <span class="self">self</span>.top() + y,
@@ -606,7 +624,8 @@
         )
     }
 
-    <span class="kw">pub fn </span>intersection(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Returns a new [BoundingBox] representing the intersection of the current bounding box and the given bounding box.
+    </span><span class="kw">pub fn </span>intersection(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>left = <span class="self">self</span>.left().max(other.left());
         <span class="kw">let </span>right = <span class="self">self</span>.right().min(other.right());
         <span class="kw">let </span>top = <span class="self">self</span>.top().max(other.top());
@@ -614,7 +633,8 @@
         BoundingBox::from_min_max(left, top, right, bottom)
     }
 
-    <span class="kw">pub fn </span>union(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Returns a new [BoundingBox] representing the union of the current bounding box and the given bounding box.
+    </span><span class="kw">pub fn </span>union(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>left = <span class="self">self</span>.left().min(other.left());
         <span class="kw">let </span>right = <span class="self">self</span>.right().max(other.right());
         <span class="kw">let </span>top = <span class="self">self</span>.top().min(other.top());
@@ -622,7 +642,8 @@
         BoundingBox::from_min_max(left, top, right, bottom)
     }
 
-    <span class="kw">pub fn </span>intersects(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+    <span class="doccomment">/// Returns true if the current bounding box and the given bounding box intersect.
+    </span><span class="kw">pub fn </span>intersects(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
         <span class="kw">let </span>x_hit = (<span class="self">self</span>.x &gt;= other.x &amp;&amp; <span class="self">self</span>.x &lt; other.x + other.w)
             || (other.x &gt;= <span class="self">self</span>.x &amp;&amp; other.x &lt; <span class="self">self</span>.x + <span class="self">self</span>.w);
         <span class="kw">let </span>y_hit = (<span class="self">self</span>.y &gt;= other.y &amp;&amp; <span class="self">self</span>.y &lt; other.y + other.h)
@@ -630,19 +651,22 @@
         x_hit &amp;&amp; y_hit
     }
 
-    <span class="kw">pub fn </span>contains(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+    <span class="doccomment">/// Returns true if the given bounding box is contained within the current bounding box.
+    </span><span class="kw">pub fn </span>contains(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
         <span class="kw">let </span>x_hit = other.x &gt;= <span class="self">self</span>.x &amp;&amp; other.x + other.w &lt; <span class="self">self</span>.x + <span class="self">self</span>.w;
         <span class="kw">let </span>y_hit = other.y &gt;= <span class="self">self</span>.y &amp;&amp; other.y + other.h &lt; <span class="self">self</span>.y + <span class="self">self</span>.h;
         x_hit &amp;&amp; y_hit
     }
 
-    <span class="kw">pub fn </span>contains_point(<span class="kw-2">&amp;</span><span class="self">self</span>, x: f32, y: f32) -&gt; bool {
+    <span class="doccomment">/// Returns true if the given point is contained within the current bounding box.
+    </span><span class="kw">pub fn </span>contains_point(<span class="kw-2">&amp;</span><span class="self">self</span>, x: f32, y: f32) -&gt; bool {
         <span class="kw">let </span>x_hit = x &gt;= <span class="self">self</span>.x &amp;&amp; x &lt; <span class="self">self</span>.x + <span class="self">self</span>.w;
         <span class="kw">let </span>y_hit = y &gt;= <span class="self">self</span>.y &amp;&amp; y &lt; <span class="self">self</span>.y + <span class="self">self</span>.h;
         x_hit &amp;&amp; y_hit
     }
 
-    <span class="kw">pub fn </span>diagonal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
+    <span class="doccomment">/// Because the diagonal distance of the current bounding box.
+    </span><span class="kw">pub fn </span>diagonal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f32 {
         (<span class="self">self</span>.width() * <span class="self">self</span>.width() + <span class="self">self</span>.height() * <span class="self">self</span>.height()).sqrt()
     }
 

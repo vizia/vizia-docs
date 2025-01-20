@@ -550,7 +550,14 @@
 <a href="#549" id="549">549</a>
 <a href="#550" id="550">550</a>
 <a href="#551" id="551">551</a>
-<a href="#552" id="552">552</a></pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code)]
+<a href="#552" id="552">552</a>
+<a href="#553" id="553">553</a>
+<a href="#554" id="554">554</a>
+<a href="#555" id="555">555</a>
+<a href="#556" id="556">556</a>
+<a href="#557" id="557">557</a>
+<a href="#558" id="558">558</a>
+<a href="#559" id="559">559</a></pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 </span><span class="kw">use </span><span class="kw">crate</span>::vg;
@@ -565,7 +572,8 @@
 
 <span class="kw">use </span>std::{default, f32::consts::PI};
 
-<span class="kw">pub struct </span>Knob&lt;L&gt; {
+<span class="doccomment">/// A circular view which represents a value.
+</span><span class="kw">pub struct </span>Knob&lt;L&gt; {
     lens: L,
     default_normal: f32,
 
@@ -582,7 +590,8 @@
 }
 
 <span class="kw">impl</span>&lt;L: Lens&lt;Target = f32&gt;&gt; Knob&lt;L&gt; {
-    <span class="kw">pub fn </span>new(
+    <span class="doccomment">/// Create a new [Knob] view.
+    </span><span class="kw">pub fn </span>new(
         cx: <span class="kw-2">&amp;mut </span>Context,
         normalized_default: <span class="kw">impl </span>Res&lt;f32&gt;,
         lens: L,
@@ -627,7 +636,8 @@
         .navigable(<span class="bool-val">true</span>)
     }
 
-    <span class="kw">pub fn </span>custom&lt;F, V: View&gt;(
+    <span class="doccomment">/// Create a custom [Knob] view.
+    </span><span class="kw">pub fn </span>custom&lt;F, V: View&gt;(
         cx: <span class="kw-2">&amp;mut </span>Context,
         default_normal: f32,
         lens: L,
@@ -660,7 +670,8 @@
 }
 
 <span class="kw">impl</span>&lt;L: Lens&lt;Target = f32&gt;&gt; Handle&lt;<span class="lifetime">'_</span>, Knob&lt;L&gt;&gt; {
-    <span class="kw">pub fn </span>on_changing&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
+    <span class="doccomment">/// Sets the callback triggered when the knob value is changed.
+    </span><span class="kw">pub fn </span>on_change&lt;F&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, f32),
     {
@@ -767,7 +778,8 @@
 }
 
 <span class="kw">impl </span>ArcTrack {
-    <span class="kw">pub fn </span>new(
+    <span class="doccomment">/// Creates a new [ArcTrack] view.
+    </span><span class="kw">pub fn </span>new(
         cx: <span class="kw-2">&amp;mut </span>Context,
         center: bool,
         radius: Units,
@@ -911,7 +923,8 @@
     </span>mode: KnobMode,
 }
 <span class="kw">impl </span>Ticks {
-    <span class="kw">pub fn </span>new(
+    <span class="doccomment">/// Creates a new [Ticks] view.
+    </span><span class="kw">pub fn </span>new(
         cx: <span class="kw-2">&amp;mut </span>Context,
         radius: Units,
         tick_len: Units,
@@ -998,7 +1011,8 @@
     mode: KnobMode,
 }
 <span class="kw">impl </span>TickKnob {
-    <span class="kw">pub fn </span>new(
+    <span class="doccomment">/// Creates a new [TickKnob] view.
+    </span><span class="kw">pub fn </span>new(
         cx: <span class="kw-2">&amp;mut </span>Context,
         radius: Units,
         tick_width: Units,

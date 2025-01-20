@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["max_rating","on_change","rating","root"]};

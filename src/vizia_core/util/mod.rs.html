@@ -80,11 +80,14 @@
 <a href="#79" id="79">79</a>
 <a href="#80" id="80">80</a>
 <a href="#81" id="81">81</a>
-<a href="#82" id="82">82</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::path::{Path, PathBuf};
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::path::{Path, PathBuf};
 
-<span class="comment">// Helper trait for getting CSS from a string or path.
+<span class="doccomment">/// Helper trait for getting CSS from a string or path.
 </span><span class="kw">pub trait </span>IntoCssStr: <span class="lifetime">'static </span>{
-    <span class="kw">fn </span>get_style(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;String, std::io::Error&gt;;
+    <span class="doccomment">/// Returns a string containing CSS.
+    </span><span class="kw">fn </span>get_style(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;String, std::io::Error&gt;;
 }
 
 <span class="kw">impl </span>IntoCssStr <span class="kw">for </span>CSS {
@@ -145,6 +148,7 @@
 
 <span class="attr">#[cfg(debug_assertions)]
 #[macro_export]
+</span><span class="doccomment">/// A macro which parses CSS from a file at runtime in debug mode, and includes the file in the binary in release mode.
 </span><span class="macro">macro_rules!</span> include_style {
     (<span class="macro-nonterminal">$filename</span>:tt) =&gt; {
         <span class="macro-nonterminal">$crate::util::CSS::from_file</span>(<span class="macro">concat!</span>(<span class="macro">env!</span>(<span class="string">"CARGO_MANIFEST_DIR"</span>), <span class="string">"/"</span>, <span class="macro-nonterminal">$filename</span>))

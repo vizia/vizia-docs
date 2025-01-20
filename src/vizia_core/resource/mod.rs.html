@@ -192,7 +192,11 @@
 <a href="#191" id="191">191</a>
 <a href="#192" id="192">192</a>
 <a href="#193" id="193">193</a>
-<a href="#194" id="194">194</a></pre></div><pre class="rust"><code><span class="doccomment">//! Resource management for fonts, themes, images, and translations.
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a></pre></div><pre class="rust"><code><span class="doccomment">//! Resource management for fonts, themes, images, and translations.
 
 </span><span class="kw">mod </span>image_id;
 
@@ -220,11 +224,15 @@
     <span class="kw">pub </span>observers: HashSet&lt;Entity&gt;,
 }
 
-<span class="attr">#[derive(Copy, Clone, PartialEq)]
+<span class="doccomment">/// An image should be stored in the resource manager.
+</span><span class="attr">#[derive(Copy, Clone, PartialEq)]
 </span><span class="kw">pub enum </span>ImageRetentionPolicy {
-    Forever,
-    DropWhenUnusedForOneFrame,
-    DropWhenNoObservers,
+    <span class="doccomment">///  The image should live for the entire duration of the application.
+    </span>Forever,
+    <span class="doccomment">/// The image should be dropped when not used for one frame.
+    </span>DropWhenUnusedForOneFrame,
+    <span class="doccomment">/// The image should be dropped when no views are using the image.
+    </span>DropWhenNoObservers,
 }
 
 <span class="attr">#[doc(hidden)]

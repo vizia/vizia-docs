@@ -68,14 +68,19 @@
 <a href="#67" id="67">67</a>
 <a href="#68" id="68">68</a>
 <a href="#69" id="69">69</a>
-<a href="#70" id="70">70</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">pub struct </span>ToggleButton {
+<span class="doccomment">/// A button which can be toggled between two states.
+</span><span class="kw">pub struct </span>ToggleButton {
     on_toggle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext)&gt;&gt;,
 }
 
 <span class="kw">impl </span>ToggleButton {
-    <span class="kw">pub fn </span>new&lt;V: View&gt;(
+    <span class="doccomment">/// Create a new [ToggleButton] view.
+    </span><span class="kw">pub fn </span>new&lt;V: View&gt;(
         cx: <span class="kw-2">&amp;mut </span>Context,
         lens: <span class="kw">impl </span>Lens&lt;Target = bool&gt;,
         content: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;V&gt; + <span class="lifetime">'static</span>,
@@ -134,7 +139,8 @@
 }
 
 <span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, ToggleButton&gt; {
-    <span class="kw">pub fn </span>on_toggle(<span class="self">self</span>, callback: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + <span class="lifetime">'static</span>) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Sets the callback triggered when the [ToggleButton] is toggled.
+    </span><span class="kw">pub fn </span>on_toggle(<span class="self">self</span>, callback: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + <span class="lifetime">'static</span>) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.modify(|toggle_button| toggle_button.on_toggle = <span class="prelude-val">Some</span>(Box::new(callback)))
     }
 }

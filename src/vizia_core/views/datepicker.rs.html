@@ -307,7 +307,9 @@
 <a href="#306" id="306">306</a>
 <a href="#307" id="307">307</a>
 <a href="#308" id="308">308</a>
-<a href="#309" id="309">309</a></pre></div><pre class="rust"><code><span class="kw">use </span>chrono::{Datelike, NaiveDate, Weekday};
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a></pre></div><pre class="rust"><code><span class="kw">use </span>chrono::{Datelike, NaiveDate, Weekday};
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
@@ -340,7 +342,7 @@
 <span class="kw">const </span>DAYS_HEADER: [<span class="kw-2">&amp;</span>str; <span class="number">7</span>] =
     [<span class="string">"Monday"</span>, <span class="string">"Tuesday"</span>, <span class="string">"Wednesday"</span>, <span class="string">"Thursday"</span>, <span class="string">"Friday"</span>, <span class="string">"Saturday"</span>, <span class="string">"Sunday"</span>];
 
-<span class="kw">pub enum </span>DatepickerEvent {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>DatepickerEvent {
     IncrementMonth,
     DecrementMonth,
     SelectMonth(usize),
@@ -417,7 +419,8 @@
         }
     }
 
-    <span class="kw">pub fn </span>new&lt;L, D&gt;(cx: <span class="kw-2">&amp;mut </span>Context, lens: L) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+    <span class="doccomment">/// Create a new [Datepicker] view.
+    </span><span class="kw">pub fn </span>new&lt;L, D&gt;(cx: <span class="kw-2">&amp;mut </span>Context, lens: L) -&gt; Handle&lt;<span class="self">Self</span>&gt;
     <span class="kw">where
         </span>L: Lens&lt;Target = D&gt;,
         D: Datelike + Data,
@@ -612,7 +615,8 @@
 }
 
 <span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, Datepicker&gt; {
-    <span class="kw">pub fn </span>on_select&lt;F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, NaiveDate)&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Set the callback triggered when a date is selected from the [Datepicker] view.
+    </span><span class="kw">pub fn </span>on_select&lt;F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, NaiveDate)&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.modify(|datepicker: <span class="kw-2">&amp;mut </span>Datepicker| datepicker.on_select = <span class="prelude-val">Some</span>(Box::new(callback)))
     }
 }

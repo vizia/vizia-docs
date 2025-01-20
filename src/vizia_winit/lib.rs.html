@@ -28,11 +28,7 @@
 <a href="#27" id="27">27</a>
 <a href="#28" id="28">28</a>
 <a href="#29" id="29">29</a>
-<a href="#30" id="30">30</a>
-<a href="#31" id="31">31</a>
-<a href="#32" id="32">32</a>
-<a href="#33" id="33">33</a>
-<a href="#34" id="34">34</a></pre></div><pre class="rust"><code><span class="kw">pub mod </span>application;
+<a href="#30" id="30">30</a></pre></div><pre class="rust"><code><span class="kw">pub mod </span>application;
 <span class="kw">mod </span>convert;
 <span class="kw">pub mod </span>window;
 <span class="kw">pub mod </span>window_modifiers;
@@ -46,15 +42,12 @@
 
 <span class="kw">use </span>std::sync::Arc;
 
-<span class="kw">use </span>vizia_core::{
-    context::TreeProps,
-    prelude::{Entity, EventContext, GenerationalId},
-};
+<span class="kw">use </span>vizia_core::{context::TreeProps, prelude::EventContext};
 <span class="kw">use </span>window::Window;
 
 <span class="kw">impl </span>ModifyWindow <span class="kw">for </span>EventContext&lt;<span class="lifetime">'_</span>&gt; {
     <span class="kw">fn </span>modify_window&lt;T&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, f: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;</span>winit::window::Window) -&gt; T) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
-        <span class="self">self</span>.with_current(<span class="self">self</span>.parent_window().unwrap_or(Entity::root()), <span class="kw">move </span>|cx| {
+        <span class="self">self</span>.with_current(<span class="self">self</span>.parent_window(), <span class="kw">move </span>|cx| {
             cx.get_view::&lt;Window&gt;()
                 .and_then(|window| window.window.clone())
                 .map(|window| (f)(window.as_ref()))
@@ -62,8 +55,7 @@
     }
 
     <span class="kw">fn </span>window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Arc&lt;winit::window::Window&gt;&gt; {
-        <span class="self">self</span>.get_view_with::&lt;Window&gt;(<span class="self">self</span>.parent_window().unwrap_or(Entity::root()))
-            .and_then(|window| window.window.clone())
+        <span class="self">self</span>.get_view_with::&lt;Window&gt;(<span class="self">self</span>.parent_window()).and_then(|window| window.window.clone())
     }
 }
 </code></pre></div></section></main></body></html>

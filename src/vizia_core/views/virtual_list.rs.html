@@ -225,17 +225,22 @@
 <a href="#224" id="224">224</a>
 <a href="#225" id="225">225</a>
 <a href="#226" id="226">226</a>
-<a href="#227" id="227">227</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::{Deref, Range};
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::{Deref, Range};
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="attr">#[derive(Lens)]
+<span class="doccomment">/// A view for creating a list of items from a binding to an iteratable list. Rather than creating a view for each item, items are recycled in the list.
+</span><span class="attr">#[derive(Lens)]
 </span><span class="kw">pub struct </span>VirtualList {
     scroll_to_cursor: bool,
     on_change: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, Range&lt;usize&gt;)&gt;&gt;,
 }
 
-<span class="kw">pub enum </span>VirtualListEvent {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>VirtualListEvent {
     SetScrollY(f32),
 }
 
@@ -315,7 +320,8 @@
 }
 
 <span class="kw">impl </span>VirtualList {
-    <span class="kw">pub fn </span>new&lt;V: View, L: Lens, T: <span class="lifetime">'static</span>&gt;(
+    <span class="doccomment">/// Creates a new [VirtualList] view.
+    </span><span class="kw">pub fn </span>new&lt;V: View, L: Lens, T: <span class="lifetime">'static</span>&gt;(
         cx: <span class="kw-2">&amp;mut </span>Context,
         list: L,
         item_height: f32,
@@ -334,7 +340,8 @@
         )
     }
 
-    <span class="kw">pub fn </span>new_generic&lt;V: View, L: Lens, T: <span class="lifetime">'static</span>&gt;(
+    <span class="doccomment">/// Creates a new [VirtualList] view with a binding to the given lens and a template for constructing the list items.
+    </span><span class="kw">pub fn </span>new_generic&lt;V: View, L: Lens, T: <span class="lifetime">'static</span>&gt;(
         cx: <span class="kw-2">&amp;mut </span>Context,
         list: L,
         list_len: <span class="kw">impl </span><span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;</span>L::Target) -&gt; usize,
@@ -411,7 +418,8 @@
 }
 
 <span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, VirtualList&gt; {
-    <span class="kw">pub fn </span>scroll_to_cursor(<span class="self">self</span>, flag: bool) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Sets whether the scrollbar should move to the cursor when pressed.
+    </span><span class="kw">pub fn </span>scroll_to_cursor(<span class="self">self</span>, flag: bool) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.modify(|virtual_list: <span class="kw-2">&amp;mut </span>VirtualList| {
             virtual_list.scroll_to_cursor = flag;
         })

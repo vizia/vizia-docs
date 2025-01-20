@@ -350,7 +350,9 @@
 <a href="#349" id="349">349</a>
 <a href="#350" id="350">350</a>
 <a href="#351" id="351">351</a>
-<a href="#352" id="352">352</a></pre></div><pre class="rust"><code><span class="doccomment">//! Provides types for adapting an application to a particular language or regional peculiarities.
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a></pre></div><pre class="rust"><code><span class="doccomment">//! Provides types for adapting an application to a particular language or regional peculiarities.
 //!
 //! # Language Translation
 //!
@@ -597,7 +599,7 @@
     }
 
     <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; String {
-        <span class="kw">let </span>cx = cx.as_context().expect(<span class="string">"Failed to get context"</span>);
+        <span class="kw">let </span>cx = cx.localization_context().expect(<span class="string">"Failed to get context"</span>);
         <span class="kw">let </span>locale = <span class="kw-2">&amp;</span>cx.environment().locale;
         <span class="kw">let </span>bundle = cx.resource_manager.current_translation(locale);
         <span class="kw">let </span>message = <span class="kw">if let </span><span class="prelude-val">Some</span>(msg) = bundle.get_message(<span class="kw-2">&amp;</span><span class="self">self</span>.key) {
@@ -667,13 +669,15 @@
     }
 }
 
-<span class="kw">pub trait </span>ToStringLocalized {
-    <span class="kw">fn </span>to_string_local(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; String;
+<span class="doccomment">/// A trait for converting from [Localized] to a `String` via a translation using fluent.
+</span><span class="kw">pub trait </span>ToStringLocalized {
+    <span class="doccomment">/// Method for converting the current type to a `String` via a translation using fluent.
+    </span><span class="kw">fn </span>to_string_local(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; String;
 }
 
 <span class="kw">impl </span>ToStringLocalized <span class="kw">for </span>Localized {
     <span class="kw">fn </span>to_string_local(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;</span><span class="kw">impl </span>DataContext) -&gt; String {
-        <span class="kw">let </span>cx = cx.as_context().expect(<span class="string">"Failed to get context"</span>);
+        <span class="kw">let </span>cx = cx.localization_context().expect(<span class="string">"Failed to get context"</span>);
 
         <span class="kw">let </span>locale = <span class="kw-2">&amp;</span>cx.environment().locale;
         <span class="kw">let </span>bundle = cx.resource_manager.current_translation(locale);

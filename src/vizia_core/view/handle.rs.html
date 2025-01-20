@@ -170,7 +170,9 @@
 <a href="#169" id="169">169</a>
 <a href="#170" id="170">170</a>
 <a href="#171" id="171">171</a>
-<a href="#172" id="172">172</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::LocalizationContext;
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::LocalizationContext;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>std::{
     any::{Any, TypeId},
@@ -211,7 +213,7 @@
         <span class="prelude-val">None
     </span>}
 
-    <span class="kw">fn </span>as_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;LocalizationContext&lt;<span class="lifetime">'_</span>&gt;&gt; {
+    <span class="kw">fn </span>localization_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;LocalizationContext&lt;<span class="lifetime">'_</span>&gt;&gt; {
         <span class="prelude-val">Some</span>(LocalizationContext::from_context(<span class="self">self</span>.cx))
     }
 }
@@ -231,7 +233,8 @@
         <span class="self">self</span>.cx
     }
 
-    <span class="kw">pub fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
+    <span class="doccomment">///  Returns the entity id of the parent view.
+    </span><span class="kw">pub fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
         <span class="self">self</span>.cx.tree.get_parent(<span class="self">self</span>.entity).unwrap_or(Entity::root())
     }
 
@@ -294,7 +297,8 @@
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>bind&lt;R, T, F&gt;(<span class="self">self</span>, res: R, closure: F) -&gt; <span class="self">Self
+    <span class="doccomment">/// Creates a binding to the given lens and provides a closure which can be used to mutate the view through a handle.
+    </span><span class="kw">pub fn </span>bind&lt;R, T, F&gt;(<span class="self">self</span>, res: R, closure: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>R: Res&lt;T&gt;,
         F: <span class="lifetime">'static </span>+ Fn(Handle&lt;<span class="lifetime">'_</span>, V&gt;, R),

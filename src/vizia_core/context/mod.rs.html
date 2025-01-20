@@ -1159,7 +1159,11 @@
 <a href="#1158" id="1158">1158</a>
 <a href="#1159" id="1159">1159</a>
 <a href="#1160" id="1160">1160</a>
-<a href="#1161" id="1161">1161</a></pre></div><pre class="rust"><code><span class="doccomment">//! Context types for retained state, used during view building, event handling, and drawing.
+<a href="#1161" id="1161">1161</a>
+<a href="#1162" id="1162">1162</a>
+<a href="#1163" id="1163">1163</a>
+<a href="#1164" id="1164">1164</a>
+<a href="#1165" id="1165">1165</a></pre></div><pre class="rust"><code><span class="doccomment">//! Context types for retained state, used during view building, event handling, and drawing.
 
 </span><span class="kw">mod </span>access;
 <span class="attr">#[doc(hidden)]
@@ -1223,10 +1227,11 @@
 <span class="kw">type </span>Bindings = HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>BindingHandler&gt;&gt;;
 
 <span class="macro">thread_local!</span> {
-    <span class="kw">pub static </span>MAP_MANAGER: RefCell&lt;IdManager&lt;MapId&gt;&gt; = RefCell::new(IdManager::new());
-    <span class="comment">// Store of mapping functions used for lens maps.
+    <span class="doccomment">/// ID manager for lens map functions.
+    </span><span class="kw">pub static </span>MAP_MANAGER: RefCell&lt;IdManager&lt;MapId&gt;&gt; = RefCell::new(IdManager::new());
+    <span class="doccomment">/// Store of mapping functions used for lens maps.
     </span><span class="kw">pub static </span>MAPS: RefCell&lt;HashMap&lt;MapId, (Entity, Box&lt;<span class="kw">dyn </span>Any&gt;)&gt;&gt; = RefCell::new(HashMap::new());
-    <span class="comment">// The 'current' entity which is used for storing lens map mapping functions as per above.
+    <span class="doccomment">/// The 'current' entity which is used for storing lens map mapping functions as per above.
     </span><span class="kw">pub static </span>CURRENT: RefCell&lt;Entity&gt; = RefCell::new(Entity::root());
 }
 
@@ -1419,7 +1424,8 @@
         <span class="self">self</span>.data::&lt;Environment&gt;().unwrap()
     }
 
-    <span class="kw">pub fn </span>parent_window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
+    <span class="doccomment">/// Returns the entity id of the  parent window to the current view.
+    </span><span class="kw">pub fn </span>parent_window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
         <span class="self">self</span>.tree.get_parent_window(<span class="self">self</span>.current).unwrap_or(Entity::root())
     }
 
@@ -2091,12 +2097,14 @@
     <span class="doccomment">/// Get model/view data from the context. Returns `None` if the data does not exist.
     </span><span class="kw">fn </span>data&lt;T: <span class="lifetime">'static</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt;;
 
-    <span class="kw">fn </span>as_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;LocalizationContext&lt;<span class="lifetime">'_</span>&gt;&gt; {
+    <span class="doccomment">/// Convert the current context into a [LocalizationContext].
+    </span><span class="kw">fn </span>localization_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;LocalizationContext&lt;<span class="lifetime">'_</span>&gt;&gt; {
         <span class="prelude-val">None
     </span>}
 }
 
-<span class="kw">pub trait </span>EmitContext {
+<span class="doccomment">/// A trait for any Context-like object that lets you emit events.
+</span><span class="kw">pub trait </span>EmitContext {
     <span class="doccomment">/// Send an event containing the provided message up the tree from the current entity.
     ///
     /// # Example
@@ -2234,7 +2242,7 @@
         <span class="prelude-val">None
     </span>}
 
-    <span class="kw">fn </span>as_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;LocalizationContext&lt;<span class="lifetime">'_</span>&gt;&gt; {
+    <span class="kw">fn </span>localization_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;LocalizationContext&lt;<span class="lifetime">'_</span>&gt;&gt; {
         <span class="prelude-val">Some</span>(LocalizationContext::from_context(<span class="self">self</span>))
     }
 }

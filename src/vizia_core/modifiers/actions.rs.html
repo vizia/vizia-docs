@@ -803,20 +803,34 @@
 <a href="#802" id="802">802</a>
 <a href="#803" id="803">803</a>
 <a href="#804" id="804">804</a>
-<a href="#805" id="805">805</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#805" id="805">805</a>
+<a href="#806" id="806">806</a>
+<a href="#807" id="807">807</a>
+<a href="#808" id="808">808</a>
+<a href="#809" id="809">809</a>
+<a href="#810" id="810">810</a>
+<a href="#811" id="811">811</a>
+<a href="#812" id="812">812</a>
+<a href="#813" id="813">813</a>
+<a href="#814" id="814">814</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>std::any::TypeId;
 
 <span class="attr">#[derive(Lens)]
-</span><span class="kw">pub struct </span>ModalModel {
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ModalModel {
     <span class="kw">pub </span>tooltip_visible: (bool, bool),
     <span class="kw">pub </span>menu_visible: bool,
 }
 
-<span class="kw">pub enum </span>ModalEvent {
-    ShowTooltip,
-    HideTooltip,
-    ShowMenu,
-    HideMenu,
+<span class="doccomment">/// An event used to modify the modal properties of a view, such as an attached tooltip.
+</span><span class="kw">pub enum </span>ModalEvent {
+    <span class="doccomment">/// Show the attached tooltip.
+    </span>ShowTooltip,
+    <span class="doccomment">/// Hide the attached tooltip.
+    </span>HideTooltip,
+    <span class="doccomment">/// Show the attached menu.
+    </span>ShowMenu,
+    <span class="doccomment">/// Hide the attached menu.
+    </span>HideMenu,
 }
 
 <span class="kw">impl </span>Model <span class="kw">for </span>ModalModel {
@@ -1282,15 +1296,19 @@
     </span><span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, GeoChanged) + Send + Sync;
 
-    <span class="kw">fn </span>tooltip&lt;C: Fn(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="lifetime">'_</span>, Tooltip&gt; + <span class="lifetime">'static</span>&gt;(<span class="self">self</span>, content: C) -&gt; <span class="self">Self</span>;
+    <span class="doccomment">/// Adds a popup tooltip to the view.
+    </span><span class="kw">fn </span>tooltip&lt;C: Fn(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="lifetime">'_</span>, Tooltip&gt; + <span class="lifetime">'static</span>&gt;(<span class="self">self</span>, content: C) -&gt; <span class="self">Self</span>;
 
-    <span class="kw">fn </span>menu&lt;C: FnOnce(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="lifetime">'_</span>, T&gt;, T: View&gt;(<span class="self">self</span>, content: C) -&gt; <span class="self">Self</span>;
+    <span class="doccomment">/// Adds a popup menu to the view.
+    </span><span class="kw">fn </span>menu&lt;C: FnOnce(<span class="kw-2">&amp;mut </span>Context) -&gt; Handle&lt;<span class="lifetime">'_</span>, T&gt;, T: View&gt;(<span class="self">self</span>, content: C) -&gt; <span class="self">Self</span>;
 
-    <span class="kw">fn </span>on_drag&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
+    <span class="doccomment">/// Adds a callback which is performed when the view is dragged during a drag and drop operation.
+    </span><span class="kw">fn </span>on_drag&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync;
 
-    <span class="kw">fn </span>on_drop&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
+    <span class="doccomment">/// Adds a callback which is performed when data is dropped on the view during a drag and drop operation.
+    </span><span class="kw">fn </span>on_drop&lt;F&gt;(<span class="self">self</span>, action: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext, DropData) + Send + Sync;
 }

@@ -112,7 +112,17 @@
 <a href="#111" id="111">111</a>
 <a href="#112" id="112">112</a>
 <a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a></pre></div><pre class="rust"><code><span class="kw">use </span>accesskit::{Node, NodeId, Rect, TextDirection, TextSelection};
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a></pre></div><pre class="rust"><code><span class="kw">use </span>accesskit::{Node, NodeId, Rect, TextDirection, TextSelection};
 
 <span class="kw">use crate</span>::{cache::CachedData, prelude::<span class="kw-2">*</span>, text::TextContext};
 
@@ -141,7 +151,8 @@
 }
 
 <span class="kw">impl </span>AccessNode {
-    <span class="kw">pub fn </span>new_from_parent(parent_id: NodeId, index: usize) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Creates a new [AccessNode] from a parent [NodeId] and a child index.
+    </span><span class="kw">pub fn </span>new_from_parent(parent_id: NodeId, index: usize) -&gt; <span class="self">Self </span>{
         <span class="comment">// Concatenate the parent id with the index of the text line to form a unique node id.
         </span><span class="kw">let </span><span class="kw-2">mut </span>node_id = parent_id.<span class="number">0 </span>&lt;&lt; <span class="number">32</span>;
         node_id |= index <span class="kw">as </span>u64;
@@ -190,39 +201,48 @@
         <span class="self">self</span>.node_builder.set_value(value);
     }
 
-    <span class="kw">pub fn </span>set_character_lengths(<span class="kw-2">&amp;mut </span><span class="self">self</span>, character_lengths: <span class="kw">impl </span>Into&lt;Box&lt;[u8]&gt;&gt;) {
+    <span class="doccomment">/// Sets the array of character lengths for a text node.
+    </span><span class="kw">pub fn </span>set_character_lengths(<span class="kw-2">&amp;mut </span><span class="self">self</span>, character_lengths: <span class="kw">impl </span>Into&lt;Box&lt;[u8]&gt;&gt;) {
         <span class="self">self</span>.node_builder.set_character_lengths(character_lengths);
     }
 
-    <span class="kw">pub fn </span>set_character_positions(<span class="kw-2">&amp;mut </span><span class="self">self</span>, character_positions: <span class="kw">impl </span>Into&lt;Box&lt;[f32]&gt;&gt;) {
+    <span class="doccomment">/// Sets the array of character positions for a text node.
+    </span><span class="kw">pub fn </span>set_character_positions(<span class="kw-2">&amp;mut </span><span class="self">self</span>, character_positions: <span class="kw">impl </span>Into&lt;Box&lt;[f32]&gt;&gt;) {
         <span class="self">self</span>.node_builder.set_character_positions(character_positions);
     }
 
-    <span class="kw">pub fn </span>set_character_widths(<span class="kw-2">&amp;mut </span><span class="self">self</span>, character_widths: <span class="kw">impl </span>Into&lt;Box&lt;[f32]&gt;&gt;) {
+    <span class="doccomment">/// Sets the array of character widths for a text node.
+    </span><span class="kw">pub fn </span>set_character_widths(<span class="kw-2">&amp;mut </span><span class="self">self</span>, character_widths: <span class="kw">impl </span>Into&lt;Box&lt;[f32]&gt;&gt;) {
         <span class="self">self</span>.node_builder.set_character_widths(character_widths);
     }
 
-    <span class="kw">pub fn </span>set_word_lengths(<span class="kw-2">&amp;mut </span><span class="self">self</span>, word_lengths: <span class="kw">impl </span>Into&lt;Box&lt;[u8]&gt;&gt;) {
+    <span class="doccomment">/// Sets the array of word lengths for a text node.
+    </span><span class="kw">pub fn </span>set_word_lengths(<span class="kw-2">&amp;mut </span><span class="self">self</span>, word_lengths: <span class="kw">impl </span>Into&lt;Box&lt;[u8]&gt;&gt;) {
         <span class="self">self</span>.node_builder.set_word_lengths(word_lengths);
     }
 
-    <span class="kw">pub fn </span>set_numeric_value_step(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: f64) {
+    <span class="doccomment">/// Sets the step for a numerical node.
+    </span><span class="kw">pub fn </span>set_numeric_value_step(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: f64) {
         <span class="self">self</span>.node_builder.set_numeric_value_step(value);
     }
 
-    <span class="kw">pub fn </span>set_numeric_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: f64) {
+    <span class="doccomment">/// Sets the value for a numerical node.
+    </span><span class="kw">pub fn </span>set_numeric_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: f64) {
         <span class="self">self</span>.node_builder.set_numeric_value(value);
     }
 
-    <span class="kw">pub fn </span>set_numeric_value_jump(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: f64) {
+    <span class="doccomment">/// Sets the jump for a numerical node.
+    </span><span class="kw">pub fn </span>set_numeric_value_jump(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: f64) {
         <span class="self">self</span>.node_builder.set_numeric_value_jump(value);
     }
 
-    <span class="kw">pub fn </span>set_min_numeric_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: f64) {
+    <span class="doccomment">/// Sets the minimum for a numerical node.
+    </span><span class="kw">pub fn </span>set_min_numeric_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: f64) {
         <span class="self">self</span>.node_builder.set_min_numeric_value(value);
     }
 
-    <span class="kw">pub fn </span>set_max_numeric_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: f64) {
+    <span class="doccomment">/// Sets the maximum for a numerical node.
+    </span><span class="kw">pub fn </span>set_max_numeric_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: f64) {
         <span class="self">self</span>.node_builder.set_max_numeric_value(value);
     }
 }

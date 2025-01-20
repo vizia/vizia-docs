@@ -584,29 +584,17 @@
 <a href="#583" id="583">583</a>
 <a href="#584" id="584">584</a>
 <a href="#585" id="585">585</a>
-<a href="#586" id="586">586</a>
-<a href="#587" id="587">587</a>
-<a href="#588" id="588">588</a>
-<a href="#589" id="589">589</a>
-<a href="#590" id="590">590</a>
-<a href="#591" id="591">591</a>
-<a href="#592" id="592">592</a>
-<a href="#593" id="593">593</a>
-<a href="#594" id="594">594</a>
-<a href="#595" id="595">595</a>
-<a href="#596" id="596">596</a>
-<a href="#597" id="597">597</a>
-<a href="#598" id="598">598</a>
-<a href="#599" id="599">599</a>
-<a href="#600" id="600">600</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::TreeProps;
+<a href="#586" id="586">586</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::TreeProps;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>bitflags::bitflags;
 
 <span class="kw">use </span><span class="kw">crate</span>::vg;
 
-<span class="attr">#[derive(Debug, Default, Data, Lens, Clone)]
+<span class="doccomment">/// A model which can be used by views which contain a popup.
+</span><span class="attr">#[derive(Debug, Default, Data, Lens, Clone)]
 </span><span class="kw">pub struct </span>PopupData {
-    <span class="kw">pub </span>is_open: bool,
+    <span class="doccomment">/// The open state of the popup.
+    </span><span class="kw">pub </span>is_open: bool,
 }
 
 <span class="kw">impl </span>From&lt;PopupData&gt; <span class="kw">for </span>bool {
@@ -636,14 +624,19 @@
     }
 }
 
-<span class="attr">#[derive(Debug)]
+<span class="doccomment">/// Events used by the [Popup] view.
+</span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub enum </span>PopupEvent {
-    Open,
-    Close,
-    Switch,
+    <span class="doccomment">/// Opens the popup.
+    </span>Open,
+    <span class="doccomment">/// Closes the popup.
+    </span>Close,
+    <span class="doccomment">/// Switches the state of the popup from closed to open or open to closed.
+    </span>Switch,
 }
 
-<span class="attr">#[derive(Lens)]
+<span class="doccomment">/// A view for displaying popup content.
+</span><span class="attr">#[derive(Lens)]
 </span><span class="kw">pub struct </span>Popup {
     placement: Placement,
     show_arrow: bool,
@@ -652,7 +645,8 @@
 }
 
 <span class="kw">impl </span>Popup {
-    <span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;mut </span>Context, content: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;mut </span>Context)) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+    <span class="doccomment">/// Creates a new [Popup] view.
+    </span><span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;mut </span>Context, content: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;mut </span>Context)) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self </span>{
             placement: Placement::Bottom,
             show_arrow: <span class="bool-val">true</span>,
@@ -684,8 +678,7 @@
                 <span class="kw">let </span>parent = cx.parent();
                 <span class="kw">let </span>parent_bounds = cx.cache.get_bounds(parent);
                 <span class="kw">let </span>bounds = cx.bounds();
-                <span class="kw">let </span>window_bounds =
-                    cx.cache.get_bounds(cx.parent_window().unwrap_or(Entity::root()));
+                <span class="kw">let </span>window_bounds = cx.cache.get_bounds(cx.parent_window());
                 <span class="kw">let </span>scale = cx.scale_factor();
                 <span class="kw">let </span>arrow_size = <span class="self">self</span>.arrow_size.to_px().unwrap() * cx.scale_factor();
 
@@ -885,27 +878,6 @@
         });
     }
 }
-
-<span class="doccomment">/// Describes the placement of a popup relative to its parent element.
-</span><span class="attr">#[derive(Debug, Clone, Copy, Data, PartialEq, Eq)]
-</span><span class="kw">pub enum </span>Placement {
-    TopStart,
-    Top,
-    TopEnd,
-    BottomStart,
-    Bottom,
-    BottomEnd,
-    RightStart,
-    Right,
-    RightEnd,
-    LeftStart,
-    Left,
-    LeftEnd,
-    Over,
-    Cursor,
-}
-
-<span class="macro">impl_res_simple!</span>(Placement);
 
 <span class="macro">bitflags!</span> {
     <span class="attr">#[derive(Debug, Clone, Copy)]

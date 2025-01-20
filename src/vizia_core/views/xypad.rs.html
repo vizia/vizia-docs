@@ -96,16 +96,21 @@
 <a href="#95" id="95">95</a>
 <a href="#96" id="96">96</a>
 <a href="#97" id="97">97</a>
-<a href="#98" id="98">98</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">pub struct </span>XYPad {
+<span class="doccomment">/// A view which allows the user to manipulate 2 floating point values simultaneously on a two dimensional pane.
+</span><span class="kw">pub struct </span>XYPad {
     is_dragging: bool,
 
     on_change: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext, f32, f32)&gt;&gt;,
 }
 
 <span class="kw">impl </span>XYPad {
-    <span class="kw">pub fn </span>new&lt;L: Lens&lt;Target = (f32, f32)&gt;&gt;(cx: <span class="kw-2">&amp;mut </span>Context, lens: L) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+    <span class="doccomment">/// creates a new [XYPad] view.
+    </span><span class="kw">pub fn </span>new&lt;L: Lens&lt;Target = (f32, f32)&gt;&gt;(cx: <span class="kw-2">&amp;mut </span>Context, lens: L) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self </span>{ is_dragging: <span class="bool-val">false</span>, on_change: <span class="prelude-val">None </span>}
             .build(cx, |cx| {
                 <span class="comment">// Thumb
@@ -190,7 +195,8 @@
 }
 
 <span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, XYPad&gt; {
-    <span class="kw">pub fn </span>on_change&lt;F: Fn(<span class="kw-2">&amp;mut </span>EventContext, f32, f32) + <span class="lifetime">'static</span>&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Set the callback which will be triggered when the XYPad is manipulated.
+    </span><span class="kw">pub fn </span>on_change&lt;F: Fn(<span class="kw-2">&amp;mut </span>EventContext, f32, f32) + <span class="lifetime">'static</span>&gt;(<span class="self">self</span>, callback: F) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.modify(|xypad| xypad.on_change = <span class="prelude-val">Some</span>(Box::new(callback)))
     }
 }

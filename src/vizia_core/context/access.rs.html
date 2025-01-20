@@ -112,7 +112,7 @@
 <a href="#111" id="111">111</a>
 <a href="#112" id="112">112</a>
 <a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a></pre></div><pre class="rust"><code><span class="kw">use </span>accesskit::{NodeBuilder, NodeId, Rect, TextDirection, TextSelection};
+<a href="#114" id="114">114</a></pre></div><pre class="rust"><code><span class="kw">use </span>accesskit::{Node, NodeId, Rect, TextDirection, TextSelection};
 
 <span class="kw">use crate</span>::{cache::CachedData, prelude::<span class="kw-2">*</span>, text::TextContext};
 
@@ -136,7 +136,7 @@
 </span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub struct </span>AccessNode {
     <span class="kw">pub</span>(<span class="kw">crate</span>) node_id: NodeId,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) node_builder: NodeBuilder,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) node_builder: Node,
     <span class="kw">pub</span>(<span class="kw">crate</span>) children: Vec&lt;AccessNode&gt;,
 }
 
@@ -147,7 +147,7 @@
         node_id |= index <span class="kw">as </span>u64;
         <span class="kw">let </span>node_id: NodeId = NodeId(node_id);
 
-        <span class="self">Self </span>{ node_id, node_builder: NodeBuilder::default(), children: Vec::new() }
+        <span class="self">Self </span>{ node_id, node_builder: Node::default(), children: Vec::new() }
     }
 
     <span class="doccomment">/// Returns the accesskit id of the access node.

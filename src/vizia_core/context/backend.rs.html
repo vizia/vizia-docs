@@ -281,14 +281,7 @@
 <a href="#280" id="280">280</a>
 <a href="#281" id="281">281</a>
 <a href="#282" id="282">282</a>
-<a href="#283" id="283">283</a>
-<a href="#284" id="284">284</a>
-<a href="#285" id="285">285</a>
-<a href="#286" id="286">286</a>
-<a href="#287" id="287">287</a>
-<a href="#288" id="288">288</a>
-<a href="#289" id="289">289</a>
-<a href="#290" id="290">290</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
+<a href="#283" id="283">283</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 
 <span class="kw">use </span>skia_safe::Surface;
 <span class="kw">use </span>vizia_window::{WindowDescription, WindowPosition};
@@ -306,6 +299,10 @@
     <span class="doccomment">/// Creates a new instance of a backend context.
     </span><span class="kw">pub fn </span>new(cx: Context) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>(cx)
+    }
+
+    <span class="kw">pub fn </span>init_accessibility_tree(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; accesskit::TreeUpdate {
+        initial_accessibility_system(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>)
     }
 
     <span class="doccomment">/// Helper function for mutating the state of a window.
@@ -492,19 +489,8 @@
     }
 
     <span class="doccomment">/// Calls the accessibility system and updates the accesskit node tree.
-    </span><span class="kw">pub fn </span>process_tree_updates(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        process: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>Vec&lt;<span class="prelude-ty">Option</span>&lt;accesskit::TreeUpdate&gt;&gt;),
-    ) {
+    </span><span class="kw">pub fn </span>process_tree_updates(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         accessibility_system(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>);
-
-        <span class="kw">if </span>!<span class="self">self</span>.<span class="number">0</span>.tree_updates.is_empty() {
-            (process)(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>.tree_updates)
-        }
-
-        <span class="comment">// TODO: Fix this
-        // self.0.tree_updates.retain(|update| update.is_some());
-        </span><span class="self">self</span>.<span class="number">0</span>.tree_updates.clear();
     }
 
     <span class="doccomment">/// Calls the style system to match entities with shared styles.

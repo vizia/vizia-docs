@@ -323,7 +323,7 @@
 <span class="kw">pub use </span>handle::Handle;
 
 <span class="kw">use </span><span class="kw">crate</span>::events::ViewHandler;
-<span class="kw">use </span>accesskit::{NodeBuilder, TreeUpdate};
+<span class="kw">use </span>accesskit::{Node, TreeUpdate};
 
 <span class="doccomment">/// A view is any object which can be displayed on the screen.
 ///
@@ -436,8 +436,8 @@
         };
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(parent_node) = get_access_node(<span class="kw-2">&amp;mut </span>access_context, <span class="kw-2">&amp;mut </span>cx.views, parent_id) {
-            <span class="kw">let </span>parent_node = parent_node.node_builder.build();
-            <span class="kw">let </span>node = NodeBuilder::default().build();
+            <span class="kw">let </span>parent_node = parent_node.node_builder;
+            <span class="kw">let </span>node = Node::default();
 
             cx.tree_updates.push(<span class="prelude-val">Some</span>(TreeUpdate {
                 nodes: <span class="macro">vec!</span>[(parent_node_id, parent_node), (node_id, node)],

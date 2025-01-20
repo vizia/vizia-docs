@@ -1301,10 +1301,7 @@
 <a href="#1300" id="1300">1300</a>
 <a href="#1301" id="1301">1301</a>
 <a href="#1302" id="1302">1302</a>
-<a href="#1303" id="1303">1303</a>
-<a href="#1304" id="1304">1304</a>
-<a href="#1305" id="1305">1305</a>
-<a href="#1306" id="1306">1306</a></pre></div><pre class="rust"><code><span class="comment">// use crate::accessibility::IntoNode;
+<a href="#1303" id="1303">1303</a></pre></div><pre class="rust"><code><span class="comment">// use crate::accessibility::IntoNode;
 </span><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">use </span><span class="kw">crate</span>::text::{
@@ -1503,7 +1500,6 @@
         .navigable(<span class="bool-val">true</span>)
         .role(Role::TextInput)
         .text_value(lens)
-        .default_action_verb(DefaultActionVerb::Focus)
         .toggle_class(<span class="string">"caret"</span>, <span class="self">Self</span>::show_caret)
         .text(lens)
     }
@@ -1935,7 +1931,7 @@
                 <span class="kw">for </span>line <span class="kw">in </span>line_metrics.iter() {
                     <span class="comment">// We need a child node per line
                     </span><span class="kw">let </span><span class="kw-2">mut </span>line_node = AccessNode::new_from_parent(node_id, line.line_number);
-                    line_node.set_role(Role::InlineTextBox);
+                    line_node.set_role(Role::TextInput);
                     line_node.set_bounds(BoundingBox {
                         x: line.left <span class="kw">as </span>f32,
                         y: (line.baseline - line.ascent) <span class="kw">as </span>f32,
@@ -2057,9 +2053,7 @@
         //         character_index: selection_active_cursor,
         //     },
         // });
-
-        </span>node.node_builder.set_default_action_verb(DefaultActionVerb::Focus);
-    }
+    </span>}
 
     <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
         <span class="comment">// Window Events

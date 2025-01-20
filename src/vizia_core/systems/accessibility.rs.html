@@ -185,15 +185,71 @@
 <a href="#184" id="184">184</a>
 <a href="#185" id="185">185</a>
 <a href="#186" id="186">186</a>
-<a href="#187" id="187">187</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{accessibility::IntoNode, events::ViewHandler, prelude::<span class="kw-2">*</span>};
-<span class="kw">use </span>accesskit::{NodeBuilder, NodeId, Rect, Toggled, TreeUpdate};
+<a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a>
+<a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
+<a href="#240" id="240">240</a>
+<a href="#241" id="241">241</a>
+<a href="#242" id="242">242</a>
+<a href="#243" id="243">243</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{accessibility::IntoNode, events::ViewHandler, prelude::<span class="kw-2">*</span>};
+<span class="kw">use </span>accesskit::{Node, NodeId, Rect, Toggled, Tree, TreeUpdate};
 <span class="kw">use </span>hashbrown::HashMap;
 <span class="kw">use </span>vizia_storage::LayoutTreeIterator;
 
 <span class="doccomment">/// Updates node properties from view properties
 /// Should be run after layout so that things like bounding box are correct.
 /// This system doesn't change the structure of the accessibility tree as this is done when views are built/removed.
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>accessibility_system(cx: <span class="kw-2">&amp;mut </span>Context) {
+</span><span class="kw">pub fn </span>accessibility_system(cx: <span class="kw-2">&amp;mut </span>Context) {
     <span class="kw">if </span>!cx.style.reaccess.is_empty() {
         <span class="kw">let </span>iterator = LayoutTreeIterator::full(<span class="kw-2">&amp;</span>cx.tree);
 
@@ -223,14 +279,14 @@
                     <span class="kw">continue</span>;
                 }
 
-                <span class="kw">let </span><span class="kw-2">mut </span>nodes = <span class="macro">vec!</span>[(node.node_id(), node.node_builder.build())];
+                <span class="kw">let </span><span class="kw-2">mut </span>nodes = <span class="macro">vec!</span>[(node.node_id(), node.node_builder)];
 
                 <span class="comment">// If child nodes were generated then append them to the nodes list
                 </span><span class="kw">if </span>!node.children.is_empty() {
                     nodes.extend(
-                        node.children.into_iter().map(|child_node| {
-                            (child_node.node_id(), child_node.node_builder.build())
-                        }),
+                        node.children
+                            .into_iter()
+                            .map(|child_node| (child_node.node_id(), child_node.node_builder)),
                     );
                 }
 
@@ -252,12 +308,64 @@
     }
 }
 
+<span class="kw">pub fn </span>initial_accessibility_system(cx: <span class="kw-2">&amp;mut </span>Context) -&gt; TreeUpdate {
+    <span class="kw">let </span>iterator = LayoutTreeIterator::full(<span class="kw-2">&amp;</span>cx.tree);
+
+    <span class="kw">let </span><span class="kw-2">mut </span>nodes = <span class="macro">vec!</span>[];
+
+    <span class="kw">for </span>entity <span class="kw">in </span>iterator {
+        <span class="kw">let </span><span class="kw-2">mut </span>access_context = AccessContext {
+            current: entity,
+            tree: <span class="kw-2">&amp;</span>cx.tree,
+            cache: <span class="kw-2">&amp;</span>cx.cache,
+            style: <span class="kw-2">&amp;</span>cx.style,
+            text_context: <span class="kw-2">&amp;mut </span>cx.text_context,
+        };
+
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(node) = get_access_node(<span class="kw-2">&amp;mut </span>access_context, <span class="kw-2">&amp;mut </span>cx.views, entity) {
+            <span class="comment">// let navigable = cx
+            //     .style
+            //     .abilities
+            //     .get(entity)
+            //     .copied()
+            //     .unwrap_or_default()
+            //     .contains(Abilities::NAVIGABLE);
+
+            // if node.node_builder.role() == Role::Unknown &amp;&amp; !navigable {
+            //     continue;
+            // }
+
+            //let mut nodes = vec![(node.node_id(), node.node_builder)];
+            </span>nodes.push((node.node_id(), node.node_builder));
+
+            <span class="macro">println!</span>(<span class="string">"{:?}"</span>, nodes.iter().map(|(id, <span class="kw">_</span>)| id).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;());
+
+            <span class="comment">// If child nodes were generated then append them to the nodes list
+            </span><span class="kw">if </span>!node.children.is_empty() {
+                nodes.extend(
+                    node.children
+                        .into_iter()
+                        .map(|child_node| (child_node.node_id(), child_node.node_builder)),
+                );
+            }
+        }
+
+        <span class="comment">// }
+    </span>}
+
+    TreeUpdate {
+        nodes,
+        tree: <span class="prelude-val">Some</span>(Tree::new(Entity::root().accesskit_id())),
+        focus: Entity::root().accesskit_id(),
+    }
+}
+
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_access_node(
     cx: <span class="kw-2">&amp;mut </span>AccessContext,
     views: <span class="kw-2">&amp;mut </span>HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
     entity: Entity,
 ) -&gt; <span class="prelude-ty">Option</span>&lt;AccessNode&gt; {
-    <span class="kw">let </span><span class="kw-2">mut </span>node_builder = NodeBuilder::default();
+    <span class="kw">let </span><span class="kw-2">mut </span>node_builder = Node::default();
 
     <span class="kw">if let </span><span class="prelude-val">Some</span>(role) = cx.style.role.get(entity) {
         node_builder.set_role(<span class="kw-2">*</span>role);
@@ -297,11 +405,11 @@
         node_builder.set_value(value.clone().into_boxed_str());
     }
 
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(name) = cx.style.name.get(entity) {
-        node_builder.set_name(name.clone().into_boxed_str());
-    }
+    <span class="comment">// if let Some(name) = cx.style.name.get(entity) {
+    //     node_builder.set_name(name.clone().into_boxed_str());
+    // }
 
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(numeric_value) = cx.style.numeric_value.get(entity) {
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(numeric_value) = cx.style.numeric_value.get(entity) {
         node_builder.set_numeric_value(<span class="kw-2">*</span>numeric_value);
     }
 
@@ -317,11 +425,11 @@
         node_builder.set_live(<span class="kw-2">*</span>live);
     }
 
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(default_action_verb) = cx.style.default_action_verb.get(entity) {
-        node_builder.set_default_action_verb(<span class="kw-2">*</span>default_action_verb);
-    }
+    <span class="comment">// if let Some(default_action_verb) = cx.style.default_action_verb.get(entity) {
+    //     node_builder.set_default_action_verb(*default_action_verb);
+    // }
 
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(labelled_by) = cx.style.labelled_by.get(entity) {
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(labelled_by) = cx.style.labelled_by.get(entity) {
         node_builder.set_labelled_by(<span class="macro">vec!</span>[labelled_by.accesskit_id()]);
     }
 
@@ -350,6 +458,8 @@
     <span class="kw">let </span><span class="kw-2">mut </span>node =
         AccessNode { node_id: entity.accesskit_id(), node_builder, children: Vec::new() };
 
+    <span class="macro">println!</span>(<span class="string">"node: {:?}"</span>, node.node_id());
+
     <span class="kw">if let </span><span class="prelude-val">Some</span>(view) = views.remove(<span class="kw-2">&amp;</span>entity) {
         view.accessibility(cx, <span class="kw-2">&amp;mut </span>node);
 
@@ -365,6 +475,8 @@
         node.children.iter().map(|child_node| child_node.node_id()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
     child_ids.extend(children);
+
+    <span class="macro">println!</span>(<span class="string">"children: {:?}"</span>, child_ids);
 
     <span class="kw">if </span>!child_ids.is_empty() {
         node.node_builder.set_children(child_ids);

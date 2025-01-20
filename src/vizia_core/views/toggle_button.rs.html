@@ -68,8 +68,7 @@
 <a href="#67" id="67">67</a>
 <a href="#68" id="68">68</a>
 <a href="#69" id="69">69</a>
-<a href="#70" id="70">70</a>
-<a href="#71" id="71">71</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#70" id="70">70</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">pub struct </span>ToggleButton {
     on_toggle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext)&gt;&gt;,
@@ -87,7 +86,6 @@
             })
             .role(Role::Button)
             .navigable(<span class="bool-val">true</span>)
-            .default_action_verb(DefaultActionVerb::Click)
             .checkable(<span class="bool-val">true</span>) <span class="comment">// To let the accesskit know button is toggleable
             </span>.checked(lens)
     }
@@ -121,7 +119,7 @@
             }
 
             WindowEvent::ActionRequest(action) =&gt; <span class="kw">match </span>action.action {
-                Action::Default =&gt; {
+                Action::Click =&gt; {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(callback) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_toggle {
                         (callback)(cx);
                     }

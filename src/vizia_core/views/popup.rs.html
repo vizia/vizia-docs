@@ -583,7 +583,22 @@
 <a href="#582" id="582">582</a>
 <a href="#583" id="583">583</a>
 <a href="#584" id="584">584</a>
-<a href="#585" id="585">585</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::TreeProps;
+<a href="#585" id="585">585</a>
+<a href="#586" id="586">586</a>
+<a href="#587" id="587">587</a>
+<a href="#588" id="588">588</a>
+<a href="#589" id="589">589</a>
+<a href="#590" id="590">590</a>
+<a href="#591" id="591">591</a>
+<a href="#592" id="592">592</a>
+<a href="#593" id="593">593</a>
+<a href="#594" id="594">594</a>
+<a href="#595" id="595">595</a>
+<a href="#596" id="596">596</a>
+<a href="#597" id="597">597</a>
+<a href="#598" id="598">598</a>
+<a href="#599" id="599">599</a>
+<a href="#600" id="600">600</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::TreeProps;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>bitflags::bitflags;
 
@@ -592,6 +607,12 @@
 <span class="attr">#[derive(Debug, Default, Data, Lens, Clone)]
 </span><span class="kw">pub struct </span>PopupData {
     <span class="kw">pub </span>is_open: bool,
+}
+
+<span class="kw">impl </span>From&lt;PopupData&gt; <span class="kw">for </span>bool {
+    <span class="kw">fn </span>from(value: PopupData) -&gt; <span class="self">Self </span>{
+        value.is_open
+    }
 }
 
 <span class="kw">impl </span>Model <span class="kw">for </span>PopupData {
@@ -997,7 +1018,7 @@
 }
 
 <span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, Popup&gt; {
-    <span class="doccomment">/// Sets the position where the tooltip should appear relative to its parent element.
+    <span class="doccomment">/// Sets the position where the popup should appear relative to its parent element.
     /// Defaults to `Placement::Bottom`.
     </span><span class="kw">pub fn </span>placement(<span class="self">self</span>, placement: <span class="kw">impl </span>Res&lt;Placement&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.bind(placement, |handle, placement| {
@@ -1009,18 +1030,27 @@
     }
 
     <span class="doccomment">/// Sets whether the popup should include an arrow. Defaults to true.
-    </span><span class="kw">pub fn </span>arrow(<span class="self">self</span>, show_arrow: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.modify(|popup| popup.show_arrow = show_arrow)
+    </span><span class="kw">pub fn </span>show_arrow(<span class="self">self</span>, show_arrow: <span class="kw">impl </span>Res&lt;bool&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(show_arrow, |handle, show_arrow| {
+            <span class="kw">let </span>show_arrow = show_arrow.get(<span class="kw-2">&amp;</span>handle);
+            handle.modify(|popup| popup.show_arrow = show_arrow);
+        })
     }
 
     <span class="doccomment">/// Sets the size of the popup arrow, or gap if the arrow is hidden.
-    </span><span class="kw">pub fn </span>arrow_size(<span class="self">self</span>, size: <span class="kw">impl </span>Into&lt;Length&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.modify(|popup| popup.arrow_size = size.into())
+    </span><span class="kw">pub fn </span>arrow_size&lt;U: Into&lt;Length&gt;&gt;(<span class="self">self</span>, size: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(size, |handle, size| {
+            <span class="kw">let </span>size = size.get(<span class="kw-2">&amp;</span>handle).into();
+            handle.modify(|popup| popup.arrow_size = size);
+        })
     }
 
     <span class="doccomment">/// Set to whether the popup should reposition to always be visible.
-    </span><span class="kw">pub fn </span>should_reposition(<span class="self">self</span>, flag: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.modify(|popup| popup.should_reposition = flag)
+    </span><span class="kw">pub fn </span>should_reposition(<span class="self">self</span>, should_reposition: <span class="kw">impl </span>Res&lt;bool&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(should_reposition, |handle, should_reposition| {
+            <span class="kw">let </span>should_reposition = should_reposition.get(<span class="kw-2">&amp;</span>handle);
+            handle.modify(|popup| popup.should_reposition = should_reposition);
+        })
     }
 
     <span class="doccomment">/// Registers a callback for when the user clicks off of the popup, usually with the intent of

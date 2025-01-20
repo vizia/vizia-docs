@@ -179,7 +179,34 @@
 <a href="#178" id="178">178</a>
 <a href="#179" id="179">179</a>
 <a href="#180" id="180">180</a>
-<a href="#181" id="181">181</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href="#181" id="181">181</a>
+<a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
+<a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+<a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// A dropdown is used to display some state with the ability to open a popup with options to change that state.
 ///
@@ -298,7 +325,14 @@
 ///     });
 /// }).width(Pixels(100.0));
 /// ```
-</span><span class="kw">pub struct </span>Dropdown;
+</span><span class="attr">#[derive(Lens)]
+</span><span class="kw">pub struct </span>Dropdown {
+    is_open: PopupData,
+    placement: Placement,
+    show_arrow: bool,
+    arrow_size: Length,
+    should_reposition: bool,
+}
 
 <span class="kw">impl </span>Dropdown {
     <span class="doccomment">/// Creates a new dropdown.
@@ -317,38 +351,26 @@
         </span>L: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context),
         F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>Context),
     {
-        <span class="self">Self </span>{}.build(cx, <span class="kw">move </span>|cx| {
-            <span class="comment">// cx.add_listener(move |_dropdown: &amp;mut Self, cx, event| {
-            //     event.map(|window_event, meta| match window_event {
-            //         WindowEvent::PressDown { mouse: _ } =&gt; {
-            //             if meta.origin != cx.current() {
-            //                 // Check if the mouse was pressed outside of any descendants
-            //                 if !cx.hovered.is_descendant_of(cx.tree, cx.current) {
-            //                     cx.emit(PopupEvent::Close);
-            //                 }
-            //             }
-            //         }
-
-            //         WindowEvent::KeyDown(code, _) =&gt; {
-            //             if *code == Code::Escape {
-            //                 cx.emit(PopupEvent::Close);
-            //             }
-            //         }
-
-            //         _ =&gt; {}
-            //     });
-            // });
-
-            </span>PopupData::default().build(cx);
-
+        <span class="self">Self </span>{
+            is_open: PopupData::default(),
+            placement: Placement::Bottom,
+            show_arrow: <span class="bool-val">true</span>,
+            arrow_size: Length::Value(LengthValue::Px(<span class="number">4.0</span>)),
+            should_reposition: <span class="bool-val">true</span>,
+        }
+        .build(cx, <span class="kw">move </span>|cx| {
             (trigger)(cx);
 
-            Binding::new(cx, PopupData::is_open, <span class="kw">move </span>|cx, is_open| {
-                <span class="kw">if </span>is_open.get(cx) {
+            Binding::new(cx, <span class="self">Self</span>::is_open, <span class="kw">move </span>|cx, is_open| {
+                <span class="kw">if </span>is_open.get(cx).into() {
                     Popup::new(cx, |cx| {
                         (content)(cx);
                     })
-                    .arrow_size(Pixels(<span class="number">4.0</span>));
+                    .on_blur(|cx| cx.emit(PopupEvent::Close))
+                    .placement(Dropdown::placement)
+                    .show_arrow(Dropdown::show_arrow)
+                    .arrow_size(Dropdown::arrow_size)
+                    .should_reposition(Dropdown::should_reposition);
                 }
             })
         })
@@ -358,6 +380,38 @@
 <span class="kw">impl </span>View <span class="kw">for </span>Dropdown {
     <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
         <span class="prelude-val">Some</span>(<span class="string">"dropdown"</span>)
+    }
+
+    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
+        <span class="self">self</span>.is_open.event(cx, event);
+    }
+}
+
+<span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, Dropdown&gt; {
+    <span class="doccomment">/// Sets the position where the tooltip should appear relative to its parent element.
+    /// Defaults to `Placement::Bottom`.
+    </span><span class="kw">pub fn </span>placement(<span class="self">self</span>, placement: <span class="kw">impl </span>Res&lt;Placement&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.bind(placement, |handle, placement| {
+            <span class="kw">let </span>placement = placement.get(<span class="kw-2">&amp;</span>handle);
+            handle.modify(|dropdown| {
+                dropdown.placement = placement;
+            });
+        })
+    }
+
+    <span class="doccomment">/// Sets whether the popup should include an arrow. Defaults to true.
+    </span><span class="kw">pub fn </span>show_arrow(<span class="self">self</span>, show_arrow: bool) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.modify(|dropdown| dropdown.show_arrow = show_arrow)
+    }
+
+    <span class="doccomment">/// Sets the size of the popup arrow, or gap if the arrow is hidden.
+    </span><span class="kw">pub fn </span>arrow_size(<span class="self">self</span>, size: <span class="kw">impl </span>Into&lt;Length&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.modify(|dropdown| dropdown.arrow_size = size.into())
+    }
+
+    <span class="doccomment">/// Set to whether the popup should reposition to always be visible.
+    </span><span class="kw">pub fn </span>should_reposition(<span class="self">self</span>, flag: bool) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.modify(|dropdown| dropdown.should_reposition = flag)
     }
 }
 </code></pre></div></section></main></body></html>

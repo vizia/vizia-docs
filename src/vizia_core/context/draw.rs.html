@@ -1253,7 +1253,53 @@
 <a href="#1252" id="1252">1252</a>
 <a href="#1253" id="1253">1253</a>
 <a href="#1254" id="1254">1254</a>
-<a href="#1255" id="1255">1255</a></pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::canvas::SaveLayerRec;
+<a href="#1255" id="1255">1255</a>
+<a href="#1256" id="1256">1256</a>
+<a href="#1257" id="1257">1257</a>
+<a href="#1258" id="1258">1258</a>
+<a href="#1259" id="1259">1259</a>
+<a href="#1260" id="1260">1260</a>
+<a href="#1261" id="1261">1261</a>
+<a href="#1262" id="1262">1262</a>
+<a href="#1263" id="1263">1263</a>
+<a href="#1264" id="1264">1264</a>
+<a href="#1265" id="1265">1265</a>
+<a href="#1266" id="1266">1266</a>
+<a href="#1267" id="1267">1267</a>
+<a href="#1268" id="1268">1268</a>
+<a href="#1269" id="1269">1269</a>
+<a href="#1270" id="1270">1270</a>
+<a href="#1271" id="1271">1271</a>
+<a href="#1272" id="1272">1272</a>
+<a href="#1273" id="1273">1273</a>
+<a href="#1274" id="1274">1274</a>
+<a href="#1275" id="1275">1275</a>
+<a href="#1276" id="1276">1276</a>
+<a href="#1277" id="1277">1277</a>
+<a href="#1278" id="1278">1278</a>
+<a href="#1279" id="1279">1279</a>
+<a href="#1280" id="1280">1280</a>
+<a href="#1281" id="1281">1281</a>
+<a href="#1282" id="1282">1282</a>
+<a href="#1283" id="1283">1283</a>
+<a href="#1284" id="1284">1284</a>
+<a href="#1285" id="1285">1285</a>
+<a href="#1286" id="1286">1286</a>
+<a href="#1287" id="1287">1287</a>
+<a href="#1288" id="1288">1288</a>
+<a href="#1289" id="1289">1289</a>
+<a href="#1290" id="1290">1290</a>
+<a href="#1291" id="1291">1291</a>
+<a href="#1292" id="1292">1292</a>
+<a href="#1293" id="1293">1293</a>
+<a href="#1294" id="1294">1294</a>
+<a href="#1295" id="1295">1295</a>
+<a href="#1296" id="1296">1296</a>
+<a href="#1297" id="1297">1297</a>
+<a href="#1298" id="1298">1298</a>
+<a href="#1299" id="1299">1299</a>
+<a href="#1300" id="1300">1300</a>
+<a href="#1301" id="1301">1301</a></pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::canvas::SaveLayerRec;
 <span class="kw">use </span>skia_safe::gradient_shader::GradientShaderColors;
 <span class="kw">use </span>skia_safe::path::ArcSize;
 <span class="kw">use </span>skia_safe::rrect::Corner;
@@ -1312,7 +1358,7 @@
 </span><span class="kw">pub struct </span>DrawContext&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub</span>(<span class="kw">crate</span>) current: Entity,
     <span class="kw">pub</span>(<span class="kw">crate</span>) style: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Style,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) cache: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>CachedData,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) cache: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>CachedData,
     <span class="kw">pub</span>(<span class="kw">crate</span>) tree: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Tree&lt;Entity&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) data: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HashMap&lt;Entity, ModelDataStore&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) views: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
@@ -1453,7 +1499,10 @@
             (Overflow::Hidden, Overflow::Hidden) =&gt; clip_bounds,
         };
 
-        <span class="prelude-val">Some</span>(<span class="self">self</span>.build_path(clip_bounds, (<span class="number">0.0</span>, <span class="number">0.0</span>)))
+        <span class="kw">let </span><span class="kw-2">mut </span>clip_path = <span class="self">self</span>.build_path(clip_bounds, (<span class="number">0.0</span>, <span class="number">0.0</span>));
+        clip_path.offset(bounds.top_left());
+
+        <span class="prelude-val">Some</span>(clip_path)
     }
 
     <span class="doccomment">/// Returns the 2D transform of the current view.
@@ -1750,6 +1799,22 @@
         <span class="self">self</span>.style.background_size.get(<span class="self">self</span>.current).cloned().unwrap_or_default()
     }
 
+    <span class="kw">pub fn </span>path(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; Path {
+        <span class="kw">let </span>border_width = <span class="self">self</span>.border_width();
+        <span class="kw">if </span><span class="self">self</span>.cache.path.get(<span class="self">self</span>.current).is_none() {
+            <span class="self">self</span>.cache.path.insert(
+                <span class="self">self</span>.current,
+                <span class="self">self</span>.build_path(<span class="self">self</span>.bounds(), (-border_width / <span class="number">2.0</span>, -border_width / <span class="number">2.0</span>)),
+            );
+        }
+        <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
+        <span class="kw">let </span><span class="kw-2">mut </span>path = <span class="self">self</span>.cache.path.get(<span class="self">self</span>.current).unwrap().clone();
+
+        path.offset(bounds.top_left());
+
+        path
+    }
+
     <span class="doccomment">/// Get the vector path of the current view.
     </span><span class="kw">pub fn </span>build_path(<span class="kw-2">&amp;</span><span class="self">self</span>, bounds: BoundingBox, outset: (f32, f32)) -&gt; Path {
         <span class="kw">let </span>corner_top_left_radius = <span class="self">self</span>.corner_top_left_radius();
@@ -1766,6 +1831,8 @@
         <span class="kw">let </span>corner_top_right_smoothing = <span class="self">self</span>.corner_top_right_smoothing();
         <span class="kw">let </span>corner_bottom_right_smoothing = <span class="self">self</span>.corner_bottom_right_smoothing();
         <span class="kw">let </span>corner_bottom_left_smoothing = <span class="self">self</span>.corner_bottom_left_smoothing();
+
+        <span class="kw">let </span>bounds = BoundingBox::from_min_max(<span class="number">0.0</span>, <span class="number">0.0</span>, bounds.w, bounds.h);
 
         <span class="kw">let </span>rect: Rect = bounds.into();
 
@@ -1796,6 +1863,19 @@
             </span>&amp;&amp; corner_top_right_radius == height / <span class="number">2.0
         </span>{
             path.add_circle((width / <span class="number">2.0</span>, bounds.h / <span class="number">2.0</span>), width / <span class="number">2.0</span>, PathDirection::CW);
+        } <span class="kw">else if </span>corner_top_left_radius == corner_top_right_radius
+            &amp;&amp; corner_top_right_radius == corner_bottom_right_radius
+            &amp;&amp; corner_bottom_right_radius == corner_bottom_left_radius
+            &amp;&amp; corner_top_left_smoothing == <span class="number">0.0
+            </span>&amp;&amp; corner_top_left_smoothing == corner_top_right_smoothing
+            &amp;&amp; corner_top_right_smoothing == corner_bottom_right_smoothing
+            &amp;&amp; corner_bottom_right_smoothing == corner_bottom_left_smoothing
+            &amp;&amp; corner_top_left_shape == CornerShape::Round
+            &amp;&amp; corner_top_left_shape == corner_top_right_shape
+            &amp;&amp; corner_top_right_shape == corner_bottom_right_shape
+            &amp;&amp; corner_bottom_right_shape == corner_bottom_left_shape
+        {
+            path.add_rrect(rr, <span class="prelude-val">None</span>);
         } <span class="kw">else </span>{
             <span class="kw">let </span>top_right = rr.radii(Corner::UpperRight).x;
 
@@ -1925,19 +2005,19 @@
             }
 
             path.close();
-        }
 
-        path.offset((x, y));
+            path.offset((x, y));
+        }
 
         path
     }
 
     <span class="doccomment">/// Draw background color or background image (including gradients) for the current view.
     </span><span class="kw">pub fn </span>draw_background(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
-        <span class="kw">let </span>border_width = <span class="self">self</span>.border_width();
-        <span class="kw">let </span>path = <span class="self">self</span>.build_path(<span class="self">self</span>.bounds(), (-border_width / <span class="number">2.0</span>, -border_width / <span class="number">2.0</span>));
         <span class="kw">let </span>background_color = <span class="self">self</span>.background_color();
-        <span class="kw">if </span>background_color.a() != <span class="number">0 </span>{
+        <span class="kw">if </span>background_color.a() &gt; <span class="number">0 </span>{
+            <span class="kw">let </span>path = <span class="self">self</span>.path();
+
             <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
             paint.set_color(skia_safe::Color::from_argb(
                 background_color.a(),
@@ -1949,7 +2029,7 @@
             canvas.draw_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
         }
 
-        <span class="self">self</span>.draw_background_images(canvas, <span class="kw-2">&amp;</span>path);
+        <span class="self">self</span>.draw_background_images(canvas);
     }
 
     <span class="doccomment">/// Draw the border of the current view.
@@ -1959,8 +2039,7 @@
         <span class="kw">let </span>border_style = <span class="self">self</span>.border_style();
 
         <span class="kw">if </span>border_width &gt; <span class="number">0.0 </span>&amp;&amp; border_color.a() &gt; <span class="number">0 </span>&amp;&amp; border_style != BorderStyleKeyword::None {
-            <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
-            <span class="kw">let </span>path = <span class="self">self</span>.build_path(bounds, (-border_width / <span class="number">2.0</span>, -border_width / <span class="number">2.0</span>));
+            <span class="kw">let </span>path = <span class="self">self</span>.path();
             <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
             paint.set_style(PaintStyle::Stroke);
             paint.set_color(border_color);
@@ -1997,10 +2076,12 @@
             <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
 
             <span class="kw">let </span>half_outline_width = outline_width / <span class="number">2.0</span>;
-            <span class="kw">let </span>outline_path = <span class="self">self</span>.build_path(
+            <span class="kw">let </span><span class="kw-2">mut </span>outline_path = <span class="self">self</span>.build_path(
                 bounds,
                 (half_outline_width + outline_offset, half_outline_width + outline_offset),
             );
+
+            outline_path.offset(<span class="self">self</span>.bounds().top_left());
 
             <span class="kw">let </span><span class="kw-2">mut </span>outline_paint = Paint::default();
             outline_paint.set_color(outline_color);
@@ -2020,7 +2101,9 @@
 
             <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
 
-            <span class="kw">let </span>path = <span class="self">self</span>.build_path(bounds, (<span class="number">0.0</span>, <span class="number">0.0</span>));
+            <span class="kw">let </span><span class="kw-2">mut </span>path = <span class="self">self</span>.build_path(bounds, (<span class="number">0.0</span>, <span class="number">0.0</span>));
+
+            path.offset(bounds.top_left());
 
             <span class="kw">for </span>shadow <span class="kw">in </span>shadows.iter().rev() {
                 <span class="kw">let </span>shadow_color = shadow.color.unwrap_or_default();
@@ -2050,6 +2133,7 @@
                 shadow_paint.set_style(PaintStyle::Fill);
 
                 <span class="kw">let </span><span class="kw-2">mut </span>shadow_path = <span class="self">self</span>.build_path(bounds, (outset, outset));
+                shadow_path.offset(bounds.top_left());
 
                 shadow_paint.set_color(shadow_color);
 
@@ -2080,208 +2164,212 @@
     }
 
     <span class="doccomment">/// Draw background images (including gradients) for the current view.
-    </span><span class="kw">fn </span>draw_background_images(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas, path: <span class="kw-2">&amp;</span>Path) {
+    </span><span class="kw">fn </span>draw_background_images(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;</span>Canvas) {
         <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
 
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(images) = <span class="self">self</span>.background_images() {
-            <span class="kw">let </span>image_sizes = <span class="self">self</span>.background_size();
+        <span class="kw">if </span><span class="self">self</span>.background_images().is_some() {
+            <span class="kw">let </span>path = <span class="self">self</span>.path();
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(images) = <span class="self">self</span>.background_images() {
+                <span class="kw">let </span>image_sizes = <span class="self">self</span>.background_size();
 
-            <span class="kw">for </span>(index, image) <span class="kw">in </span>images.iter().enumerate() {
-                <span class="kw">match </span>image {
-                    ImageOrGradient::Gradient(gradient) =&gt; <span class="kw">match </span>gradient {
-                        Gradient::Linear(linear_gradient) =&gt; {
-                            <span class="kw">let </span>(start, end, parent_length) = <span class="kw">match </span>linear_gradient.direction {
-                                LineDirection::Horizontal(horizontal_keyword) =&gt; {
-                                    <span class="kw">match </span>horizontal_keyword {
-                                        HorizontalPositionKeyword::Left =&gt; (
-                                            bounds.center_right(),
-                                            bounds.center_left(),
-                                            bounds.width(),
-                                        ),
+                <span class="kw">for </span>(index, image) <span class="kw">in </span>images.iter().enumerate() {
+                    <span class="kw">match </span>image {
+                        ImageOrGradient::Gradient(gradient) =&gt; <span class="kw">match </span>gradient {
+                            Gradient::Linear(linear_gradient) =&gt; {
+                                <span class="kw">let </span>(start, end, parent_length) = <span class="kw">match </span>linear_gradient.direction {
+                                    LineDirection::Horizontal(horizontal_keyword) =&gt; {
+                                        <span class="kw">match </span>horizontal_keyword {
+                                            HorizontalPositionKeyword::Left =&gt; (
+                                                bounds.center_right(),
+                                                bounds.center_left(),
+                                                bounds.width(),
+                                            ),
 
-                                        HorizontalPositionKeyword::Right =&gt; (
-                                            bounds.center_left(),
-                                            bounds.center_right(),
-                                            bounds.width(),
-                                        ),
+                                            HorizontalPositionKeyword::Right =&gt; (
+                                                bounds.center_left(),
+                                                bounds.center_right(),
+                                                bounds.width(),
+                                            ),
+                                        }
+                                    }
+
+                                    LineDirection::Vertical(vertical_keyword) =&gt; {
+                                        <span class="kw">match </span>vertical_keyword {
+                                            VerticalPositionKeyword::Top =&gt; (
+                                                bounds.center_bottom(),
+                                                bounds.center_top(),
+                                                bounds.height(),
+                                            ),
+
+                                            VerticalPositionKeyword::Bottom =&gt; (
+                                                bounds.center_top(),
+                                                bounds.center_bottom(),
+                                                bounds.height(),
+                                            ),
+                                        }
+                                    }
+
+                                    LineDirection::Corner { horizontal, vertical } =&gt; {
+                                        <span class="kw">match </span>(horizontal, vertical) {
+                                            (
+                                                HorizontalPositionKeyword::Right,
+                                                VerticalPositionKeyword::Bottom,
+                                            ) =&gt; (
+                                                bounds.top_left(),
+                                                bounds.bottom_right(),
+                                                bounds.diagonal(),
+                                            ),
+
+                                            (
+                                                HorizontalPositionKeyword::Right,
+                                                VerticalPositionKeyword::Top,
+                                            ) =&gt; (
+                                                bounds.bottom_left(),
+                                                bounds.top_right(),
+                                                bounds.diagonal(),
+                                            ),
+
+                                            <span class="kw">_ </span>=&gt; (bounds.top_left(), bounds.bottom_right(), <span class="number">0.0</span>),
+                                        }
+                                    }
+
+                                    LineDirection::Angle(angle) =&gt; {
+                                        <span class="kw">let </span>angle_rad = angle.to_radians();
+                                        <span class="kw">let </span>start_x = bounds.x
+                                            + ((angle_rad.sin() * bounds.w) - bounds.w) / -<span class="number">2.0</span>;
+                                        <span class="kw">let </span>end_x = bounds.x
+                                            + ((angle_rad.sin() * bounds.w) + bounds.w) / <span class="number">2.0</span>;
+                                        <span class="kw">let </span>start_y = bounds.y
+                                            + ((angle_rad.cos() * bounds.h) + bounds.h) / <span class="number">2.0</span>;
+                                        <span class="kw">let </span>end_y = bounds.y
+                                            + ((angle_rad.cos() * bounds.h) - bounds.h) / -<span class="number">2.0</span>;
+
+                                        <span class="kw">let </span>x = (end_x - start_x).abs();
+                                        <span class="kw">let </span>y = (end_y - start_y).abs();
+
+                                        <span class="kw">let </span>dist = (x * x + y * y).sqrt();
+
+                                        ((start_x, start_y), (end_x, end_y), dist)
+                                    }
+                                };
+
+                                <span class="kw">let </span>num_stops = linear_gradient.stops.len();
+
+                                <span class="kw">let </span><span class="kw-2">mut </span>stops = linear_gradient
+                                    .stops
+                                    .iter()
+                                    .enumerate()
+                                    .map(|(index, stop)| {
+                                        <span class="kw">let </span>pos = <span class="kw">if let </span><span class="prelude-val">Some</span>(pos) = <span class="kw-2">&amp;</span>stop.position {
+                                            pos.to_pixels(parent_length, <span class="self">self</span>.scale_factor())
+                                                / parent_length
+                                        } <span class="kw">else </span>{
+                                            index <span class="kw">as </span>f32 / (num_stops - <span class="number">1</span>) <span class="kw">as </span>f32
+                                        };
+                                        (pos, skia_safe::Color::from(stop.color))
+                                    })
+                                    .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+
+                                <span class="comment">// Insert a stop at the front if the first stop is not at 0.
+                                </span><span class="kw">if let </span><span class="prelude-val">Some</span>(first) = stops.first() {
+                                    <span class="kw">if </span>first.<span class="number">0 </span>!= <span class="number">0.0 </span>{
+                                        stops.insert(<span class="number">0</span>, (<span class="number">0.0</span>, first.<span class="number">1</span>));
                                     }
                                 }
 
-                                LineDirection::Vertical(vertical_keyword) =&gt; <span class="kw">match </span>vertical_keyword
-                                {
-                                    VerticalPositionKeyword::Top =&gt; (
-                                        bounds.center_bottom(),
-                                        bounds.center_top(),
-                                        bounds.height(),
-                                    ),
-
-                                    VerticalPositionKeyword::Bottom =&gt; (
-                                        bounds.center_top(),
-                                        bounds.center_bottom(),
-                                        bounds.height(),
-                                    ),
-                                },
-
-                                LineDirection::Corner { horizontal, vertical } =&gt; {
-                                    <span class="kw">match </span>(horizontal, vertical) {
-                                        (
-                                            HorizontalPositionKeyword::Right,
-                                            VerticalPositionKeyword::Bottom,
-                                        ) =&gt; (
-                                            bounds.top_left(),
-                                            bounds.bottom_right(),
-                                            bounds.diagonal(),
-                                        ),
-
-                                        (
-                                            HorizontalPositionKeyword::Right,
-                                            VerticalPositionKeyword::Top,
-                                        ) =&gt; (
-                                            bounds.bottom_left(),
-                                            bounds.top_right(),
-                                            bounds.diagonal(),
-                                        ),
-
-                                        <span class="kw">_ </span>=&gt; (bounds.top_left(), bounds.bottom_right(), <span class="number">0.0</span>),
+                                <span class="comment">// Insert a stop at the end if the last stop is not at 1.0.
+                                </span><span class="kw">if let </span><span class="prelude-val">Some</span>(last) = stops.last() {
+                                    <span class="kw">if </span>last.<span class="number">0 </span>!= <span class="number">1.0 </span>{
+                                        stops.push((<span class="number">1.0</span>, last.<span class="number">1</span>));
                                     }
                                 }
 
-                                LineDirection::Angle(angle) =&gt; {
-                                    <span class="kw">let </span>angle_rad = angle.to_radians();
-                                    <span class="kw">let </span>start_x =
-                                        bounds.x + ((angle_rad.sin() * bounds.w) - bounds.w) / -<span class="number">2.0</span>;
-                                    <span class="kw">let </span>end_x =
-                                        bounds.x + ((angle_rad.sin() * bounds.w) + bounds.w) / <span class="number">2.0</span>;
-                                    <span class="kw">let </span>start_y =
-                                        bounds.y + ((angle_rad.cos() * bounds.h) + bounds.h) / <span class="number">2.0</span>;
-                                    <span class="kw">let </span>end_y =
-                                        bounds.y + ((angle_rad.cos() * bounds.h) - bounds.h) / -<span class="number">2.0</span>;
+                                <span class="kw">let </span>(offsets, colors): (Vec&lt;f32&gt;, Vec&lt;skia_safe::Color&gt;) =
+                                    stops.into_iter().unzip();
 
-                                    <span class="kw">let </span>x = (end_x - start_x).abs();
-                                    <span class="kw">let </span>y = (end_y - start_y).abs();
+                                <span class="kw">let </span>shader = Shader::linear_gradient(
+                                    (Point::from(start), Point::from(end)),
+                                    GradientShaderColors::Colors(<span class="kw-2">&amp;</span>colors[..]),
+                                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>offsets[..]),
+                                    TileMode::Clamp,
+                                    <span class="prelude-val">None</span>,
+                                    <span class="prelude-val">None</span>,
+                                );
 
-                                    <span class="kw">let </span>dist = (x * x + y * y).sqrt();
+                                <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
+                                paint.set_shader(shader);
 
-                                    ((start_x, start_y), (end_x, end_y), dist)
-                                }
-                            };
-
-                            <span class="kw">let </span>num_stops = linear_gradient.stops.len();
-
-                            <span class="kw">let </span><span class="kw-2">mut </span>stops = linear_gradient
-                                .stops
-                                .iter()
-                                .enumerate()
-                                .map(|(index, stop)| {
-                                    <span class="kw">let </span>pos = <span class="kw">if let </span><span class="prelude-val">Some</span>(pos) = <span class="kw-2">&amp;</span>stop.position {
-                                        pos.to_pixels(parent_length, <span class="self">self</span>.scale_factor())
-                                            / parent_length
-                                    } <span class="kw">else </span>{
-                                        index <span class="kw">as </span>f32 / (num_stops - <span class="number">1</span>) <span class="kw">as </span>f32
-                                    };
-                                    (pos, skia_safe::Color::from(stop.color))
-                                })
-                                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-
-                            <span class="comment">// Insert a stop at the front if the first stop is not at 0.
-                            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(first) = stops.first() {
-                                <span class="kw">if </span>first.<span class="number">0 </span>!= <span class="number">0.0 </span>{
-                                    stops.insert(<span class="number">0</span>, (<span class="number">0.0</span>, first.<span class="number">1</span>));
-                                }
+                                canvas.draw_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
                             }
 
-                            <span class="comment">// Insert a stop at the end if the last stop is not at 1.0.
-                            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(last) = stops.last() {
-                                <span class="kw">if </span>last.<span class="number">0 </span>!= <span class="number">1.0 </span>{
-                                    stops.push((<span class="number">1.0</span>, last.<span class="number">1</span>));
+                            Gradient::Radial(radial_gradient) =&gt; {
+                                <span class="kw">let </span>num_stops = radial_gradient.stops.len();
+
+                                <span class="kw">let </span><span class="kw-2">mut </span>stops = radial_gradient
+                                    .stops
+                                    .iter()
+                                    .enumerate()
+                                    .map(|(index, stop)| {
+                                        <span class="kw">let </span>pos = <span class="kw">if let </span><span class="prelude-val">Some</span>(pos) = <span class="kw-2">&amp;</span>stop.position {
+                                            pos.to_pixels(bounds.width(), <span class="self">self</span>.scale_factor())
+                                                / bounds.width()
+                                        } <span class="kw">else </span>{
+                                            index <span class="kw">as </span>f32 / (num_stops - <span class="number">1</span>) <span class="kw">as </span>f32
+                                        };
+
+                                        (pos, skia_safe::Color::from(stop.color))
+                                    })
+                                    .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+
+                                <span class="comment">// Insert a stop at the front if the first stop is not at 0.
+                                </span><span class="kw">if let </span><span class="prelude-val">Some</span>(first) = stops.first() {
+                                    <span class="kw">if </span>first.<span class="number">0 </span>!= <span class="number">0.0 </span>{
+                                        stops.insert(<span class="number">0</span>, (<span class="number">0.0</span>, first.<span class="number">1</span>));
+                                    }
                                 }
+
+                                <span class="comment">// Insert a stop at the end if the last stop is not at 1.0.
+                                </span><span class="kw">if let </span><span class="prelude-val">Some</span>(last) = stops.last() {
+                                    <span class="kw">if </span>last.<span class="number">0 </span>!= <span class="number">1.0 </span>{
+                                        stops.push((<span class="number">1.0</span>, last.<span class="number">1</span>));
+                                    }
+                                }
+
+                                <span class="kw">let </span>(offsets, colors): (Vec&lt;f32&gt;, Vec&lt;skia_safe::Color&gt;) =
+                                    stops.into_iter().unzip();
+
+                                <span class="kw">let </span>shader = Shader::radial_gradient(
+                                    Point::from(bounds.center()),
+                                    bounds.w.max(bounds.h),
+                                    GradientShaderColors::Colors(<span class="kw-2">&amp;</span>colors[..]),
+                                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>offsets[..]),
+                                    TileMode::Clamp,
+                                    <span class="prelude-val">None</span>,
+                                    <span class="prelude-val">None</span>,
+                                );
+
+                                <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
+                                paint.set_shader(shader);
+                                canvas.draw_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
                             }
 
-                            <span class="kw">let </span>(offsets, colors): (Vec&lt;f32&gt;, Vec&lt;skia_safe::Color&gt;) =
-                                stops.into_iter().unzip();
+                            <span class="kw">_ </span>=&gt; {}
+                        },
 
-                            <span class="kw">let </span>shader = Shader::linear_gradient(
-                                (Point::from(start), Point::from(end)),
-                                GradientShaderColors::Colors(<span class="kw-2">&amp;</span>colors[..]),
-                                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>offsets[..]),
-                                TileMode::Clamp,
-                                <span class="prelude-val">None</span>,
-                                <span class="prelude-val">None</span>,
-                            );
-
-                            <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
-                            paint.set_shader(shader);
-
-                            canvas.draw_path(path, <span class="kw-2">&amp;</span>paint);
-                        }
-
-                        Gradient::Radial(radial_gradient) =&gt; {
-                            <span class="kw">let </span>num_stops = radial_gradient.stops.len();
-
-                            <span class="kw">let </span><span class="kw-2">mut </span>stops = radial_gradient
-                                .stops
-                                .iter()
-                                .enumerate()
-                                .map(|(index, stop)| {
-                                    <span class="kw">let </span>pos = <span class="kw">if let </span><span class="prelude-val">Some</span>(pos) = <span class="kw-2">&amp;</span>stop.position {
-                                        pos.to_pixels(bounds.width(), <span class="self">self</span>.scale_factor())
-                                            / bounds.width()
-                                    } <span class="kw">else </span>{
-                                        index <span class="kw">as </span>f32 / (num_stops - <span class="number">1</span>) <span class="kw">as </span>f32
-                                    };
-
-                                    (pos, skia_safe::Color::from(stop.color))
-                                })
-                                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-
-                            <span class="comment">// Insert a stop at the front if the first stop is not at 0.
-                            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(first) = stops.first() {
-                                <span class="kw">if </span>first.<span class="number">0 </span>!= <span class="number">0.0 </span>{
-                                    stops.insert(<span class="number">0</span>, (<span class="number">0.0</span>, first.<span class="number">1</span>));
-                                }
-                            }
-
-                            <span class="comment">// Insert a stop at the end if the last stop is not at 1.0.
-                            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(last) = stops.last() {
-                                <span class="kw">if </span>last.<span class="number">0 </span>!= <span class="number">1.0 </span>{
-                                    stops.push((<span class="number">1.0</span>, last.<span class="number">1</span>));
-                                }
-                            }
-
-                            <span class="kw">let </span>(offsets, colors): (Vec&lt;f32&gt;, Vec&lt;skia_safe::Color&gt;) =
-                                stops.into_iter().unzip();
-
-                            <span class="kw">let </span>shader = Shader::radial_gradient(
-                                Point::from(bounds.center()),
-                                bounds.w.max(bounds.h),
-                                GradientShaderColors::Colors(<span class="kw-2">&amp;</span>colors[..]),
-                                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>offsets[..]),
-                                TileMode::Clamp,
-                                <span class="prelude-val">None</span>,
-                                <span class="prelude-val">None</span>,
-                            );
-
-                            <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
-                            paint.set_shader(shader);
-                            canvas.draw_path(path, <span class="kw-2">&amp;</span>paint);
-                        }
-
-                        <span class="kw">_ </span>=&gt; {}
-                    },
-
-                    ImageOrGradient::Image(image_name) =&gt; {
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>(image_id) = <span class="self">self</span>.resource_manager.image_ids.get(image_name) {
-                            <span class="kw">if let </span><span class="prelude-val">Some</span>(image) = <span class="self">self</span>.resource_manager.images.get(image_id) {
-                                <span class="kw">match </span><span class="kw-2">&amp;</span>image.image {
-                                    ImageOrSvg::Image(image) =&gt; {
-                                        <span class="kw">let </span>image_width = image.width();
-                                        <span class="kw">let </span>image_height = image.height();
-                                        <span class="kw">let </span>(width, height) = <span class="kw">if let </span><span class="prelude-val">Some</span>(background_size) =
-                                            image_sizes.get(index)
-                                        {
-                                            <span class="kw">match </span>background_size {
-                                                BackgroundSize::Explicit { width, height } =&gt; {
-                                                    <span class="kw">let </span>w = <span class="kw">match </span>width {
+                        ImageOrGradient::Image(image_name) =&gt; {
+                            <span class="kw">if let </span><span class="prelude-val">Some</span>(image_id) = <span class="self">self</span>.resource_manager.image_ids.get(image_name)
+                            {
+                                <span class="kw">if let </span><span class="prelude-val">Some</span>(image) = <span class="self">self</span>.resource_manager.images.get(image_id) {
+                                    <span class="kw">match </span><span class="kw-2">&amp;</span>image.image {
+                                        ImageOrSvg::Image(image) =&gt; {
+                                            <span class="kw">let </span>image_width = image.width();
+                                            <span class="kw">let </span>image_height = image.height();
+                                            <span class="kw">let </span>(width, height) = <span class="kw">if let </span><span class="prelude-val">Some</span>(background_size) =
+                                                image_sizes.get(index)
+                                            {
+                                                <span class="kw">match </span>background_size {
+                                                    BackgroundSize::Explicit { width, height } =&gt; {
+                                                        <span class="kw">let </span>w = <span class="kw">match </span>width {
                                                 LengthPercentageOrAuto::LengthPercentage(
                                                     length,
                                                 ) =&gt; {
@@ -2290,7 +2378,7 @@
                                                 LengthPercentageOrAuto::Auto =&gt; image_width <span class="kw">as </span>f32,
                                             };
 
-                                                    <span class="kw">let </span>h = <span class="kw">match </span>height {
+                                                        <span class="kw">let </span>h = <span class="kw">match </span>height {
                                                 LengthPercentageOrAuto::LengthPercentage(
                                                     length,
                                                 ) =&gt; {
@@ -2299,98 +2387,102 @@
                                                 LengthPercentageOrAuto::Auto =&gt; image_height <span class="kw">as </span>f32,
                                             };
 
-                                                    (w, h)
+                                                        (w, h)
+                                                    }
+
+                                                    BackgroundSize::Contain =&gt; {
+                                                        <span class="kw">let </span>image_ratio = image_width <span class="kw">as </span>f32
+                                                            / image_height <span class="kw">as </span>f32;
+                                                        <span class="kw">let </span>container_ratio = bounds.w / bounds.h;
+
+                                                        <span class="kw">let </span>(w, h) =
+                                                            <span class="kw">if </span>image_ratio &gt; container_ratio {
+                                                                (bounds.w, bounds.w / image_ratio)
+                                                            } <span class="kw">else </span>{
+                                                                (bounds.h * image_ratio, bounds.h)
+                                                            };
+
+                                                        (w, h)
+                                                    }
+
+                                                    BackgroundSize::Cover =&gt; {
+                                                        <span class="kw">let </span>image_ratio = image_width <span class="kw">as </span>f32
+                                                            / image_height <span class="kw">as </span>f32;
+                                                        <span class="kw">let </span>container_ratio = bounds.w / bounds.h;
+
+                                                        <span class="kw">let </span>(w, h) =
+                                                            <span class="kw">if </span>image_ratio &lt; container_ratio {
+                                                                (bounds.w, bounds.w / image_ratio)
+                                                            } <span class="kw">else </span>{
+                                                                (bounds.h * image_ratio, bounds.h)
+                                                            };
+
+                                                        (w, h)
+                                                    }
                                                 }
+                                            } <span class="kw">else </span>{
+                                                (image_width <span class="kw">as </span>f32, image_height <span class="kw">as </span>f32)
+                                            };
 
-                                                BackgroundSize::Contain =&gt; {
-                                                    <span class="kw">let </span>image_ratio =
-                                                        image_width <span class="kw">as </span>f32 / image_height <span class="kw">as </span>f32;
-                                                    <span class="kw">let </span>container_ratio = bounds.w / bounds.h;
+                                            <span class="kw">let </span>matrix = Matrix::rect_to_rect(
+                                                Rect::new(
+                                                    <span class="number">0.0</span>,
+                                                    <span class="number">0.0</span>,
+                                                    image.width() <span class="kw">as </span>f32,
+                                                    image.height() <span class="kw">as </span>f32,
+                                                ),
+                                                Rect::new(
+                                                    bounds.left(),
+                                                    bounds.top(),
+                                                    bounds.left() + width,
+                                                    bounds.top() + height,
+                                                ),
+                                                <span class="prelude-val">None</span>,
+                                            );
 
-                                                    <span class="kw">let </span>(w, h) = <span class="kw">if </span>image_ratio &gt; container_ratio {
-                                                        (bounds.w, bounds.w / image_ratio)
-                                                    } <span class="kw">else </span>{
-                                                        (bounds.h * image_ratio, bounds.h)
-                                                    };
-
-                                                    (w, h)
-                                                }
-
-                                                BackgroundSize::Cover =&gt; {
-                                                    <span class="kw">let </span>image_ratio =
-                                                        image_width <span class="kw">as </span>f32 / image_height <span class="kw">as </span>f32;
-                                                    <span class="kw">let </span>container_ratio = bounds.w / bounds.h;
-
-                                                    <span class="kw">let </span>(w, h) = <span class="kw">if </span>image_ratio &lt; container_ratio {
-                                                        (bounds.w, bounds.w / image_ratio)
-                                                    } <span class="kw">else </span>{
-                                                        (bounds.h * image_ratio, bounds.h)
-                                                    };
-
-                                                    (w, h)
-                                                }
-                                            }
-                                        } <span class="kw">else </span>{
-                                            (image_width <span class="kw">as </span>f32, image_height <span class="kw">as </span>f32)
-                                        };
-
-                                        <span class="kw">let </span>matrix = Matrix::rect_to_rect(
-                                            Rect::new(
-                                                <span class="number">0.0</span>,
-                                                <span class="number">0.0</span>,
-                                                image.width() <span class="kw">as </span>f32,
-                                                image.height() <span class="kw">as </span>f32,
-                                            ),
-                                            Rect::new(
-                                                bounds.left(),
-                                                bounds.top(),
-                                                bounds.left() + width,
-                                                bounds.top() + height,
-                                            ),
-                                            <span class="prelude-val">None</span>,
-                                        );
-
-                                        <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
-                                        paint.set_anti_alias(<span class="bool-val">true</span>);
-                                        paint.set_shader(image.to_shader(
-                                            (TileMode::Repeat, TileMode::Repeat),
-                                            SamplingOptions::default(),
-                                            <span class="kw-2">&amp;</span>matrix,
-                                        ));
-
-                                        canvas.draw_path(path, <span class="kw-2">&amp;</span>paint);
-                                    }
-
-                                    ImageOrSvg::Svg(svg) =&gt; {
-                                        canvas.save_layer(<span class="kw-2">&amp;</span>SaveLayerRec::default());
-                                        canvas.translate((bounds.x, bounds.y));
-                                        <span class="kw">let </span>(scale_x, scale_y) = (
-                                            bounds.width() / svg.inner().fContainerSize.fWidth,
-                                            bounds.height() / svg.inner().fContainerSize.fHeight,
-                                        );
-
-                                        <span class="kw">if </span>scale_x.is_finite() &amp;&amp; scale_y.is_finite() {
-                                            canvas.scale((scale_x, scale_y));
-                                        } <span class="kw">else </span>{
-                                            svg.clone().set_container_size((
-                                                bounds.width(),
-                                                bounds.height(),
-                                            ));
-                                        }
-
-                                        svg.render(canvas);
-
-                                        <span class="kw">if let </span><span class="prelude-val">Some</span>(color) =
-                                            <span class="self">self</span>.style.fill.get(<span class="self">self</span>.current).copied()
-                                        {
                                             <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
-
                                             paint.set_anti_alias(<span class="bool-val">true</span>);
-                                            paint.set_blend_mode(skia_safe::BlendMode::SrcIn);
-                                            paint.set_color(color);
-                                            canvas.draw_paint(<span class="kw-2">&amp;</span>paint);
+                                            paint.set_shader(image.to_shader(
+                                                (TileMode::Repeat, TileMode::Repeat),
+                                                SamplingOptions::default(),
+                                                <span class="kw-2">&amp;</span>matrix,
+                                            ));
+
+                                            canvas.draw_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
                                         }
-                                        canvas.restore();
+
+                                        ImageOrSvg::Svg(svg) =&gt; {
+                                            canvas.save_layer(<span class="kw-2">&amp;</span>SaveLayerRec::default());
+                                            canvas.translate((bounds.x, bounds.y));
+                                            <span class="kw">let </span>(scale_x, scale_y) = (
+                                                bounds.width() / svg.inner().fContainerSize.fWidth,
+                                                bounds.height()
+                                                    / svg.inner().fContainerSize.fHeight,
+                                            );
+
+                                            <span class="kw">if </span>scale_x.is_finite() &amp;&amp; scale_y.is_finite() {
+                                                canvas.scale((scale_x, scale_y));
+                                            } <span class="kw">else </span>{
+                                                svg.clone().set_container_size((
+                                                    bounds.width(),
+                                                    bounds.height(),
+                                                ));
+                                            }
+
+                                            svg.render(canvas);
+
+                                            <span class="kw">if let </span><span class="prelude-val">Some</span>(color) =
+                                                <span class="self">self</span>.style.fill.get(<span class="self">self</span>.current).copied()
+                                            {
+                                                <span class="kw">let </span><span class="kw-2">mut </span>paint = Paint::default();
+
+                                                paint.set_anti_alias(<span class="bool-val">true</span>);
+                                                paint.set_blend_mode(skia_safe::BlendMode::SrcIn);
+                                                paint.set_color(color);
+                                                canvas.draw_paint(<span class="kw-2">&amp;</span>paint);
+                                            }
+                                            canvas.restore();
+                                        }
                                     }
                                 }
                             }

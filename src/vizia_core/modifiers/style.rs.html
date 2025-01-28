@@ -803,7 +803,13 @@
 <a href="#802" id="802">802</a>
 <a href="#803" id="803">803</a>
 <a href="#804" id="804">804</a>
-<a href="#805" id="805">805</a></pre></div><pre class="rust"><code><span class="kw">use </span>vizia_style::{ColorStop, CornerRadius, Rect};
+<a href="#805" id="805">805</a>
+<a href="#806" id="806">806</a>
+<a href="#807" id="807">807</a>
+<a href="#808" id="808">808</a>
+<a href="#809" id="809">809</a>
+<a href="#810" id="810">810</a>
+<a href="#811" id="811">811</a></pre></div><pre class="rust"><code><span class="kw">use </span>vizia_style::{ColorStop, CornerRadius, Rect};
 
 <span class="kw">use </span><span class="kw">super</span>::internal;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -1216,12 +1222,18 @@
     </span>}
 
     <span class="comment">// Border Properties
-    </span><span class="macro">modifier!</span>(
-        <span class="doccomment">/// Sets the border width of the view.
-        </span>border_width,
-        LengthOrPercentage,
-        SystemFlags::RELAYOUT | SystemFlags::REDRAW
-    );
+    </span><span class="kw">fn </span>border_width&lt;U: Into&lt;LengthOrPercentage&gt;&gt;(<span class="kw-2">mut </span><span class="self">self</span>, value: <span class="kw">impl </span>Res&lt;U&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>entity = <span class="self">self</span>.entity();
+        <span class="kw">let </span>current = <span class="self">self</span>.current();
+        value.set_or_bind(<span class="self">self</span>.context(), current, <span class="kw">move </span>|cx, v| {
+            cx.style.border_width.insert(entity, v.get(cx).into());
+            cx.cache.path.remove(entity);
+            cx.style.system_flags |= SystemFlags::RELAYOUT | SystemFlags::REDRAW;
+            cx.set_system_flags(entity, SystemFlags::RELAYOUT | SystemFlags::REDRAW);
+        });
+
+        <span class="self">self
+    </span>}
 
     <span class="macro">modifier!</span>(
         <span class="doccomment">/// Sets the border color of the view.

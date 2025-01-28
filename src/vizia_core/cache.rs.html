@@ -95,11 +95,13 @@
 <a href="#94" id="94">94</a>
 <a href="#95" id="95">95</a>
 <a href="#96" id="96">96</a>
-<a href="#97" id="97">97</a></pre></div><pre class="rust"><code><span class="doccomment">//! The cache is a store for intermediate data produced while computing state, notably layout
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a></pre></div><pre class="rust"><code><span class="doccomment">//! The cache is a store for intermediate data produced while computing state, notably layout
 //! results. The main type here is CachedData, usually accessed via `cx.cache`.
 
 </span><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span>skia_safe::Matrix;
+<span class="kw">use </span>skia_safe::{Matrix, Path};
 <span class="kw">use </span>vizia_storage::SparseSet;
 
 <span class="doccomment">/// Stores data which can be cached between system runs.
@@ -114,6 +116,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) geo_changed: SparseSet&lt;GeoChanged&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) transform: SparseSet&lt;Matrix&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) clip_path: SparseSet&lt;BoundingBox&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) path: SparseSet&lt;Path&gt;,
 }
 
 <span class="kw">impl </span>CachedData {
@@ -131,6 +134,7 @@
         <span class="self">self</span>.geo_changed.remove(entity);
         <span class="self">self</span>.transform.remove(entity);
         <span class="self">self</span>.clip_path.remove(entity);
+        <span class="self">self</span>.path.remove(entity);
     }
 
     <span class="doccomment">/// Returns the bounding box of the entity, determined by the layout system.

@@ -952,7 +952,21 @@
 <a href="#951" id="951">951</a>
 <a href="#952" id="952">952</a>
 <a href="#953" id="953">953</a>
-<a href="#954" id="954">954</a></pre></div><pre class="rust"><code><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
+<a href="#954" id="954">954</a>
+<a href="#955" id="955">955</a>
+<a href="#956" id="956">956</a>
+<a href="#957" id="957">957</a>
+<a href="#958" id="958">958</a>
+<a href="#959" id="959">959</a>
+<a href="#960" id="960">960</a>
+<a href="#961" id="961">961</a>
+<a href="#962" id="962">962</a>
+<a href="#963" id="963">963</a>
+<a href="#964" id="964">964</a>
+<a href="#965" id="965">965</a>
+<a href="#966" id="966">966</a>
+<a href="#967" id="967">967</a>
+<a href="#968" id="968">968</a></pre></div><pre class="rust"><code><span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::window::set_cloak;
 <span class="kw">use crate</span>::{
     convert::{winit_key_code_to_code, winit_key_to_key},
@@ -1230,7 +1244,11 @@
                 </span>.create_window(event_loop, Entity::root(), <span class="kw-2">&amp;</span><span class="self">self</span>.window_description.clone(), <span class="prelude-val">None</span>)
                 .expect(<span class="string">"failed to create initial window"</span>);
             <span class="kw">let </span>custom_cursors = Arc::new(load_default_cursors(event_loop));
-            <span class="self">self</span>.cx.add_main_window(Entity::root(), <span class="kw-2">&amp;</span><span class="self">self</span>.window_description, <span class="number">1.0</span>);
+            <span class="self">self</span>.cx.add_main_window(
+                Entity::root(),
+                <span class="kw-2">&amp;</span><span class="self">self</span>.window_description,
+                main_window.scale_factor() <span class="kw">as </span>f32,
+            );
             <span class="self">self</span>.cx.add_window(Window {
                 window: <span class="prelude-val">Some</span>(main_window.clone()),
                 on_close: <span class="prelude-val">None</span>,
@@ -1285,7 +1303,13 @@
                         owner,
                     )
                     .expect(<span class="string">"Failed to create window"</span>);
-                <span class="self">self</span>.cx.add_main_window(window_entity, <span class="kw-2">&amp;</span>window_state.window_description, <span class="number">1.0</span>);
+
+                <span class="self">self</span>.cx.add_main_window(
+                    window_entity,
+                    <span class="kw-2">&amp;</span>window_state.window_description,
+                    window.scale_factor() <span class="kw">as </span>f32,
+                );
+
                 <span class="self">self</span>.cx.<span class="number">0</span>.with_current(window_entity, |cx| {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(content) = <span class="kw-2">&amp;</span>window_state.content {
                         (content)(cx)
@@ -1593,8 +1617,6 @@
         <span class="kw">if </span><span class="self">self</span>.windows.len() != <span class="self">self</span>.cx.<span class="number">0</span>.windows.len() {
             <span class="kw">for </span>(window_entity, window_state) <span class="kw">in </span><span class="self">self</span>.cx.<span class="number">0</span>.windows.clone().iter() {
                 <span class="kw">if </span>!<span class="self">self</span>.window_ids.contains_key(window_entity) {
-                    <span class="self">self</span>.cx.add_main_window(<span class="kw-2">*</span>window_entity, <span class="kw-2">&amp;</span>window_state.window_description, <span class="number">1.0</span>);
-
                     <span class="kw">let </span>owner = window_state.owner.and_then(|entity| {
                         <span class="self">self</span>.window_ids
                             .get(<span class="kw-2">&amp;</span>entity)
@@ -1609,6 +1631,12 @@
                             owner,
                         )
                         .expect(<span class="string">"Failed to create window"</span>);
+
+                    <span class="self">self</span>.cx.add_main_window(
+                        <span class="kw-2">*</span>window_entity,
+                        <span class="kw-2">&amp;</span>window_state.window_description,
+                        window.scale_factor() <span class="kw">as </span>f32,
+                    );
 
                     <span class="self">self</span>.cx.<span class="number">0</span>.with_current(<span class="kw-2">*</span>window_entity, |cx| {
                         <span class="kw">if let </span><span class="prelude-val">Some</span>(content) = <span class="kw-2">&amp;</span>window_state.content {

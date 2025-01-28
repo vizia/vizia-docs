@@ -1414,7 +1414,33 @@
 <a href="#1413" id="1413">1413</a>
 <a href="#1414" id="1414">1414</a>
 <a href="#1415" id="1415">1415</a>
-<a href="#1416" id="1416">1416</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
+<a href="#1416" id="1416">1416</a>
+<a href="#1417" id="1417">1417</a>
+<a href="#1418" id="1418">1418</a>
+<a href="#1419" id="1419">1419</a>
+<a href="#1420" id="1420">1420</a>
+<a href="#1421" id="1421">1421</a>
+<a href="#1422" id="1422">1422</a>
+<a href="#1423" id="1423">1423</a>
+<a href="#1424" id="1424">1424</a>
+<a href="#1425" id="1425">1425</a>
+<a href="#1426" id="1426">1426</a>
+<a href="#1427" id="1427">1427</a>
+<a href="#1428" id="1428">1428</a>
+<a href="#1429" id="1429">1429</a>
+<a href="#1430" id="1430">1430</a>
+<a href="#1431" id="1431">1431</a>
+<a href="#1432" id="1432">1432</a>
+<a href="#1433" id="1433">1433</a>
+<a href="#1434" id="1434">1434</a>
+<a href="#1435" id="1435">1435</a>
+<a href="#1436" id="1436">1436</a>
+<a href="#1437" id="1437">1437</a>
+<a href="#1438" id="1438">1438</a>
+<a href="#1439" id="1439">1439</a>
+<a href="#1440" id="1440">1440</a>
+<a href="#1441" id="1441">1441</a>
+<a href="#1442" id="1442">1442</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">use </span>std::collections::{BinaryHeap, VecDeque};
 <span class="attr">#[cfg(feature = <span class="string">"clipboard"</span>)]
 </span><span class="kw">use </span>std::error::Error;
@@ -2529,20 +2555,46 @@
         <span class="self">self</span>.needs_redraw();
     }
 
-    <span class="kw">pub fn </span>set_top(<span class="kw-2">&amp;mut </span><span class="self">self</span>, left: Units) {
-        <span class="self">self</span>.style.top.insert(<span class="self">self</span>.current, left);
+    <span class="kw">pub fn </span>set_top(<span class="kw-2">&amp;mut </span><span class="self">self</span>, top: Units) {
+        <span class="self">self</span>.style.top.insert(<span class="self">self</span>.current, top);
         <span class="self">self</span>.needs_relayout();
         <span class="self">self</span>.needs_redraw();
     }
 
-    <span class="kw">pub fn </span>set_right(<span class="kw-2">&amp;mut </span><span class="self">self</span>, left: Units) {
-        <span class="self">self</span>.style.right.insert(<span class="self">self</span>.current, left);
+    <span class="kw">pub fn </span>set_right(<span class="kw-2">&amp;mut </span><span class="self">self</span>, right: Units) {
+        <span class="self">self</span>.style.right.insert(<span class="self">self</span>.current, right);
         <span class="self">self</span>.needs_relayout();
         <span class="self">self</span>.needs_redraw();
     }
 
-    <span class="kw">pub fn </span>set_bottom(<span class="kw-2">&amp;mut </span><span class="self">self</span>, left: Units) {
-        <span class="self">self</span>.style.bottom.insert(<span class="self">self</span>.current, left);
+    <span class="kw">pub fn </span>set_bottom(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bottom: Units) {
+        <span class="self">self</span>.style.bottom.insert(<span class="self">self</span>.current, bottom);
+        <span class="self">self</span>.needs_relayout();
+        <span class="self">self</span>.needs_redraw();
+    }
+
+    <span class="comment">// PADDING
+
+    </span><span class="kw">pub fn </span>set_padding_left(<span class="kw-2">&amp;mut </span><span class="self">self</span>, padding_left: Units) {
+        <span class="self">self</span>.style.padding_left.insert(<span class="self">self</span>.current, padding_left);
+        <span class="self">self</span>.needs_relayout();
+        <span class="self">self</span>.needs_redraw();
+    }
+
+    <span class="kw">pub fn </span>set_padding_top(<span class="kw-2">&amp;mut </span><span class="self">self</span>, padding_top: Units) {
+        <span class="self">self</span>.style.padding_top.insert(<span class="self">self</span>.current, padding_top);
+        <span class="self">self</span>.needs_relayout();
+        <span class="self">self</span>.needs_redraw();
+    }
+
+    <span class="kw">pub fn </span>set_padding_right(<span class="kw-2">&amp;mut </span><span class="self">self</span>, padding_right: Units) {
+        <span class="self">self</span>.style.padding_right.insert(<span class="self">self</span>.current, padding_right);
+        <span class="self">self</span>.needs_relayout();
+        <span class="self">self</span>.needs_redraw();
+    }
+
+    <span class="kw">pub fn </span>set_padding_bottom(<span class="kw-2">&amp;mut </span><span class="self">self</span>, padding_bottom: Units) {
+        <span class="self">self</span>.style.padding_bottom.insert(<span class="self">self</span>.current, padding_bottom);
         <span class="self">self</span>.needs_relayout();
         <span class="self">self</span>.needs_redraw();
     }

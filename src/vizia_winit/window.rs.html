@@ -718,10 +718,7 @@
 <a href="#717" id="717">717</a>
 <a href="#718" id="718">718</a>
 <a href="#719" id="719">719</a>
-<a href="#720" id="720">720</a>
-<a href="#721" id="721">721</a>
-<a href="#722" id="722">722</a>
-<a href="#723" id="723">723</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::window_modifiers::WindowModifiers;
+<a href="#720" id="720">720</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::window_modifiers::WindowModifiers;
 <span class="kw">use </span>glutin::context::GlProfile;
 <span class="kw">use </span>vizia_core::context::TreeProps;
 <span class="attr">#[cfg(target_os = <span class="string">"windows"</span>)]
@@ -1184,20 +1181,17 @@
             }
 
             WindowEvent::SetSize(size) =&gt; {
-                <span class="kw">let _ </span>=
-                    <span class="self">self</span>.window().request_inner_size(PhysicalSize::new(size.width, size.height));
+                <span class="kw">let _ </span>= <span class="self">self</span>.window().request_inner_size(LogicalSize::new(size.width, size.height));
             }
 
             WindowEvent::SetMinSize(size) =&gt; {
-                <span class="self">self</span>.window().set_min_inner_size(
-                    size.map(|size| PhysicalSize::new(size.width, size.height)),
-                );
+                <span class="self">self</span>.window()
+                    .set_min_inner_size(size.map(|size| LogicalSize::new(size.width, size.height)));
             }
 
             WindowEvent::SetMaxSize(size) =&gt; {
-                <span class="self">self</span>.window().set_max_inner_size(
-                    size.map(|size| PhysicalSize::new(size.width, size.height)),
-                );
+                <span class="self">self</span>.window()
+                    .set_max_inner_size(size.map(|size| LogicalSize::new(size.width, size.height)));
             }
 
             WindowEvent::SetPosition(pos) =&gt; {

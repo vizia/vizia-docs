@@ -885,11 +885,30 @@
 <a href="#884" id="884">884</a>
 <a href="#885" id="885">885</a>
 <a href="#886" id="886">886</a>
-<a href="#887" id="887">887</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{cache::CachedData, events::ViewHandler, prelude::<span class="kw-2">*</span>};
+<a href="#887" id="887">887</a>
+<a href="#888" id="888">888</a>
+<a href="#889" id="889">889</a>
+<a href="#890" id="890">890</a>
+<a href="#891" id="891">891</a>
+<a href="#892" id="892">892</a>
+<a href="#893" id="893">893</a>
+<a href="#894" id="894">894</a>
+<a href="#895" id="895">895</a>
+<a href="#896" id="896">896</a>
+<a href="#897" id="897">897</a>
+<a href="#898" id="898">898</a>
+<a href="#899" id="899">899</a>
+<a href="#900" id="900">900</a>
+<a href="#901" id="901">901</a>
+<a href="#902" id="902">902</a>
+<a href="#903" id="903">903</a>
+<a href="#904" id="904">904</a>
+<a href="#905" id="905">905</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{cache::CachedData, events::ViewHandler, prelude::<span class="kw-2">*</span>};
 <span class="kw">use </span>hashbrown::HashMap;
 <span class="kw">use </span>vizia_storage::{LayoutParentIterator, TreeBreadthIterator};
 <span class="kw">use </span>vizia_style::{
     matches_selector,
+    precomputed_hash::PrecomputedHash,
     selectors::{
         attr::{AttrSelectorOperation, CaseSensitivity, NamespaceConstraint},
         context::{MatchingForInvalidation, NeedsSelectorFlags, SelectorCaches},
@@ -975,8 +994,8 @@
     </span>}
 
     <span class="kw">fn </span>has_local_name(<span class="kw-2">&amp;</span><span class="self">self</span>, local_name: <span class="kw-2">&amp;</span>SelectorIdent) -&gt; bool {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(element) = <span class="self">self</span>.views.get(<span class="kw-2">&amp;</span><span class="self">self</span>.entity).and_then(|view| view.element()) {
-            <span class="kw">return </span>element == local_name.<span class="number">0</span>;
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(element) = <span class="self">self</span>.store.element.get(<span class="self">self</span>.entity) {
+            <span class="kw">return </span>element == <span class="kw-2">&amp;</span>local_name.precomputed_hash();
         }
 
         <span class="bool-val">false
@@ -1002,10 +1021,8 @@
     </span>}
 
     <span class="kw">fn </span>is_same_type(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(element) = <span class="self">self</span>.views.get(<span class="kw-2">&amp;</span><span class="self">self</span>.entity).and_then(|view| view.element()) {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(other_element) =
-                <span class="self">self</span>.views.get(<span class="kw-2">&amp;</span>other.entity).and_then(|view| view.element())
-            {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(element) = <span class="self">self</span>.store.element.get(<span class="self">self</span>.entity) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(other_element) = <span class="self">self</span>.store.element.get(other.entity) {
                 <span class="kw">return </span>element == other_element;
             }
         }
@@ -1613,30 +1630,28 @@
     entity: Entity,
     matched_rules: <span class="kw-2">&amp;mut </span>Vec&lt;(Rule, u32)&gt;,
 ) {
-    <span class="kw">for </span>(rule, selector_list) <span class="kw">in </span>cx.style.rules.iter() {
-        <span class="kw">let </span><span class="kw-2">mut </span>cache = SelectorCaches::default();
-        <span class="kw">let </span><span class="kw-2">mut </span>context = MatchingContext::new(
-            MatchingMode::Normal,
-            <span class="prelude-val">None</span>,
-            <span class="kw-2">&amp;mut </span>cache,
-            QuirksMode::NoQuirks,
-            NeedsSelectorFlags::No,
-            MatchingForInvalidation::No,
+    <span class="kw">let </span><span class="kw-2">mut </span>cache = SelectorCaches::default();
+    <span class="kw">let </span><span class="kw-2">mut </span>context = MatchingContext::new(
+        MatchingMode::Normal,
+        <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>cx.style.style_bloom),
+        <span class="kw-2">&amp;mut </span>cache,
+        QuirksMode::NoQuirks,
+        NeedsSelectorFlags::Yes,
+        MatchingForInvalidation::No,
+    );
+    <span class="kw">for </span>(rule_id, rule) <span class="kw">in </span>cx.style.rules.iter() {
+        <span class="kw">let </span>matches = matches_selector(
+            <span class="kw-2">&amp;</span>rule.selector,
+            <span class="number">0</span>,
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>rule.hashes),
+            <span class="kw-2">&amp;</span>Node { entity, store: <span class="kw-2">&amp;</span>cx.style, tree: <span class="kw-2">&amp;</span>cx.tree, views: <span class="kw-2">&amp;</span>cx.views },
+            <span class="kw-2">&amp;mut </span>context,
         );
 
-        <span class="kw">for </span>selector <span class="kw">in </span>selector_list.slice() {
-            <span class="kw">let </span>matches = matches_selector(
-                selector,
-                <span class="number">0</span>,
-                <span class="prelude-val">None</span>,
-                <span class="kw-2">&amp;</span>Node { entity, store: <span class="kw-2">&amp;</span>cx.style, tree: <span class="kw-2">&amp;</span>cx.tree, views: <span class="kw-2">&amp;</span>cx.views },
-                <span class="kw-2">&amp;mut </span>context,
-            );
-            <span class="kw">if </span>matches {
-                matched_rules.push((<span class="kw-2">*</span>rule, selector.specificity()));
-                <span class="kw">break</span>;
-            }
-        }
+        <span class="kw">if </span>matches {
+            matched_rules.push((<span class="kw-2">*</span>rule_id, rule.selector.specificity()));
+            <span class="comment">//break;
+        </span>}
     }
 
     matched_rules.sort_by_cached_key(|(<span class="kw">_</span>, s)| <span class="kw-2">*</span>s);
@@ -1644,13 +1659,13 @@
 }
 
 <span class="kw">fn </span>has_same_selector(cx: <span class="kw-2">&amp;</span>Context, entity1: Entity, entity2: Entity) -&gt; bool {
-    <span class="kw">let </span>element1 = cx.views.get(<span class="kw-2">&amp;</span>entity1).and_then(|view| view.element()).unwrap_or_default();
-
-    <span class="kw">let </span>element2 = cx.views.get(<span class="kw-2">&amp;</span>entity2).and_then(|view| view.element()).unwrap_or_default();
-
-    <span class="kw">if </span>element1 != element2 {
-        <span class="kw">return </span><span class="bool-val">false</span>;
-    };
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(element1) = cx.style.element.get(entity1) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(element2) = cx.style.element.get(entity2) {
+            <span class="kw">if </span>element1 != element2 {
+                <span class="kw">return </span><span class="bool-val">false</span>;
+            };
+        }
+    }
 
     <span class="kw">let </span>id1 = <span class="kw">if let </span><span class="prelude-val">Some</span>(id) = cx.style.ids.get(entity1) { id } <span class="kw">else </span>{ <span class="string">"" </span>};
     <span class="kw">let </span>id2 = <span class="kw">if let </span><span class="prelude-val">Some</span>(id) = cx.style.ids.get(entity2) { id } <span class="kw">else </span>{ <span class="string">"" </span>};
@@ -1678,6 +1693,26 @@
     <span class="bool-val">true
 </span>}
 
+<span class="kw">fn </span>compute_element_hash(entity: Entity, tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;, style: <span class="kw-2">&amp;mut </span>Style) {
+    <span class="kw">let </span>parent_iter = LayoutParentIterator::new(tree, entity);
+
+    <span class="kw">for </span>ancestor <span class="kw">in </span>parent_iter {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(element) = style.element.get(ancestor) {
+            style.style_bloom.insert_hash(<span class="kw-2">*</span>element);
+        }
+
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(id) = style.ids.get(ancestor) {
+            style.style_bloom.insert_hash(fxhash::hash32(id));
+        }
+
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(classes) = style.classes.get(ancestor) {
+            <span class="kw">for </span>class <span class="kw">in </span>classes {
+                style.style_bloom.insert_hash(fxhash::hash32(class));
+            }
+        }
+    }
+}
+
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>MatchedRulesCache {
     <span class="kw">pub </span>entity: Entity,
     <span class="kw">pub </span>rules: Vec&lt;(Rule, u32)&gt;,
@@ -1692,8 +1727,9 @@
     <span class="kw">if </span>!cx.style.restyle.is_empty() {
         <span class="kw">let </span>iterator = TreeBreadthIterator::full(<span class="kw-2">&amp;</span>cx.tree);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>parent = <span class="prelude-val">None</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>parent: <span class="prelude-ty">Option</span>&lt;Entity&gt; = <span class="prelude-val">None</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>cache: Vec&lt;MatchedRulesCache&gt; = Vec::with_capacity(<span class="number">50</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>matched_rules = Vec::with_capacity(<span class="number">50</span>);
 
         <span class="comment">// Restyle the entire application.
         </span><span class="kw">for </span>entity <span class="kw">in </span>iterator {
@@ -1701,7 +1737,9 @@
                 <span class="kw">continue</span>;
             }
 
-            <span class="kw">let </span><span class="kw-2">mut </span>matched_rules = Vec::with_capacity(<span class="number">50</span>);
+            compute_element_hash(entity, <span class="kw-2">&amp;</span>cx.tree, <span class="kw-2">&amp;mut </span>cx.style);
+
+            matched_rules.clear();
 
             <span class="kw">let </span>current_parent = cx.tree.get_layout_parent(entity);
 
@@ -1718,22 +1756,20 @@
                         compute_match = <span class="bool-val">false</span>;
 
                         <span class="kw">for </span>rule <span class="kw">in </span>entry.rules.iter() {
-                            <span class="kw">if let </span><span class="prelude-val">Some</span>(selectors) = cx.style.rules.get(<span class="kw-2">&amp;</span>rule.<span class="number">0</span>) {
-                                <span class="kw">for </span>selector <span class="kw">in </span>selectors.slice() {
-                                    <span class="kw">for </span>component <span class="kw">in </span>selector.iter() {
-                                        <span class="kw">match </span><span class="kw-2">*</span>component {
-                                            Component::Nth(n)
-                                                <span class="kw">if </span>n.ty == NthType::Child
-                                                    || n.ty == NthType::LastChild
-                                                    || n.ty == NthType::OnlyChild =&gt;
-                                            {
-                                                matched_rules.clear();
-                                                compute_match = <span class="bool-val">true</span>;
-                                                <span class="kw">continue </span><span class="lifetime">'cache</span>;
-                                            }
-
-                                            <span class="kw">_ </span>=&gt; {}
+                            <span class="kw">if let </span><span class="prelude-val">Some</span>(style_rule) = cx.style.rules.get(<span class="kw-2">&amp;</span>rule.<span class="number">0</span>) {
+                                <span class="kw">for </span>component <span class="kw">in </span>style_rule.selector.iter() {
+                                    <span class="kw">match </span><span class="kw-2">*</span>component {
+                                        Component::Nth(n)
+                                            <span class="kw">if </span>n.ty == NthType::Child
+                                                || n.ty == NthType::LastChild
+                                                || n.ty == NthType::OnlyChild =&gt;
+                                        {
+                                            matched_rules.clear();
+                                            compute_match = <span class="bool-val">true</span>;
+                                            <span class="kw">continue </span><span class="lifetime">'cache</span>;
                                         }
+
+                                        <span class="kw">_ </span>=&gt; {}
                                     }
                                 }
                             }

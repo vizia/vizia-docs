@@ -302,7 +302,12 @@
 <a href="#301" id="301">301</a>
 <a href="#302" id="302">302</a>
 <a href="#303" id="303">303</a>
-<a href="#304" id="304">304</a></pre></div><pre class="rust"><code><span class="doccomment">//! Views are used to visually present model data and to act as controls which, when interacted with, send events to mutate model data.
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a></pre></div><pre class="rust"><code><span class="doccomment">//! Views are used to visually present model data and to act as controls which, when interacted with, send events to mutate model data.
 //!
 //! # Example
 //! The `Label` view is used to display a text string:
@@ -317,12 +322,12 @@
 //! ```
 
 </span><span class="kw">use </span><span class="kw">crate</span>::accessibility::IntoNode;
-<span class="kw">use </span><span class="kw">crate</span>::model::ModelDataStore;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::systems::get_access_node;
-<span class="kw">use </span>std::any::Any;
+<span class="kw">use </span>std::any::{Any, TypeId};
 <span class="kw">mod </span>handle;
 <span class="kw">pub use </span>handle::Handle;
+<span class="kw">use </span>hashbrown::HashMap;
 
 <span class="kw">use </span><span class="kw">crate</span>::events::ViewHandler;
 <span class="kw">use </span>accesskit::{Node, TreeUpdate};
@@ -454,7 +459,8 @@
             }));
         }
 
-        cx.data.insert(id, ModelDataStore::default());
+        cx.models.insert(id, HashMap::default());
+        cx.stores.insert(id, HashMap::default());
 
         <span class="kw">let </span>handle = Handle { current: id, entity: id, p: Default::default(), cx };
 
@@ -605,5 +611,9 @@
     <span class="kw">fn </span>as_any_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Any {
         <span class="self">self
     </span>}
+
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::any::TypeId {
+        TypeId::of::&lt;T&gt;()
+    }
 }
 </code></pre></div></section></main></body></html>

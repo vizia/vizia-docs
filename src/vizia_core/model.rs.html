@@ -161,23 +161,11 @@
 <a href="#160" id="160">160</a>
 <a href="#161" id="161">161</a>
 <a href="#162" id="162">162</a>
-<a href="#163" id="163">163</a>
-<a href="#164" id="164">164</a>
-<a href="#165" id="165">165</a>
-<a href="#166" id="166">166</a>
-<a href="#167" id="167">167</a>
-<a href="#168" id="168">168</a>
-<a href="#169" id="169">169</a>
-<a href="#170" id="170">170</a>
-<a href="#171" id="171">171</a>
-<a href="#172" id="172">172</a></pre></div><pre class="rust"><code><span class="doccomment">//! Models are used to store application data and can be bound to by views to visually display the data.
+<a href="#163" id="163">163</a></pre></div><pre class="rust"><code><span class="doccomment">//! Models are used to store application data and can be bound to by views to visually display the data.
 
-</span><span class="kw">use </span>std::any::{Any, TypeId};
-
-<span class="kw">use </span><span class="kw">crate</span>::binding::Store;
-<span class="kw">use </span><span class="kw">crate</span>::binding::StoreId;
-<span class="kw">use crate</span>::{events::ViewHandler, prelude::<span class="kw-2">*</span>};
+</span><span class="kw">use crate</span>::{events::ViewHandler, prelude::<span class="kw-2">*</span>};
 <span class="kw">use </span>hashbrown::HashMap;
+<span class="kw">use </span>std::any::{Any, TypeId};
 
 <span class="doccomment">/// A trait implemented by application data in order to respond to events and mutate state.
 ///
@@ -238,12 +226,12 @@
             cx.current
         };
 
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = cx.data.get_mut(<span class="kw-2">&amp;</span>current) {
-            model_data_store.models.insert(TypeId::of::&lt;<span class="self">Self</span>&gt;(), Box::new(<span class="self">self</span>));
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(models) = cx.models.get_mut(<span class="kw-2">&amp;</span>current) {
+            models.insert(TypeId::of::&lt;<span class="self">Self</span>&gt;(), Box::new(<span class="self">self</span>));
         } <span class="kw">else </span>{
             <span class="kw">let </span><span class="kw-2">mut </span>models: HashMap&lt;TypeId, Box&lt;<span class="kw">dyn </span>ModelData&gt;&gt; = HashMap::new();
             models.insert(TypeId::of::&lt;<span class="self">Self</span>&gt;(), Box::new(<span class="self">self</span>));
-            cx.data.insert(current, ModelDataStore { models, stores: HashMap::default() });
+            cx.models.insert(current, models);
         }
     }
 
@@ -318,12 +306,6 @@
     </span><span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
         &lt;T <span class="kw">as </span>Model&gt;::name(<span class="self">self</span>)
     }
-}
-
-<span class="attr">#[derive(Default)]
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ModelDataStore {
-    <span class="kw">pub </span>models: HashMap&lt;TypeId, Box&lt;<span class="kw">dyn </span>ModelData&gt;&gt;,
-    <span class="kw">pub </span>stores: HashMap&lt;StoreId, Box&lt;<span class="kw">dyn </span>Store&gt;&gt;,
 }
 
 <span class="kw">impl </span>Model <span class="kw">for </span>() {}

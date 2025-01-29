@@ -679,11 +679,7 @@
 <a href="#678" id="678">678</a>
 <a href="#679" id="679">679</a>
 <a href="#680" id="680">680</a>
-<a href="#681" id="681">681</a>
-<a href="#682" id="682">682</a>
-<a href="#683" id="683">683</a>
-<a href="#684" id="684">684</a>
-<a href="#685" id="685">685</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
+<a href="#681" id="681">681</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::context::{InternalEvent, ResourceContext};
 <span class="kw">use </span><span class="kw">crate</span>::events::EventMeta;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="attr">#[cfg(debug_assertions)]
@@ -854,24 +850,18 @@
 
 <span class="kw">fn </span>visit_entity(cx: <span class="kw-2">&amp;mut </span>EventContext, entity: Entity, event: <span class="kw-2">&amp;mut </span>Event) {
     <span class="comment">// Send event to models attached to the entity
-    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(ids) = cx
-        .data
-        .get(<span class="kw-2">&amp;</span>entity)
-        .map(|model_data_store| model_data_store.models.keys().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;())
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(ids) =
+        cx.models.get(<span class="kw-2">&amp;</span>entity).map(|models| models.keys().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;())
     {
         <span class="kw">for </span>id <span class="kw">in </span>ids {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>model) = cx
-                .data
-                .get_mut(<span class="kw-2">&amp;</span>entity)
-                .and_then(|model_data_store| model_data_store.models.remove(<span class="kw-2">&amp;</span>id))
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>model) =
+                cx.models.get_mut(<span class="kw-2">&amp;</span>entity).and_then(|models| models.remove(<span class="kw-2">&amp;</span>id))
             {
                 cx.current = entity;
 
                 model.event(cx, event);
 
-                cx.data
-                    .get_mut(<span class="kw-2">&amp;</span>entity)
-                    .and_then(|model_data_store| model_data_store.models.insert(id, model));
+                cx.models.get_mut(<span class="kw-2">&amp;</span>entity).and_then(|models| models.insert(id, model));
             }
         }
     }
@@ -1063,17 +1053,19 @@
             <span class="attr">#[cfg(debug_assertions)]
             </span><span class="kw">if </span><span class="kw-2">*</span>code == Code::KeyP &amp;&amp; cx.modifiers.ctrl() {
                 <span class="kw">for </span>entity <span class="kw">in </span>TreeIterator::full(<span class="kw-2">&amp;</span>cx.tree) {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = cx.data.get(<span class="kw-2">&amp;</span>entity) {
-                        <span class="kw">if </span>!model_data_store.models.is_empty() {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(models) = cx.models.get(<span class="kw-2">&amp;</span>entity) {
+                        <span class="kw">if </span>!models.is_empty() {
                             <span class="macro">debug!</span>(<span class="string">"Models for {}"</span>, entity);
-                            <span class="kw">for </span>(<span class="kw">_</span>, model) <span class="kw">in </span>model_data_store.models.iter() {
+                            <span class="kw">for </span>(<span class="kw">_</span>, model) <span class="kw">in </span>models.iter() {
                                 <span class="macro">debug!</span>(<span class="string">"M: {:?}"</span>, model.name())
                             }
                         }
+                    }
 
-                        <span class="kw">if </span>!model_data_store.stores.is_empty() {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(stores) = cx.stores.get(<span class="kw-2">&amp;</span>entity) {
+                        <span class="kw">if </span>!stores.is_empty() {
                             <span class="macro">debug!</span>(<span class="string">"Stores for {}"</span>, entity);
-                            <span class="kw">for </span>(<span class="kw">_</span>, store) <span class="kw">in </span>model_data_store.stores.iter() {
+                            <span class="kw">for </span>(<span class="kw">_</span>, store) <span class="kw">in </span>stores.iter() {
                                 <span class="macro">debug!</span>(<span class="string">"S: [{}] - Observers {:?}"</span>, store.name(), store.observers())
                             }
                         }

@@ -272,66 +272,75 @@
         <span class="kw">let </span>new_ancestors = id.parent_iter(<span class="kw-2">&amp;</span>cx.tree).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
         <span class="kw">fn </span>insert_store&lt;L&gt;(
+            entity: Entity,
             ancestors: <span class="kw-2">&amp;</span>HashSet&lt;Entity&gt;,
-            stores: <span class="kw-2">&amp;mut </span>HashMap&lt;StoreId, Box&lt;<span class="kw">dyn </span>Store&gt;&gt;,
+            stores: <span class="kw-2">&amp;mut </span>HashMap&lt;Entity, HashMap&lt;StoreId, Box&lt;<span class="kw">dyn </span>Store&gt;&gt;&gt;,
             model_data: ModelOrView,
             lens: L,
             id: Entity,
         ) <span class="kw">where
             </span>L: Lens&lt;Target: Data&gt;,
         {
-            <span class="kw">let </span>key = get_storeid(<span class="kw-2">&amp;</span>lens);
+            <span class="kw">if </span>!stores.contains_key(<span class="kw-2">&amp;</span>entity) {
+                stores.insert(entity, HashMap::new());
+            }
 
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(store) = stores.get_mut(<span class="kw-2">&amp;</span>key) {
-                <span class="kw">let </span>observers = store.observers();
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(stores) = stores.get_mut(<span class="kw-2">&amp;</span>entity) {
+                <span class="kw">let </span>key = get_storeid(<span class="kw-2">&amp;</span>lens);
 
-                <span class="kw">if </span>ancestors.intersection(observers).next().is_none() {
-                    store.add_observer(id);
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(store) = stores.get_mut(<span class="kw-2">&amp;</span>key) {
+                    <span class="kw">let </span>observers = store.observers();
+
+                    <span class="kw">if </span>ancestors.intersection(observers).next().is_none() {
+                        store.add_observer(id);
+                    }
+                } <span class="kw">else </span>{
+                    <span class="kw">let </span><span class="kw-2">mut </span>observers = HashSet::new();
+                    observers.insert(id);
+
+                    <span class="kw">let </span>model = model_data.downcast_ref::&lt;L::Source&gt;().unwrap();
+
+                    <span class="kw">let </span>old = lens.view(model).map(|val| val.into_owned());
+
+                    <span class="kw">let </span>store = Box::new(BasicStore { lens, old, observers });
+
+                    stores.insert(key, store);
                 }
-            } <span class="kw">else </span>{
-                <span class="kw">let </span><span class="kw-2">mut </span>observers = HashSet::new();
-                observers.insert(id);
-
-                <span class="kw">let </span>model = model_data.downcast_ref::&lt;L::Source&gt;().unwrap();
-
-                <span class="kw">let </span>old = lens.view(model).map(|val| val.into_owned());
-
-                <span class="kw">let </span>store = Box::new(BasicStore { lens, old, observers });
-
-                stores.insert(key, store);
             }
         }
 
         <span class="comment">// Check if there's already a store with the same lens somewhere up the tree. If there is, add this binding as an observer,
         // else create a new store with this binding as an observer.
         </span><span class="kw">for </span>entity <span class="kw">in </span>new_ancestors {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = cx.data.get_mut(<span class="kw-2">&amp;</span>entity) {
-                <span class="comment">// Check for model store
-                </span><span class="kw">if let </span><span class="prelude-val">Some</span>(model_data) = model_data_store.models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;L::Source&gt;()) {
+            <span class="comment">// Check for view store
+            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = cx.views.get(<span class="kw-2">&amp;</span>entity) {
+                <span class="kw">if </span>view_handler.as_any_ref().is::&lt;L::Source&gt;() {
                     insert_store(
+                        entity,
                         <span class="kw-2">&amp;</span>ancestors,
-                        <span class="kw-2">&amp;mut </span>model_data_store.stores,
-                        ModelOrView::Model(model_data.as_ref()),
+                        <span class="kw-2">&amp;mut </span>cx.stores,
+                        ModelOrView::View(view_handler.as_ref()),
                         lens,
                         id,
                     );
 
                     <span class="kw">break</span>;
                 }
+            }
 
-                <span class="comment">// Check for view store
-                </span><span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = cx.views.get(<span class="kw-2">&amp;</span>entity) {
-                    <span class="kw">if </span>view_handler.as_any_ref().is::&lt;L::Source&gt;() {
-                        insert_store(
-                            <span class="kw-2">&amp;</span>ancestors,
-                            <span class="kw-2">&amp;mut </span>model_data_store.stores,
-                            ModelOrView::View(view_handler.as_ref()),
-                            lens,
-                            id,
-                        );
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(models) = cx.models.get_mut(<span class="kw-2">&amp;</span>entity) {
+                <span class="comment">// Check for model store
+                </span><span class="kw">if let </span><span class="prelude-val">Some</span>(model_data) = models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;L::Source&gt;()) {
+                    insert_store(
+                        entity,
+                        <span class="kw-2">&amp;</span>ancestors,
+                        <span class="kw-2">&amp;mut </span>cx.stores,
+                        ModelOrView::Model(model_data.as_ref()),
+                        lens,
+                        id,
+                    );
 
-                        <span class="kw">break</span>;
-                    }
+                    <span class="kw">break</span>;
                 }
             }
         }
@@ -382,31 +391,22 @@
 
     <span class="kw">fn </span>remove(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context) {
         <span class="kw">for </span>entity <span class="kw">in </span><span class="self">self</span>.entity.parent_iter(<span class="kw-2">&amp;</span>cx.tree) {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = cx.data.get_mut(<span class="kw-2">&amp;</span>entity) {
-                <span class="kw">let </span>key = get_storeid(<span class="kw-2">&amp;</span><span class="self">self</span>.lens);
+            <span class="kw">let </span>key = get_storeid(<span class="kw-2">&amp;</span><span class="self">self</span>.lens);
 
-                <span class="comment">// Check for model store
-                </span><span class="kw">if </span>model_data_store.models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;L::Source&gt;()).is_some() {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(store) = model_data_store.stores.get_mut(<span class="kw-2">&amp;</span>key) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(stores) = cx.stores.get_mut(<span class="kw-2">&amp;</span>entity) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(store) = stores.get_mut(<span class="kw-2">&amp;</span>key) {
+                    <span class="kw">let </span>source = store.source();
+                    <span class="kw">if </span>cx.views.get(<span class="kw-2">&amp;</span>entity).filter(|view| view.id() == source).is_some()
+                        || cx
+                            .models
+                            .get(<span class="kw-2">&amp;</span>entity)
+                            .filter(|models| models.contains_key(<span class="kw-2">&amp;</span>source))
+                            .is_some()
+                    {
                         store.remove_observer(<span class="kw-2">&amp;</span><span class="self">self</span>.entity);
 
                         <span class="kw">if </span>store.num_observers() == <span class="number">0 </span>{
-                            model_data_store.stores.remove(<span class="kw-2">&amp;</span>key);
-                        }
-                    }
-
-                    <span class="kw">break</span>;
-                }
-
-                <span class="comment">// Check for view store
-                </span><span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = cx.views.get(<span class="kw-2">&amp;</span>entity) {
-                    <span class="kw">if </span>view_handler.as_any_ref().is::&lt;L::Source&gt;() {
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>(store) = model_data_store.stores.get_mut(<span class="kw-2">&amp;</span>key) {
-                            store.remove_observer(<span class="kw-2">&amp;</span><span class="self">self</span>.entity);
-
-                            <span class="kw">if </span>store.num_observers() == <span class="number">0 </span>{
-                                model_data_store.stores.remove(<span class="kw-2">&amp;</span>key);
-                            }
+                            stores.remove(<span class="kw-2">&amp;</span>key);
                         }
 
                         <span class="kw">break</span>;

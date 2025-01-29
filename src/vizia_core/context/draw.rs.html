@@ -1299,7 +1299,8 @@
 <a href="#1298" id="1298">1298</a>
 <a href="#1299" id="1299">1299</a>
 <a href="#1300" id="1300">1300</a>
-<a href="#1301" id="1301">1301</a></pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::canvas::SaveLayerRec;
+<a href="#1301" id="1301">1301</a>
+<a href="#1302" id="1302">1302</a></pre></div><pre class="rust"><code><span class="kw">use </span>skia_safe::canvas::SaveLayerRec;
 <span class="kw">use </span>skia_safe::gradient_shader::GradientShaderColors;
 <span class="kw">use </span>skia_safe::path::ArcSize;
 <span class="kw">use </span>skia_safe::rrect::Corner;
@@ -1317,11 +1318,12 @@
 <span class="kw">use </span><span class="kw">crate</span>::animation::Interpolator;
 <span class="kw">use </span><span class="kw">crate</span>::cache::CachedData;
 <span class="kw">use </span><span class="kw">crate</span>::events::ViewHandler;
-<span class="kw">use </span><span class="kw">crate</span>::model::ModelDataStore;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::resource::{ImageOrSvg, ResourceManager};
 <span class="kw">use </span><span class="kw">crate</span>::text::TextContext;
 <span class="kw">use </span>vizia_input::MouseState;
+
+<span class="kw">use </span><span class="kw">super</span>::ModelData;
 
 <span class="doccomment">/// A context used when drawing a view.
 ///
@@ -1360,7 +1362,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) style: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Style,
     <span class="kw">pub</span>(<span class="kw">crate</span>) cache: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>CachedData,
     <span class="kw">pub</span>(<span class="kw">crate</span>) tree: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Tree&lt;Entity&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) data: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HashMap&lt;Entity, ModelDataStore&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) models: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HashMap&lt;Entity, HashMap&lt;TypeId, Box&lt;<span class="kw">dyn </span>ModelData&gt;&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) views: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>HashMap&lt;Entity, Box&lt;<span class="kw">dyn </span>ViewHandler&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) resource_manager: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ResourceManager,
     <span class="kw">pub</span>(<span class="kw">crate</span>) text_context: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>TextContext,
@@ -2546,8 +2548,8 @@
 
         <span class="kw">for </span>entity <span class="kw">in </span><span class="self">self</span>.current.parent_iter(<span class="self">self</span>.tree) {
             <span class="comment">// Return model data.
-            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(model_data_store) = <span class="self">self</span>.data.get(<span class="kw-2">&amp;</span>entity) {
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(model) = model_data_store.models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;T&gt;()) {
+            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(models) = <span class="self">self</span>.models.get(<span class="kw-2">&amp;</span>entity) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(model) = models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;T&gt;()) {
                     <span class="kw">return </span>model.downcast_ref::&lt;T&gt;();
                 }
             }

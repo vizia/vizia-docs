@@ -152,13 +152,7 @@
 <a href="#151" id="151">151</a>
 <a href="#152" id="152">152</a>
 <a href="#153" id="153">153</a>
-<a href="#154" id="154">154</a>
-<a href="#155" id="155">155</a>
-<a href="#156" id="156">156</a>
-<a href="#157" id="157">157</a>
-<a href="#158" id="158">158</a>
-<a href="#159" id="159">159</a>
-<a href="#160" id="160">160</a></pre></div><pre class="rust"><code><span class="kw">use </span>morphorm::Node;
+<a href="#154" id="154">154</a></pre></div><pre class="rust"><code><span class="kw">use </span>morphorm::Node;
 <span class="kw">use </span>vizia_storage::LayoutTreeIterator;
 
 <span class="kw">use </span><span class="kw">crate</span>::layout::node::SubLayout;
@@ -283,24 +277,18 @@
 
 <span class="kw">fn </span>visit_entity(cx: <span class="kw-2">&amp;mut </span>EventContext, entity: Entity, event: <span class="kw-2">&amp;mut </span>Event) {
     <span class="comment">// Send event to models attached to the entity
-    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(ids) = cx
-        .data
-        .get(<span class="kw-2">&amp;</span>entity)
-        .map(|model_data_store| model_data_store.models.keys().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;())
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(ids) =
+        cx.models.get(<span class="kw-2">&amp;</span>entity).map(|models| models.keys().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;())
     {
         <span class="kw">for </span>id <span class="kw">in </span>ids {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>model) = cx
-                .data
-                .get_mut(<span class="kw-2">&amp;</span>entity)
-                .and_then(|model_data_store| model_data_store.models.remove(<span class="kw-2">&amp;</span>id))
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>model) =
+                cx.models.get_mut(<span class="kw-2">&amp;</span>entity).and_then(|models| models.remove(<span class="kw-2">&amp;</span>id))
             {
                 cx.current = entity;
 
                 model.event(cx, event);
 
-                cx.data
-                    .get_mut(<span class="kw-2">&amp;</span>entity)
-                    .and_then(|model_data_store| model_data_store.models.insert(id, model));
+                cx.models.get_mut(<span class="kw-2">&amp;</span>entity).and_then(|models| models.insert(id, model));
             }
         }
     }

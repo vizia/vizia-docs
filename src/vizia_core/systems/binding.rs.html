@@ -70,51 +70,19 @@
 <a href="#69" id="69">69</a>
 <a href="#70" id="70">70</a>
 <a href="#71" id="71">71</a>
-<a href="#72" id="72">72</a>
-<a href="#73" id="73">73</a>
-<a href="#74" id="74">74</a>
-<a href="#75" id="75">75</a>
-<a href="#76" id="76">76</a>
-<a href="#77" id="77">77</a>
-<a href="#78" id="78">78</a>
-<a href="#79" id="79">79</a>
-<a href="#80" id="80">80</a>
-<a href="#81" id="81">81</a>
-<a href="#82" id="82">82</a>
-<a href="#83" id="83">83</a>
-<a href="#84" id="84">84</a>
-<a href="#85" id="85">85</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{binding::StoreId, model::ModelOrView, prelude::<span class="kw-2">*</span>};
+<a href="#72" id="72">72</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{binding::StoreId, model::ModelOrView, prelude::<span class="kw-2">*</span>};
 <span class="kw">use </span>hashbrown::{HashMap, HashSet};
 <span class="kw">use </span>std::any::TypeId;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>binding_system(cx: <span class="kw-2">&amp;mut </span>Context) {
-    <span class="kw">let </span><span class="kw-2">mut </span>observers: HashMap&lt;Entity, (Entity, <span class="prelude-ty">Option</span>&lt;TypeId&gt;, StoreId)&gt; = HashMap::new();
+    <span class="kw">let </span><span class="kw-2">mut </span>observers: HashMap&lt;Entity, (Entity, TypeId, StoreId)&gt; = HashMap::new();
 
-    <span class="kw">for </span>(entity, model_data_store) <span class="kw">in </span>cx.data.iter_mut() {
-        <span class="kw">for </span>(store_id, store) <span class="kw">in </span>model_data_store.stores.iter() {
-            <span class="comment">// Determine observers of model data.
-            </span><span class="kw">for </span>(model_id, model) <span class="kw">in </span>model_data_store.models.iter() {
-                <span class="kw">let </span>model: ModelOrView&lt;<span class="lifetime">'_</span>&gt; = ModelOrView::Model(model.as_ref());
+    <span class="kw">for </span>(entity, stores) <span class="kw">in </span>cx.stores.iter_mut() {
+        <span class="kw">for </span>(store_id, store) <span class="kw">in </span>stores.iter() {
+            <span class="kw">let </span>model_id = store.source();
 
-                <span class="kw">if </span>store.contains_source(model) {
-                    observers.extend(
-                        store
-                            .observers()
-                            .iter()
-                            .map(|e| (<span class="kw-2">*</span>e, (<span class="kw-2">*</span>entity, <span class="prelude-val">Some</span>(<span class="kw-2">*</span>model_id), <span class="kw-2">*</span>store_id))),
-                    );
-                }
-            }
-
-            <span class="comment">// Determine observers of view data.
-            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = cx.views.get(entity) {
-                <span class="kw">let </span>view = ModelOrView::View(view_handler.as_ref());
-
-                <span class="kw">if </span>store.contains_source(view) {
-                    observers
-                        .extend(store.observers().iter().map(|e| (<span class="kw-2">*</span>e, (<span class="kw-2">*</span>entity, <span class="prelude-val">None</span>, <span class="kw-2">*</span>store_id))))
-                }
-            }
+            observers
+                .extend(store.observers().iter().map(|e| (<span class="kw-2">*</span>e, (<span class="kw-2">*</span>entity, model_id, <span class="kw-2">*</span>store_id))));
         }
     }
 
@@ -137,22 +105,28 @@
 
             <span class="kw">if </span>updated_stores.contains(<span class="kw-2">&amp;</span>store_id) {
                 update_binding(cx, observer);
-            } <span class="kw">else if let </span><span class="prelude-val">Some</span>(model_data_store) = cx.data.get_mut(<span class="kw-2">&amp;</span>source) {
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(store) = model_data_store.stores.get_mut(<span class="kw-2">&amp;</span>store_id) {
-                    <span class="kw">let </span>model_or_view = <span class="kw">if let </span><span class="prelude-val">Some</span>(model_id) = model_id {
-                        model_data_store
-                            .models
-                            .get(<span class="kw-2">&amp;</span>model_id)
-                            .map(|model| ModelOrView::Model(model.as_ref()))
-                    } <span class="kw">else </span>{
-                        cx.views.get(<span class="kw-2">&amp;</span>source).map(|view| ModelOrView::View(view.as_ref()))
-                    };
+            } <span class="kw">else if let </span><span class="prelude-val">Some</span>(store) =
+                cx.stores.get_mut(<span class="kw-2">&amp;</span>source).and_then(|stores| stores.get_mut(<span class="kw-2">&amp;</span>store_id))
+            {
+                <span class="kw">let </span>view = cx
+                    .views
+                    .get(<span class="kw-2">&amp;</span>source)
+                    .filter(|view| view.id() == model_id)
+                    .map(|view| ModelOrView::View(view.as_ref()));
 
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(model_or_view) = model_or_view {
-                        <span class="kw">if </span>store.update(model_or_view) {
-                            updated_stores.insert(store_id);
-                            update_binding(cx, observer);
-                        }
+                <span class="kw">let </span>model_or_view = <span class="kw">if </span>view.is_some() {
+                    view
+                } <span class="kw">else </span>{
+                    cx.models
+                        .get(<span class="kw-2">&amp;</span>source)
+                        .and_then(|models| models.get(<span class="kw-2">&amp;</span>model_id))
+                        .map(|model| ModelOrView::Model(model.as_ref()))
+                };
+
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(model_or_view) = model_or_view {
+                    <span class="kw">if </span>store.update(model_or_view) {
+                        updated_stores.insert(store_id);
+                        update_binding(cx, observer);
                     }
                 }
             }

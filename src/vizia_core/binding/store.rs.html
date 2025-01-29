@@ -108,7 +108,7 @@
     <span class="doccomment">/// Returns the number of obersers for the store.
     </span><span class="kw">fn </span>num_observers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize;
     <span class="doccomment">/// Returns true if the model or view is the source of the store.
-    </span><span class="kw">fn </span>contains_source(<span class="kw-2">&amp;</span><span class="self">self</span>, model: ModelOrView) -&gt; bool;
+    </span><span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TypeId;
 
     <span class="attr">#[cfg(debug_assertions)]
     </span><span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String;
@@ -124,8 +124,8 @@
 <span class="kw">where
     </span>L: Lens&lt;Target: Data&gt;,
 {
-    <span class="kw">fn </span>contains_source(<span class="kw-2">&amp;</span><span class="self">self</span>, model: ModelOrView) -&gt; bool {
-        model.downcast_ref::&lt;L::Source&gt;().is_some()
+    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TypeId {
+        TypeId::of::&lt;L::Source&gt;()
     }
 
     <span class="kw">fn </span>update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, model: ModelOrView) -&gt; bool {

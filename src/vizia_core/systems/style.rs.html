@@ -979,11 +979,7 @@
 <a href="#978" id="978">978</a>
 <a href="#979" id="979">979</a>
 <a href="#980" id="980">980</a>
-<a href="#981" id="981">981</a>
-<a href="#982" id="982">982</a>
-<a href="#983" id="983">983</a>
-<a href="#984" id="984">984</a>
-<a href="#985" id="985">985</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{cache::CachedData, prelude::<span class="kw-2">*</span>};
+<a href="#981" id="981">981</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{cache::CachedData, prelude::<span class="kw-2">*</span>};
 <span class="attr">#[cfg(feature = <span class="string">"rayon"</span>)]
 </span><span class="kw">use </span>dashmap::{DashMap, ReadOnlyView};
 <span class="kw">use </span>hashbrown::HashMap;
@@ -1827,7 +1823,8 @@
 }
 
 <span class="kw">impl </span>MatchedRules {
-    <span class="kw">fn </span>build(entities: <span class="kw-2">&amp;</span>[Entity], style: <span class="kw-2">&amp;</span>Style, tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;) -&gt; <span class="self">Self </span>{
+    <span class="attr">#[cfg(not(feature = <span class="string">"rayon"</span>))]
+    </span><span class="kw">fn </span>build(entities: <span class="kw-2">&amp;</span>[Entity], style: <span class="kw-2">&amp;</span>Style, tree: <span class="kw-2">&amp;</span>Tree&lt;Entity&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>filter = <span class="kw-2">&amp;mut </span>BloomFilter::default();
 
         <span class="kw">let </span><span class="kw-2">mut </span>cache = HashMap::new();
@@ -1931,12 +1928,7 @@
         .filter(|e| cx.style.restyle.contains(<span class="kw-2">*</span>e))
         .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-    <span class="comment">// TODO: Tune this number. Or perhaps make it customizable?
-    </span><span class="kw">let </span>parallel = entities.len() * cx.style.rules.len() &gt;= <span class="number">4096</span>;
-
-    <span class="kw">let </span>matched_rules = <span class="kw">if </span>!parallel {
-        MatchedRules::build(<span class="kw-2">&amp;</span>entities, <span class="kw-2">&amp;</span>cx.style, <span class="kw-2">&amp;</span>cx.tree)
-    } <span class="kw">else </span>{
+    <span class="kw">let </span>matched_rules = {
         <span class="attr">#[cfg(feature = <span class="string">"rayon"</span>)]
         </span>{
             MatchedRules::build_parallel(<span class="kw-2">&amp;</span>entities, <span class="kw-2">&amp;</span>cx.style, <span class="kw-2">&amp;</span>cx.tree)

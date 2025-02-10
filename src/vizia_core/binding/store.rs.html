@@ -78,22 +78,18 @@
 <a href="#77" id="77">77</a>
 <a href="#78" id="78">78</a>
 <a href="#79" id="79">79</a>
-<a href="#80" id="80">80</a>
-<a href="#81" id="81">81</a>
-<a href="#82" id="82">82</a></pre></div><pre class="rust"><code><span class="kw">use </span>hashbrown::{hash_map::DefaultHashBuilder, HashSet};
+<a href="#80" id="80">80</a></pre></div><pre class="rust"><code><span class="kw">use </span>hashbrown::HashSet;
 <span class="kw">use </span>std::any::TypeId;
-<span class="kw">use </span>std::hash::{BuildHasher, Hash, Hasher};
+<span class="kw">use </span>std::hash::Hash;
 
 <span class="kw">use crate</span>::{model::ModelOrView, prelude::<span class="kw-2">*</span>};
 
-<span class="attr">#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
-</span><span class="kw">pub struct </span>StoreId(<span class="kw">pub </span>u64);
-
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_storeid&lt;T: <span class="lifetime">'static </span>+ Hash&gt;(t: <span class="kw-2">&amp;</span>T) -&gt; StoreId {
-    <span class="kw">let </span><span class="kw-2">mut </span>s = DefaultHashBuilder::default().build_hasher();
-    TypeId::of::&lt;T&gt;().hash(<span class="kw-2">&amp;mut </span>s);
-    t.hash(<span class="kw-2">&amp;mut </span>s);
-    StoreId(s.finish())
+<span class="attr">#[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
+</span><span class="kw">pub enum </span>StoreId {
+    Source(TypeId),
+    Index(TypeId, usize),
+    Recursive(Box&lt;(StoreId, StoreId)&gt;),
+    Map(u64),
 }
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>Store {

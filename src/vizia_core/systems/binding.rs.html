@@ -70,7 +70,8 @@
 <a href="#69" id="69">69</a>
 <a href="#70" id="70">70</a>
 <a href="#71" id="71">71</a>
-<a href="#72" id="72">72</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{binding::StoreId, model::ModelOrView, prelude::<span class="kw-2">*</span>};
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a></pre></div><pre class="rust"><code><span class="kw">use crate</span>::{binding::StoreId, model::ModelOrView, prelude::<span class="kw-2">*</span>};
 <span class="kw">use </span>hashbrown::{HashMap, HashSet};
 <span class="kw">use </span>std::any::TypeId;
 
@@ -81,8 +82,9 @@
         <span class="kw">for </span>(store_id, store) <span class="kw">in </span>stores.iter() {
             <span class="kw">let </span>model_id = store.source();
 
-            observers
-                .extend(store.observers().iter().map(|e| (<span class="kw-2">*</span>e, (<span class="kw-2">*</span>entity, model_id, <span class="kw-2">*</span>store_id))));
+            observers.extend(
+                store.observers().iter().map(|e| (<span class="kw-2">*</span>e, (<span class="kw-2">*</span>entity, model_id, store_id.clone()))),
+            );
         }
     }
 
@@ -91,7 +93,7 @@
         </span><span class="kw">let </span>ordered_observers = cx
             .tree
             .into_iter()
-            .filter_map(|ent| observers.get(<span class="kw-2">&amp;</span>ent).map(|e| (ent, <span class="kw-2">*</span>e)))
+            .filter_map(|ent| observers.get(<span class="kw-2">&amp;</span>ent).map(|e| (ent, e.clone())))
             .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
         <span class="kw">let </span><span class="kw-2">mut </span>updated_stores: HashSet&lt;StoreId&gt; = HashSet::new();

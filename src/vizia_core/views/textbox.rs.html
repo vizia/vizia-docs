@@ -1301,46 +1301,7 @@
 <a href="#1300" id="1300">1300</a>
 <a href="#1301" id="1301">1301</a>
 <a href="#1302" id="1302">1302</a>
-<a href="#1303" id="1303">1303</a>
-<a href="#1304" id="1304">1304</a>
-<a href="#1305" id="1305">1305</a>
-<a href="#1306" id="1306">1306</a>
-<a href="#1307" id="1307">1307</a>
-<a href="#1308" id="1308">1308</a>
-<a href="#1309" id="1309">1309</a>
-<a href="#1310" id="1310">1310</a>
-<a href="#1311" id="1311">1311</a>
-<a href="#1312" id="1312">1312</a>
-<a href="#1313" id="1313">1313</a>
-<a href="#1314" id="1314">1314</a>
-<a href="#1315" id="1315">1315</a>
-<a href="#1316" id="1316">1316</a>
-<a href="#1317" id="1317">1317</a>
-<a href="#1318" id="1318">1318</a>
-<a href="#1319" id="1319">1319</a>
-<a href="#1320" id="1320">1320</a>
-<a href="#1321" id="1321">1321</a>
-<a href="#1322" id="1322">1322</a>
-<a href="#1323" id="1323">1323</a>
-<a href="#1324" id="1324">1324</a>
-<a href="#1325" id="1325">1325</a>
-<a href="#1326" id="1326">1326</a>
-<a href="#1327" id="1327">1327</a>
-<a href="#1328" id="1328">1328</a>
-<a href="#1329" id="1329">1329</a>
-<a href="#1330" id="1330">1330</a>
-<a href="#1331" id="1331">1331</a>
-<a href="#1332" id="1332">1332</a>
-<a href="#1333" id="1333">1333</a>
-<a href="#1334" id="1334">1334</a>
-<a href="#1335" id="1335">1335</a>
-<a href="#1336" id="1336">1336</a>
-<a href="#1337" id="1337">1337</a>
-<a href="#1338" id="1338">1338</a>
-<a href="#1339" id="1339">1339</a>
-<a href="#1340" id="1340">1340</a>
-<a href="#1341" id="1341">1341</a>
-<a href="#1342" id="1342">1342</a></pre></div><pre class="rust"><code><span class="comment">// use crate::accessibility::IntoNode;
+<a href="#1303" id="1303">1303</a></pre></div><pre class="rust"><code><span class="comment">// use crate::accessibility::IntoNode;
 </span><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">use </span><span class="kw">crate</span>::text::{
@@ -1414,7 +1375,6 @@
     on_cancel: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>EventContext) + Send + Sync&gt;&gt;,
     validate: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>L::Target) -&gt; bool&gt;&gt;,
     placeholder: String,
-    show_placeholder: bool,
     show_caret: bool,
     caret_timer: Timer,
     selection: Selection,
@@ -1500,7 +1460,6 @@
             on_cancel: <span class="prelude-val">None</span>,
             validate: <span class="prelude-val">None</span>,
             placeholder: String::from(<span class="string">""</span>),
-            show_placeholder: <span class="bool-val">true</span>,
             show_caret: <span class="bool-val">true</span>,
             caret_timer,
             selection: Selection::new(<span class="number">0</span>, <span class="number">0</span>),
@@ -1518,6 +1477,23 @@
                     <span class="kw">_ </span>=&gt; {}
                 });
             });
+
+            Binding::new(cx, <span class="self">Self</span>::placeholder, <span class="kw">move </span>|cx, placeholder| {
+                <span class="kw">let </span>placeholder_string = placeholder.get(cx);
+                <span class="kw">if </span>!placeholder_string.is_empty() {
+                    Label::new(cx, <span class="kw-2">&amp;</span>placeholder_string)
+                        .size(Stretch(<span class="number">1.0</span>))
+                        .space(Pixels(<span class="number">0.0</span>))
+                        .hoverable(<span class="bool-val">false</span>)
+                        .position_type(PositionType::Absolute)
+                        .hidden(<span class="bool-val">true</span>)
+                        .class(<span class="string">"placeholder"</span>)
+                        .bind(lens, |handle, lens| {
+                            <span class="kw">let </span>flag = lens.get(<span class="kw-2">&amp;</span>handle).to_string_local(handle.cx).is_empty();
+                            handle.display(flag);
+                        });
+                }
+            });
         })
         .toggle_class(<span class="string">"multiline"</span>, kind == TextboxKind::MultiLineWrapped)
         .text_wrap(kind == TextboxKind::MultiLineWrapped)
@@ -1526,26 +1502,12 @@
         .text_value(lens)
         .toggle_class(<span class="string">"caret"</span>, <span class="self">Self</span>::show_caret)
         .text(lens)
-        .placeholder_shown(<span class="self">Self</span>::show_placeholder)
-        .bind(lens, |handle, lens| {
-            <span class="kw">let </span>flag = lens.get(<span class="kw-2">&amp;</span>handle).to_string_local(handle.cx).is_empty();
-            handle.modify(|textbox| textbox.show_placeholder = flag).bind(
-                <span class="self">Self</span>::placeholder,
-                <span class="kw">move </span>|handle, placeholder| {
-                    <span class="kw">let </span>value = placeholder.get(<span class="kw-2">&amp;</span>handle).to_string_local(handle.cx);
-                    <span class="kw">if </span>flag {
-                        handle.text(value);
-                    }
-                },
-            );
-        })
     }
 
     <span class="kw">fn </span>insert_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, txt: <span class="kw-2">&amp;</span>str) {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get_mut(cx.current) {
             text.edit(<span class="self">self</span>.selection.range(), txt);
             <span class="self">self</span>.selection = Selection::caret(<span class="self">self</span>.selection.min() + txt.len());
-            <span class="self">self</span>.show_placeholder = text.is_empty();
             cx.style.needs_text_update(cx.current);
         }
     }
@@ -1553,9 +1515,6 @@
     <span class="kw">fn </span>delete_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, movement: Movement) {
         <span class="kw">if </span><span class="self">self</span>.selection.is_caret() {
             <span class="kw">if </span>movement == Movement::Grapheme(Direction::Upstream) {
-                <span class="kw">if </span><span class="self">self</span>.selection.active == <span class="number">0 </span>{
-                    <span class="kw">return</span>;
-                }
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get_mut(cx.current) {
                     <span class="kw">let </span>del_offset = offset_for_delete_backwards(<span class="kw-2">&amp;</span><span class="self">self</span>.selection, text);
                     <span class="kw">let </span>del_range = del_offset..<span class="self">self</span>.selection.active;
@@ -1582,22 +1541,6 @@
 
             text.edit(del_range, <span class="string">""</span>);
 
-            cx.style.needs_text_update(cx.current);
-        }
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get_mut(cx.current) {
-            <span class="self">self</span>.show_placeholder = text.is_empty();
-            <span class="kw">if </span><span class="self">self</span>.show_placeholder {
-                <span class="kw-2">*</span>text = <span class="self">self</span>.placeholder.clone();
-                <span class="self">self</span>.selection = Selection::caret(<span class="number">0</span>);
-            }
-        }
-    }
-
-    <span class="kw">fn </span>reset_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext) {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(text) = cx.style.text.get_mut(cx.current) {
-            text.clear();
-            <span class="self">self</span>.selection = Selection::caret(<span class="number">0</span>);
-            <span class="self">self</span>.show_placeholder = <span class="bool-val">true</span>;
             cx.style.needs_text_update(cx.current);
         }
     }
@@ -2434,10 +2377,6 @@
         <span class="comment">// Textbox Events
         </span>event.map(|text_event, <span class="kw">_</span>| <span class="kw">match </span>text_event {
             TextEvent::InsertText(text) =&gt; {
-                <span class="kw">if </span><span class="self">self</span>.show_placeholder {
-                    <span class="self">self</span>.reset_text(cx);
-                }
-
                 <span class="self">self</span>.insert_text(cx, text);
 
                 <span class="kw">let </span>text = <span class="self">self</span>.clone_text(cx);
@@ -2489,7 +2428,7 @@
             }
 
             TextEvent::MoveCursor(movement, selection) =&gt; {
-                <span class="kw">if </span><span class="self">self</span>.edit &amp;&amp; !<span class="self">self</span>.show_placeholder {
+                <span class="kw">if </span><span class="self">self</span>.edit {
                     <span class="self">self</span>.move_cursor(cx, <span class="kw-2">*</span>movement, <span class="kw-2">*</span>selection);
                 }
             }
@@ -2507,12 +2446,7 @@
                     <span class="kw">let </span>text = <span class="self">self</span>.lens.get(cx);
                     <span class="kw">let </span>text = text.to_string_local(cx);
 
-                    <span class="kw">if </span>text.is_empty() {
-                        <span class="self">self</span>.show_placeholder = <span class="bool-val">true</span>;
-                        <span class="self">self</span>.selection = Selection::caret(<span class="number">0</span>);
-                    } <span class="kw">else </span>{
-                        <span class="self">self</span>.select_all(cx);
-                    }
+                    <span class="self">self</span>.select_all(cx);
 
                     <span class="kw">if let </span><span class="prelude-val">Ok</span>(value) = <span class="kw-2">&amp;</span>text.parse::&lt;L::Target&gt;() {
                         <span class="kw">if let </span><span class="prelude-val">Some</span>(validate) = <span class="kw-2">&amp;</span><span class="self">self</span>.validate {
@@ -2547,14 +2481,6 @@
                 } <span class="kw">else </span>{
                     cx.set_valid(<span class="bool-val">false</span>);
                 }
-                <span class="self">self</span>.show_placeholder = text.is_empty();
-                <span class="kw">if </span><span class="self">self</span>.show_placeholder {
-                    cx.style.text.insert(cx.current, <span class="self">self</span>.placeholder.clone());
-                } <span class="kw">else </span>{
-                    cx.style.text.insert(cx.current, text);
-                }
-
-                cx.style.needs_text_update(cx.current);
             }
 
             TextEvent::Blur =&gt; {
@@ -2591,15 +2517,11 @@
             }
 
             TextEvent::Hit(posx, posy, selection) =&gt; {
-                <span class="kw">if </span>!<span class="self">self</span>.show_placeholder {
-                    <span class="self">self</span>.hit(cx, <span class="kw-2">*</span>posx, <span class="kw-2">*</span>posy, <span class="kw-2">*</span>selection);
-                }
+                <span class="self">self</span>.hit(cx, <span class="kw-2">*</span>posx, <span class="kw-2">*</span>posy, <span class="kw-2">*</span>selection);
             }
 
             TextEvent::Drag(posx, posy) =&gt; {
-                <span class="kw">if </span>!<span class="self">self</span>.show_placeholder {
-                    <span class="self">self</span>.drag(cx, <span class="kw-2">*</span>posx, <span class="kw-2">*</span>posy);
-                }
+                <span class="self">self</span>.drag(cx, <span class="kw-2">*</span>posx, <span class="kw-2">*</span>posy);
             }
 
             TextEvent::Scroll(_x, _y) =&gt; {

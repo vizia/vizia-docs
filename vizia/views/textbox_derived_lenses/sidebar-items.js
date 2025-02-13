@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["caret_timer","edit","lens","on_blur","on_cancel","on_edit","on_submit","placeholder","root","selection","show_caret","transform","validate"]};
+window.SIDEBAR_ITEMS = {"struct":["caret_timer","edit","lens","on_blur","on_cancel","on_edit","on_submit","placeholder","root","selection","show_caret","show_placeholder","transform","validate"]};

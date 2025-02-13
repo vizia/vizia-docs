@@ -279,21 +279,11 @@
 <a href="#278" id="278">278</a>
 <a href="#279" id="279">279</a>
 <a href="#280" id="280">280</a>
-<a href="#281" id="281">281</a>
-<a href="#282" id="282">282</a>
-<a href="#283" id="283">283</a>
-<a href="#284" id="284">284</a>
-<a href="#285" id="285">285</a>
-<a href="#286" id="286">286</a>
-<a href="#287" id="287">287</a>
-<a href="#288" id="288">288</a>
-<a href="#289" id="289">289</a>
-<a href="#290" id="290">290</a>
-<a href="#291" id="291">291</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
+<a href="#281" id="281">281</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 
 <span class="kw">use </span>skia_safe::Surface;
 <span class="kw">use </span>vizia_storage::LayoutTreeIterator;
-<span class="kw">use </span>vizia_window::{WindowDescription, WindowPosition};
+<span class="kw">use </span>vizia_window::WindowDescription;
 
 <span class="kw">use </span><span class="kw">super</span>::EventProxy;
 <span class="kw">use crate</span>::{cache::CachedData, prelude::<span class="kw-2">*</span>, systems::<span class="kw-2">*</span>};
@@ -387,11 +377,11 @@
 
         <span class="self">self</span>.<span class="number">0</span>.tree.set_window(window_entity, <span class="bool-val">true</span>);
 
-        <span class="kw">let </span>physical_x = window_description.position.unwrap_or_default().x <span class="kw">as </span>f32 * dpi_factor;
-        <span class="kw">let </span>physical_y = window_description.position.unwrap_or_default().y <span class="kw">as </span>f32 * dpi_factor;
+        <span class="comment">// let physical_x = window_description.position.unwrap_or_default().x as f32 * dpi_factor;
+        // let physical_y = window_description.position.unwrap_or_default().y as f32 * dpi_factor;
 
-        <span class="self">self</span>.set_window_position(window_entity, physical_x, physical_y);
-    }
+        // self.set_window_position(window_entity, physical_x, physical_y);
+    </span>}
 
     <span class="doccomment">/// Returns a reference to the [`Environment`] model.
     </span><span class="kw">pub fn </span>environment(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Environment {
@@ -441,16 +431,6 @@
         <span class="kw">let </span>logical_height = <span class="self">self</span>.<span class="number">0</span>.style.physical_to_logical(physical_height);
         <span class="self">self</span>.<span class="number">0</span>.style.width.insert(window_entity, Units::Pixels(logical_width));
         <span class="self">self</span>.<span class="number">0</span>.style.height.insert(window_entity, Units::Pixels(logical_height));
-    }
-
-    <span class="kw">pub fn </span>set_window_position(<span class="kw-2">&amp;mut </span><span class="self">self</span>, window_entity: Entity, physical_x: f32, physical_y: f32) {
-        <span class="kw">let </span>logical_x = <span class="self">self</span>.<span class="number">0</span>.style.physical_to_logical(physical_x);
-        <span class="kw">let </span>logical_y = <span class="self">self</span>.<span class="number">0</span>.style.physical_to_logical(physical_y);
-
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(state) = <span class="self">self</span>.<span class="number">0</span>.windows.get_mut(<span class="kw-2">&amp;</span>window_entity) {
-            state.position =
-                WindowPosition::new(logical_x.round() <span class="kw">as </span>u32, logical_y.round() <span class="kw">as </span>u32);
-        }
     }
 
     <span class="doccomment">/// Temporarily sets the current entity, calls the provided closure, and then resets the current entity back to previous.

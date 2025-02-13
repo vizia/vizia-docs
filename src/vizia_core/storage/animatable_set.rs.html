@@ -796,7 +796,40 @@
 <a href="#795" id="795">795</a>
 <a href="#796" id="796">796</a>
 <a href="#797" id="797">797</a>
-<a href="#798" id="798">798</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::animation::{AnimationState, Interpolator};
+<a href="#798" id="798">798</a>
+<a href="#799" id="799">799</a>
+<a href="#800" id="800">800</a>
+<a href="#801" id="801">801</a>
+<a href="#802" id="802">802</a>
+<a href="#803" id="803">803</a>
+<a href="#804" id="804">804</a>
+<a href="#805" id="805">805</a>
+<a href="#806" id="806">806</a>
+<a href="#807" id="807">807</a>
+<a href="#808" id="808">808</a>
+<a href="#809" id="809">809</a>
+<a href="#810" id="810">810</a>
+<a href="#811" id="811">811</a>
+<a href="#812" id="812">812</a>
+<a href="#813" id="813">813</a>
+<a href="#814" id="814">814</a>
+<a href="#815" id="815">815</a>
+<a href="#816" id="816">816</a>
+<a href="#817" id="817">817</a>
+<a href="#818" id="818">818</a>
+<a href="#819" id="819">819</a>
+<a href="#820" id="820">820</a>
+<a href="#821" id="821">821</a>
+<a href="#822" id="822">822</a>
+<a href="#823" id="823">823</a>
+<a href="#824" id="824">824</a>
+<a href="#825" id="825">825</a>
+<a href="#826" id="826">826</a>
+<a href="#827" id="827">827</a>
+<a href="#828" id="828">828</a>
+<a href="#829" id="829">829</a>
+<a href="#830" id="830">830</a>
+<a href="#831" id="831">831</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::animation::{AnimationState, Interpolator};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>vizia_storage::{SparseSet, SparseSetGeneric, SparseSetIndex};
 
@@ -975,7 +1008,8 @@
         </span>}
     }
 
-    <span class="kw">pub fn </span>inherit_inline(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, parent: Entity) -&gt; bool {
+    <span class="doccomment">/// Inherit inline data from a parent entity.
+    </span><span class="kw">pub fn </span>inherit_inline(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, parent: Entity) -&gt; bool {
         <span class="kw">let </span>entity_index = entity.index();
         <span class="kw">let </span>parent_index = parent.index();
 
@@ -1022,7 +1056,8 @@
         <span class="bool-val">false
     </span>}
 
-    <span class="kw">pub fn </span>inherit_shared(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, parent: Entity) -&gt; bool {
+    <span class="doccomment">/// Inherit shared data from a parent entity.
+    </span><span class="kw">pub fn </span>inherit_shared(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, parent: Entity) -&gt; bool {
         <span class="kw">let </span>entity_index = entity.index();
         <span class="kw">let </span>parent_index = parent.index();
 
@@ -1105,7 +1140,8 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>play_animation(
+    <span class="doccomment">/// Play an animation for a given entity.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>play_animation(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         entity: Entity,
         animation: Animation,
@@ -1162,6 +1198,7 @@
             <span class="comment">// Safe to unwrap because already checked that the animation exists
             </span><span class="kw">let </span><span class="kw-2">mut </span>anim_state = <span class="self">self</span>.animations.get(animation).cloned().unwrap();
             anim_state.duration = duration;
+            anim_state.id = animation;
             anim_state.delay = delay;
             anim_state.dt = delay.as_secs_f32() / duration.as_secs_f32();
             anim_state.output = <span class="prelude-val">Some</span>(
@@ -1181,7 +1218,27 @@
         }
     }
 
-    <span class="kw">pub fn </span>tick(<span class="kw-2">&amp;mut </span><span class="self">self</span>, time: Instant) -&gt; Vec&lt;Entity&gt; {
+    <span class="doccomment">/// Stop an animation for a given entity.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>stop_animation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, entity: Entity, animation: Animation) {
+        <span class="kw">let </span>entity_index = entity.index();
+
+        <span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
+            <span class="kw">let </span>active_anim_index = <span class="self">self</span>.inline_data.sparse[entity_index].anim_index <span class="kw">as </span>usize;
+            <span class="kw">if </span>active_anim_index &lt; <span class="self">self</span>.active_animations.len() {
+                <span class="kw">let </span>anim_state = <span class="kw-2">&amp;mut </span><span class="self">self</span>.active_animations[active_anim_index];
+                <span class="kw">if </span>anim_state.id == animation {
+                    <span class="macro">println!</span>(<span class="string">"Stopping animation: {:?}"</span>, animation);
+                    <span class="comment">// anim_state.active = false;
+                    // anim_state.t = 1.0;
+                    </span>anim_state.entities.remove(<span class="kw-2">&amp;</span>entity);
+                }
+            }
+            <span class="self">self</span>.inline_data.sparse[entity_index].anim_index = u32::MAX;
+        }
+    }
+
+    <span class="doccomment">/// Tick the animation for the given time and return a list of entities which have been animated.
+    </span><span class="kw">pub fn </span>tick(<span class="kw-2">&amp;mut </span><span class="self">self</span>, time: Instant) -&gt; Vec&lt;Entity&gt; {
         <span class="self">self</span>.remove_innactive_animations();
 
         <span class="kw">if </span><span class="self">self</span>.has_animations() {
@@ -1241,6 +1298,7 @@
     //     false
     // }
 
+    </span><span class="doccomment">/// Remove any inactive animations from the active animations list.
     </span><span class="kw">pub fn </span>remove_innactive_animations(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="comment">// Create a list of finished animations
         </span><span class="kw">let </span>inactive: Vec&lt;AnimationState&lt;T&gt;&gt; = <span class="self">self
@@ -1267,7 +1325,8 @@
         }
     }
 
-    <span class="kw">pub fn </span>has_animations(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+    <span class="doccomment">/// Returns true if there are any active animations.
+    </span><span class="kw">pub fn </span>has_animations(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="kw">for </span>state <span class="kw">in </span><span class="self">self</span>.active_animations.iter() {
             <span class="kw">if </span>state.t &lt; <span class="number">1.0 </span>{
                 <span class="kw">return </span><span class="bool-val">true</span>;
@@ -1277,7 +1336,8 @@
         <span class="bool-val">false
     </span>}
 
-    <span class="kw">pub fn </span>has_active_animation(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity, animation: Animation) -&gt; bool {
+    <span class="doccomment">/// Returns true if the given entity is linked to an active animation.
+    </span><span class="kw">pub fn </span>has_active_animation(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity, animation: Animation) -&gt; bool {
         <span class="kw">let </span>entity_index = entity.index();
         <span class="kw">if </span>entity_index &lt; <span class="self">self</span>.inline_data.sparse.len() {
             <span class="kw">let </span>anim_index = <span class="self">self</span>.inline_data.sparse[entity_index].anim_index <span class="kw">as </span>usize;
@@ -1347,6 +1407,11 @@
 
         <span class="prelude-val">None
     </span>}
+
+    <span class="doccomment">/// Returns a reference to the active animations.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_active_animations(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Vec&lt;AnimationState&lt;T&gt;&gt;&gt; {
+        <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.active_animations)
+    }
 
     <span class="doccomment">/// Get the animated, inline, or shared data value from the storage.
     </span><span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, entity: Entity) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
@@ -1505,7 +1570,8 @@
         <span class="bool-val">false
     </span>}
 
-    <span class="kw">pub fn </span>clear_rules(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="doccomment">/// Clear all rules and animations from the storage.
+    </span><span class="kw">pub fn </span>clear_rules(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="comment">// Remove transitions
         </span><span class="kw">for </span>index <span class="kw">in </span><span class="self">self</span>.shared_data.sparse.iter() {
             <span class="kw">let </span>animation = index.animation;

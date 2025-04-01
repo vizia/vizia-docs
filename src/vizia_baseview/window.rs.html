@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_baseview/src/window.rs`."><title>window.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vizia_baseview" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.0 (4d91de4e4 2025-02-17)" data-channel="1.85.0" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" ><script src="../../static.files/storage-59e33391.js"></script><script defer src="../../static.files/src-script-56102188.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">vizia_baseview/</div>window.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_baseview/src/window.rs`."><title>window.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vizia_baseview" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.1 (4eb161250 2025-03-15)" data-channel="1.85.1" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" ><script src="../../static.files/storage-59e33391.js"></script><script defer src="../../static.files/src-script-56102188.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">vizia_baseview/</div>window.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
 <a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
@@ -251,7 +251,9 @@
 <a href="#250" id="250">250</a>
 <a href="#251" id="251">251</a>
 <a href="#252" id="252">252</a>
-<a href="#253" id="253">253</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::application::ApplicationRunner;
+<a href="#253" id="253">253</a>
+<a href="#254" id="254">254</a>
+<a href="#255" id="255">255</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::application::ApplicationRunner;
 <span class="kw">use </span>baseview::gl::GlConfig;
 <span class="kw">use </span>baseview::{
     Event, EventStatus, Window, WindowHandle, WindowHandler, WindowOpenOptions, WindowScalePolicy,
@@ -263,7 +265,7 @@
 <span class="kw">use </span>skia_safe::gpu::{
     <span class="self">self</span>, backend_render_targets, ganesh::context_options, ContextOptions, SurfaceOrigin,
 };
-<span class="kw">use </span>skia_safe::{ColorType, Surface};
+<span class="kw">use </span>skia_safe::{ColorSpace, ColorType, PixelGeometry, Surface, SurfaceProps, SurfacePropsFlags};
 
 <span class="kw">use </span><span class="kw">crate</span>::proxy::BaseviewProxy;
 <span class="kw">use </span>vizia_core::backend::<span class="kw-2">*</span>;
@@ -331,7 +333,6 @@
             .unwrap();
 
         <span class="comment">// Assume scale for now until there is an event with a new one.
-        // Assume scale for now until there is an event with a new one.
         // Scaling is a combination of the window's scale factor (which is usually determined by the
         // operating system, or explicitly overridden by a hosting application) and a custom user
         // scale factor.
@@ -339,7 +340,7 @@
             WindowScalePolicy::ScaleFactor(scale) =&gt; (<span class="bool-val">false</span>, scale),
             <span class="comment">// NOTE: This is not correct, but we should get a `Resized` event to correct this
             //       immediately after the window is created
-            </span>WindowScalePolicy::SystemScaleFactor =&gt; (<span class="bool-val">true</span>, <span class="number">1.0</span>),
+            </span>WindowScalePolicy::SystemScaleFactor =&gt; (<span class="bool-val">true</span>, <span class="number">1.25</span>),
         };
         <span class="kw">let </span>dpi_factor = window_scale_factor * win_desc.user_scale_factor;
 
@@ -348,7 +349,7 @@
 
         cx.<span class="number">0</span>.windows.insert(
             Entity::root(),
-            WindowState { window_description: win_desc, ..Default::default() },
+            WindowState { window_description: win_desc.clone(), ..Default::default() },
         );
 
         cx.context().remove_user_themes();
@@ -363,6 +364,7 @@
             window_scale_factor,
             surface,
             dirty_surface,
+            win_desc,
         );
         <span class="kw">unsafe </span>{ context.make_not_current() };
 
@@ -459,16 +461,10 @@
     <span class="kw">fn </span>on_frame(<span class="kw-2">&amp;mut </span><span class="self">self</span>, window: <span class="kw-2">&amp;mut </span>Window) {
         <span class="self">self</span>.application.on_frame_update(window);
 
-        <span class="kw">let </span>context = window.gl_context().expect(<span class="string">"Window was created without OpenGL support"</span>);
-        <span class="kw">unsafe </span>{ context.make_current() };
-
-        <span class="self">self</span>.application.render();
-        context.swap_buffers();
-
-        <span class="kw">unsafe </span>{ context.make_not_current() };
+        <span class="self">self</span>.application.render(window);
     }
 
-    <span class="kw">fn </span>on_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _window: <span class="kw-2">&amp;mut </span>Window&lt;<span class="lifetime">'_</span>&gt;, event: Event) -&gt; EventStatus {
+    <span class="kw">fn </span>on_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, window: <span class="kw-2">&amp;mut </span>Window&lt;<span class="lifetime">'_</span>&gt;, event: Event) -&gt; EventStatus {
         <span class="kw">let </span><span class="kw-2">mut </span>should_quit = <span class="bool-val">false</span>;
 
         <span class="self">self</span>.application.handle_event(event, <span class="kw-2">&amp;mut </span>should_quit);
@@ -476,8 +472,8 @@
         <span class="self">self</span>.application.handle_idle(<span class="kw-2">&amp;</span><span class="self">self</span>.on_idle);
 
         <span class="kw">if </span>should_quit {
-            <span class="comment">// TODO: Request close.
-        </span>}
+            window.close();
+        }
 
         EventStatus::Ignored
     }
@@ -494,14 +490,22 @@
 ) -&gt; Surface {
     <span class="kw">let </span>backend_render_target = backend_render_targets::make_gl(size, <span class="prelude-val">None</span>, <span class="number">8</span>, fb_info);
 
+    <span class="kw">let </span>surface_props = SurfaceProps::new_with_text_properties(
+        SurfacePropsFlags::default(),
+        PixelGeometry::default(),
+        <span class="number">0.5</span>,
+        <span class="number">0.0</span>,
+    );
+
     gpu::surfaces::wrap_backend_render_target(
         gr_context,
         <span class="kw-2">&amp;</span>backend_render_target,
         SurfaceOrigin::BottomLeft,
         ColorType::RGBA8888,
-        <span class="prelude-val">None</span>,
-        <span class="prelude-val">None</span>,
-    )
+        ColorSpace::new_srgb(),
+        <span class="prelude-val">Some</span>(surface_props).as_ref(),
+        <span class="comment">// None,
+    </span>)
     .expect(<span class="string">"Could not create skia surface"</span>)
 }
 </code></pre></div></section></main></body></html>

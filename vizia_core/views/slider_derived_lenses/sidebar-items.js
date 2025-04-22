@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["internal","is_dragging","lens","on_changing","root"]};
+window.SIDEBAR_ITEMS = {"struct":["internal","is_dragging","lens","on_change","root"]};

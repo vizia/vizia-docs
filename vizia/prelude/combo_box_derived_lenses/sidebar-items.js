@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["filter_text","is_open","list_lens","on_select","p","placeholder","root","selected"]};

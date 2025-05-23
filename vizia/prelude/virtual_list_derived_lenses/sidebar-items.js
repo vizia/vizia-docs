@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["on_change","root","scroll_to_cursor"]};

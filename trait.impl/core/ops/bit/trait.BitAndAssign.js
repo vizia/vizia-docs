@@ -1,5 +1,5 @@
 (function() {
-    var implementors = Object.fromEntries([["vizia_core",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/ops/bit/trait.BitAndAssign.html\" title=\"trait core::ops::bit::BitAndAssign\">BitAndAssign</a> for <a class=\"struct\" href=\"vizia_core/layout/struct.GeoChanged.html\" title=\"struct vizia_core::layout::GeoChanged\">GeoChanged</a>"]]]]);
+    var implementors = Object.fromEntries([["vizia_core",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.88.0/core/ops/bit/trait.BitAndAssign.html\" title=\"trait core::ops::bit::BitAndAssign\">BitAndAssign</a> for <a class=\"struct\" href=\"vizia_core/layout/struct.GeoChanged.html\" title=\"struct vizia_core::layout::GeoChanged\">GeoChanged</a>"]]]]);
     if (window.register_implementors) {
         window.register_implementors(implementors);
     } else {

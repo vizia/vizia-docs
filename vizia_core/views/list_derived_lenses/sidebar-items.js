@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["focus_visible","focused","horizontal","list_len","on_select","root","selectable","selected","selection_follows_focus"]};
+window.SIDEBAR_ITEMS = {"struct":["focused","num_items","orientation","root","scroll_to_cursor","scroll_x","scroll_y","selectable","selected","selection_follows_focus","show_horizontal_scrollbar","show_vertical_scrollbar"]};

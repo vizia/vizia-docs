@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-aa0817cf.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.90.0 (1159e78c4 2025-09-14)" data-channel="1.90.0" data-search-js="search-fa3e91e5.js" data-settings-js="settings-5514c975.js" ><script src="../../../static.files/storage-68b7e25d.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-eebb9057.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">vizia_core/context/</div>mod.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-4"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="doccomment">//! Context types for retained state, used during view building, event handling, and drawing.
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/context/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-77263533.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.94.0 (4a4ef493e 2026-03-02)" data-channel="1.94.0" data-search-js="search-9e2438ea.js" data-stringdex-js="stringdex-b897f86f.js" data-settings-js="settings-c38705f0.js" ><script src="../../../static.files/storage-e2aeef58.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-7bab91a1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-ffcac47a.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">vizia_core/context/</div>mod.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-4"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="doccomment">//! Context types for retained state, used during view building, event handling, and drawing.
 <a href=#2 id=2 data-nosnippet>2</a>
 <a href=#3 id=3 data-nosnippet>3</a></span><span class="kw">mod </span>access;
 <a href=#4 id=4 data-nosnippet>4</a><span class="attr">#[doc(hidden)]
@@ -35,17 +35,17 @@
 <a href=#35 id=35 data-nosnippet>35</a><span class="kw">pub use </span>proxy::<span class="kw-2">*</span>;
 <a href=#36 id=36 data-nosnippet>36</a><span class="kw">pub use </span>resource::<span class="kw-2">*</span>;
 <a href=#37 id=37 data-nosnippet>37</a>
-<a href=#38 id=38 data-nosnippet>38</a><span class="kw">use crate</span>::{
+<a href=#38 id=38 data-nosnippet>38</a><span class="kw">use </span>crate::{
 <a href=#39 id=39 data-nosnippet>39</a>    binding::{Store, StoreId},
 <a href=#40 id=40 data-nosnippet>40</a>    events::{TimedEvent, TimedEventHandle, TimerState, ViewHandler},
 <a href=#41 id=41 data-nosnippet>41</a>    model::ModelData,
 <a href=#42 id=42 data-nosnippet>42</a>};
 <a href=#43 id=43 data-nosnippet>43</a>
-<a href=#44 id=44 data-nosnippet>44</a><span class="kw">use crate</span>::{
+<a href=#44 id=44 data-nosnippet>44</a><span class="kw">use </span>crate::{
 <a href=#45 id=45 data-nosnippet>45</a>    binding::{BindingHandler, MapId},
 <a href=#46 id=46 data-nosnippet>46</a>    resource::StoredImage,
 <a href=#47 id=47 data-nosnippet>47</a>};
-<a href=#48 id=48 data-nosnippet>48</a><span class="kw">use crate</span>::{cache::CachedData, resource::ImageOrSvg};
+<a href=#48 id=48 data-nosnippet>48</a><span class="kw">use </span>crate::{cache::CachedData, resource::ImageOrSvg};
 <a href=#49 id=49 data-nosnippet>49</a>
 <a href=#50 id=50 data-nosnippet>50</a><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <a href=#51 id=51 data-nosnippet>51</a><span class="kw">use </span><span class="kw">crate</span>::resource::ResourceManager;
@@ -370,7 +370,7 @@
 <a href=#370 id=370 data-nosnippet>370</a>        <span class="kw">let </span>old_focus = <span class="self">self</span>.focused;
 <a href=#371 id=371 data-nosnippet>371</a>        <span class="kw">let </span>new_focus = <span class="self">self</span>.current;
 <a href=#372 id=372 data-nosnippet>372</a>        <span class="self">self</span>.set_focus_pseudo_classes(old_focus, <span class="bool-val">false</span>, focus_visible);
-<a href=#373 id=373 data-nosnippet>373</a>        <span class="kw">if </span><span class="self">self</span>.current != <span class="self">self</span>.focused {
+<a href=#373 id=373 data-nosnippet>373</a>        <span class="kw">if </span><span class="self">self</span>.<span class="macro">current !</span>= <span class="self">self</span>.focused {
 <a href=#374 id=374 data-nosnippet>374</a>            <span class="self">self</span>.emit_to(old_focus, WindowEvent::FocusOut);
 <a href=#375 id=375 data-nosnippet>375</a>            <span class="self">self</span>.emit_to(new_focus, WindowEvent::FocusIn);
 <a href=#376 id=376 data-nosnippet>376</a>            <span class="self">self</span>.focused = <span class="self">self</span>.current;
@@ -746,7 +746,7 @@
 <a href=#746 id=746 data-nosnippet>746</a>        }
 <a href=#747 id=747 data-nosnippet>747</a>
 <a href=#748 id=748 data-nosnippet>748</a>        <span class="self">self</span>.running_timers =
-<a href=#749 id=749 data-nosnippet>749</a>            running_timers.drain().filter(|timer_state| timer_state.id != timer).collect();
+<a href=#749 id=749 data-nosnippet>749</a>            running_timers.drain().filter(|timer_state| timer_state.<span class="macro">id !</span>= timer).collect();
 <a href=#750 id=750 data-nosnippet>750</a>    }
 <a href=#751 id=751 data-nosnippet>751</a>
 <a href=#752 id=752 data-nosnippet>752</a>    <span class="comment">// Tick all timers.
@@ -1177,6 +1177,7 @@
 <a href=#1177 id=1177 data-nosnippet>1177</a>
 <a href=#1178 id=1178 data-nosnippet>1178</a>    <span class="kw">fn </span>cancel_scheduled(<span class="kw-2">&amp;mut </span><span class="self">self</span>, handle: TimedEventHandle) {
 <a href=#1179 id=1179 data-nosnippet>1179</a>        <span class="self">self</span>.event_schedule =
-<a href=#1180 id=1180 data-nosnippet>1180</a>            <span class="self">self</span>.event_schedule.drain().filter(|item| item.ident != handle).collect();
+<a href=#1180 id=1180 data-nosnippet>1180</a>            <span class="self">self</span>.event_schedule.drain().filter(|item| item.<span class="macro">ident !</span>= handle).collect();
 <a href=#1181 id=1181 data-nosnippet>1181</a>    }
-<a href=#1182 id=1182 data-nosnippet>1182</a>}</code></pre></div></section></main></body></html>
+<a href=#1182 id=1182 data-nosnippet>1182</a>}
+</code></pre></div></section></main></body></html>

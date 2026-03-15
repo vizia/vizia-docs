@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/textbox.rs`."><title>textbox.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-aa0817cf.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.90.0 (1159e78c4 2025-09-14)" data-channel="1.90.0" data-search-js="search-fa3e91e5.js" data-settings-js="settings-5514c975.js" ><script src="../../../static.files/storage-68b7e25d.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-eebb9057.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">vizia_core/views/</div>textbox.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-4"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>std::cell::RefCell;
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_core/src/views/textbox.rs`."><title>textbox.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-77263533.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="vizia_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.94.0 (4a4ef493e 2026-03-02)" data-channel="1.94.0" data-search-js="search-9e2438ea.js" data-stringdex-js="stringdex-b897f86f.js" data-settings-js="settings-c38705f0.js" ><script src="../../../static.files/storage-e2aeef58.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-7bab91a1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-ffcac47a.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">vizia_core/views/</div>textbox.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-4"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>std::cell::RefCell;
 <a href=#2 id=2 data-nosnippet>2</a><span class="kw">use </span>std::rc::Rc;
 <a href=#3 id=3 data-nosnippet>3</a>
 <a href=#4 id=4 data-nosnippet>4</a><span class="comment">// use crate::accessibility::IntoNode;
@@ -179,7 +179,7 @@
 <a href=#179 id=179 data-nosnippet>179</a>                <span class="kw">let </span>flag: bool = textbox.edit;
 <a href=#180 id=180 data-nosnippet>180</a>                event.map(|window_event, meta| <span class="kw">match </span>window_event {
 <a href=#181 id=181 data-nosnippet>181</a>                    WindowEvent::MouseDown(<span class="kw">_</span>) =&gt; {
-<a href=#182 id=182 data-nosnippet>182</a>                        <span class="kw">if </span>flag &amp;&amp; meta.origin != cx.current() &amp;&amp; cx.hovered() != cx.current() {
+<a href=#182 id=182 data-nosnippet>182</a>                        <span class="kw">if </span>flag &amp;&amp; meta.<span class="macro">origin !</span>= cx.current() &amp;&amp; cx.hovered() != cx.current() {
 <a href=#183 id=183 data-nosnippet>183</a>                            cx.emit(TextEvent::Blur);
 <a href=#184 id=184 data-nosnippet>184</a>                        }
 <a href=#185 id=185 data-nosnippet>185</a>                    }
@@ -727,7 +727,7 @@
 <a href=#727 id=727 data-nosnippet>727</a>
 <a href=#728 id=728 data-nosnippet>728</a>                <span class="kw">let </span>(new_tx, new_ty) = ensure_visible(<span class="kw-2">&amp;</span>caret_box, <span class="kw-2">&amp;</span>bounds, (tx, ty));
 <a href=#729 id=729 data-nosnippet>729</a>
-<a href=#730 id=730 data-nosnippet>730</a>                <span class="kw">if </span>new_tx != transform.<span class="number">0 </span>|| new_ty != transform.<span class="number">1 </span>{
+<a href=#730 id=730 data-nosnippet>730</a>                <span class="kw">if </span><span class="macro">new_tx !</span>= transform.<span class="number">0 </span>|| <span class="macro">new_ty !</span>= transform.<span class="number">1 </span>{
 <a href=#731 id=731 data-nosnippet>731</a>                    <span class="kw-2">*</span>transform = (new_tx, new_ty);
 <a href=#732 id=732 data-nosnippet>732</a>                    cx.needs_redraw();
 <a href=#733 id=733 data-nosnippet>733</a>                }
@@ -992,7 +992,7 @@
 <a href=#992 id=992 data-nosnippet>992</a>            }
 <a href=#993 id=993 data-nosnippet>993</a>
 <a href=#994 id=994 data-nosnippet>994</a>            WindowEvent::FocusIn =&gt; {
-<a href=#995 id=995 data-nosnippet>995</a>                <span class="kw">if </span>cx.mouse.left.pressed != cx.current()
+<a href=#995 id=995 data-nosnippet>995</a>                <span class="kw">if </span>cx.mouse.left.<span class="macro">pressed !</span>= cx.current()
 <a href=#996 id=996 data-nosnippet>996</a>                    || cx.mouse.left.state == MouseButtonState::Released
 <a href=#997 id=997 data-nosnippet>997</a>                {
 <a href=#998 id=998 data-nosnippet>998</a>                    cx.emit(TextEvent::StartEdit);
@@ -1035,11 +1035,11 @@
 <a href=#1035 id=1035 data-nosnippet>1035</a>            }
 <a href=#1036 id=1036 data-nosnippet>1036</a>
 <a href=#1037 id=1037 data-nosnippet>1037</a>            WindowEvent::CharInput(c) =&gt; {
-<a href=#1038 id=1038 data-nosnippet>1038</a>                <span class="kw">if </span><span class="kw-2">*</span>c != <span class="string">'\u{1b}' </span>&amp;&amp; <span class="comment">// Escape
-<a href=#1039 id=1039 data-nosnippet>1039</a>                    </span><span class="kw-2">*</span>c != <span class="string">'\u{8}' </span>&amp;&amp; <span class="comment">// Backspace
-<a href=#1040 id=1040 data-nosnippet>1040</a>                    </span><span class="kw-2">*</span>c != <span class="string">'\u{9}' </span>&amp;&amp; <span class="comment">// Tab
-<a href=#1041 id=1041 data-nosnippet>1041</a>                    </span><span class="kw-2">*</span>c != <span class="string">'\u{7f}' </span>&amp;&amp; <span class="comment">// Delete
-<a href=#1042 id=1042 data-nosnippet>1042</a>                    </span><span class="kw-2">*</span>c != <span class="string">'\u{0d}' </span>&amp;&amp; <span class="comment">// Carriage return
+<a href=#1038 id=1038 data-nosnippet>1038</a>                <span class="kw">if </span><span class="kw-2">*</span><span class="macro">c !</span>= <span class="string">'\u{1b}' </span>&amp;&amp; <span class="comment">// Escape
+<a href=#1039 id=1039 data-nosnippet>1039</a>                    </span><span class="kw-2">*</span><span class="macro">c !</span>= <span class="string">'\u{8}' </span>&amp;&amp; <span class="comment">// Backspace
+<a href=#1040 id=1040 data-nosnippet>1040</a>                    </span><span class="kw-2">*</span><span class="macro">c !</span>= <span class="string">'\u{9}' </span>&amp;&amp; <span class="comment">// Tab
+<a href=#1041 id=1041 data-nosnippet>1041</a>                    </span><span class="kw-2">*</span><span class="macro">c !</span>= <span class="string">'\u{7f}' </span>&amp;&amp; <span class="comment">// Delete
+<a href=#1042 id=1042 data-nosnippet>1042</a>                    </span><span class="kw-2">*</span><span class="macro">c !</span>= <span class="string">'\u{0d}' </span>&amp;&amp; <span class="comment">// Carriage return
 <a href=#1043 id=1043 data-nosnippet>1043</a>                    </span>!cx.modifiers.ctrl() &amp;&amp;
 <a href=#1044 id=1044 data-nosnippet>1044</a>                    !cx.modifiers.logo() &amp;&amp;
 <a href=#1045 id=1045 data-nosnippet>1045</a>                    <span class="self">self</span>.edit &amp;&amp;
@@ -1106,7 +1106,7 @@
 <a href=#1106 id=1106 data-nosnippet>1106</a>
 <a href=#1107 id=1107 data-nosnippet>1107</a>                Code::ArrowUp =&gt; {
 <a href=#1108 id=1108 data-nosnippet>1108</a>                    <span class="self">self</span>.reset_caret_timer(cx);
-<a href=#1109 id=1109 data-nosnippet>1109</a>                    <span class="kw">if </span><span class="self">self</span>.kind != TextboxKind::SingleLine {
+<a href=#1109 id=1109 data-nosnippet>1109</a>                    <span class="kw">if </span><span class="self">self</span>.<span class="macro">kind !</span>= TextboxKind::SingleLine {
 <a href=#1110 id=1110 data-nosnippet>1110</a>                        cx.emit(TextEvent::MoveCursor(
 <a href=#1111 id=1111 data-nosnippet>1111</a>                            Movement::Vertical(VerticalMovement::LineUp),
 <a href=#1112 id=1112 data-nosnippet>1112</a>                            cx.modifiers.shift(),
@@ -1116,7 +1116,7 @@
 <a href=#1116 id=1116 data-nosnippet>1116</a>
 <a href=#1117 id=1117 data-nosnippet>1117</a>                Code::ArrowDown =&gt; {
 <a href=#1118 id=1118 data-nosnippet>1118</a>                    <span class="self">self</span>.reset_caret_timer(cx);
-<a href=#1119 id=1119 data-nosnippet>1119</a>                    <span class="kw">if </span><span class="self">self</span>.kind != TextboxKind::SingleLine {
+<a href=#1119 id=1119 data-nosnippet>1119</a>                    <span class="kw">if </span><span class="self">self</span>.<span class="macro">kind !</span>= TextboxKind::SingleLine {
 <a href=#1120 id=1120 data-nosnippet>1120</a>                        cx.emit(TextEvent::MoveCursor(
 <a href=#1121 id=1121 data-nosnippet>1121</a>                            Movement::Vertical(VerticalMovement::LineDown),
 <a href=#1122 id=1122 data-nosnippet>1122</a>                            cx.modifiers.shift(),
@@ -1570,4 +1570,5 @@
 <a href=#1570 id=1570 data-nosnippet>1570</a>        }
 <a href=#1571 id=1571 data-nosnippet>1571</a>        canvas.restore();
 <a href=#1572 id=1572 data-nosnippet>1572</a>    }
-<a href=#1573 id=1573 data-nosnippet>1573</a>}</code></pre></div></section></main></body></html>
+<a href=#1573 id=1573 data-nosnippet>1573</a>}
+</code></pre></div></section></main></body></html>

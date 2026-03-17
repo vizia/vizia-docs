@@ -4,7 +4,7 @@
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::layout::node::SubLayout;
 <a href=#5 id=5 data-nosnippet>5</a><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <a href=#6 id=6 data-nosnippet>6</a>
-<a href=#7 id=7 data-nosnippet>7</a><span class="kw">use </span>super::{text_layout_system, text_system};
+<a href=#7 id=7 data-nosnippet>7</a><span class="kw">use </span>super::{clipping_system, text_layout_system, text_system, transform_system};
 <a href=#8 id=8 data-nosnippet>8</a>
 <a href=#9 id=9 data-nosnippet>9</a><span class="doccomment">/// Determines the size and position of views.
 <a href=#10 id=10 data-nosnippet>10</a>/// TODO: Currently relayout is done on an entire tree rather than incrementally.
@@ -80,76 +80,82 @@
 <a href=#80 id=80 data-nosnippet>80</a>                }
 <a href=#81 id=81 data-nosnippet>81</a>            }
 <a href=#82 id=82 data-nosnippet>82</a>
-<a href=#83 id=83 data-nosnippet>83</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(geo) = cx.cache.geo_changed.get(entity).copied() {
-<a href=#84 id=84 data-nosnippet>84</a>                <span class="kw">if </span>!geo.is_empty()
-<a href=#85 id=85 data-nosnippet>85</a>                <span class="comment">// &amp;&amp; cx.style.text.get(entity).is_some()
-<a href=#86 id=86 data-nosnippet>86</a>                </span>{
-<a href=#87 id=87 data-nosnippet>87</a>                    cx.needs_redraw();
-<a href=#88 id=88 data-nosnippet>88</a>                    cx.style.needs_text_layout(entity);
-<a href=#89 id=89 data-nosnippet>89</a>                }
+<a href=#83 id=83 data-nosnippet>83</a>            cx.style.needs_text_layout(entity);
+<a href=#84 id=84 data-nosnippet>84</a>
+<a href=#85 id=85 data-nosnippet>85</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(geo) = cx.cache.geo_changed.get(entity).copied() {
+<a href=#86 id=86 data-nosnippet>86</a>                <span class="kw">if </span>!geo.is_empty()
+<a href=#87 id=87 data-nosnippet>87</a>                <span class="comment">// &amp;&amp; cx.style.text.get(entity).is_some()
+<a href=#88 id=88 data-nosnippet>88</a>                </span>{
+<a href=#89 id=89 data-nosnippet>89</a>                    cx.needs_redraw();
 <a href=#90 id=90 data-nosnippet>90</a>
-<a href=#91 id=91 data-nosnippet>91</a>                <span class="comment">// TODO: Use geo changed to determine whether an entity needs to be redrawn.
-<a href=#92 id=92 data-nosnippet>92</a>
-<a href=#93 id=93 data-nosnippet>93</a>                </span><span class="kw">if </span>!geo.is_empty() {
-<a href=#94 id=94 data-nosnippet>94</a>                    <span class="kw">let </span><span class="kw-2">mut </span>event = Event::new(WindowEvent::GeometryChanged(geo))
-<a href=#95 id=95 data-nosnippet>95</a>                        .target(entity)
-<a href=#96 id=96 data-nosnippet>96</a>                        .origin(entity)
-<a href=#97 id=97 data-nosnippet>97</a>                        .propagate(Propagation::Direct);
-<a href=#98 id=98 data-nosnippet>98</a>                    visit_entity(cx, entity, <span class="kw-2">&amp;mut </span>event);
-<a href=#99 id=99 data-nosnippet>99</a>                }
-<a href=#100 id=100 data-nosnippet>100</a>            }
-<a href=#101 id=101 data-nosnippet>101</a>
-<a href=#102 id=102 data-nosnippet>102</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(geo) = cx.cache.geo_changed.get_mut(entity) {
-<a href=#103 id=103 data-nosnippet>103</a>                <span class="kw-2">*</span>geo = GeoChanged::empty();
+<a href=#91 id=91 data-nosnippet>91</a>                    cx.needs_retransform();
+<a href=#92 id=92 data-nosnippet>92</a>                    cx.needs_reclip();
+<a href=#93 id=93 data-nosnippet>93</a>                }
+<a href=#94 id=94 data-nosnippet>94</a>
+<a href=#95 id=95 data-nosnippet>95</a>                <span class="comment">// TODO: Use geo changed to determine whether an entity needs to be redrawn.
+<a href=#96 id=96 data-nosnippet>96</a>
+<a href=#97 id=97 data-nosnippet>97</a>                </span><span class="kw">if </span>!geo.is_empty() {
+<a href=#98 id=98 data-nosnippet>98</a>                    <span class="kw">let </span><span class="kw-2">mut </span>event = Event::new(WindowEvent::GeometryChanged(geo))
+<a href=#99 id=99 data-nosnippet>99</a>                        .target(entity)
+<a href=#100 id=100 data-nosnippet>100</a>                        .origin(entity)
+<a href=#101 id=101 data-nosnippet>101</a>                        .propagate(Propagation::Direct);
+<a href=#102 id=102 data-nosnippet>102</a>                    visit_entity(cx, entity, <span class="kw-2">&amp;mut </span>event);
+<a href=#103 id=103 data-nosnippet>103</a>                }
 <a href=#104 id=104 data-nosnippet>104</a>            }
-<a href=#105 id=105 data-nosnippet>105</a>        }
-<a href=#106 id=106 data-nosnippet>106</a>
-<a href=#107 id=107 data-nosnippet>107</a>        <span class="comment">// A relayout, retransform, or reclip, can cause the element under the cursor to change. So we push a mouse move event here to force
-<a href=#108 id=108 data-nosnippet>108</a>        // a new event cycle and the hover system to trigger.
-<a href=#109 id=109 data-nosnippet>109</a>        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(proxy) = <span class="kw-2">&amp;</span>cx.event_proxy {
-<a href=#110 id=110 data-nosnippet>110</a>            <span class="kw">let </span>event = Event::new(WindowEvent::MouseMove(cx.mouse.cursor_x, cx.mouse.cursor_y))
-<a href=#111 id=111 data-nosnippet>111</a>                .target(Entity::root())
-<a href=#112 id=112 data-nosnippet>112</a>                .origin(Entity::root())
-<a href=#113 id=113 data-nosnippet>113</a>                .propagate(Propagation::Up);
-<a href=#114 id=114 data-nosnippet>114</a>
-<a href=#115 id=115 data-nosnippet>115</a>            proxy.send(event).expect(<span class="string">"Failed to send event"</span>);
-<a href=#116 id=116 data-nosnippet>116</a>        }
-<a href=#117 id=117 data-nosnippet>117</a>
-<a href=#118 id=118 data-nosnippet>118</a>        cx.style.system_flags.set(SystemFlags::RELAYOUT, <span class="bool-val">false</span>);
-<a href=#119 id=119 data-nosnippet>119</a>    }
-<a href=#120 id=120 data-nosnippet>120</a>
-<a href=#121 id=121 data-nosnippet>121</a>    text_layout_system(cx);
-<a href=#122 id=122 data-nosnippet>122</a>}
-<a href=#123 id=123 data-nosnippet>123</a>
-<a href=#124 id=124 data-nosnippet>124</a><span class="kw">fn </span>visit_entity(cx: <span class="kw-2">&amp;mut </span>EventContext, entity: Entity, event: <span class="kw-2">&amp;mut </span>Event) {
-<a href=#125 id=125 data-nosnippet>125</a>    <span class="comment">// Send event to models attached to the entity
-<a href=#126 id=126 data-nosnippet>126</a>    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(ids) =
-<a href=#127 id=127 data-nosnippet>127</a>        cx.models.get(<span class="kw-2">&amp;</span>entity).map(|models| models.keys().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;())
-<a href=#128 id=128 data-nosnippet>128</a>    {
-<a href=#129 id=129 data-nosnippet>129</a>        <span class="kw">for </span>id <span class="kw">in </span>ids {
-<a href=#130 id=130 data-nosnippet>130</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>model) =
-<a href=#131 id=131 data-nosnippet>131</a>                cx.models.get_mut(<span class="kw-2">&amp;</span>entity).and_then(|models| models.remove(<span class="kw-2">&amp;</span>id))
-<a href=#132 id=132 data-nosnippet>132</a>            {
-<a href=#133 id=133 data-nosnippet>133</a>                cx.current = entity;
-<a href=#134 id=134 data-nosnippet>134</a>
-<a href=#135 id=135 data-nosnippet>135</a>                model.event(cx, event);
-<a href=#136 id=136 data-nosnippet>136</a>
-<a href=#137 id=137 data-nosnippet>137</a>                cx.models.get_mut(<span class="kw-2">&amp;</span>entity).and_then(|models| models.insert(id, model));
-<a href=#138 id=138 data-nosnippet>138</a>            }
-<a href=#139 id=139 data-nosnippet>139</a>        }
-<a href=#140 id=140 data-nosnippet>140</a>    }
-<a href=#141 id=141 data-nosnippet>141</a>
-<a href=#142 id=142 data-nosnippet>142</a>    <span class="comment">// Return early if the event was consumed by a model
-<a href=#143 id=143 data-nosnippet>143</a>    </span><span class="kw">if </span>event.meta.consumed {
-<a href=#144 id=144 data-nosnippet>144</a>        <span class="kw">return</span>;
-<a href=#145 id=145 data-nosnippet>145</a>    }
-<a href=#146 id=146 data-nosnippet>146</a>
-<a href=#147 id=147 data-nosnippet>147</a>    <span class="comment">// Send event to the view attached to the entity
-<a href=#148 id=148 data-nosnippet>148</a>    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>view) = cx.views.remove(<span class="kw-2">&amp;</span>entity) {
-<a href=#149 id=149 data-nosnippet>149</a>        cx.current = entity;
-<a href=#150 id=150 data-nosnippet>150</a>        view.event(cx, event);
-<a href=#151 id=151 data-nosnippet>151</a>
-<a href=#152 id=152 data-nosnippet>152</a>        cx.views.insert(entity, view);
-<a href=#153 id=153 data-nosnippet>153</a>    }
-<a href=#154 id=154 data-nosnippet>154</a>}
+<a href=#105 id=105 data-nosnippet>105</a>
+<a href=#106 id=106 data-nosnippet>106</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(geo) = cx.cache.geo_changed.get_mut(entity) {
+<a href=#107 id=107 data-nosnippet>107</a>                <span class="kw-2">*</span>geo = GeoChanged::empty();
+<a href=#108 id=108 data-nosnippet>108</a>            }
+<a href=#109 id=109 data-nosnippet>109</a>        }
+<a href=#110 id=110 data-nosnippet>110</a>
+<a href=#111 id=111 data-nosnippet>111</a>        <span class="comment">// A relayout, retransform, or reclip, can cause the element under the cursor to change. So we push a mouse move event here to force
+<a href=#112 id=112 data-nosnippet>112</a>        // a new event cycle and the hover system to trigger.
+<a href=#113 id=113 data-nosnippet>113</a>        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(proxy) = <span class="kw-2">&amp;</span>cx.event_proxy {
+<a href=#114 id=114 data-nosnippet>114</a>            <span class="kw">let </span>event = Event::new(WindowEvent::MouseMove(cx.mouse.cursor_x, cx.mouse.cursor_y))
+<a href=#115 id=115 data-nosnippet>115</a>                .target(Entity::root())
+<a href=#116 id=116 data-nosnippet>116</a>                .origin(Entity::root())
+<a href=#117 id=117 data-nosnippet>117</a>                .propagate(Propagation::Up);
+<a href=#118 id=118 data-nosnippet>118</a>
+<a href=#119 id=119 data-nosnippet>119</a>            proxy.send(event).expect(<span class="string">"Failed to send event"</span>);
+<a href=#120 id=120 data-nosnippet>120</a>        }
+<a href=#121 id=121 data-nosnippet>121</a>
+<a href=#122 id=122 data-nosnippet>122</a>        cx.style.system_flags.set(SystemFlags::RELAYOUT, <span class="bool-val">false</span>);
+<a href=#123 id=123 data-nosnippet>123</a>    }
+<a href=#124 id=124 data-nosnippet>124</a>
+<a href=#125 id=125 data-nosnippet>125</a>    text_layout_system(cx);
+<a href=#126 id=126 data-nosnippet>126</a>    transform_system(cx);
+<a href=#127 id=127 data-nosnippet>127</a>    clipping_system(cx);
+<a href=#128 id=128 data-nosnippet>128</a>}
+<a href=#129 id=129 data-nosnippet>129</a>
+<a href=#130 id=130 data-nosnippet>130</a><span class="kw">fn </span>visit_entity(cx: <span class="kw-2">&amp;mut </span>EventContext, entity: Entity, event: <span class="kw-2">&amp;mut </span>Event) {
+<a href=#131 id=131 data-nosnippet>131</a>    <span class="comment">// Send event to models attached to the entity
+<a href=#132 id=132 data-nosnippet>132</a>    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(ids) =
+<a href=#133 id=133 data-nosnippet>133</a>        cx.models.get(<span class="kw-2">&amp;</span>entity).map(|models| models.keys().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;())
+<a href=#134 id=134 data-nosnippet>134</a>    {
+<a href=#135 id=135 data-nosnippet>135</a>        <span class="kw">for </span>id <span class="kw">in </span>ids {
+<a href=#136 id=136 data-nosnippet>136</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>model) =
+<a href=#137 id=137 data-nosnippet>137</a>                cx.models.get_mut(<span class="kw-2">&amp;</span>entity).and_then(|models| models.remove(<span class="kw-2">&amp;</span>id))
+<a href=#138 id=138 data-nosnippet>138</a>            {
+<a href=#139 id=139 data-nosnippet>139</a>                cx.current = entity;
+<a href=#140 id=140 data-nosnippet>140</a>
+<a href=#141 id=141 data-nosnippet>141</a>                model.event(cx, event);
+<a href=#142 id=142 data-nosnippet>142</a>
+<a href=#143 id=143 data-nosnippet>143</a>                cx.models.get_mut(<span class="kw-2">&amp;</span>entity).and_then(|models| models.insert(id, model));
+<a href=#144 id=144 data-nosnippet>144</a>            }
+<a href=#145 id=145 data-nosnippet>145</a>        }
+<a href=#146 id=146 data-nosnippet>146</a>    }
+<a href=#147 id=147 data-nosnippet>147</a>
+<a href=#148 id=148 data-nosnippet>148</a>    <span class="comment">// Return early if the event was consumed by a model
+<a href=#149 id=149 data-nosnippet>149</a>    </span><span class="kw">if </span>event.meta.consumed {
+<a href=#150 id=150 data-nosnippet>150</a>        <span class="kw">return</span>;
+<a href=#151 id=151 data-nosnippet>151</a>    }
+<a href=#152 id=152 data-nosnippet>152</a>
+<a href=#153 id=153 data-nosnippet>153</a>    <span class="comment">// Send event to the view attached to the entity
+<a href=#154 id=154 data-nosnippet>154</a>    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>view) = cx.views.remove(<span class="kw-2">&amp;</span>entity) {
+<a href=#155 id=155 data-nosnippet>155</a>        cx.current = entity;
+<a href=#156 id=156 data-nosnippet>156</a>        view.event(cx, event);
+<a href=#157 id=157 data-nosnippet>157</a>
+<a href=#158 id=158 data-nosnippet>158</a>        cx.views.insert(entity, view);
+<a href=#159 id=159 data-nosnippet>159</a>    }
+<a href=#160 id=160 data-nosnippet>160</a>}
 </code></pre></div></section></main></body></html>

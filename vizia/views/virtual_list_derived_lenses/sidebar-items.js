@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["focused","item_height","num_items","on_scroll","root","scroll_to_cursor","scroll_x","scroll_y","selectable","selected","selection_follows_focus","show_horizontal_scrollbar","show_vertical_scrollbar","visible_range"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["caret_timer","locale","root","theme"]};

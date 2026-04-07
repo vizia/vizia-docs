@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["app_theme","root","sys_theme"]};

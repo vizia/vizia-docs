@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["direction","is_dragging","offset","on_drag","on_reset","root"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["icons","on_decrement","on_increment","orientation","root"]};

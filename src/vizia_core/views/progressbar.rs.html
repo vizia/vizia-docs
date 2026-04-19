@@ -74,42 +74,41 @@
 <a href=#74 id=74 data-nosnippet>74</a>    /// # }
 <a href=#75 id=75 data-nosnippet>75</a>    /// # impl Model for AppData {}
 <a href=#76 id=76 data-nosnippet>76</a>    /// # AppData::default().build(cx);
-<a href=#77 id=77 data-nosnippet>77</a>    /// ProgressBar::new(cx, AppData::value, Orientation::Horizontal);
+<a href=#77 id=77 data-nosnippet>77</a>    /// ProgressBar::new(cx, AppData::value);
 <a href=#78 id=78 data-nosnippet>78</a>    /// ```
-<a href=#79 id=79 data-nosnippet>79</a>    </span><span class="kw">pub fn </span>new&lt;L&gt;(cx: <span class="kw-2">&amp;mut </span>Context, signal: L, orientation: Orientation) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+<a href=#79 id=79 data-nosnippet>79</a>    </span><span class="kw">pub fn </span>new&lt;L&gt;(cx: <span class="kw-2">&amp;mut </span>Context, signal: L) -&gt; Handle&lt;<span class="self">Self</span>&gt;
 <a href=#80 id=80 data-nosnippet>80</a>    <span class="kw">where
 <a href=#81 id=81 data-nosnippet>81</a>        </span>L: SignalGet&lt;f32&gt; + SignalMap&lt;f32&gt;,
 <a href=#82 id=82 data-nosnippet>82</a>    {
-<a href=#83 id=83 data-nosnippet>83</a>        <span class="kw">match </span>orientation {
-<a href=#84 id=84 data-nosnippet>84</a>            Orientation::Horizontal =&gt; <span class="self">Self</span>::horizontal(cx, signal),
-<a href=#85 id=85 data-nosnippet>85</a>            Orientation::Vertical =&gt; <span class="self">Self</span>::vertical(cx, signal),
-<a href=#86 id=86 data-nosnippet>86</a>        }
-<a href=#87 id=87 data-nosnippet>87</a>    }
-<a href=#88 id=88 data-nosnippet>88</a>
-<a href=#89 id=89 data-nosnippet>89</a>    <span class="doccomment">/// Creates a new horizontal progress bar bound to the provided value source.
-<a href=#90 id=90 data-nosnippet>90</a>    </span><span class="kw">pub fn </span>horizontal&lt;L&gt;(cx: <span class="kw-2">&amp;mut </span>Context, signal: L) -&gt; Handle&lt;<span class="self">Self</span>&gt;
-<a href=#91 id=91 data-nosnippet>91</a>    <span class="kw">where
-<a href=#92 id=92 data-nosnippet>92</a>        </span>L: SignalGet&lt;f32&gt; + SignalMap&lt;f32&gt;,
-<a href=#93 id=93 data-nosnippet>93</a>    {
-<a href=#94 id=94 data-nosnippet>94</a>        <span class="self">Self</span>.build(cx, |cx| {
-<a href=#95 id=95 data-nosnippet>95</a>            <span class="kw">let </span>progress = signal.map(|v| Units::Percentage(v * <span class="number">100.0</span>));
-<a href=#96 id=96 data-nosnippet>96</a>            Element::new(cx).width(progress).class(<span class="string">"progressbar-bar"</span>);
-<a href=#97 id=97 data-nosnippet>97</a>        })
-<a href=#98 id=98 data-nosnippet>98</a>        .role(Role::ProgressIndicator)
-<a href=#99 id=99 data-nosnippet>99</a>        .numeric_value(signal.map(|val| <span class="kw-2">*</span>val <span class="kw">as </span>f64))
-<a href=#100 id=100 data-nosnippet>100</a>    }
-<a href=#101 id=101 data-nosnippet>101</a>
-<a href=#102 id=102 data-nosnippet>102</a>    <span class="doccomment">/// Creates a new vertical progress bar bound to the provided value source.
-<a href=#103 id=103 data-nosnippet>103</a>    </span><span class="kw">pub fn </span>vertical&lt;L&gt;(cx: <span class="kw-2">&amp;mut </span>Context, signal: L) -&gt; Handle&lt;<span class="self">Self</span>&gt;
-<a href=#104 id=104 data-nosnippet>104</a>    <span class="kw">where
-<a href=#105 id=105 data-nosnippet>105</a>        </span>L: SignalGet&lt;f32&gt; + SignalMap&lt;f32&gt;,
-<a href=#106 id=106 data-nosnippet>106</a>    {
-<a href=#107 id=107 data-nosnippet>107</a>        <span class="self">Self</span>.build(cx, |cx| {
-<a href=#108 id=108 data-nosnippet>108</a>            <span class="kw">let </span>progress = signal.map(|v| Units::Percentage(v * <span class="number">100.0</span>));
-<a href=#109 id=109 data-nosnippet>109</a>            Element::new(cx).top(Stretch(<span class="number">1.0</span>)).height(progress).class(<span class="string">"progressbar-bar"</span>);
-<a href=#110 id=110 data-nosnippet>110</a>        })
-<a href=#111 id=111 data-nosnippet>111</a>        .role(Role::ProgressIndicator)
-<a href=#112 id=112 data-nosnippet>112</a>        .numeric_value(signal.map(|val| <span class="kw-2">*</span>val <span class="kw">as </span>f64))
-<a href=#113 id=113 data-nosnippet>113</a>    }
-<a href=#114 id=114 data-nosnippet>114</a>}
+<a href=#83 id=83 data-nosnippet>83</a>        <span class="self">Self</span>::horizontal(cx, signal)
+<a href=#84 id=84 data-nosnippet>84</a>    }
+<a href=#85 id=85 data-nosnippet>85</a>
+<a href=#86 id=86 data-nosnippet>86</a>    <span class="doccomment">/// Creates a new horizontal progress bar bound to the provided value source.
+<a href=#87 id=87 data-nosnippet>87</a>    </span><span class="kw">pub fn </span>horizontal&lt;L&gt;(cx: <span class="kw-2">&amp;mut </span>Context, signal: L) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+<a href=#88 id=88 data-nosnippet>88</a>    <span class="kw">where
+<a href=#89 id=89 data-nosnippet>89</a>        </span>L: SignalGet&lt;f32&gt; + SignalMap&lt;f32&gt;,
+<a href=#90 id=90 data-nosnippet>90</a>    {
+<a href=#91 id=91 data-nosnippet>91</a>        <span class="self">Self</span>.build(cx, |cx| {
+<a href=#92 id=92 data-nosnippet>92</a>            <span class="kw">let </span>progress = signal.map(|v| Units::Percentage(v * <span class="number">100.0</span>));
+<a href=#93 id=93 data-nosnippet>93</a>            Element::new(cx).width(progress).class(<span class="string">"progressbar-bar"</span>);
+<a href=#94 id=94 data-nosnippet>94</a>        })
+<a href=#95 id=95 data-nosnippet>95</a>        .role(Role::ProgressIndicator)
+<a href=#96 id=96 data-nosnippet>96</a>        .numeric_value(signal.map(|val| <span class="kw-2">*</span>val <span class="kw">as </span>f64))
+<a href=#97 id=97 data-nosnippet>97</a>        .orientation(Orientation::Horizontal)
+<a href=#98 id=98 data-nosnippet>98</a>    }
+<a href=#99 id=99 data-nosnippet>99</a>
+<a href=#100 id=100 data-nosnippet>100</a>    <span class="doccomment">/// Creates a new vertical progress bar bound to the provided value source.
+<a href=#101 id=101 data-nosnippet>101</a>    </span><span class="kw">pub fn </span>vertical&lt;L&gt;(cx: <span class="kw-2">&amp;mut </span>Context, signal: L) -&gt; Handle&lt;<span class="self">Self</span>&gt;
+<a href=#102 id=102 data-nosnippet>102</a>    <span class="kw">where
+<a href=#103 id=103 data-nosnippet>103</a>        </span>L: SignalGet&lt;f32&gt; + SignalMap&lt;f32&gt;,
+<a href=#104 id=104 data-nosnippet>104</a>    {
+<a href=#105 id=105 data-nosnippet>105</a>        <span class="self">Self</span>.build(cx, |cx| {
+<a href=#106 id=106 data-nosnippet>106</a>            <span class="kw">let </span>progress = signal.map(|v| Units::Percentage(v * <span class="number">100.0</span>));
+<a href=#107 id=107 data-nosnippet>107</a>            Element::new(cx).top(Stretch(<span class="number">1.0</span>)).height(progress).class(<span class="string">"progressbar-bar"</span>);
+<a href=#108 id=108 data-nosnippet>108</a>        })
+<a href=#109 id=109 data-nosnippet>109</a>        .role(Role::ProgressIndicator)
+<a href=#110 id=110 data-nosnippet>110</a>        .numeric_value(signal.map(|val| <span class="kw-2">*</span>val <span class="kw">as </span>f64))
+<a href=#111 id=111 data-nosnippet>111</a>        .orientation(Orientation::Vertical)
+<a href=#112 id=112 data-nosnippet>112</a>    }
+<a href=#113 id=113 data-nosnippet>113</a>}
 </code></pre></div></section></main></body></html>

@@ -26,7 +26,7 @@
 <a href=#26 id=26 data-nosnippet>26</a>    <span class="doccomment">/// Whether the vertical scrollbar should be visible.
 <a href=#27 id=27 data-nosnippet>27</a>    </span>show_vertical_scrollbar: Signal&lt;bool&gt;,
 <a href=#28 id=28 data-nosnippet>28</a>    <span class="doccomment">/// The set of selected items in the list.
-<a href=#29 id=29 data-nosnippet>29</a>    </span>selected: Signal&lt;BTreeSet&lt;usize&gt;&gt;,
+<a href=#29 id=29 data-nosnippet>29</a>    </span>selection: Signal&lt;BTreeSet&lt;usize&gt;&gt;,
 <a href=#30 id=30 data-nosnippet>30</a>    <span class="doccomment">/// The selectable state of the list.
 <a href=#31 id=31 data-nosnippet>31</a>    </span>selectable: Signal&lt;Selectable&gt;,
 <a href=#32 id=32 data-nosnippet>32</a>    <span class="doccomment">/// The index of the currently focused item in the list.
@@ -145,7 +145,7 @@
 <a href=#145 id=145 data-nosnippet>145</a>        <span class="kw">let </span>scroll_y = Signal::new(<span class="number">0.0</span>);
 <a href=#146 id=146 data-nosnippet>146</a>        <span class="kw">let </span>show_horizontal_scrollbar = Signal::new(<span class="bool-val">false</span>);
 <a href=#147 id=147 data-nosnippet>147</a>        <span class="kw">let </span>show_vertical_scrollbar = Signal::new(<span class="bool-val">true</span>);
-<a href=#148 id=148 data-nosnippet>148</a>        <span class="kw">let </span>selected = Signal::new(BTreeSet::default());
+<a href=#148 id=148 data-nosnippet>148</a>        <span class="kw">let </span>selection = Signal::new(BTreeSet::default());
 <a href=#149 id=149 data-nosnippet>149</a>        <span class="kw">let </span>selectable = Signal::new(Selectable::None);
 <a href=#150 id=150 data-nosnippet>150</a>        <span class="kw">let </span>focused = Signal::new(<span class="prelude-val">None</span>);
 <a href=#151 id=151 data-nosnippet>151</a>        <span class="kw">let </span>selection_follows_focus = Signal::new(<span class="bool-val">false</span>);
@@ -161,7 +161,7 @@
 <a href=#161 id=161 data-nosnippet>161</a>            scroll_y,
 <a href=#162 id=162 data-nosnippet>162</a>            show_horizontal_scrollbar,
 <a href=#163 id=163 data-nosnippet>163</a>            show_vertical_scrollbar,
-<a href=#164 id=164 data-nosnippet>164</a>            selected,
+<a href=#164 id=164 data-nosnippet>164</a>            selection,
 <a href=#165 id=165 data-nosnippet>165</a>            selectable,
 <a href=#166 id=166 data-nosnippet>166</a>            focused,
 <a href=#167 id=167 data-nosnippet>167</a>            selection_follows_focus,
@@ -214,7 +214,7 @@
 <a href=#214 id=214 data-nosnippet>214</a>                                        cx,
 <a href=#215 id=215 data-nosnippet>215</a>                                        index,
 <a href=#216 id=216 data-nosnippet>216</a>                                        item,
-<a href=#217 id=217 data-nosnippet>217</a>                                        selected,
+<a href=#217 id=217 data-nosnippet>217</a>                                        selection,
 <a href=#218 id=218 data-nosnippet>218</a>                                        focused,
 <a href=#219 id=219 data-nosnippet>219</a>                                        <span class="kw">move </span>|cx, index, item| {
 <a href=#220 id=220 data-nosnippet>220</a>                                            item_content(cx, index, item).height(Percentage(<span class="number">100.0</span>));
@@ -264,17 +264,17 @@
 <a href=#264 id=264 data-nosnippet>264</a>            ListEvent::Select(index) =&gt; {
 <a href=#265 id=265 data-nosnippet>265</a>                cx.focus();
 <a href=#266 id=266 data-nosnippet>266</a>                <span class="kw">let </span>selectable = <span class="self">self</span>.selectable.get();
-<a href=#267 id=267 data-nosnippet>267</a>                <span class="kw">let </span><span class="kw-2">mut </span>selected = <span class="self">self</span>.selected.get();
+<a href=#267 id=267 data-nosnippet>267</a>                <span class="kw">let </span><span class="kw-2">mut </span>selection = <span class="self">self</span>.selection.get();
 <a href=#268 id=268 data-nosnippet>268</a>                <span class="kw">let </span><span class="kw-2">mut </span>focused = <span class="self">self</span>.focused.get();
 <a href=#269 id=269 data-nosnippet>269</a>
 <a href=#270 id=270 data-nosnippet>270</a>                <span class="kw">match </span>selectable {
 <a href=#271 id=271 data-nosnippet>271</a>                    Selectable::Single =&gt; {
-<a href=#272 id=272 data-nosnippet>272</a>                        <span class="kw">if </span>selected.contains(<span class="kw-2">&amp;</span>index) {
-<a href=#273 id=273 data-nosnippet>273</a>                            selected.clear();
+<a href=#272 id=272 data-nosnippet>272</a>                        <span class="kw">if </span>selection.contains(<span class="kw-2">&amp;</span>index) {
+<a href=#273 id=273 data-nosnippet>273</a>                            selection.clear();
 <a href=#274 id=274 data-nosnippet>274</a>                            focused = <span class="prelude-val">None</span>;
 <a href=#275 id=275 data-nosnippet>275</a>                        } <span class="kw">else </span>{
-<a href=#276 id=276 data-nosnippet>276</a>                            selected.clear();
-<a href=#277 id=277 data-nosnippet>277</a>                            selected.insert(index);
+<a href=#276 id=276 data-nosnippet>276</a>                            selection.clear();
+<a href=#277 id=277 data-nosnippet>277</a>                            selection.insert(index);
 <a href=#278 id=278 data-nosnippet>278</a>                            focused = <span class="prelude-val">Some</span>(index);
 <a href=#279 id=279 data-nosnippet>279</a>                            <span class="kw">if let </span><span class="prelude-val">Some</span>(on_select) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_select {
 <a href=#280 id=280 data-nosnippet>280</a>                                on_select(cx, index);
@@ -283,11 +283,11 @@
 <a href=#283 id=283 data-nosnippet>283</a>                    }
 <a href=#284 id=284 data-nosnippet>284</a>
 <a href=#285 id=285 data-nosnippet>285</a>                    Selectable::Multi =&gt; {
-<a href=#286 id=286 data-nosnippet>286</a>                        <span class="kw">if </span>selected.contains(<span class="kw-2">&amp;</span>index) {
-<a href=#287 id=287 data-nosnippet>287</a>                            selected.remove(<span class="kw-2">&amp;</span>index);
+<a href=#286 id=286 data-nosnippet>286</a>                        <span class="kw">if </span>selection.contains(<span class="kw-2">&amp;</span>index) {
+<a href=#287 id=287 data-nosnippet>287</a>                            selection.remove(<span class="kw-2">&amp;</span>index);
 <a href=#288 id=288 data-nosnippet>288</a>                            focused = <span class="prelude-val">None</span>;
 <a href=#289 id=289 data-nosnippet>289</a>                        } <span class="kw">else </span>{
-<a href=#290 id=290 data-nosnippet>290</a>                            selected.insert(index);
+<a href=#290 id=290 data-nosnippet>290</a>                            selection.insert(index);
 <a href=#291 id=291 data-nosnippet>291</a>                            focused = <span class="prelude-val">Some</span>(index);
 <a href=#292 id=292 data-nosnippet>292</a>                            <span class="kw">if let </span><span class="prelude-val">Some</span>(on_select) = <span class="kw-2">&amp;</span><span class="self">self</span>.on_select {
 <a href=#293 id=293 data-nosnippet>293</a>                                on_select(cx, index);
@@ -298,7 +298,7 @@
 <a href=#298 id=298 data-nosnippet>298</a>                    Selectable::None =&gt; {}
 <a href=#299 id=299 data-nosnippet>299</a>                }
 <a href=#300 id=300 data-nosnippet>300</a>
-<a href=#301 id=301 data-nosnippet>301</a>                <span class="self">self</span>.selected.set(selected);
+<a href=#301 id=301 data-nosnippet>301</a>                <span class="self">self</span>.selection.set(selection);
 <a href=#302 id=302 data-nosnippet>302</a>                <span class="self">self</span>.focused.set(focused);
 <a href=#303 id=303 data-nosnippet>303</a>
 <a href=#304 id=304 data-nosnippet>304</a>                meta.consume();
@@ -312,7 +312,7 @@
 <a href=#312 id=312 data-nosnippet>312</a>            }
 <a href=#313 id=313 data-nosnippet>313</a>
 <a href=#314 id=314 data-nosnippet>314</a>            ListEvent::ClearSelection =&gt; {
-<a href=#315 id=315 data-nosnippet>315</a>                <span class="self">self</span>.selected.set(BTreeSet::default());
+<a href=#315 id=315 data-nosnippet>315</a>                <span class="self">self</span>.selection.set(BTreeSet::default());
 <a href=#316 id=316 data-nosnippet>316</a>                meta.consume();
 <a href=#317 id=317 data-nosnippet>317</a>            }
 <a href=#318 id=318 data-nosnippet>318</a>
@@ -388,23 +388,23 @@
 <a href=#388 id=388 data-nosnippet>388</a>
 <a href=#389 id=389 data-nosnippet>389</a><span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, VirtualList&gt; {
 <a href=#390 id=390 data-nosnippet>390</a>    <span class="doccomment">/// Sets the selected items of the list from a signal of indices.
-<a href=#391 id=391 data-nosnippet>391</a>    </span><span class="kw">pub fn </span>selected&lt;R&gt;(<span class="self">self</span>, selected: <span class="kw">impl </span>Res&lt;R&gt; + <span class="lifetime">'static</span>) -&gt; <span class="self">Self
+<a href=#391 id=391 data-nosnippet>391</a>    </span><span class="kw">pub fn </span>selection&lt;R&gt;(<span class="self">self</span>, selection: <span class="kw">impl </span>Res&lt;R&gt; + <span class="lifetime">'static</span>) -&gt; <span class="self">Self
 <a href=#392 id=392 data-nosnippet>392</a>    </span><span class="kw">where
 <a href=#393 id=393 data-nosnippet>393</a>        </span>R: Deref&lt;Target = [usize]&gt; + Clone + <span class="lifetime">'static</span>,
 <a href=#394 id=394 data-nosnippet>394</a>    {
-<a href=#395 id=395 data-nosnippet>395</a>        <span class="kw">let </span>selected = selected.to_signal(<span class="self">self</span>.cx);
-<a href=#396 id=396 data-nosnippet>396</a>        <span class="self">self</span>.bind(selected, <span class="kw">move </span>|handle| {
-<a href=#397 id=397 data-nosnippet>397</a>            <span class="kw">let </span>selected = selected.get();
-<a href=#398 id=398 data-nosnippet>398</a>            <span class="kw">let </span>ss = selected.deref().to_vec();
-<a href=#399 id=399 data-nosnippet>399</a>            handle.modify(|list| {
-<a href=#400 id=400 data-nosnippet>400</a>                <span class="kw">let </span><span class="kw-2">mut </span>selected = BTreeSet::default();
-<a href=#401 id=401 data-nosnippet>401</a>                <span class="kw">let </span><span class="kw-2">mut </span>focused = <span class="prelude-val">None</span>;
-<a href=#402 id=402 data-nosnippet>402</a>                <span class="kw">for </span>idx <span class="kw">in </span>ss {
-<a href=#403 id=403 data-nosnippet>403</a>                    selected.insert(idx);
-<a href=#404 id=404 data-nosnippet>404</a>                    focused = <span class="prelude-val">Some</span>(idx);
-<a href=#405 id=405 data-nosnippet>405</a>                }
-<a href=#406 id=406 data-nosnippet>406</a>                list.selected.set(selected);
-<a href=#407 id=407 data-nosnippet>407</a>                list.focused.set(focused);
+<a href=#395 id=395 data-nosnippet>395</a>        <span class="kw">let </span>selection = selection.to_signal(<span class="self">self</span>.cx);
+<a href=#396 id=396 data-nosnippet>396</a>        <span class="self">self</span>.bind(selection, <span class="kw">move </span>|handle| {
+<a href=#397 id=397 data-nosnippet>397</a>            selection.with(|selected_indices| {
+<a href=#398 id=398 data-nosnippet>398</a>                handle.modify(|list| {
+<a href=#399 id=399 data-nosnippet>399</a>                    <span class="kw">let </span><span class="kw-2">mut </span>selection = BTreeSet::default();
+<a href=#400 id=400 data-nosnippet>400</a>                    <span class="kw">let </span><span class="kw-2">mut </span>focused = <span class="prelude-val">None</span>;
+<a href=#401 id=401 data-nosnippet>401</a>                    <span class="kw">for </span>idx <span class="kw">in </span>selected_indices.deref().iter().copied() {
+<a href=#402 id=402 data-nosnippet>402</a>                        selection.insert(idx);
+<a href=#403 id=403 data-nosnippet>403</a>                        focused = <span class="prelude-val">Some</span>(idx);
+<a href=#404 id=404 data-nosnippet>404</a>                    }
+<a href=#405 id=405 data-nosnippet>405</a>                    list.selection.set(selection);
+<a href=#406 id=406 data-nosnippet>406</a>                    list.focused.set(focused);
+<a href=#407 id=407 data-nosnippet>407</a>                });
 <a href=#408 id=408 data-nosnippet>408</a>            });
 <a href=#409 id=409 data-nosnippet>409</a>        })
 <a href=#410 id=410 data-nosnippet>410</a>    }

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["ImageRetentionPolicy"],"struct":["ImageId"]};
+window.SIDEBAR_ITEMS = {"enum":["ImageRetentionPolicy","TranslationError"],"struct":["ImageId"]};

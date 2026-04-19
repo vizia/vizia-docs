@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["AppTheme","EnvironmentEvent","ThemeMode"],"struct":["Environment","Theme"]};
+window.SIDEBAR_ITEMS = {"enum":["EnvironmentEvent","ThemeMode"],"struct":["Environment"]};

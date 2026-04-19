@@ -38,7 +38,7 @@
 <a href=#38 id=38 data-nosnippet>38</a>    }
 <a href=#39 id=39 data-nosnippet>39</a>}
 <a href=#40 id=40 data-nosnippet>40</a>
-<a href=#41 id=41 data-nosnippet>41</a><span class="doccomment">/// Events used by the [Popup] view.
+<a href=#41 id=41 data-nosnippet>41</a><span class="doccomment">/// Events used by the [Popover] view.
 <a href=#42 id=42 data-nosnippet>42</a></span><span class="attr">#[derive(Debug)]
 <a href=#43 id=43 data-nosnippet>43</a></span><span class="kw">pub enum </span>PopupEvent {
 <a href=#44 id=44 data-nosnippet>44</a>    <span class="doccomment">/// Opens the popup.
@@ -50,15 +50,15 @@
 <a href=#50 id=50 data-nosnippet>50</a>}
 <a href=#51 id=51 data-nosnippet>51</a>
 <a href=#52 id=52 data-nosnippet>52</a><span class="doccomment">/// A view for displaying popup content.
-<a href=#53 id=53 data-nosnippet>53</a></span><span class="kw">pub struct </span>Popup {
+<a href=#53 id=53 data-nosnippet>53</a></span><span class="kw">pub struct </span>Popover {
 <a href=#54 id=54 data-nosnippet>54</a>    placement: Signal&lt;Placement&gt;,
 <a href=#55 id=55 data-nosnippet>55</a>    show_arrow: Signal&lt;bool&gt;,
 <a href=#56 id=56 data-nosnippet>56</a>    arrow_size: Signal&lt;Length&gt;,
 <a href=#57 id=57 data-nosnippet>57</a>    should_reposition: Signal&lt;bool&gt;,
 <a href=#58 id=58 data-nosnippet>58</a>}
 <a href=#59 id=59 data-nosnippet>59</a>
-<a href=#60 id=60 data-nosnippet>60</a><span class="kw">impl </span>Popup {
-<a href=#61 id=61 data-nosnippet>61</a>    <span class="doccomment">/// Creates a new [Popup] view.
+<a href=#60 id=60 data-nosnippet>60</a><span class="kw">impl </span>Popover {
+<a href=#61 id=61 data-nosnippet>61</a>    <span class="doccomment">/// Creates a new [Popover] view.
 <a href=#62 id=62 data-nosnippet>62</a>    </span><span class="kw">pub fn </span>new(cx: <span class="kw-2">&amp;mut </span>Context, content: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;mut </span>Context)) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
 <a href=#63 id=63 data-nosnippet>63</a>        <span class="kw">let </span>placement = Signal::new(Placement::Bottom);
 <a href=#64 id=64 data-nosnippet>64</a>        <span class="kw">let </span>show_arrow = Signal::new(<span class="bool-val">true</span>);
@@ -80,7 +80,7 @@
 <a href=#80 id=80 data-nosnippet>80</a>    }
 <a href=#81 id=81 data-nosnippet>81</a>}
 <a href=#82 id=82 data-nosnippet>82</a>
-<a href=#83 id=83 data-nosnippet>83</a><span class="kw">impl </span>View <span class="kw">for </span>Popup {
+<a href=#83 id=83 data-nosnippet>83</a><span class="kw">impl </span>View <span class="kw">for </span>Popover {
 <a href=#84 id=84 data-nosnippet>84</a>    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
 <a href=#85 id=85 data-nosnippet>85</a>        <span class="prelude-val">Some</span>(<span class="string">"popup"</span>)
 <a href=#86 id=86 data-nosnippet>86</a>    }
@@ -403,202 +403,214 @@
 <a href=#403 id=403 data-nosnippet>403</a>    }
 <a href=#404 id=404 data-nosnippet>404</a>}
 <a href=#405 id=405 data-nosnippet>405</a>
-<a href=#406 id=406 data-nosnippet>406</a><span class="kw">impl </span>Handle&lt;<span class="lifetime">'_</span>, Popup&gt; {
-<a href=#407 id=407 data-nosnippet>407</a>    <span class="doccomment">/// Sets the position where the popup should appear relative to its parent element.
-<a href=#408 id=408 data-nosnippet>408</a>    /// Defaults to `Placement::Bottom`.
-<a href=#409 id=409 data-nosnippet>409</a>    </span><span class="kw">pub fn </span>placement(<span class="self">self</span>, placement: <span class="kw">impl </span>Res&lt;Placement&gt; + <span class="lifetime">'static</span>) -&gt; <span class="self">Self </span>{
-<a href=#410 id=410 data-nosnippet>410</a>        <span class="kw">let </span>placement = placement.to_signal(<span class="self">self</span>.cx);
-<a href=#411 id=411 data-nosnippet>411</a>        <span class="self">self</span>.bind(placement, <span class="kw">move </span>|handle| {
-<a href=#412 id=412 data-nosnippet>412</a>            <span class="kw">let </span>placement = placement.get();
-<a href=#413 id=413 data-nosnippet>413</a>            handle.modify(|popup| {
-<a href=#414 id=414 data-nosnippet>414</a>                popup.placement.set(placement);
-<a href=#415 id=415 data-nosnippet>415</a>            });
-<a href=#416 id=416 data-nosnippet>416</a>        })
-<a href=#417 id=417 data-nosnippet>417</a>    }
-<a href=#418 id=418 data-nosnippet>418</a>
-<a href=#419 id=419 data-nosnippet>419</a>    <span class="doccomment">/// Sets whether the popup should include an arrow. Defaults to true.
-<a href=#420 id=420 data-nosnippet>420</a>    </span><span class="kw">pub fn </span>show_arrow(<span class="self">self</span>, show_arrow: <span class="kw">impl </span>Res&lt;bool&gt; + <span class="lifetime">'static</span>) -&gt; <span class="self">Self </span>{
-<a href=#421 id=421 data-nosnippet>421</a>        <span class="kw">let </span>show_arrow = show_arrow.to_signal(<span class="self">self</span>.cx);
-<a href=#422 id=422 data-nosnippet>422</a>        <span class="self">self</span>.bind(show_arrow, <span class="kw">move </span>|handle| {
-<a href=#423 id=423 data-nosnippet>423</a>            <span class="kw">let </span>show_arrow = show_arrow.get();
-<a href=#424 id=424 data-nosnippet>424</a>            handle.modify(|popup| popup.show_arrow.set(show_arrow));
-<a href=#425 id=425 data-nosnippet>425</a>        })
-<a href=#426 id=426 data-nosnippet>426</a>    }
+<a href=#406 id=406 data-nosnippet>406</a><span class="doccomment">/// Modifiers for configuring [Popover] behavior and positioning.
+<a href=#407 id=407 data-nosnippet>407</a></span><span class="kw">pub trait </span>PopoverModifiers: Sized {
+<a href=#408 id=408 data-nosnippet>408</a>    <span class="doccomment">/// Sets the position where the popup should appear relative to its parent element.
+<a href=#409 id=409 data-nosnippet>409</a>    /// Defaults to `Placement::Bottom`.
+<a href=#410 id=410 data-nosnippet>410</a>    </span><span class="kw">fn </span>placement(<span class="self">self</span>, placement: <span class="kw">impl </span>Res&lt;Placement&gt; + <span class="lifetime">'static</span>) -&gt; <span class="self">Self</span>;
+<a href=#411 id=411 data-nosnippet>411</a>
+<a href=#412 id=412 data-nosnippet>412</a>    <span class="doccomment">/// Sets whether the popup should include an arrow. Defaults to true.
+<a href=#413 id=413 data-nosnippet>413</a>    </span><span class="kw">fn </span>show_arrow(<span class="self">self</span>, show_arrow: <span class="kw">impl </span>Res&lt;bool&gt; + <span class="lifetime">'static</span>) -&gt; <span class="self">Self</span>;
+<a href=#414 id=414 data-nosnippet>414</a>
+<a href=#415 id=415 data-nosnippet>415</a>    <span class="doccomment">/// Sets the size of the popup arrow, or gap if the arrow is hidden.
+<a href=#416 id=416 data-nosnippet>416</a>    </span><span class="kw">fn </span>arrow_size&lt;U: Into&lt;Length&gt; + Clone + <span class="lifetime">'static</span>&gt;(<span class="self">self</span>, size: <span class="kw">impl </span>Res&lt;U&gt; + <span class="lifetime">'static</span>) -&gt; <span class="self">Self</span>;
+<a href=#417 id=417 data-nosnippet>417</a>
+<a href=#418 id=418 data-nosnippet>418</a>    <span class="doccomment">/// Set to whether the popup should reposition to always be visible.
+<a href=#419 id=419 data-nosnippet>419</a>    </span><span class="kw">fn </span>should_reposition(<span class="self">self</span>, should_reposition: <span class="kw">impl </span>Res&lt;bool&gt; + <span class="lifetime">'static</span>) -&gt; <span class="self">Self</span>;
+<a href=#420 id=420 data-nosnippet>420</a>
+<a href=#421 id=421 data-nosnippet>421</a>    <span class="doccomment">/// Registers a callback for when the user clicks off of the popup, usually with the intent of
+<a href=#422 id=422 data-nosnippet>422</a>    /// closing it.
+<a href=#423 id=423 data-nosnippet>423</a>    </span><span class="kw">fn </span>on_blur&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; <span class="self">Self
+<a href=#424 id=424 data-nosnippet>424</a>    </span><span class="kw">where
+<a href=#425 id=425 data-nosnippet>425</a>        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext);
+<a href=#426 id=426 data-nosnippet>426</a>}
 <a href=#427 id=427 data-nosnippet>427</a>
-<a href=#428 id=428 data-nosnippet>428</a>    <span class="doccomment">/// Sets the size of the popup arrow, or gap if the arrow is hidden.
-<a href=#429 id=429 data-nosnippet>429</a>    </span><span class="kw">pub fn </span>arrow_size&lt;U: Into&lt;Length&gt; + Clone + <span class="lifetime">'static</span>&gt;(
-<a href=#430 id=430 data-nosnippet>430</a>        <span class="self">self</span>,
-<a href=#431 id=431 data-nosnippet>431</a>        size: <span class="kw">impl </span>Res&lt;U&gt; + <span class="lifetime">'static</span>,
-<a href=#432 id=432 data-nosnippet>432</a>    ) -&gt; <span class="self">Self </span>{
-<a href=#433 id=433 data-nosnippet>433</a>        <span class="kw">let </span>size = size.to_signal(<span class="self">self</span>.cx);
-<a href=#434 id=434 data-nosnippet>434</a>        <span class="self">self</span>.bind(size, <span class="kw">move </span>|handle| {
-<a href=#435 id=435 data-nosnippet>435</a>            <span class="kw">let </span>size = size.get();
-<a href=#436 id=436 data-nosnippet>436</a>            <span class="kw">let </span>size = size.into();
-<a href=#437 id=437 data-nosnippet>437</a>            handle.modify(|popup| popup.arrow_size.set(size));
-<a href=#438 id=438 data-nosnippet>438</a>        })
-<a href=#439 id=439 data-nosnippet>439</a>    }
-<a href=#440 id=440 data-nosnippet>440</a>
-<a href=#441 id=441 data-nosnippet>441</a>    <span class="doccomment">/// Set to whether the popup should reposition to always be visible.
-<a href=#442 id=442 data-nosnippet>442</a>    </span><span class="kw">pub fn </span>should_reposition(<span class="self">self</span>, should_reposition: <span class="kw">impl </span>Res&lt;bool&gt; + <span class="lifetime">'static</span>) -&gt; <span class="self">Self </span>{
-<a href=#443 id=443 data-nosnippet>443</a>        <span class="kw">let </span>should_reposition = should_reposition.to_signal(<span class="self">self</span>.cx);
-<a href=#444 id=444 data-nosnippet>444</a>        <span class="self">self</span>.bind(should_reposition, <span class="kw">move </span>|handle| {
-<a href=#445 id=445 data-nosnippet>445</a>            <span class="kw">let </span>should_reposition = should_reposition.get();
-<a href=#446 id=446 data-nosnippet>446</a>            handle.modify(|popup| popup.should_reposition.set(should_reposition));
-<a href=#447 id=447 data-nosnippet>447</a>        })
-<a href=#448 id=448 data-nosnippet>448</a>    }
-<a href=#449 id=449 data-nosnippet>449</a>
-<a href=#450 id=450 data-nosnippet>450</a>    <span class="doccomment">/// Registers a callback for when the user clicks off of the popup, usually with the intent of
-<a href=#451 id=451 data-nosnippet>451</a>    /// closing it.
-<a href=#452 id=452 data-nosnippet>452</a>    </span><span class="kw">pub fn </span>on_blur&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; <span class="self">Self
-<a href=#453 id=453 data-nosnippet>453</a>    </span><span class="kw">where
-<a href=#454 id=454 data-nosnippet>454</a>        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext),
-<a href=#455 id=455 data-nosnippet>455</a>    {
-<a href=#456 id=456 data-nosnippet>456</a>        <span class="kw">let </span>focus_event = Box::new(f);
-<a href=#457 id=457 data-nosnippet>457</a>        <span class="self">self</span>.cx.with_current(<span class="self">self</span>.entity, |cx| {
-<a href=#458 id=458 data-nosnippet>458</a>            cx.add_listener(<span class="kw">move </span>|<span class="kw">_</span>: <span class="kw-2">&amp;mut </span>Popup, cx, event| {
-<a href=#459 id=459 data-nosnippet>459</a>                event.map(|window_event, meta| <span class="kw">match </span>window_event {
-<a href=#460 id=460 data-nosnippet>460</a>                    WindowEvent::MouseDown(<span class="kw">_</span>) =&gt; {
-<a href=#461 id=461 data-nosnippet>461</a>                        <span class="kw">if </span>meta.origin != cx.current() {
-<a href=#462 id=462 data-nosnippet>462</a>                            <span class="comment">// Check if the mouse was pressed outside of any descendants
-<a href=#463 id=463 data-nosnippet>463</a>                            </span><span class="kw">if </span>!cx.hovered.is_descendant_of(cx.tree, cx.current) {
-<a href=#464 id=464 data-nosnippet>464</a>                                (focus_event)(cx);
-<a href=#465 id=465 data-nosnippet>465</a>                                meta.consume();
-<a href=#466 id=466 data-nosnippet>466</a>                            }
-<a href=#467 id=467 data-nosnippet>467</a>                        }
-<a href=#468 id=468 data-nosnippet>468</a>                    }
-<a href=#469 id=469 data-nosnippet>469</a>
-<a href=#470 id=470 data-nosnippet>470</a>                    WindowEvent::KeyDown(code, <span class="kw">_</span>) =&gt; {
-<a href=#471 id=471 data-nosnippet>471</a>                        <span class="kw">if </span><span class="kw-2">*</span>code == Code::Escape {
-<a href=#472 id=472 data-nosnippet>472</a>                            (focus_event)(cx);
-<a href=#473 id=473 data-nosnippet>473</a>                        }
-<a href=#474 id=474 data-nosnippet>474</a>                    }
-<a href=#475 id=475 data-nosnippet>475</a>
-<a href=#476 id=476 data-nosnippet>476</a>                    <span class="kw">_ </span>=&gt; {}
-<a href=#477 id=477 data-nosnippet>477</a>                });
-<a href=#478 id=478 data-nosnippet>478</a>            });
-<a href=#479 id=479 data-nosnippet>479</a>        });
-<a href=#480 id=480 data-nosnippet>480</a>
-<a href=#481 id=481 data-nosnippet>481</a>        <span class="self">self
-<a href=#482 id=482 data-nosnippet>482</a>    </span>}
-<a href=#483 id=483 data-nosnippet>483</a>}
-<a href=#484 id=484 data-nosnippet>484</a>
-<a href=#485 id=485 data-nosnippet>485</a><span class="doccomment">/// An arrow view used by the Popup view.
-<a href=#486 id=486 data-nosnippet>486</a></span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Arrow {
-<a href=#487 id=487 data-nosnippet>487</a>    placement: Signal&lt;Placement&gt;,
-<a href=#488 id=488 data-nosnippet>488</a>}
-<a href=#489 id=489 data-nosnippet>489</a>
-<a href=#490 id=490 data-nosnippet>490</a><span class="kw">impl </span>Arrow {
-<a href=#491 id=491 data-nosnippet>491</a>    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(
-<a href=#492 id=492 data-nosnippet>492</a>        cx: <span class="kw-2">&amp;mut </span>Context,
-<a href=#493 id=493 data-nosnippet>493</a>        placement: Signal&lt;Placement&gt;,
-<a href=#494 id=494 data-nosnippet>494</a>        arrow_size: Signal&lt;Length&gt;,
-<a href=#495 id=495 data-nosnippet>495</a>    ) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
-<a href=#496 id=496 data-nosnippet>496</a>        <span class="self">Self </span>{ placement }.build(cx, |<span class="kw">_</span>| {}).position_type(PositionType::Absolute).bind(
-<a href=#497 id=497 data-nosnippet>497</a>            placement,
-<a href=#498 id=498 data-nosnippet>498</a>            <span class="kw">move </span>|<span class="kw-2">mut </span>handle| {
-<a href=#499 id=499 data-nosnippet>499</a>                <span class="kw">let </span>placement = placement.get();
-<a href=#500 id=500 data-nosnippet>500</a>                <span class="kw">let </span>(t, b) = <span class="kw">match </span>placement {
-<a href=#501 id=501 data-nosnippet>501</a>                    Placement::TopStart | Placement::Top | Placement::TopEnd =&gt; {
-<a href=#502 id=502 data-nosnippet>502</a>                        (Percentage(<span class="number">100.0</span>), Stretch(<span class="number">1.0</span>))
-<a href=#503 id=503 data-nosnippet>503</a>                    }
-<a href=#504 id=504 data-nosnippet>504</a>                    Placement::BottomStart | Placement::Bottom | Placement::BottomEnd =&gt; {
-<a href=#505 id=505 data-nosnippet>505</a>                        (Stretch(<span class="number">1.0</span>), Percentage(<span class="number">100.0</span>))
-<a href=#506 id=506 data-nosnippet>506</a>                    }
-<a href=#507 id=507 data-nosnippet>507</a>                    <span class="kw">_ </span>=&gt; (Stretch(<span class="number">1.0</span>), Stretch(<span class="number">1.0</span>)),
-<a href=#508 id=508 data-nosnippet>508</a>                };
-<a href=#509 id=509 data-nosnippet>509</a>
-<a href=#510 id=510 data-nosnippet>510</a>                <span class="kw">let </span>(l, r) = <span class="kw">match </span>placement {
-<a href=#511 id=511 data-nosnippet>511</a>                    Placement::LeftStart | Placement::Left | Placement::LeftEnd =&gt; {
-<a href=#512 id=512 data-nosnippet>512</a>                        (Percentage(<span class="number">100.0</span>), Stretch(<span class="number">1.0</span>))
-<a href=#513 id=513 data-nosnippet>513</a>                    }
-<a href=#514 id=514 data-nosnippet>514</a>                    Placement::RightStart | Placement::Right | Placement::RightEnd =&gt; {
-<a href=#515 id=515 data-nosnippet>515</a>                        (Stretch(<span class="number">1.0</span>), Percentage(<span class="number">100.0</span>))
-<a href=#516 id=516 data-nosnippet>516</a>                    }
-<a href=#517 id=517 data-nosnippet>517</a>                    Placement::TopStart | Placement::BottomStart =&gt; {
-<a href=#518 id=518 data-nosnippet>518</a>                        <span class="comment">// TODO: Use border radius
-<a href=#519 id=519 data-nosnippet>519</a>                        </span>(Pixels(<span class="number">8.0</span>), Stretch(<span class="number">1.0</span>))
-<a href=#520 id=520 data-nosnippet>520</a>                    }
-<a href=#521 id=521 data-nosnippet>521</a>                    Placement::TopEnd | Placement::BottomEnd =&gt; {
-<a href=#522 id=522 data-nosnippet>522</a>                        <span class="comment">// TODO: Use border radius
-<a href=#523 id=523 data-nosnippet>523</a>                        </span>(Stretch(<span class="number">1.0</span>), Pixels(<span class="number">8.0</span>))
-<a href=#524 id=524 data-nosnippet>524</a>                    }
-<a href=#525 id=525 data-nosnippet>525</a>                    <span class="kw">_ </span>=&gt; (Stretch(<span class="number">1.0</span>), Stretch(<span class="number">1.0</span>)),
-<a href=#526 id=526 data-nosnippet>526</a>                };
-<a href=#527 id=527 data-nosnippet>527</a>
-<a href=#528 id=528 data-nosnippet>528</a>                handle = handle
-<a href=#529 id=529 data-nosnippet>529</a>                    .top(t)
-<a href=#530 id=530 data-nosnippet>530</a>                    .bottom(b)
-<a href=#531 id=531 data-nosnippet>531</a>                    .left(l)
-<a href=#532 id=532 data-nosnippet>532</a>                    .right(r)
-<a href=#533 id=533 data-nosnippet>533</a>                    .position_type(PositionType::Absolute)
-<a href=#534 id=534 data-nosnippet>534</a>                    .hoverable(<span class="bool-val">false</span>);
-<a href=#535 id=535 data-nosnippet>535</a>
-<a href=#536 id=536 data-nosnippet>536</a>                handle.bind(arrow_size, <span class="kw">move </span>|handle| {
-<a href=#537 id=537 data-nosnippet>537</a>                    <span class="kw">let </span>arrow_size = arrow_size.get();
-<a href=#538 id=538 data-nosnippet>538</a>                    <span class="kw">let </span>arrow_size = arrow_size.to_px().unwrap_or(<span class="number">8.0</span>);
-<a href=#539 id=539 data-nosnippet>539</a>                    <span class="kw">let </span>(w, h) = <span class="kw">match </span>placement {
-<a href=#540 id=540 data-nosnippet>540</a>                        Placement::Top
-<a href=#541 id=541 data-nosnippet>541</a>                        | Placement::Bottom
-<a href=#542 id=542 data-nosnippet>542</a>                        | Placement::TopStart
-<a href=#543 id=543 data-nosnippet>543</a>                        | Placement::BottomStart
-<a href=#544 id=544 data-nosnippet>544</a>                        | Placement::TopEnd
-<a href=#545 id=545 data-nosnippet>545</a>                        | Placement::BottomEnd =&gt; (Pixels(arrow_size * <span class="number">2.0</span>), Pixels(arrow_size)),
-<a href=#546 id=546 data-nosnippet>546</a>
-<a href=#547 id=547 data-nosnippet>547</a>                        <span class="kw">_ </span>=&gt; (Pixels(arrow_size), Pixels(arrow_size * <span class="number">2.0</span>)),
-<a href=#548 id=548 data-nosnippet>548</a>                    };
-<a href=#549 id=549 data-nosnippet>549</a>
-<a href=#550 id=550 data-nosnippet>550</a>                    handle.width(w).height(h);
-<a href=#551 id=551 data-nosnippet>551</a>                });
-<a href=#552 id=552 data-nosnippet>552</a>            },
-<a href=#553 id=553 data-nosnippet>553</a>        )
-<a href=#554 id=554 data-nosnippet>554</a>    }
-<a href=#555 id=555 data-nosnippet>555</a>}
-<a href=#556 id=556 data-nosnippet>556</a>
-<a href=#557 id=557 data-nosnippet>557</a><span class="kw">impl </span>View <span class="kw">for </span>Arrow {
-<a href=#558 id=558 data-nosnippet>558</a>    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
-<a href=#559 id=559 data-nosnippet>559</a>        <span class="prelude-val">Some</span>(<span class="string">"arrow"</span>)
-<a href=#560 id=560 data-nosnippet>560</a>    }
-<a href=#561 id=561 data-nosnippet>561</a>    <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;</span>Canvas) {
-<a href=#562 id=562 data-nosnippet>562</a>        <span class="kw">let </span>bounds = cx.bounds();
-<a href=#563 id=563 data-nosnippet>563</a>        <span class="kw">let </span><span class="kw-2">mut </span>path = vg::PathBuilder::new();
-<a href=#564 id=564 data-nosnippet>564</a>        <span class="kw">match </span><span class="self">self</span>.placement.get() {
-<a href=#565 id=565 data-nosnippet>565</a>            Placement::Bottom | Placement::BottomStart | Placement::BottomEnd =&gt; {
-<a href=#566 id=566 data-nosnippet>566</a>                path.move_to(bounds.bottom_left());
-<a href=#567 id=567 data-nosnippet>567</a>                path.line_to(bounds.center_top());
-<a href=#568 id=568 data-nosnippet>568</a>                path.line_to(bounds.bottom_right());
-<a href=#569 id=569 data-nosnippet>569</a>                path.line_to(bounds.bottom_left());
-<a href=#570 id=570 data-nosnippet>570</a>            }
-<a href=#571 id=571 data-nosnippet>571</a>
-<a href=#572 id=572 data-nosnippet>572</a>            Placement::Top | Placement::TopStart | Placement::TopEnd =&gt; {
-<a href=#573 id=573 data-nosnippet>573</a>                path.move_to(bounds.top_left());
-<a href=#574 id=574 data-nosnippet>574</a>                path.line_to(bounds.center_bottom());
-<a href=#575 id=575 data-nosnippet>575</a>                path.line_to(bounds.top_right());
-<a href=#576 id=576 data-nosnippet>576</a>                path.line_to(bounds.top_left());
-<a href=#577 id=577 data-nosnippet>577</a>            }
-<a href=#578 id=578 data-nosnippet>578</a>
-<a href=#579 id=579 data-nosnippet>579</a>            Placement::Left | Placement::LeftStart | Placement::LeftEnd =&gt; {
-<a href=#580 id=580 data-nosnippet>580</a>                path.move_to(bounds.top_left());
-<a href=#581 id=581 data-nosnippet>581</a>                path.line_to(bounds.center_right());
-<a href=#582 id=582 data-nosnippet>582</a>                path.line_to(bounds.bottom_left());
-<a href=#583 id=583 data-nosnippet>583</a>                path.line_to(bounds.top_left());
-<a href=#584 id=584 data-nosnippet>584</a>            }
-<a href=#585 id=585 data-nosnippet>585</a>
-<a href=#586 id=586 data-nosnippet>586</a>            Placement::Right | Placement::RightStart | Placement::RightEnd =&gt; {
-<a href=#587 id=587 data-nosnippet>587</a>                path.move_to(bounds.top_right());
-<a href=#588 id=588 data-nosnippet>588</a>                path.line_to(bounds.center_left());
-<a href=#589 id=589 data-nosnippet>589</a>                path.line_to(bounds.bottom_right());
-<a href=#590 id=590 data-nosnippet>590</a>                path.line_to(bounds.top_right());
-<a href=#591 id=591 data-nosnippet>591</a>            }
-<a href=#592 id=592 data-nosnippet>592</a>
-<a href=#593 id=593 data-nosnippet>593</a>            <span class="kw">_ </span>=&gt; {}
-<a href=#594 id=594 data-nosnippet>594</a>        }
-<a href=#595 id=595 data-nosnippet>595</a>        path.close();
-<a href=#596 id=596 data-nosnippet>596</a>
-<a href=#597 id=597 data-nosnippet>597</a>        <span class="kw">let </span>bg = cx.background_color();
-<a href=#598 id=598 data-nosnippet>598</a>        <span class="kw">let </span><span class="kw-2">mut </span>paint = vg::Paint::default();
-<a href=#599 id=599 data-nosnippet>599</a>        paint.set_color(bg);
-<a href=#600 id=600 data-nosnippet>600</a>        <span class="kw">let </span>path = path.detach();
-<a href=#601 id=601 data-nosnippet>601</a>        canvas.draw_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
-<a href=#602 id=602 data-nosnippet>602</a>    }
-<a href=#603 id=603 data-nosnippet>603</a>}
+<a href=#428 id=428 data-nosnippet>428</a><span class="kw">impl </span>PopoverModifiers <span class="kw">for </span>Handle&lt;<span class="lifetime">'_</span>, Popover&gt; {
+<a href=#429 id=429 data-nosnippet>429</a>    <span class="kw">fn </span>placement(<span class="self">self</span>, placement: <span class="kw">impl </span>Res&lt;Placement&gt; + <span class="lifetime">'static</span>) -&gt; <span class="self">Self </span>{
+<a href=#430 id=430 data-nosnippet>430</a>        <span class="kw">let </span>placement = placement.to_signal(<span class="self">self</span>.cx);
+<a href=#431 id=431 data-nosnippet>431</a>        <span class="self">self</span>.bind(placement, <span class="kw">move </span>|handle| {
+<a href=#432 id=432 data-nosnippet>432</a>            <span class="kw">let </span>placement = placement.get();
+<a href=#433 id=433 data-nosnippet>433</a>            handle.modify(|popup| {
+<a href=#434 id=434 data-nosnippet>434</a>                popup.placement.set(placement);
+<a href=#435 id=435 data-nosnippet>435</a>            });
+<a href=#436 id=436 data-nosnippet>436</a>        })
+<a href=#437 id=437 data-nosnippet>437</a>    }
+<a href=#438 id=438 data-nosnippet>438</a>
+<a href=#439 id=439 data-nosnippet>439</a>    <span class="kw">fn </span>show_arrow(<span class="self">self</span>, show_arrow: <span class="kw">impl </span>Res&lt;bool&gt; + <span class="lifetime">'static</span>) -&gt; <span class="self">Self </span>{
+<a href=#440 id=440 data-nosnippet>440</a>        <span class="kw">let </span>show_arrow = show_arrow.to_signal(<span class="self">self</span>.cx);
+<a href=#441 id=441 data-nosnippet>441</a>        <span class="self">self</span>.bind(show_arrow, <span class="kw">move </span>|handle| {
+<a href=#442 id=442 data-nosnippet>442</a>            <span class="kw">let </span>show_arrow = show_arrow.get();
+<a href=#443 id=443 data-nosnippet>443</a>            handle.modify(|popup| popup.show_arrow.set(show_arrow));
+<a href=#444 id=444 data-nosnippet>444</a>        })
+<a href=#445 id=445 data-nosnippet>445</a>    }
+<a href=#446 id=446 data-nosnippet>446</a>
+<a href=#447 id=447 data-nosnippet>447</a>    <span class="kw">fn </span>arrow_size&lt;U: Into&lt;Length&gt; + Clone + <span class="lifetime">'static</span>&gt;(<span class="self">self</span>, size: <span class="kw">impl </span>Res&lt;U&gt; + <span class="lifetime">'static</span>) -&gt; <span class="self">Self </span>{
+<a href=#448 id=448 data-nosnippet>448</a>        <span class="kw">let </span>size = size.to_signal(<span class="self">self</span>.cx);
+<a href=#449 id=449 data-nosnippet>449</a>        <span class="self">self</span>.bind(size, <span class="kw">move </span>|handle| {
+<a href=#450 id=450 data-nosnippet>450</a>            <span class="kw">let </span>size = size.get();
+<a href=#451 id=451 data-nosnippet>451</a>            <span class="kw">let </span>size = size.into();
+<a href=#452 id=452 data-nosnippet>452</a>            handle.modify(|popup| popup.arrow_size.set(size));
+<a href=#453 id=453 data-nosnippet>453</a>        })
+<a href=#454 id=454 data-nosnippet>454</a>    }
+<a href=#455 id=455 data-nosnippet>455</a>
+<a href=#456 id=456 data-nosnippet>456</a>    <span class="kw">fn </span>should_reposition(<span class="self">self</span>, should_reposition: <span class="kw">impl </span>Res&lt;bool&gt; + <span class="lifetime">'static</span>) -&gt; <span class="self">Self </span>{
+<a href=#457 id=457 data-nosnippet>457</a>        <span class="kw">let </span>should_reposition = should_reposition.to_signal(<span class="self">self</span>.cx);
+<a href=#458 id=458 data-nosnippet>458</a>        <span class="self">self</span>.bind(should_reposition, <span class="kw">move </span>|handle| {
+<a href=#459 id=459 data-nosnippet>459</a>            <span class="kw">let </span>should_reposition = should_reposition.get();
+<a href=#460 id=460 data-nosnippet>460</a>            handle.modify(|popup| popup.should_reposition.set(should_reposition));
+<a href=#461 id=461 data-nosnippet>461</a>        })
+<a href=#462 id=462 data-nosnippet>462</a>    }
+<a href=#463 id=463 data-nosnippet>463</a>
+<a href=#464 id=464 data-nosnippet>464</a>    <span class="kw">fn </span>on_blur&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; <span class="self">Self
+<a href=#465 id=465 data-nosnippet>465</a>    </span><span class="kw">where
+<a href=#466 id=466 data-nosnippet>466</a>        </span>F: <span class="lifetime">'static </span>+ Fn(<span class="kw-2">&amp;mut </span>EventContext),
+<a href=#467 id=467 data-nosnippet>467</a>    {
+<a href=#468 id=468 data-nosnippet>468</a>        <span class="kw">let </span>focus_event = Box::new(f);
+<a href=#469 id=469 data-nosnippet>469</a>        <span class="self">self</span>.cx.with_current(<span class="self">self</span>.entity, |cx| {
+<a href=#470 id=470 data-nosnippet>470</a>            cx.add_listener(<span class="kw">move </span>|<span class="kw">_</span>: <span class="kw-2">&amp;mut </span>Popover, cx, event| {
+<a href=#471 id=471 data-nosnippet>471</a>                event.map(|window_event, meta| <span class="kw">match </span>window_event {
+<a href=#472 id=472 data-nosnippet>472</a>                    WindowEvent::MouseDown(<span class="kw">_</span>) =&gt; {
+<a href=#473 id=473 data-nosnippet>473</a>                        <span class="kw">if </span>meta.origin != cx.current() {
+<a href=#474 id=474 data-nosnippet>474</a>                            <span class="comment">// Check if the mouse was pressed outside of any descendants
+<a href=#475 id=475 data-nosnippet>475</a>                            </span><span class="kw">if </span>!cx.hovered.is_descendant_of(cx.tree, cx.current) {
+<a href=#476 id=476 data-nosnippet>476</a>                                (focus_event)(cx);
+<a href=#477 id=477 data-nosnippet>477</a>                                meta.consume();
+<a href=#478 id=478 data-nosnippet>478</a>                            }
+<a href=#479 id=479 data-nosnippet>479</a>                        }
+<a href=#480 id=480 data-nosnippet>480</a>                    }
+<a href=#481 id=481 data-nosnippet>481</a>
+<a href=#482 id=482 data-nosnippet>482</a>                    WindowEvent::KeyDown(code, <span class="kw">_</span>) =&gt; {
+<a href=#483 id=483 data-nosnippet>483</a>                        <span class="kw">if </span><span class="kw-2">*</span>code == Code::Escape {
+<a href=#484 id=484 data-nosnippet>484</a>                            (focus_event)(cx);
+<a href=#485 id=485 data-nosnippet>485</a>                        }
+<a href=#486 id=486 data-nosnippet>486</a>                    }
+<a href=#487 id=487 data-nosnippet>487</a>
+<a href=#488 id=488 data-nosnippet>488</a>                    <span class="kw">_ </span>=&gt; {}
+<a href=#489 id=489 data-nosnippet>489</a>                });
+<a href=#490 id=490 data-nosnippet>490</a>            });
+<a href=#491 id=491 data-nosnippet>491</a>        });
+<a href=#492 id=492 data-nosnippet>492</a>
+<a href=#493 id=493 data-nosnippet>493</a>        <span class="self">self
+<a href=#494 id=494 data-nosnippet>494</a>    </span>}
+<a href=#495 id=495 data-nosnippet>495</a>}
+<a href=#496 id=496 data-nosnippet>496</a>
+<a href=#497 id=497 data-nosnippet>497</a><span class="doccomment">/// An arrow view used by the Popover view.
+<a href=#498 id=498 data-nosnippet>498</a></span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Arrow {
+<a href=#499 id=499 data-nosnippet>499</a>    placement: Signal&lt;Placement&gt;,
+<a href=#500 id=500 data-nosnippet>500</a>}
+<a href=#501 id=501 data-nosnippet>501</a>
+<a href=#502 id=502 data-nosnippet>502</a><span class="kw">impl </span>Arrow {
+<a href=#503 id=503 data-nosnippet>503</a>    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(
+<a href=#504 id=504 data-nosnippet>504</a>        cx: <span class="kw-2">&amp;mut </span>Context,
+<a href=#505 id=505 data-nosnippet>505</a>        placement: Signal&lt;Placement&gt;,
+<a href=#506 id=506 data-nosnippet>506</a>        arrow_size: Signal&lt;Length&gt;,
+<a href=#507 id=507 data-nosnippet>507</a>    ) -&gt; Handle&lt;<span class="self">Self</span>&gt; {
+<a href=#508 id=508 data-nosnippet>508</a>        <span class="self">Self </span>{ placement }.build(cx, |<span class="kw">_</span>| {}).position_type(PositionType::Absolute).bind(
+<a href=#509 id=509 data-nosnippet>509</a>            placement,
+<a href=#510 id=510 data-nosnippet>510</a>            <span class="kw">move </span>|<span class="kw-2">mut </span>handle| {
+<a href=#511 id=511 data-nosnippet>511</a>                <span class="kw">let </span>placement = placement.get();
+<a href=#512 id=512 data-nosnippet>512</a>                <span class="kw">let </span>(t, b) = <span class="kw">match </span>placement {
+<a href=#513 id=513 data-nosnippet>513</a>                    Placement::TopStart | Placement::Top | Placement::TopEnd =&gt; {
+<a href=#514 id=514 data-nosnippet>514</a>                        (Percentage(<span class="number">100.0</span>), Stretch(<span class="number">1.0</span>))
+<a href=#515 id=515 data-nosnippet>515</a>                    }
+<a href=#516 id=516 data-nosnippet>516</a>                    Placement::BottomStart | Placement::Bottom | Placement::BottomEnd =&gt; {
+<a href=#517 id=517 data-nosnippet>517</a>                        (Stretch(<span class="number">1.0</span>), Percentage(<span class="number">100.0</span>))
+<a href=#518 id=518 data-nosnippet>518</a>                    }
+<a href=#519 id=519 data-nosnippet>519</a>                    <span class="kw">_ </span>=&gt; (Stretch(<span class="number">1.0</span>), Stretch(<span class="number">1.0</span>)),
+<a href=#520 id=520 data-nosnippet>520</a>                };
+<a href=#521 id=521 data-nosnippet>521</a>
+<a href=#522 id=522 data-nosnippet>522</a>                <span class="kw">let </span>(l, r) = <span class="kw">match </span>placement {
+<a href=#523 id=523 data-nosnippet>523</a>                    Placement::LeftStart | Placement::Left | Placement::LeftEnd =&gt; {
+<a href=#524 id=524 data-nosnippet>524</a>                        (Percentage(<span class="number">100.0</span>), Stretch(<span class="number">1.0</span>))
+<a href=#525 id=525 data-nosnippet>525</a>                    }
+<a href=#526 id=526 data-nosnippet>526</a>                    Placement::RightStart | Placement::Right | Placement::RightEnd =&gt; {
+<a href=#527 id=527 data-nosnippet>527</a>                        (Stretch(<span class="number">1.0</span>), Percentage(<span class="number">100.0</span>))
+<a href=#528 id=528 data-nosnippet>528</a>                    }
+<a href=#529 id=529 data-nosnippet>529</a>                    Placement::TopStart | Placement::BottomStart =&gt; {
+<a href=#530 id=530 data-nosnippet>530</a>                        <span class="comment">// TODO: Use border radius
+<a href=#531 id=531 data-nosnippet>531</a>                        </span>(Pixels(<span class="number">8.0</span>), Stretch(<span class="number">1.0</span>))
+<a href=#532 id=532 data-nosnippet>532</a>                    }
+<a href=#533 id=533 data-nosnippet>533</a>                    Placement::TopEnd | Placement::BottomEnd =&gt; {
+<a href=#534 id=534 data-nosnippet>534</a>                        <span class="comment">// TODO: Use border radius
+<a href=#535 id=535 data-nosnippet>535</a>                        </span>(Stretch(<span class="number">1.0</span>), Pixels(<span class="number">8.0</span>))
+<a href=#536 id=536 data-nosnippet>536</a>                    }
+<a href=#537 id=537 data-nosnippet>537</a>                    <span class="kw">_ </span>=&gt; (Stretch(<span class="number">1.0</span>), Stretch(<span class="number">1.0</span>)),
+<a href=#538 id=538 data-nosnippet>538</a>                };
+<a href=#539 id=539 data-nosnippet>539</a>
+<a href=#540 id=540 data-nosnippet>540</a>                handle = handle
+<a href=#541 id=541 data-nosnippet>541</a>                    .top(t)
+<a href=#542 id=542 data-nosnippet>542</a>                    .bottom(b)
+<a href=#543 id=543 data-nosnippet>543</a>                    .left(l)
+<a href=#544 id=544 data-nosnippet>544</a>                    .right(r)
+<a href=#545 id=545 data-nosnippet>545</a>                    .position_type(PositionType::Absolute)
+<a href=#546 id=546 data-nosnippet>546</a>                    .hoverable(<span class="bool-val">false</span>);
+<a href=#547 id=547 data-nosnippet>547</a>
+<a href=#548 id=548 data-nosnippet>548</a>                handle.bind(arrow_size, <span class="kw">move </span>|handle| {
+<a href=#549 id=549 data-nosnippet>549</a>                    <span class="kw">let </span>arrow_size = arrow_size.get();
+<a href=#550 id=550 data-nosnippet>550</a>                    <span class="kw">let </span>arrow_size = arrow_size.to_px().unwrap_or(<span class="number">8.0</span>);
+<a href=#551 id=551 data-nosnippet>551</a>                    <span class="kw">let </span>(w, h) = <span class="kw">match </span>placement {
+<a href=#552 id=552 data-nosnippet>552</a>                        Placement::Top
+<a href=#553 id=553 data-nosnippet>553</a>                        | Placement::Bottom
+<a href=#554 id=554 data-nosnippet>554</a>                        | Placement::TopStart
+<a href=#555 id=555 data-nosnippet>555</a>                        | Placement::BottomStart
+<a href=#556 id=556 data-nosnippet>556</a>                        | Placement::TopEnd
+<a href=#557 id=557 data-nosnippet>557</a>                        | Placement::BottomEnd =&gt; (Pixels(arrow_size * <span class="number">2.0</span>), Pixels(arrow_size)),
+<a href=#558 id=558 data-nosnippet>558</a>
+<a href=#559 id=559 data-nosnippet>559</a>                        <span class="kw">_ </span>=&gt; (Pixels(arrow_size), Pixels(arrow_size * <span class="number">2.0</span>)),
+<a href=#560 id=560 data-nosnippet>560</a>                    };
+<a href=#561 id=561 data-nosnippet>561</a>
+<a href=#562 id=562 data-nosnippet>562</a>                    handle.width(w).height(h);
+<a href=#563 id=563 data-nosnippet>563</a>                });
+<a href=#564 id=564 data-nosnippet>564</a>            },
+<a href=#565 id=565 data-nosnippet>565</a>        )
+<a href=#566 id=566 data-nosnippet>566</a>    }
+<a href=#567 id=567 data-nosnippet>567</a>}
+<a href=#568 id=568 data-nosnippet>568</a>
+<a href=#569 id=569 data-nosnippet>569</a><span class="kw">impl </span>View <span class="kw">for </span>Arrow {
+<a href=#570 id=570 data-nosnippet>570</a>    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+<a href=#571 id=571 data-nosnippet>571</a>        <span class="prelude-val">Some</span>(<span class="string">"arrow"</span>)
+<a href=#572 id=572 data-nosnippet>572</a>    }
+<a href=#573 id=573 data-nosnippet>573</a>    <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>DrawContext, canvas: <span class="kw-2">&amp;</span>Canvas) {
+<a href=#574 id=574 data-nosnippet>574</a>        <span class="kw">let </span>bounds = cx.bounds();
+<a href=#575 id=575 data-nosnippet>575</a>        <span class="kw">let </span><span class="kw-2">mut </span>path = vg::PathBuilder::new();
+<a href=#576 id=576 data-nosnippet>576</a>        <span class="kw">match </span><span class="self">self</span>.placement.get() {
+<a href=#577 id=577 data-nosnippet>577</a>            Placement::Bottom | Placement::BottomStart | Placement::BottomEnd =&gt; {
+<a href=#578 id=578 data-nosnippet>578</a>                path.move_to(bounds.bottom_left());
+<a href=#579 id=579 data-nosnippet>579</a>                path.line_to(bounds.center_top());
+<a href=#580 id=580 data-nosnippet>580</a>                path.line_to(bounds.bottom_right());
+<a href=#581 id=581 data-nosnippet>581</a>                path.line_to(bounds.bottom_left());
+<a href=#582 id=582 data-nosnippet>582</a>            }
+<a href=#583 id=583 data-nosnippet>583</a>
+<a href=#584 id=584 data-nosnippet>584</a>            Placement::Top | Placement::TopStart | Placement::TopEnd =&gt; {
+<a href=#585 id=585 data-nosnippet>585</a>                path.move_to(bounds.top_left());
+<a href=#586 id=586 data-nosnippet>586</a>                path.line_to(bounds.center_bottom());
+<a href=#587 id=587 data-nosnippet>587</a>                path.line_to(bounds.top_right());
+<a href=#588 id=588 data-nosnippet>588</a>                path.line_to(bounds.top_left());
+<a href=#589 id=589 data-nosnippet>589</a>            }
+<a href=#590 id=590 data-nosnippet>590</a>
+<a href=#591 id=591 data-nosnippet>591</a>            Placement::Left | Placement::LeftStart | Placement::LeftEnd =&gt; {
+<a href=#592 id=592 data-nosnippet>592</a>                path.move_to(bounds.top_left());
+<a href=#593 id=593 data-nosnippet>593</a>                path.line_to(bounds.center_right());
+<a href=#594 id=594 data-nosnippet>594</a>                path.line_to(bounds.bottom_left());
+<a href=#595 id=595 data-nosnippet>595</a>                path.line_to(bounds.top_left());
+<a href=#596 id=596 data-nosnippet>596</a>            }
+<a href=#597 id=597 data-nosnippet>597</a>
+<a href=#598 id=598 data-nosnippet>598</a>            Placement::Right | Placement::RightStart | Placement::RightEnd =&gt; {
+<a href=#599 id=599 data-nosnippet>599</a>                path.move_to(bounds.top_right());
+<a href=#600 id=600 data-nosnippet>600</a>                path.line_to(bounds.center_left());
+<a href=#601 id=601 data-nosnippet>601</a>                path.line_to(bounds.bottom_right());
+<a href=#602 id=602 data-nosnippet>602</a>                path.line_to(bounds.top_right());
+<a href=#603 id=603 data-nosnippet>603</a>            }
+<a href=#604 id=604 data-nosnippet>604</a>
+<a href=#605 id=605 data-nosnippet>605</a>            <span class="kw">_ </span>=&gt; {}
+<a href=#606 id=606 data-nosnippet>606</a>        }
+<a href=#607 id=607 data-nosnippet>607</a>        path.close();
+<a href=#608 id=608 data-nosnippet>608</a>
+<a href=#609 id=609 data-nosnippet>609</a>        <span class="kw">let </span>bg = cx.background_color();
+<a href=#610 id=610 data-nosnippet>610</a>        <span class="kw">let </span><span class="kw-2">mut </span>paint = vg::Paint::default();
+<a href=#611 id=611 data-nosnippet>611</a>        paint.set_color(bg);
+<a href=#612 id=612 data-nosnippet>612</a>        <span class="kw">let </span>path = path.detach();
+<a href=#613 id=613 data-nosnippet>613</a>        canvas.draw_path(<span class="kw-2">&amp;</span>path, <span class="kw-2">&amp;</span>paint);
+<a href=#614 id=614 data-nosnippet>614</a>    }
+<a href=#615 id=615 data-nosnippet>615</a>}
 </code></pre></div></section></main></body></html>

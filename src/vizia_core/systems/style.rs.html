@@ -1472,5 +1472,59 @@
 <a href=#1472 id=1472 data-nosnippet>1472</a>    <span class="kw">for </span>entity <span class="kw">in </span>redraw_entities {
 <a href=#1473 id=1473 data-nosnippet>1473</a>        cx.needs_redraw(entity);
 <a href=#1474 id=1474 data-nosnippet>1474</a>    }
-<a href=#1475 id=1475 data-nosnippet>1475</a>}
+<a href=#1475 id=1475 data-nosnippet>1475</a>
+<a href=#1476 id=1476 data-nosnippet>1476</a>    invalidate_focus_on_hidden(cx);
+<a href=#1477 id=1477 data-nosnippet>1477</a>}
+<a href=#1478 id=1478 data-nosnippet>1478</a>
+<a href=#1479 id=1479 data-nosnippet>1479</a><span class="doccomment">/// Re-validates `cx.focused` after style resolution.
+<a href=#1480 id=1480 data-nosnippet>1480</a>///
+<a href=#1481 id=1481 data-nosnippet>1481</a>/// `WindowEvent::KeyDown` dispatch in `event_manager` routes to
+<a href=#1482 id=1482 data-nosnippet>1482</a>/// `cx.focused` regardless of the focused view's visibility. Without
+<a href=#1483 id=1483 data-nosnippet>1483</a>/// re-validation, an entity that becomes `Display::None` (or whose
+<a href=#1484 id=1484 data-nosnippet>1484</a>/// ancestor does) via either a CSS rule or the `.display(...)` modifier
+<a href=#1485 id=1485 data-nosnippet>1485</a>/// keeps focus indefinitely; the existing cleanup in `Context::remove`
+<a href=#1486 id=1486 data-nosnippet>1486</a>/// only fires when an entity is *removed from the tree*, not when it
+<a href=#1487 id=1487 data-nosnippet>1487</a>/// merely becomes non-visible. The most user-visible symptom is a
+<a href=#1488 id=1488 data-nosnippet>1488</a>/// plug-in `Textbox` inside a modal that gets hidden via
+<a href=#1489 id=1489 data-nosnippet>1489</a>/// `Display::None` — every subsequent host keystroke continues to be
+<a href=#1490 id=1490 data-nosnippet>1490</a>/// routed to the invisible textbox.
+<a href=#1491 id=1491 data-nosnippet>1491</a>///
+<a href=#1492 id=1492 data-nosnippet>1492</a>/// Runs at the end of [`style_system`]: at this point `display` and
+<a href=#1493 id=1493 data-nosnippet>1493</a>/// `disabled` are authoritative for the frame, but layout / draw
+<a href=#1494 id=1494 data-nosnippet>1494</a>/// haven't consumed them yet, so re-routing here avoids one frame of
+<a href=#1495 id=1495 data-nosnippet>1495</a>/// incorrect dispatch.
+<a href=#1496 id=1496 data-nosnippet>1496</a>///
+<a href=#1497 id=1497 data-nosnippet>1497</a>/// When the focused entity (or any ancestor) is `Display::None`, or
+<a href=#1498 id=1498 data-nosnippet>1498</a>/// the focused entity is `disabled`, focus moves to the previous
+<a href=#1499 id=1499 data-nosnippet>1499</a>/// focusable element in tab order via [`focus_backward`]. If
+<a href=#1500 id=1500 data-nosnippet>1500</a>/// `focus_backward` returns `None` (no prior focusable in scope),
+<a href=#1501 id=1501 data-nosnippet>1501</a>/// focus falls back to [`Entity::root`] so keystrokes route to the
+<a href=#1502 id=1502 data-nosnippet>1502</a>/// window rather than to an invisible view.
+<a href=#1503 id=1503 data-nosnippet>1503</a></span><span class="kw">fn </span>invalidate_focus_on_hidden(cx: <span class="kw-2">&amp;mut </span>Context) {
+<a href=#1504 id=1504 data-nosnippet>1504</a>    <span class="kw">use </span><span class="kw">crate</span>::style::Display;
+<a href=#1505 id=1505 data-nosnippet>1505</a>    <span class="kw">use </span><span class="kw">crate</span>::tree::focus_backward;
+<a href=#1506 id=1506 data-nosnippet>1506</a>
+<a href=#1507 id=1507 data-nosnippet>1507</a>    <span class="kw">let </span>focused = cx.focused;
+<a href=#1508 id=1508 data-nosnippet>1508</a>    <span class="kw">if </span>focused == Entity::null() || focused == Entity::root() {
+<a href=#1509 id=1509 data-nosnippet>1509</a>        <span class="kw">return</span>;
+<a href=#1510 id=1510 data-nosnippet>1510</a>    }
+<a href=#1511 id=1511 data-nosnippet>1511</a>
+<a href=#1512 id=1512 data-nosnippet>1512</a>    <span class="kw">let </span>hidden = std::iter::once(focused)
+<a href=#1513 id=1513 data-nosnippet>1513</a>        .chain(focused.parent_iter(<span class="kw-2">&amp;</span>cx.tree))
+<a href=#1514 id=1514 data-nosnippet>1514</a>        .any(|entity| cx.style.display.get(entity).copied().unwrap_or_default() == Display::None);
+<a href=#1515 id=1515 data-nosnippet>1515</a>    <span class="kw">let </span>disabled = cx.style.disabled.get(focused).cloned().unwrap_or_default();
+<a href=#1516 id=1516 data-nosnippet>1516</a>
+<a href=#1517 id=1517 data-nosnippet>1517</a>    <span class="kw">if </span>!hidden &amp;&amp; !disabled {
+<a href=#1518 id=1518 data-nosnippet>1518</a>        <span class="kw">return</span>;
+<a href=#1519 id=1519 data-nosnippet>1519</a>    }
+<a href=#1520 id=1520 data-nosnippet>1520</a>
+<a href=#1521 id=1521 data-nosnippet>1521</a>    <span class="comment">// `lock_focus_to` matches the scope used by `focus_prev` / `focus_next`
+<a href=#1522 id=1522 data-nosnippet>1522</a>    // for keyboard navigation: respect any active modal-focus lock from
+<a href=#1523 id=1523 data-nosnippet>1523</a>    // `lock_focus_to_within`, otherwise scope to the entire tree.
+<a href=#1524 id=1524 data-nosnippet>1524</a>    </span><span class="kw">let </span>lock_focus_to = cx.focus_stack.last().copied().unwrap_or(Entity::root());
+<a href=#1525 id=1525 data-nosnippet>1525</a>    <span class="kw">let </span>new_target =
+<a href=#1526 id=1526 data-nosnippet>1526</a>        focus_backward(<span class="kw-2">&amp;</span>cx.tree, <span class="kw-2">&amp;</span>cx.style, focused, lock_focus_to).unwrap_or(Entity::root());
+<a href=#1527 id=1527 data-nosnippet>1527</a>
+<a href=#1528 id=1528 data-nosnippet>1528</a>    cx.with_current(new_target, |cx| cx.focus());
+<a href=#1529 id=1529 data-nosnippet>1529</a>}
 </code></pre></div></section></main></body></html>

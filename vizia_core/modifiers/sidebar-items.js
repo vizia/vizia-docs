@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["ControlSize","ModalEvent"],"struct":["LinearGradientBuilder","ShadowBuilder"],"trait":["AbilityModifiers","AccessibilityModifiers","ActionModifiers","ControlModifiers","LayoutModifiers","StyleModifiers","TextModifiers"]};
+window.SIDEBAR_ITEMS = {"enum":["ControlSize","ModalEvent"],"struct":["LinearGradientBuilder","ShadowBuilder"],"trait":["AbilityModifiers","AccessibilityModifiers","ActionModifiers","ControlModifiers","DragModifiers","LayoutModifiers","StyleModifiers","TextModifiers"]};

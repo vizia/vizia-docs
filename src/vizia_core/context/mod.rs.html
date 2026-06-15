@@ -1137,7 +1137,7 @@
 <a href=#1137 id=1137 data-nosnippet>1137</a>    /// # enum AppEvent {Increment}
 <a href=#1138 id=1138 data-nosnippet>1138</a>    /// cx.emit(AppEvent::Increment);
 <a href=#1139 id=1139 data-nosnippet>1139</a>    /// ```
-<a href=#1140 id=1140 data-nosnippet>1140</a>    </span><span class="kw">fn </span>emit&lt;M: Any + Send&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M);
+<a href=#1140 id=1140 data-nosnippet>1140</a>    </span><span class="kw">fn </span>emit&lt;M: Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M);
 <a href=#1141 id=1141 data-nosnippet>1141</a>
 <a href=#1142 id=1142 data-nosnippet>1142</a>    <span class="doccomment">/// Send an event containing the provided message directly to a specified entity from the current entity.
 <a href=#1143 id=1143 data-nosnippet>1143</a>    ///
@@ -1149,7 +1149,7 @@
 <a href=#1149 id=1149 data-nosnippet>1149</a>    /// # enum AppEvent {Increment}
 <a href=#1150 id=1150 data-nosnippet>1150</a>    /// cx.emit_to(Entity::root(), AppEvent::Increment);
 <a href=#1151 id=1151 data-nosnippet>1151</a>    /// ```
-<a href=#1152 id=1152 data-nosnippet>1152</a>    </span><span class="kw">fn </span>emit_to&lt;M: Any + Send&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, target: Entity, message: M);
+<a href=#1152 id=1152 data-nosnippet>1152</a>    </span><span class="kw">fn </span>emit_to&lt;M: Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, target: Entity, message: M);
 <a href=#1153 id=1153 data-nosnippet>1153</a>
 <a href=#1154 id=1154 data-nosnippet>1154</a>    <span class="doccomment">/// Send a custom event with custom origin and propagation information.
 <a href=#1155 id=1155 data-nosnippet>1155</a>    ///
@@ -1181,7 +1181,7 @@
 <a href=#1181 id=1181 data-nosnippet>1181</a>    /// # enum AppEvent {Increment}
 <a href=#1182 id=1182 data-nosnippet>1182</a>    /// cx.schedule_emit(AppEvent::Increment, Instant::now() + Duration::from_secs(2));
 <a href=#1183 id=1183 data-nosnippet>1183</a>    /// ```
-<a href=#1184 id=1184 data-nosnippet>1184</a>    </span><span class="kw">fn </span>schedule_emit&lt;M: Any + Send&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M, at: Instant) -&gt; TimedEventHandle;
+<a href=#1184 id=1184 data-nosnippet>1184</a>    </span><span class="kw">fn </span>schedule_emit&lt;M: Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M, at: Instant) -&gt; TimedEventHandle;
 <a href=#1185 id=1185 data-nosnippet>1185</a>
 <a href=#1186 id=1186 data-nosnippet>1186</a>    <span class="doccomment">/// Send an event containing the provided message directly to a specified view at a particular time instant.
 <a href=#1187 id=1187 data-nosnippet>1187</a>    ///
@@ -1196,7 +1196,7 @@
 <a href=#1196 id=1196 data-nosnippet>1196</a>    /// # enum AppEvent {Increment}
 <a href=#1197 id=1197 data-nosnippet>1197</a>    /// cx.schedule_emit_to(Entity::root(), AppEvent::Increment, Instant::now() + Duration::from_secs(2));
 <a href=#1198 id=1198 data-nosnippet>1198</a>    /// ```
-<a href=#1199 id=1199 data-nosnippet>1199</a>    </span><span class="kw">fn </span>schedule_emit_to&lt;M: Any + Send&gt;(
+<a href=#1199 id=1199 data-nosnippet>1199</a>    </span><span class="kw">fn </span>schedule_emit_to&lt;M: Any&gt;(
 <a href=#1200 id=1200 data-nosnippet>1200</a>        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
 <a href=#1201 id=1201 data-nosnippet>1201</a>        target: Entity,
 <a href=#1202 id=1202 data-nosnippet>1202</a>        message: M,
@@ -1297,7 +1297,7 @@
 <a href=#1297 id=1297 data-nosnippet>1297</a>}
 <a href=#1298 id=1298 data-nosnippet>1298</a>
 <a href=#1299 id=1299 data-nosnippet>1299</a><span class="kw">impl </span>EmitContext <span class="kw">for </span>Context {
-<a href=#1300 id=1300 data-nosnippet>1300</a>    <span class="kw">fn </span>emit&lt;M: Any + Send&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M) {
+<a href=#1300 id=1300 data-nosnippet>1300</a>    <span class="kw">fn </span>emit&lt;M: Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M) {
 <a href=#1301 id=1301 data-nosnippet>1301</a>        <span class="self">self</span>.event_queue.push_back(
 <a href=#1302 id=1302 data-nosnippet>1302</a>            Event::new(message)
 <a href=#1303 id=1303 data-nosnippet>1303</a>                .target(<span class="self">self</span>.current)
@@ -1306,7 +1306,7 @@
 <a href=#1306 id=1306 data-nosnippet>1306</a>        );
 <a href=#1307 id=1307 data-nosnippet>1307</a>    }
 <a href=#1308 id=1308 data-nosnippet>1308</a>
-<a href=#1309 id=1309 data-nosnippet>1309</a>    <span class="kw">fn </span>emit_to&lt;M: Any + Send&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, target: Entity, message: M) {
+<a href=#1309 id=1309 data-nosnippet>1309</a>    <span class="kw">fn </span>emit_to&lt;M: Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, target: Entity, message: M) {
 <a href=#1310 id=1310 data-nosnippet>1310</a>        <span class="self">self</span>.event_queue.push_back(
 <a href=#1311 id=1311 data-nosnippet>1311</a>            Event::new(message).target(target).origin(<span class="self">self</span>.current).propagate(Propagation::Direct),
 <a href=#1312 id=1312 data-nosnippet>1312</a>        );
@@ -1316,7 +1316,7 @@
 <a href=#1316 id=1316 data-nosnippet>1316</a>        <span class="self">self</span>.event_queue.push_back(event);
 <a href=#1317 id=1317 data-nosnippet>1317</a>    }
 <a href=#1318 id=1318 data-nosnippet>1318</a>
-<a href=#1319 id=1319 data-nosnippet>1319</a>    <span class="kw">fn </span>schedule_emit&lt;M: Any + Send&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M, at: Instant) -&gt; TimedEventHandle {
+<a href=#1319 id=1319 data-nosnippet>1319</a>    <span class="kw">fn </span>schedule_emit&lt;M: Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M, at: Instant) -&gt; TimedEventHandle {
 <a href=#1320 id=1320 data-nosnippet>1320</a>        <span class="self">self</span>.schedule_emit_custom(
 <a href=#1321 id=1321 data-nosnippet>1321</a>            Event::new(message)
 <a href=#1322 id=1322 data-nosnippet>1322</a>                .target(<span class="self">self</span>.current)
@@ -1326,7 +1326,7 @@
 <a href=#1326 id=1326 data-nosnippet>1326</a>        )
 <a href=#1327 id=1327 data-nosnippet>1327</a>    }
 <a href=#1328 id=1328 data-nosnippet>1328</a>
-<a href=#1329 id=1329 data-nosnippet>1329</a>    <span class="kw">fn </span>schedule_emit_to&lt;M: Any + Send&gt;(
+<a href=#1329 id=1329 data-nosnippet>1329</a>    <span class="kw">fn </span>schedule_emit_to&lt;M: Any&gt;(
 <a href=#1330 id=1330 data-nosnippet>1330</a>        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
 <a href=#1331 id=1331 data-nosnippet>1331</a>        target: Entity,
 <a href=#1332 id=1332 data-nosnippet>1332</a>        message: M,

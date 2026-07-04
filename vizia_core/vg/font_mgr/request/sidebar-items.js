@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["font_style_from_model","model_from_font_style"],"struct":["CMapEntry"]};

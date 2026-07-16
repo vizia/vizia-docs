@@ -1,5 +1,5 @@
 (function() {
-    const implementors = Object.fromEntries([["vizia_core",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.96.1/core/iter/traits/collect/trait.IntoIterator.html\" title=\"trait core::iter::traits::collect::IntoIterator\">IntoIterator</a> for <a class=\"struct\" href=\"vizia_core/layout/struct.GeoChanged.html\" title=\"struct vizia_core::layout::GeoChanged\">GeoChanged</a>",0]]]]);
+    const implementors = Object.fromEntries([["vizia_core",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.97.1/core/iter/traits/collect/trait.IntoIterator.html\" title=\"trait core::iter::traits::collect::IntoIterator\">IntoIterator</a> for <a class=\"struct\" href=\"vizia_core/layout/struct.GeoChanged.html\" title=\"struct vizia_core::layout::GeoChanged\">GeoChanged</a>",0]]]]);
     if (window.register_implementors) {
         window.register_implementors(implementors);
     } else {

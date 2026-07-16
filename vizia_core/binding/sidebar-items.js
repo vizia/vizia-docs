@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"macro":["impl_res_clone","impl_res_simple"],"struct":["Binding"],"trait":["Res"]};
+window.SIDEBAR_ITEMS = {"macro":[["impl_res_clone",1],["impl_res_simple",1]],"struct":["Binding"],"trait":["Res"]};

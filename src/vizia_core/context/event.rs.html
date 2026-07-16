@@ -1428,185 +1428,177 @@
 <a href=#1428 id=1428 data-nosnippet>1428</a>
 <a href=#1429 id=1429 data-nosnippet>1429</a>    <span class="doccomment">/// Modifies the state of an existing timer with the provided `Timer` id.
 <a href=#1430 id=1430 data-nosnippet>1430</a>    </span><span class="kw">pub fn </span>modify_timer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, timer: Timer, timer_function: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>TimerState)) {
-<a href=#1431 id=1431 data-nosnippet>1431</a>        <span class="kw">while let </span><span class="prelude-val">Some</span>(next_timer_state) = <span class="self">self</span>.running_timers.peek() {
-<a href=#1432 id=1432 data-nosnippet>1432</a>            <span class="kw">if </span>next_timer_state.id == timer {
-<a href=#1433 id=1433 data-nosnippet>1433</a>                <span class="kw">let </span><span class="kw-2">mut </span>timer_state = <span class="self">self</span>.running_timers.pop().unwrap();
-<a href=#1434 id=1434 data-nosnippet>1434</a>
-<a href=#1435 id=1435 data-nosnippet>1435</a>                (timer_function)(<span class="kw-2">&amp;mut </span>timer_state);
-<a href=#1436 id=1436 data-nosnippet>1436</a>
-<a href=#1437 id=1437 data-nosnippet>1437</a>                <span class="self">self</span>.running_timers.push(timer_state);
-<a href=#1438 id=1438 data-nosnippet>1438</a>
-<a href=#1439 id=1439 data-nosnippet>1439</a>                <span class="kw">return</span>;
-<a href=#1440 id=1440 data-nosnippet>1440</a>            }
-<a href=#1441 id=1441 data-nosnippet>1441</a>        }
-<a href=#1442 id=1442 data-nosnippet>1442</a>
-<a href=#1443 id=1443 data-nosnippet>1443</a>        <span class="kw">for </span>pending_timer <span class="kw">in </span><span class="self">self</span>.timers.iter_mut() {
-<a href=#1444 id=1444 data-nosnippet>1444</a>            <span class="kw">if </span>pending_timer.id == timer {
-<a href=#1445 id=1445 data-nosnippet>1445</a>                (timer_function)(pending_timer);
-<a href=#1446 id=1446 data-nosnippet>1446</a>            }
-<a href=#1447 id=1447 data-nosnippet>1447</a>        }
-<a href=#1448 id=1448 data-nosnippet>1448</a>    }
-<a href=#1449 id=1449 data-nosnippet>1449</a>
-<a href=#1450 id=1450 data-nosnippet>1450</a>    <span class="kw">pub fn </span>query_timer&lt;T&gt;(
-<a href=#1451 id=1451 data-nosnippet>1451</a>        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-<a href=#1452 id=1452 data-nosnippet>1452</a>        timer: Timer,
-<a href=#1453 id=1453 data-nosnippet>1453</a>        timer_function: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>TimerState) -&gt; T,
-<a href=#1454 id=1454 data-nosnippet>1454</a>    ) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
-<a href=#1455 id=1455 data-nosnippet>1455</a>        <span class="kw">while let </span><span class="prelude-val">Some</span>(next_timer_state) = <span class="self">self</span>.running_timers.peek() {
-<a href=#1456 id=1456 data-nosnippet>1456</a>            <span class="kw">if </span>next_timer_state.id == timer {
-<a href=#1457 id=1457 data-nosnippet>1457</a>                <span class="kw">let </span>timer_state = <span class="self">self</span>.running_timers.pop().unwrap();
+<a href=#1431 id=1431 data-nosnippet>1431</a>        <span class="kw">let </span><span class="kw-2">mut </span>running_timers = <span class="self">self</span>.running_timers.clone().into_vec();
+<a href=#1432 id=1432 data-nosnippet>1432</a>
+<a href=#1433 id=1433 data-nosnippet>1433</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(timer_state) =
+<a href=#1434 id=1434 data-nosnippet>1434</a>            running_timers.iter_mut().find(|timer_state| timer_state.id == timer)
+<a href=#1435 id=1435 data-nosnippet>1435</a>        {
+<a href=#1436 id=1436 data-nosnippet>1436</a>            (timer_function)(timer_state);
+<a href=#1437 id=1437 data-nosnippet>1437</a>            <span class="kw-2">*</span><span class="self">self</span>.running_timers = running_timers.into();
+<a href=#1438 id=1438 data-nosnippet>1438</a>            <span class="kw">return</span>;
+<a href=#1439 id=1439 data-nosnippet>1439</a>        }
+<a href=#1440 id=1440 data-nosnippet>1440</a>
+<a href=#1441 id=1441 data-nosnippet>1441</a>        <span class="kw">for </span>pending_timer <span class="kw">in </span><span class="self">self</span>.timers.iter_mut() {
+<a href=#1442 id=1442 data-nosnippet>1442</a>            <span class="kw">if </span>pending_timer.id == timer {
+<a href=#1443 id=1443 data-nosnippet>1443</a>                (timer_function)(pending_timer);
+<a href=#1444 id=1444 data-nosnippet>1444</a>            }
+<a href=#1445 id=1445 data-nosnippet>1445</a>        }
+<a href=#1446 id=1446 data-nosnippet>1446</a>    }
+<a href=#1447 id=1447 data-nosnippet>1447</a>
+<a href=#1448 id=1448 data-nosnippet>1448</a>    <span class="kw">pub fn </span>query_timer&lt;T&gt;(
+<a href=#1449 id=1449 data-nosnippet>1449</a>        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+<a href=#1450 id=1450 data-nosnippet>1450</a>        timer: Timer,
+<a href=#1451 id=1451 data-nosnippet>1451</a>        timer_function: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>TimerState) -&gt; T,
+<a href=#1452 id=1452 data-nosnippet>1452</a>    ) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+<a href=#1453 id=1453 data-nosnippet>1453</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(timer_state) =
+<a href=#1454 id=1454 data-nosnippet>1454</a>            <span class="self">self</span>.running_timers.iter().find(|timer_state| timer_state.id == timer)
+<a href=#1455 id=1455 data-nosnippet>1455</a>        {
+<a href=#1456 id=1456 data-nosnippet>1456</a>            <span class="kw">return </span><span class="prelude-val">Some</span>(timer_function(timer_state));
+<a href=#1457 id=1457 data-nosnippet>1457</a>        }
 <a href=#1458 id=1458 data-nosnippet>1458</a>
-<a href=#1459 id=1459 data-nosnippet>1459</a>                <span class="kw">let </span>t = (timer_function)(<span class="kw-2">&amp;</span>timer_state);
-<a href=#1460 id=1460 data-nosnippet>1460</a>
-<a href=#1461 id=1461 data-nosnippet>1461</a>                <span class="self">self</span>.running_timers.push(timer_state);
-<a href=#1462 id=1462 data-nosnippet>1462</a>
-<a href=#1463 id=1463 data-nosnippet>1463</a>                <span class="kw">return </span><span class="prelude-val">Some</span>(t);
-<a href=#1464 id=1464 data-nosnippet>1464</a>            }
-<a href=#1465 id=1465 data-nosnippet>1465</a>        }
-<a href=#1466 id=1466 data-nosnippet>1466</a>
-<a href=#1467 id=1467 data-nosnippet>1467</a>        <span class="kw">for </span>pending_timer <span class="kw">in </span><span class="self">self</span>.timers.iter() {
-<a href=#1468 id=1468 data-nosnippet>1468</a>            <span class="kw">if </span>pending_timer.id == timer {
-<a href=#1469 id=1469 data-nosnippet>1469</a>                <span class="kw">return </span><span class="prelude-val">Some</span>(timer_function(pending_timer));
-<a href=#1470 id=1470 data-nosnippet>1470</a>            }
-<a href=#1471 id=1471 data-nosnippet>1471</a>        }
-<a href=#1472 id=1472 data-nosnippet>1472</a>
-<a href=#1473 id=1473 data-nosnippet>1473</a>        <span class="prelude-val">None
-<a href=#1474 id=1474 data-nosnippet>1474</a>    </span>}
+<a href=#1459 id=1459 data-nosnippet>1459</a>        <span class="kw">for </span>pending_timer <span class="kw">in </span><span class="self">self</span>.timers.iter() {
+<a href=#1460 id=1460 data-nosnippet>1460</a>            <span class="kw">if </span>pending_timer.id == timer {
+<a href=#1461 id=1461 data-nosnippet>1461</a>                <span class="kw">return </span><span class="prelude-val">Some</span>(timer_function(pending_timer));
+<a href=#1462 id=1462 data-nosnippet>1462</a>            }
+<a href=#1463 id=1463 data-nosnippet>1463</a>        }
+<a href=#1464 id=1464 data-nosnippet>1464</a>
+<a href=#1465 id=1465 data-nosnippet>1465</a>        <span class="prelude-val">None
+<a href=#1466 id=1466 data-nosnippet>1466</a>    </span>}
+<a href=#1467 id=1467 data-nosnippet>1467</a>
+<a href=#1468 id=1468 data-nosnippet>1468</a>    <span class="doccomment">/// Returns true if the timer with the provided timer id is currently running.
+<a href=#1469 id=1469 data-nosnippet>1469</a>    </span><span class="kw">pub fn </span>timer_is_running(<span class="kw-2">&amp;mut </span><span class="self">self</span>, timer: Timer) -&gt; bool {
+<a href=#1470 id=1470 data-nosnippet>1470</a>        <span class="kw">for </span>timer_state <span class="kw">in </span><span class="self">self</span>.running_timers.iter() {
+<a href=#1471 id=1471 data-nosnippet>1471</a>            <span class="kw">if </span>timer_state.id == timer {
+<a href=#1472 id=1472 data-nosnippet>1472</a>                <span class="kw">return </span><span class="bool-val">true</span>;
+<a href=#1473 id=1473 data-nosnippet>1473</a>            }
+<a href=#1474 id=1474 data-nosnippet>1474</a>        }
 <a href=#1475 id=1475 data-nosnippet>1475</a>
-<a href=#1476 id=1476 data-nosnippet>1476</a>    <span class="doccomment">/// Returns true if the timer with the provided timer id is currently running.
-<a href=#1477 id=1477 data-nosnippet>1477</a>    </span><span class="kw">pub fn </span>timer_is_running(<span class="kw-2">&amp;mut </span><span class="self">self</span>, timer: Timer) -&gt; bool {
-<a href=#1478 id=1478 data-nosnippet>1478</a>        <span class="kw">for </span>timer_state <span class="kw">in </span><span class="self">self</span>.running_timers.iter() {
-<a href=#1479 id=1479 data-nosnippet>1479</a>            <span class="kw">if </span>timer_state.id == timer {
-<a href=#1480 id=1480 data-nosnippet>1480</a>                <span class="kw">return </span><span class="bool-val">true</span>;
-<a href=#1481 id=1481 data-nosnippet>1481</a>            }
-<a href=#1482 id=1482 data-nosnippet>1482</a>        }
-<a href=#1483 id=1483 data-nosnippet>1483</a>
-<a href=#1484 id=1484 data-nosnippet>1484</a>        <span class="bool-val">false
-<a href=#1485 id=1485 data-nosnippet>1485</a>    </span>}
-<a href=#1486 id=1486 data-nosnippet>1486</a>
-<a href=#1487 id=1487 data-nosnippet>1487</a>    <span class="doccomment">/// Stops the timer with the given timer id.
-<a href=#1488 id=1488 data-nosnippet>1488</a>    ///
-<a href=#1489 id=1489 data-nosnippet>1489</a>    /// Any events emitted in response to the timer stopping, as determined by the callback provided in `add_timer()`, will target the view which called `start_timer()`.
-<a href=#1490 id=1490 data-nosnippet>1490</a>    </span><span class="kw">pub fn </span>stop_timer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, timer: Timer) {
-<a href=#1491 id=1491 data-nosnippet>1491</a>        <span class="kw">let </span><span class="kw-2">mut </span>running_timers = <span class="self">self</span>.running_timers.clone();
+<a href=#1476 id=1476 data-nosnippet>1476</a>        <span class="bool-val">false
+<a href=#1477 id=1477 data-nosnippet>1477</a>    </span>}
+<a href=#1478 id=1478 data-nosnippet>1478</a>
+<a href=#1479 id=1479 data-nosnippet>1479</a>    <span class="doccomment">/// Stops the timer with the given timer id.
+<a href=#1480 id=1480 data-nosnippet>1480</a>    ///
+<a href=#1481 id=1481 data-nosnippet>1481</a>    /// Any events emitted in response to the timer stopping, as determined by the callback provided in `add_timer()`, will target the view which called `start_timer()`.
+<a href=#1482 id=1482 data-nosnippet>1482</a>    </span><span class="kw">pub fn </span>stop_timer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, timer: Timer) {
+<a href=#1483 id=1483 data-nosnippet>1483</a>        <span class="kw">let </span><span class="kw-2">mut </span>running_timers = <span class="self">self</span>.running_timers.clone();
+<a href=#1484 id=1484 data-nosnippet>1484</a>
+<a href=#1485 id=1485 data-nosnippet>1485</a>        <span class="kw">for </span>timer_state <span class="kw">in </span>running_timers.iter() {
+<a href=#1486 id=1486 data-nosnippet>1486</a>            <span class="kw">if </span>timer_state.id == timer {
+<a href=#1487 id=1487 data-nosnippet>1487</a>                <span class="self">self</span>.with_current(timer_state.entity, |cx| {
+<a href=#1488 id=1488 data-nosnippet>1488</a>                    (timer_state.callback)(cx, TimerAction::Stop);
+<a href=#1489 id=1489 data-nosnippet>1489</a>                });
+<a href=#1490 id=1490 data-nosnippet>1490</a>            }
+<a href=#1491 id=1491 data-nosnippet>1491</a>        }
 <a href=#1492 id=1492 data-nosnippet>1492</a>
-<a href=#1493 id=1493 data-nosnippet>1493</a>        <span class="kw">for </span>timer_state <span class="kw">in </span>running_timers.iter() {
-<a href=#1494 id=1494 data-nosnippet>1494</a>            <span class="kw">if </span>timer_state.id == timer {
-<a href=#1495 id=1495 data-nosnippet>1495</a>                <span class="self">self</span>.with_current(timer_state.entity, |cx| {
-<a href=#1496 id=1496 data-nosnippet>1496</a>                    (timer_state.callback)(cx, TimerAction::Stop);
-<a href=#1497 id=1497 data-nosnippet>1497</a>                });
-<a href=#1498 id=1498 data-nosnippet>1498</a>            }
-<a href=#1499 id=1499 data-nosnippet>1499</a>        }
-<a href=#1500 id=1500 data-nosnippet>1500</a>
-<a href=#1501 id=1501 data-nosnippet>1501</a>        <span class="kw-2">*</span><span class="self">self</span>.running_timers =
-<a href=#1502 id=1502 data-nosnippet>1502</a>            running_timers.drain().filter(|timer_state| timer_state.id != timer).collect();
-<a href=#1503 id=1503 data-nosnippet>1503</a>    }
-<a href=#1504 id=1504 data-nosnippet>1504</a>}
-<a href=#1505 id=1505 data-nosnippet>1505</a>
-<a href=#1506 id=1506 data-nosnippet>1506</a><span class="kw">impl </span>DataContext <span class="kw">for </span>EventContext&lt;<span class="lifetime">'_</span>&gt; {
-<a href=#1507 id=1507 data-nosnippet>1507</a>    <span class="kw">fn </span>try_data&lt;T: <span class="lifetime">'static</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
-<a href=#1508 id=1508 data-nosnippet>1508</a>        <span class="comment">// Return data for the static model.
-<a href=#1509 id=1509 data-nosnippet>1509</a>        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(t) = &lt;<span class="kw">dyn </span>Any&gt;::downcast_ref::&lt;T&gt;(<span class="kw-2">&amp;</span>()) {
-<a href=#1510 id=1510 data-nosnippet>1510</a>            <span class="kw">return </span><span class="prelude-val">Some</span>(t);
-<a href=#1511 id=1511 data-nosnippet>1511</a>        }
+<a href=#1493 id=1493 data-nosnippet>1493</a>        <span class="kw-2">*</span><span class="self">self</span>.running_timers =
+<a href=#1494 id=1494 data-nosnippet>1494</a>            running_timers.drain().filter(|timer_state| timer_state.id != timer).collect();
+<a href=#1495 id=1495 data-nosnippet>1495</a>    }
+<a href=#1496 id=1496 data-nosnippet>1496</a>}
+<a href=#1497 id=1497 data-nosnippet>1497</a>
+<a href=#1498 id=1498 data-nosnippet>1498</a><span class="kw">impl </span>DataContext <span class="kw">for </span>EventContext&lt;<span class="lifetime">'_</span>&gt; {
+<a href=#1499 id=1499 data-nosnippet>1499</a>    <span class="kw">fn </span>try_data&lt;T: <span class="lifetime">'static</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>T&gt; {
+<a href=#1500 id=1500 data-nosnippet>1500</a>        <span class="comment">// Return data for the static model.
+<a href=#1501 id=1501 data-nosnippet>1501</a>        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(t) = &lt;<span class="kw">dyn </span>Any&gt;::downcast_ref::&lt;T&gt;(<span class="kw-2">&amp;</span>()) {
+<a href=#1502 id=1502 data-nosnippet>1502</a>            <span class="kw">return </span><span class="prelude-val">Some</span>(t);
+<a href=#1503 id=1503 data-nosnippet>1503</a>        }
+<a href=#1504 id=1504 data-nosnippet>1504</a>
+<a href=#1505 id=1505 data-nosnippet>1505</a>        <span class="kw">for </span>entity <span class="kw">in </span><span class="self">self</span>.current.parent_iter(<span class="self">self</span>.tree) {
+<a href=#1506 id=1506 data-nosnippet>1506</a>            <span class="comment">// Return model data.
+<a href=#1507 id=1507 data-nosnippet>1507</a>            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(models) = <span class="self">self</span>.models.get(<span class="kw-2">&amp;</span>entity) {
+<a href=#1508 id=1508 data-nosnippet>1508</a>                <span class="kw">if let </span><span class="prelude-val">Some</span>(model) = models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;T&gt;()) {
+<a href=#1509 id=1509 data-nosnippet>1509</a>                    <span class="kw">return </span>model.downcast_ref::&lt;T&gt;();
+<a href=#1510 id=1510 data-nosnippet>1510</a>                }
+<a href=#1511 id=1511 data-nosnippet>1511</a>            }
 <a href=#1512 id=1512 data-nosnippet>1512</a>
-<a href=#1513 id=1513 data-nosnippet>1513</a>        <span class="kw">for </span>entity <span class="kw">in </span><span class="self">self</span>.current.parent_iter(<span class="self">self</span>.tree) {
-<a href=#1514 id=1514 data-nosnippet>1514</a>            <span class="comment">// Return model data.
-<a href=#1515 id=1515 data-nosnippet>1515</a>            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(models) = <span class="self">self</span>.models.get(<span class="kw-2">&amp;</span>entity) {
-<a href=#1516 id=1516 data-nosnippet>1516</a>                <span class="kw">if let </span><span class="prelude-val">Some</span>(model) = models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;T&gt;()) {
-<a href=#1517 id=1517 data-nosnippet>1517</a>                    <span class="kw">return </span>model.downcast_ref::&lt;T&gt;();
-<a href=#1518 id=1518 data-nosnippet>1518</a>                }
-<a href=#1519 id=1519 data-nosnippet>1519</a>            }
+<a href=#1513 id=1513 data-nosnippet>1513</a>            <span class="comment">// Return view data.
+<a href=#1514 id=1514 data-nosnippet>1514</a>            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = <span class="self">self</span>.views.get(<span class="kw-2">&amp;</span>entity) {
+<a href=#1515 id=1515 data-nosnippet>1515</a>                <span class="kw">if let </span><span class="prelude-val">Some</span>(data) = view_handler.downcast_ref::&lt;T&gt;() {
+<a href=#1516 id=1516 data-nosnippet>1516</a>                    <span class="kw">return </span><span class="prelude-val">Some</span>(data);
+<a href=#1517 id=1517 data-nosnippet>1517</a>                }
+<a href=#1518 id=1518 data-nosnippet>1518</a>            }
+<a href=#1519 id=1519 data-nosnippet>1519</a>        }
 <a href=#1520 id=1520 data-nosnippet>1520</a>
-<a href=#1521 id=1521 data-nosnippet>1521</a>            <span class="comment">// Return view data.
-<a href=#1522 id=1522 data-nosnippet>1522</a>            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = <span class="self">self</span>.views.get(<span class="kw-2">&amp;</span>entity) {
-<a href=#1523 id=1523 data-nosnippet>1523</a>                <span class="kw">if let </span><span class="prelude-val">Some</span>(data) = view_handler.downcast_ref::&lt;T&gt;() {
-<a href=#1524 id=1524 data-nosnippet>1524</a>                    <span class="kw">return </span><span class="prelude-val">Some</span>(data);
-<a href=#1525 id=1525 data-nosnippet>1525</a>                }
-<a href=#1526 id=1526 data-nosnippet>1526</a>            }
-<a href=#1527 id=1527 data-nosnippet>1527</a>        }
+<a href=#1521 id=1521 data-nosnippet>1521</a>        <span class="prelude-val">None
+<a href=#1522 id=1522 data-nosnippet>1522</a>    </span>}
+<a href=#1523 id=1523 data-nosnippet>1523</a>
+<a href=#1524 id=1524 data-nosnippet>1524</a>    <span class="kw">fn </span>localization_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;LocalizationContext&lt;<span class="lifetime">'_</span>&gt;&gt; {
+<a href=#1525 id=1525 data-nosnippet>1525</a>        <span class="prelude-val">Some</span>(LocalizationContext::from_event_context(<span class="self">self</span>))
+<a href=#1526 id=1526 data-nosnippet>1526</a>    }
+<a href=#1527 id=1527 data-nosnippet>1527</a>}
 <a href=#1528 id=1528 data-nosnippet>1528</a>
-<a href=#1529 id=1529 data-nosnippet>1529</a>        <span class="prelude-val">None
-<a href=#1530 id=1530 data-nosnippet>1530</a>    </span>}
-<a href=#1531 id=1531 data-nosnippet>1531</a>
-<a href=#1532 id=1532 data-nosnippet>1532</a>    <span class="kw">fn </span>localization_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;LocalizationContext&lt;<span class="lifetime">'_</span>&gt;&gt; {
-<a href=#1533 id=1533 data-nosnippet>1533</a>        <span class="prelude-val">Some</span>(LocalizationContext::from_event_context(<span class="self">self</span>))
-<a href=#1534 id=1534 data-nosnippet>1534</a>    }
-<a href=#1535 id=1535 data-nosnippet>1535</a>}
-<a href=#1536 id=1536 data-nosnippet>1536</a>
-<a href=#1537 id=1537 data-nosnippet>1537</a><span class="kw">impl </span>EmitContext <span class="kw">for </span>EventContext&lt;<span class="lifetime">'_</span>&gt; {
-<a href=#1538 id=1538 data-nosnippet>1538</a>    <span class="kw">fn </span>emit&lt;M: Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M) {
-<a href=#1539 id=1539 data-nosnippet>1539</a>        <span class="self">self</span>.event_queue.push_back(
-<a href=#1540 id=1540 data-nosnippet>1540</a>            Event::new(message)
-<a href=#1541 id=1541 data-nosnippet>1541</a>                .target(<span class="self">self</span>.current)
-<a href=#1542 id=1542 data-nosnippet>1542</a>                .origin(<span class="self">self</span>.current)
-<a href=#1543 id=1543 data-nosnippet>1543</a>                .propagate(Propagation::Up),
-<a href=#1544 id=1544 data-nosnippet>1544</a>        );
-<a href=#1545 id=1545 data-nosnippet>1545</a>    }
-<a href=#1546 id=1546 data-nosnippet>1546</a>
-<a href=#1547 id=1547 data-nosnippet>1547</a>    <span class="kw">fn </span>emit_to&lt;M: Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, target: Entity, message: M) {
-<a href=#1548 id=1548 data-nosnippet>1548</a>        <span class="self">self</span>.event_queue.push_back(
-<a href=#1549 id=1549 data-nosnippet>1549</a>            Event::new(message).target(target).origin(<span class="self">self</span>.current).propagate(Propagation::Direct),
-<a href=#1550 id=1550 data-nosnippet>1550</a>        );
-<a href=#1551 id=1551 data-nosnippet>1551</a>    }
-<a href=#1552 id=1552 data-nosnippet>1552</a>
-<a href=#1553 id=1553 data-nosnippet>1553</a>    <span class="kw">fn </span>emit_custom(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: Event) {
-<a href=#1554 id=1554 data-nosnippet>1554</a>        <span class="self">self</span>.event_queue.push_back(event);
-<a href=#1555 id=1555 data-nosnippet>1555</a>    }
-<a href=#1556 id=1556 data-nosnippet>1556</a>
-<a href=#1557 id=1557 data-nosnippet>1557</a>    <span class="kw">fn </span>schedule_emit&lt;M: Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M, at: Instant) -&gt; TimedEventHandle {
-<a href=#1558 id=1558 data-nosnippet>1558</a>        <span class="self">self</span>.schedule_emit_custom(
-<a href=#1559 id=1559 data-nosnippet>1559</a>            Event::new(message)
-<a href=#1560 id=1560 data-nosnippet>1560</a>                .target(<span class="self">self</span>.current)
-<a href=#1561 id=1561 data-nosnippet>1561</a>                .origin(<span class="self">self</span>.current)
-<a href=#1562 id=1562 data-nosnippet>1562</a>                .propagate(Propagation::Up),
-<a href=#1563 id=1563 data-nosnippet>1563</a>            at,
-<a href=#1564 id=1564 data-nosnippet>1564</a>        )
-<a href=#1565 id=1565 data-nosnippet>1565</a>    }
-<a href=#1566 id=1566 data-nosnippet>1566</a>    <span class="kw">fn </span>schedule_emit_to&lt;M: Any&gt;(
-<a href=#1567 id=1567 data-nosnippet>1567</a>        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-<a href=#1568 id=1568 data-nosnippet>1568</a>        target: Entity,
-<a href=#1569 id=1569 data-nosnippet>1569</a>        message: M,
-<a href=#1570 id=1570 data-nosnippet>1570</a>        at: Instant,
-<a href=#1571 id=1571 data-nosnippet>1571</a>    ) -&gt; TimedEventHandle {
-<a href=#1572 id=1572 data-nosnippet>1572</a>        <span class="self">self</span>.schedule_emit_custom(
-<a href=#1573 id=1573 data-nosnippet>1573</a>            Event::new(message).target(target).origin(<span class="self">self</span>.current).propagate(Propagation::Direct),
-<a href=#1574 id=1574 data-nosnippet>1574</a>            at,
-<a href=#1575 id=1575 data-nosnippet>1575</a>        )
-<a href=#1576 id=1576 data-nosnippet>1576</a>    }
-<a href=#1577 id=1577 data-nosnippet>1577</a>    <span class="kw">fn </span>schedule_emit_custom(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: Event, at: Instant) -&gt; TimedEventHandle {
-<a href=#1578 id=1578 data-nosnippet>1578</a>        <span class="kw">let </span>handle = TimedEventHandle(<span class="kw-2">*</span><span class="self">self</span>.next_event_id);
-<a href=#1579 id=1579 data-nosnippet>1579</a>        <span class="self">self</span>.event_schedule.push(TimedEvent { event, time: at, ident: handle });
-<a href=#1580 id=1580 data-nosnippet>1580</a>        <span class="kw-2">*</span><span class="self">self</span>.next_event_id += <span class="number">1</span>;
-<a href=#1581 id=1581 data-nosnippet>1581</a>        handle
-<a href=#1582 id=1582 data-nosnippet>1582</a>    }
-<a href=#1583 id=1583 data-nosnippet>1583</a>    <span class="kw">fn </span>cancel_scheduled(<span class="kw-2">&amp;mut </span><span class="self">self</span>, handle: TimedEventHandle) {
-<a href=#1584 id=1584 data-nosnippet>1584</a>        <span class="kw-2">*</span><span class="self">self</span>.event_schedule =
-<a href=#1585 id=1585 data-nosnippet>1585</a>            <span class="self">self</span>.event_schedule.drain().filter(|item| item.ident != handle).collect();
-<a href=#1586 id=1586 data-nosnippet>1586</a>    }
-<a href=#1587 id=1587 data-nosnippet>1587</a>}
-<a href=#1588 id=1588 data-nosnippet>1588</a>
-<a href=#1589 id=1589 data-nosnippet>1589</a><span class="doccomment">/// Trait for querying properties of the tree from a context.
-<a href=#1590 id=1590 data-nosnippet>1590</a></span><span class="kw">pub trait </span>TreeProps {
-<a href=#1591 id=1591 data-nosnippet>1591</a>    <span class="doccomment">/// Returns the entity id of the parent of the current view.
-<a href=#1592 id=1592 data-nosnippet>1592</a>    </span><span class="kw">fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity;
-<a href=#1593 id=1593 data-nosnippet>1593</a>    <span class="doccomment">/// Returns the entity id of the first_child of the current view.
-<a href=#1594 id=1594 data-nosnippet>1594</a>    </span><span class="kw">fn </span>first_child(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity;
-<a href=#1595 id=1595 data-nosnippet>1595</a>    <span class="doccomment">/// Returns the entity id of the parent window of the current view.
-<a href=#1596 id=1596 data-nosnippet>1596</a>    </span><span class="kw">fn </span>parent_window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity;
-<a href=#1597 id=1597 data-nosnippet>1597</a>}
-<a href=#1598 id=1598 data-nosnippet>1598</a>
-<a href=#1599 id=1599 data-nosnippet>1599</a><span class="kw">impl </span>TreeProps <span class="kw">for </span>EventContext&lt;<span class="lifetime">'_</span>&gt; {
-<a href=#1600 id=1600 data-nosnippet>1600</a>    <span class="kw">fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
-<a href=#1601 id=1601 data-nosnippet>1601</a>        <span class="self">self</span>.tree.get_layout_parent(<span class="self">self</span>.current).unwrap()
+<a href=#1529 id=1529 data-nosnippet>1529</a><span class="kw">impl </span>EmitContext <span class="kw">for </span>EventContext&lt;<span class="lifetime">'_</span>&gt; {
+<a href=#1530 id=1530 data-nosnippet>1530</a>    <span class="kw">fn </span>emit&lt;M: Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M) {
+<a href=#1531 id=1531 data-nosnippet>1531</a>        <span class="self">self</span>.event_queue.push_back(
+<a href=#1532 id=1532 data-nosnippet>1532</a>            Event::new(message)
+<a href=#1533 id=1533 data-nosnippet>1533</a>                .target(<span class="self">self</span>.current)
+<a href=#1534 id=1534 data-nosnippet>1534</a>                .origin(<span class="self">self</span>.current)
+<a href=#1535 id=1535 data-nosnippet>1535</a>                .propagate(Propagation::Up),
+<a href=#1536 id=1536 data-nosnippet>1536</a>        );
+<a href=#1537 id=1537 data-nosnippet>1537</a>    }
+<a href=#1538 id=1538 data-nosnippet>1538</a>
+<a href=#1539 id=1539 data-nosnippet>1539</a>    <span class="kw">fn </span>emit_to&lt;M: Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, target: Entity, message: M) {
+<a href=#1540 id=1540 data-nosnippet>1540</a>        <span class="self">self</span>.event_queue.push_back(
+<a href=#1541 id=1541 data-nosnippet>1541</a>            Event::new(message).target(target).origin(<span class="self">self</span>.current).propagate(Propagation::Direct),
+<a href=#1542 id=1542 data-nosnippet>1542</a>        );
+<a href=#1543 id=1543 data-nosnippet>1543</a>    }
+<a href=#1544 id=1544 data-nosnippet>1544</a>
+<a href=#1545 id=1545 data-nosnippet>1545</a>    <span class="kw">fn </span>emit_custom(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: Event) {
+<a href=#1546 id=1546 data-nosnippet>1546</a>        <span class="self">self</span>.event_queue.push_back(event);
+<a href=#1547 id=1547 data-nosnippet>1547</a>    }
+<a href=#1548 id=1548 data-nosnippet>1548</a>
+<a href=#1549 id=1549 data-nosnippet>1549</a>    <span class="kw">fn </span>schedule_emit&lt;M: Any&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M, at: Instant) -&gt; TimedEventHandle {
+<a href=#1550 id=1550 data-nosnippet>1550</a>        <span class="self">self</span>.schedule_emit_custom(
+<a href=#1551 id=1551 data-nosnippet>1551</a>            Event::new(message)
+<a href=#1552 id=1552 data-nosnippet>1552</a>                .target(<span class="self">self</span>.current)
+<a href=#1553 id=1553 data-nosnippet>1553</a>                .origin(<span class="self">self</span>.current)
+<a href=#1554 id=1554 data-nosnippet>1554</a>                .propagate(Propagation::Up),
+<a href=#1555 id=1555 data-nosnippet>1555</a>            at,
+<a href=#1556 id=1556 data-nosnippet>1556</a>        )
+<a href=#1557 id=1557 data-nosnippet>1557</a>    }
+<a href=#1558 id=1558 data-nosnippet>1558</a>    <span class="kw">fn </span>schedule_emit_to&lt;M: Any&gt;(
+<a href=#1559 id=1559 data-nosnippet>1559</a>        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+<a href=#1560 id=1560 data-nosnippet>1560</a>        target: Entity,
+<a href=#1561 id=1561 data-nosnippet>1561</a>        message: M,
+<a href=#1562 id=1562 data-nosnippet>1562</a>        at: Instant,
+<a href=#1563 id=1563 data-nosnippet>1563</a>    ) -&gt; TimedEventHandle {
+<a href=#1564 id=1564 data-nosnippet>1564</a>        <span class="self">self</span>.schedule_emit_custom(
+<a href=#1565 id=1565 data-nosnippet>1565</a>            Event::new(message).target(target).origin(<span class="self">self</span>.current).propagate(Propagation::Direct),
+<a href=#1566 id=1566 data-nosnippet>1566</a>            at,
+<a href=#1567 id=1567 data-nosnippet>1567</a>        )
+<a href=#1568 id=1568 data-nosnippet>1568</a>    }
+<a href=#1569 id=1569 data-nosnippet>1569</a>    <span class="kw">fn </span>schedule_emit_custom(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: Event, at: Instant) -&gt; TimedEventHandle {
+<a href=#1570 id=1570 data-nosnippet>1570</a>        <span class="kw">let </span>handle = TimedEventHandle(<span class="kw-2">*</span><span class="self">self</span>.next_event_id);
+<a href=#1571 id=1571 data-nosnippet>1571</a>        <span class="self">self</span>.event_schedule.push(TimedEvent { event, time: at, ident: handle });
+<a href=#1572 id=1572 data-nosnippet>1572</a>        <span class="kw-2">*</span><span class="self">self</span>.next_event_id += <span class="number">1</span>;
+<a href=#1573 id=1573 data-nosnippet>1573</a>        handle
+<a href=#1574 id=1574 data-nosnippet>1574</a>    }
+<a href=#1575 id=1575 data-nosnippet>1575</a>    <span class="kw">fn </span>cancel_scheduled(<span class="kw-2">&amp;mut </span><span class="self">self</span>, handle: TimedEventHandle) {
+<a href=#1576 id=1576 data-nosnippet>1576</a>        <span class="kw-2">*</span><span class="self">self</span>.event_schedule =
+<a href=#1577 id=1577 data-nosnippet>1577</a>            <span class="self">self</span>.event_schedule.drain().filter(|item| item.ident != handle).collect();
+<a href=#1578 id=1578 data-nosnippet>1578</a>    }
+<a href=#1579 id=1579 data-nosnippet>1579</a>}
+<a href=#1580 id=1580 data-nosnippet>1580</a>
+<a href=#1581 id=1581 data-nosnippet>1581</a><span class="doccomment">/// Trait for querying properties of the tree from a context.
+<a href=#1582 id=1582 data-nosnippet>1582</a></span><span class="kw">pub trait </span>TreeProps {
+<a href=#1583 id=1583 data-nosnippet>1583</a>    <span class="doccomment">/// Returns the entity id of the parent of the current view.
+<a href=#1584 id=1584 data-nosnippet>1584</a>    </span><span class="kw">fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity;
+<a href=#1585 id=1585 data-nosnippet>1585</a>    <span class="doccomment">/// Returns the entity id of the first_child of the current view.
+<a href=#1586 id=1586 data-nosnippet>1586</a>    </span><span class="kw">fn </span>first_child(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity;
+<a href=#1587 id=1587 data-nosnippet>1587</a>    <span class="doccomment">/// Returns the entity id of the parent window of the current view.
+<a href=#1588 id=1588 data-nosnippet>1588</a>    </span><span class="kw">fn </span>parent_window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity;
+<a href=#1589 id=1589 data-nosnippet>1589</a>}
+<a href=#1590 id=1590 data-nosnippet>1590</a>
+<a href=#1591 id=1591 data-nosnippet>1591</a><span class="kw">impl </span>TreeProps <span class="kw">for </span>EventContext&lt;<span class="lifetime">'_</span>&gt; {
+<a href=#1592 id=1592 data-nosnippet>1592</a>    <span class="kw">fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
+<a href=#1593 id=1593 data-nosnippet>1593</a>        <span class="self">self</span>.tree.get_layout_parent(<span class="self">self</span>.current).unwrap()
+<a href=#1594 id=1594 data-nosnippet>1594</a>    }
+<a href=#1595 id=1595 data-nosnippet>1595</a>
+<a href=#1596 id=1596 data-nosnippet>1596</a>    <span class="kw">fn </span>first_child(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
+<a href=#1597 id=1597 data-nosnippet>1597</a>        <span class="self">self</span>.tree.get_layout_first_child(<span class="self">self</span>.current).unwrap()
+<a href=#1598 id=1598 data-nosnippet>1598</a>    }
+<a href=#1599 id=1599 data-nosnippet>1599</a>
+<a href=#1600 id=1600 data-nosnippet>1600</a>    <span class="kw">fn </span>parent_window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
+<a href=#1601 id=1601 data-nosnippet>1601</a>        <span class="self">self</span>.tree.get_parent_window(<span class="self">self</span>.current).unwrap_or(Entity::root())
 <a href=#1602 id=1602 data-nosnippet>1602</a>    }
-<a href=#1603 id=1603 data-nosnippet>1603</a>
-<a href=#1604 id=1604 data-nosnippet>1604</a>    <span class="kw">fn </span>first_child(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
-<a href=#1605 id=1605 data-nosnippet>1605</a>        <span class="self">self</span>.tree.get_layout_first_child(<span class="self">self</span>.current).unwrap()
-<a href=#1606 id=1606 data-nosnippet>1606</a>    }
-<a href=#1607 id=1607 data-nosnippet>1607</a>
-<a href=#1608 id=1608 data-nosnippet>1608</a>    <span class="kw">fn </span>parent_window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Entity {
-<a href=#1609 id=1609 data-nosnippet>1609</a>        <span class="self">self</span>.tree.get_parent_window(<span class="self">self</span>.current).unwrap_or(Entity::root())
-<a href=#1610 id=1610 data-nosnippet>1610</a>    }
-<a href=#1611 id=1611 data-nosnippet>1611</a>}
+<a href=#1603 id=1603 data-nosnippet>1603</a>}
 </code></pre></div></section></main></body></html>

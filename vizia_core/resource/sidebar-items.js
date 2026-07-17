@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["ImageRetentionPolicy","TranslationError"],"struct":["ImageId"]};
+window.SIDEBAR_ITEMS = {"enum":["ImageRetentionPolicy","LoadingStatus","ResourceLoadExecution","ResourceRequest","TranslationError"],"struct":["FileResourceLoader","FontRequest","ImageId","ImageRequest","QueuedResourceRequest","ResourceLoadOptions","TranslationRequest"],"trait":["ResourceLoader"]};

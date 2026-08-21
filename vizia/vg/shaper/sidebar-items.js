@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["icu","run_handler"],"struct":["Feature","TextBlobBuilderRunHandler"],"trait":["AsNativeRunHandler","AsRunHandler","RunHandler","RunIterator"],"type":["BiDiRunIterator","FontRunIterator","LanguageRunIterator","ScriptRunIterator","Shaper"]};
+window.SIDEBAR_ITEMS = {"mod":["run_handler"],"struct":["Feature","TextBlobBuilderRunHandler"],"trait":["AsNativeRunHandler","AsRunHandler","RunHandler","RunIterator"],"type":["BiDiRunIterator","FontRunIterator","LanguageRunIterator","ScriptRunIterator","Shaper"]};

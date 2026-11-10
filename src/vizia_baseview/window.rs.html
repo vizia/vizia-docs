@@ -1,8 +1,8 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/vizia_baseview/src/window.rs`."><title>window.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-0c87338a.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vizia_baseview" data-themes="" data-resource-suffix="" data-rustdoc-version="1.99.1 (58cf8f9c3 2026-10-13)" data-channel="1.99.1" data-search-js="search-cf4fc35e.js" data-stringdex-js="stringdex-b5109af9.js" data-settings-js="settings-170eb4bf.js" ><script src="../../static.files/storage-41dd4d93.js"></script><script defer src="../../static.files/src-script-813739b1.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-417ebf0a.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-9f56287d.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1><div class="sub-heading">vizia_baseview/</div>window.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span><span class="kw">crate</span>::application::ApplicationRunner;
-<a href=#2 id=2 data-nosnippet>2</a><span class="kw">use </span>baseview::gl::GlConfig;
-<a href=#3 id=3 data-nosnippet>3</a><span class="kw">use </span>baseview::{
-<a href=#4 id=4 data-nosnippet>4</a>    Event, EventStatus, Window, WindowContext, WindowHandle, WindowHandler, WindowOpenOptions,
-<a href=#5 id=5 data-nosnippet>5</a>    WindowScalePolicy,
+<a href=#2 id=2 data-nosnippet>2</a><span class="kw">use </span><span class="kw">crate</span>::window_settings::{FramePolicy, WindowScalePolicy};
+<a href=#3 id=3 data-nosnippet>3</a><span class="kw">use </span>baseview::gl::GlConfig;
+<a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span>baseview::{
+<a href=#5 id=5 data-nosnippet>5</a>    Event, EventStatus, HandlerError, Window, WindowContext, WindowHandler, WindowSettings,
 <a href=#6 id=6 data-nosnippet>6</a>};
 <a href=#7 id=7 data-nosnippet>7</a><span class="kw">use </span>gl::types::GLint;
 <a href=#8 id=8 data-nosnippet>8</a><span class="kw">use </span>gl_rs <span class="kw">as </span>gl;
@@ -14,311 +14,348 @@
 <a href=#14 id=14 data-nosnippet>14</a><span class="kw">use </span>skia_safe::{ColorSpace, ColorType, PixelGeometry, Surface, SurfaceProps, SurfacePropsFlags};
 <a href=#15 id=15 data-nosnippet>15</a><span class="kw">use </span>std::cell::RefCell;
 <a href=#16 id=16 data-nosnippet>16</a>
-<a href=#17 id=17 data-nosnippet>17</a><span class="kw">use </span><span class="kw">crate</span>::proxy::BaseviewProxy;
-<a href=#18 id=18 data-nosnippet>18</a><span class="kw">use </span>vizia_core::backend::<span class="kw-2">*</span>;
-<a href=#19 id=19 data-nosnippet>19</a><span class="kw">use </span>vizia_core::prelude::<span class="kw-2">*</span>;
-<a href=#20 id=20 data-nosnippet>20</a>
-<a href=#21 id=21 data-nosnippet>21</a><span class="doccomment">/// Handles a vizia_baseview application
-<a href=#22 id=22 data-nosnippet>22</a></span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ViziaWindow {
-<a href=#23 id=23 data-nosnippet>23</a>    application: RefCell&lt;ApplicationRunner&gt;,
-<a href=#24 id=24 data-nosnippet>24</a>    <span class="attr">#[allow(clippy::type_complexity)]
-<a href=#25 id=25 data-nosnippet>25</a>    </span>on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
-<a href=#26 id=26 data-nosnippet>26</a>}
-<a href=#27 id=27 data-nosnippet>27</a>
-<a href=#28 id=28 data-nosnippet>28</a><span class="kw">impl </span>ViziaWindow {
-<a href=#29 id=29 data-nosnippet>29</a>    <span class="kw">fn </span>new(
-<a href=#30 id=30 data-nosnippet>30</a>        <span class="kw-2">mut </span>cx: BackendContext,
-<a href=#31 id=31 data-nosnippet>31</a>        win_desc: WindowDescription,
-<a href=#32 id=32 data-nosnippet>32</a>        window_scale_policy: WindowScalePolicy,
-<a href=#33 id=33 data-nosnippet>33</a>        window: WindowContext,
-<a href=#34 id=34 data-nosnippet>34</a>        builder: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnOnce(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
-<a href=#35 id=35 data-nosnippet>35</a>        on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
-<a href=#36 id=36 data-nosnippet>36</a>        is_parented: bool,
-<a href=#37 id=37 data-nosnippet>37</a>    ) -&gt; ViziaWindow {
-<a href=#38 id=38 data-nosnippet>38</a>        <span class="comment">// Reactive runtime setup — mirrors what `vizia_winit::Application::new` does.
-<a href=#39 id=39 data-nosnippet>39</a>        //
-<a href=#40 id=40 data-nosnippet>40</a>        // Mark this thread as the UI thread so off-thread `SyncSignal` writes correctly
-<a href=#41 id=41 data-nosnippet>41</a>        // enqueue effects via `SYNC_RUNTIME` instead of the thread-local `RUNTIME` (which
-<a href=#42 id=42 data-nosnippet>42</a>        // nobody drains). `on_frame_update` later calls `Runtime::drain_pending_work` to
-<a href=#43 id=43 data-nosnippet>43</a>        // apply those effects on this thread.
-<a href=#44 id=44 data-nosnippet>44</a>        </span>Runtime::init_on_ui_thread();
-<a href=#45 id=45 data-nosnippet>45</a>
-<a href=#46 id=46 data-nosnippet>46</a>        <span class="comment">// Register a no-op sync waker. baseview doesn't expose a proxy-event primitive we
-<a href=#47 id=47 data-nosnippet>47</a>        // can use to wake the event loop from another thread, but it drives `on_frame` at
-<a href=#48 id=48 data-nosnippet>48</a>        // the host compositor's vsync rate anyway — signal changes from off-UI writes will
-<a href=#49 id=49 data-nosnippet>49</a>        // be observed on the next frame (at most one frame of latency).
-<a href=#50 id=50 data-nosnippet>50</a>        //
-<a href=#51 id=51 data-nosnippet>51</a>        // Registering the waker here — even as a no-op — has two benefits: (1) it matches
-<a href=#52 id=52 data-nosnippet>52</a>        // the pattern in `vizia_winit`, so embedders don't have to know about sync-runtime
-<a href=#53 id=53 data-nosnippet>53</a>        // internals; (2) if a future baseview release gains a window-wake mechanism, only
-<a href=#54 id=54 data-nosnippet>54</a>        // this one line needs to change.
-<a href=#55 id=55 data-nosnippet>55</a>        </span>Runtime::set_sync_effect_waker(|| {});
-<a href=#56 id=56 data-nosnippet>56</a>        <span class="kw">let </span>context = window.gl_context().expect(<span class="string">"Window was created without OpenGL support"</span>);
-<a href=#57 id=57 data-nosnippet>57</a>
-<a href=#58 id=58 data-nosnippet>58</a>        <span class="kw">unsafe </span>{ context.make_current() };
+<a href=#17 id=17 data-nosnippet>17</a><span class="kw">use </span><span class="kw">crate</span>::proxy::ProxyQueue;
+<a href=#18 id=18 data-nosnippet>18</a><span class="kw">use </span><span class="kw">crate</span>::sync_waker::{SyncWakerGuard, register_window, wake};
+<a href=#19 id=19 data-nosnippet>19</a><span class="kw">use </span>vizia_core::backend::<span class="kw-2">*</span>;
+<a href=#20 id=20 data-nosnippet>20</a><span class="kw">use </span>vizia_core::prelude::<span class="kw-2">*</span>;
+<a href=#21 id=21 data-nosnippet>21</a>
+<a href=#22 id=22 data-nosnippet>22</a><span class="doccomment">/// Handles a vizia_baseview application
+<a href=#23 id=23 data-nosnippet>23</a></span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ViziaWindow {
+<a href=#24 id=24 data-nosnippet>24</a>    application: RefCell&lt;ApplicationRunner&gt;,
+<a href=#25 id=25 data-nosnippet>25</a>    <span class="attr">#[allow(clippy::type_complexity)]
+<a href=#26 id=26 data-nosnippet>26</a>    </span>on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
+<a href=#27 id=27 data-nosnippet>27</a>    <span class="comment">// Droping this deregister the waker on drop.
+<a href=#28 id=28 data-nosnippet>28</a>    </span>_sync_waker: <span class="prelude-ty">Option</span>&lt;SyncWakerGuard&gt;,
+<a href=#29 id=29 data-nosnippet>29</a>}
+<a href=#30 id=30 data-nosnippet>30</a>
+<a href=#31 id=31 data-nosnippet>31</a><span class="kw">impl </span>ViziaWindow {
+<a href=#32 id=32 data-nosnippet>32</a>    <span class="kw">fn </span>new(
+<a href=#33 id=33 data-nosnippet>33</a>        <span class="kw-2">mut </span>cx: BackendContext,
+<a href=#34 id=34 data-nosnippet>34</a>        win_desc: WindowDescription,
+<a href=#35 id=35 data-nosnippet>35</a>        frame_policy: FramePolicy,
+<a href=#36 id=36 data-nosnippet>36</a>        window: WindowContext,
+<a href=#37 id=37 data-nosnippet>37</a>        builder: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnOnce(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
+<a href=#38 id=38 data-nosnippet>38</a>        on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
+<a href=#39 id=39 data-nosnippet>39</a>        is_parented: bool,
+<a href=#40 id=40 data-nosnippet>40</a>    ) -&gt; ViziaWindow {
+<a href=#41 id=41 data-nosnippet>41</a>        <span class="comment">// Reactive runtime setup — mirrors what `vizia_winit::Application::new` does.
+<a href=#42 id=42 data-nosnippet>42</a>        //
+<a href=#43 id=43 data-nosnippet>43</a>        // Mark this thread as the UI thread so off-thread `SyncSignal` writes correctly
+<a href=#44 id=44 data-nosnippet>44</a>        // enqueue effects via `SYNC_RUNTIME` instead of the thread-local `RUNTIME` (which
+<a href=#45 id=45 data-nosnippet>45</a>        // nobody drains). `on_frame_update` later calls `Runtime::drain_pending_work` to
+<a href=#46 id=46 data-nosnippet>46</a>        // apply those effects on this thread.
+<a href=#47 id=47 data-nosnippet>47</a>        </span>Runtime::init_on_ui_thread();
+<a href=#48 id=48 data-nosnippet>48</a>
+<a href=#49 id=49 data-nosnippet>49</a>        <span class="comment">// The runner owns the queue and drains it in `on_frame_update`.
+<a href=#50 id=50 data-nosnippet>50</a>        // proxies only hold a weak reference, so sending fails once the window is closed.
+<a href=#51 id=51 data-nosnippet>51</a>        </span><span class="kw">let </span>proxy_queue = ProxyQueue::default();
+<a href=#52 id=52 data-nosnippet>52</a>        cx.set_event_proxy(Box::new(proxy_queue.proxy(window.waker())));
+<a href=#53 id=53 data-nosnippet>53</a>
+<a href=#54 id=54 data-nosnippet>54</a>        <span class="comment">// Register the window as needing wake only if the policy is `OnDemand`.
+<a href=#55 id=55 data-nosnippet>55</a>        // `Continuous` draw runs every vsync frame anyway.
+<a href=#56 id=56 data-nosnippet>56</a>        </span><span class="kw">let </span>guard =
+<a href=#57 id=57 data-nosnippet>57</a>            (frame_policy == FramePolicy::OnDemand).then(|| register_window(window.waker()));
+<a href=#58 id=58 data-nosnippet>58</a>        Runtime::set_sync_effect_waker(wake);
 <a href=#59 id=59 data-nosnippet>59</a>
-<a href=#60 id=60 data-nosnippet>60</a>        <span class="comment">// Build skia renderer
-<a href=#61 id=61 data-nosnippet>61</a>        </span>gl::load_with(|s| context.get_proc_address(s));
-<a href=#62 id=62 data-nosnippet>62</a>        <span class="kw">let </span>interface = skia_safe::gpu::gl::Interface::new_load_with(|name| {
-<a href=#63 id=63 data-nosnippet>63</a>            <span class="kw">if </span>name == <span class="string">"eglGetCurrentDisplay" </span>{
-<a href=#64 id=64 data-nosnippet>64</a>                <span class="kw">return </span>std::ptr::null();
-<a href=#65 id=65 data-nosnippet>65</a>            }
-<a href=#66 id=66 data-nosnippet>66</a>            context.get_proc_address(name)
-<a href=#67 id=67 data-nosnippet>67</a>        })
-<a href=#68 id=68 data-nosnippet>68</a>        .expect(<span class="string">"Could not create interface"</span>);
-<a href=#69 id=69 data-nosnippet>69</a>
-<a href=#70 id=70 data-nosnippet>70</a>        <span class="comment">// https://github.com/rust-skia/rust-skia/issues/476
-<a href=#71 id=71 data-nosnippet>71</a>        </span><span class="kw">let </span><span class="kw-2">mut </span>context_options = ContextOptions::new();
-<a href=#72 id=72 data-nosnippet>72</a>        context_options.skip_gl_error_checks = context_options::Enable::Yes;
+<a href=#60 id=60 data-nosnippet>60</a>        <span class="kw">let </span>context = window.gl_context().expect(<span class="string">"Window was created without OpenGL support"</span>);
+<a href=#61 id=61 data-nosnippet>61</a>
+<a href=#62 id=62 data-nosnippet>62</a>        <span class="kw">unsafe </span>{ context.make_current() }.expect(<span class="string">"Failed to make GL context current"</span>);
+<a href=#63 id=63 data-nosnippet>63</a>
+<a href=#64 id=64 data-nosnippet>64</a>        <span class="comment">// Build skia renderer
+<a href=#65 id=65 data-nosnippet>65</a>        </span>gl::load_with(|s| context.get_proc_address_from_str(s));
+<a href=#66 id=66 data-nosnippet>66</a>        <span class="kw">let </span>interface = skia_safe::gpu::gl::Interface::new_load_with(|name| {
+<a href=#67 id=67 data-nosnippet>67</a>            <span class="kw">if </span>name == <span class="string">"eglGetCurrentDisplay" </span>{
+<a href=#68 id=68 data-nosnippet>68</a>                <span class="kw">return </span>std::ptr::null();
+<a href=#69 id=69 data-nosnippet>69</a>            }
+<a href=#70 id=70 data-nosnippet>70</a>            context.get_proc_address_from_str(name)
+<a href=#71 id=71 data-nosnippet>71</a>        })
+<a href=#72 id=72 data-nosnippet>72</a>        .expect(<span class="string">"Could not create interface"</span>);
 <a href=#73 id=73 data-nosnippet>73</a>
-<a href=#74 id=74 data-nosnippet>74</a>        <span class="kw">let </span><span class="kw-2">mut </span>gr_context = skia_safe::gpu::direct_contexts::make_gl(interface, <span class="kw-2">&amp;</span>context_options)
-<a href=#75 id=75 data-nosnippet>75</a>            .expect(<span class="string">"Could not create direct context"</span>);
-<a href=#76 id=76 data-nosnippet>76</a>        gr_context.set_resource_cache_limit(win_desc.skia_resource_cache_limit);
+<a href=#74 id=74 data-nosnippet>74</a>        <span class="comment">// https://github.com/rust-skia/rust-skia/issues/476
+<a href=#75 id=75 data-nosnippet>75</a>        </span><span class="kw">let </span><span class="kw-2">mut </span>context_options = ContextOptions::new();
+<a href=#76 id=76 data-nosnippet>76</a>        context_options.skip_gl_error_checks = context_options::Enable::Yes;
 <a href=#77 id=77 data-nosnippet>77</a>
-<a href=#78 id=78 data-nosnippet>78</a>        <span class="kw">let </span>fb_info = {
-<a href=#79 id=79 data-nosnippet>79</a>            <span class="kw">let </span><span class="kw-2">mut </span>fboid: GLint = <span class="number">0</span>;
-<a href=#80 id=80 data-nosnippet>80</a>            <span class="kw">unsafe </span>{ gl::GetIntegerv(gl::FRAMEBUFFER_BINDING, <span class="kw-2">&amp;mut </span>fboid) };
+<a href=#78 id=78 data-nosnippet>78</a>        <span class="kw">let </span><span class="kw-2">mut </span>gr_context = skia_safe::gpu::direct_contexts::make_gl(interface, <span class="kw-2">&amp;</span>context_options)
+<a href=#79 id=79 data-nosnippet>79</a>            .expect(<span class="string">"Could not create direct context"</span>);
+<a href=#80 id=80 data-nosnippet>80</a>        gr_context.set_resource_cache_limit(win_desc.skia_resource_cache_limit);
 <a href=#81 id=81 data-nosnippet>81</a>
-<a href=#82 id=82 data-nosnippet>82</a>            FramebufferInfo {
-<a href=#83 id=83 data-nosnippet>83</a>                fboid: fboid.try_into().unwrap(),
-<a href=#84 id=84 data-nosnippet>84</a>                format: skia_safe::gpu::gl::Format::RGBA8.into(),
-<a href=#85 id=85 data-nosnippet>85</a>                ..Default::default()
-<a href=#86 id=86 data-nosnippet>86</a>            }
-<a href=#87 id=87 data-nosnippet>87</a>        };
-<a href=#88 id=88 data-nosnippet>88</a>
-<a href=#89 id=89 data-nosnippet>89</a>        <span class="kw">let </span>initial_size = window.size();
-<a href=#90 id=90 data-nosnippet>90</a>        <span class="kw">let </span>initial_width = initial_size.physical.width.max(<span class="number">1</span>) <span class="kw">as </span>i32;
-<a href=#91 id=91 data-nosnippet>91</a>        <span class="kw">let </span>initial_height = initial_size.physical.height.max(<span class="number">1</span>) <span class="kw">as </span>i32;
+<a href=#82 id=82 data-nosnippet>82</a>        <span class="kw">let </span>fb_info = {
+<a href=#83 id=83 data-nosnippet>83</a>            <span class="kw">let </span><span class="kw-2">mut </span>fboid: GLint = <span class="number">0</span>;
+<a href=#84 id=84 data-nosnippet>84</a>            <span class="kw">unsafe </span>{ gl::GetIntegerv(gl::FRAMEBUFFER_BINDING, <span class="kw-2">&amp;mut </span>fboid) };
+<a href=#85 id=85 data-nosnippet>85</a>
+<a href=#86 id=86 data-nosnippet>86</a>            FramebufferInfo {
+<a href=#87 id=87 data-nosnippet>87</a>                fboid: fboid.try_into().unwrap(),
+<a href=#88 id=88 data-nosnippet>88</a>                format: skia_safe::gpu::gl::Format::RGBA8.into(),
+<a href=#89 id=89 data-nosnippet>89</a>                ..Default::default()
+<a href=#90 id=90 data-nosnippet>90</a>            }
+<a href=#91 id=91 data-nosnippet>91</a>        };
 <a href=#92 id=92 data-nosnippet>92</a>
-<a href=#93 id=93 data-nosnippet>93</a>        <span class="kw">let </span><span class="kw-2">mut </span>surface = create_surface((initial_width, initial_height), fb_info, <span class="kw-2">&amp;mut </span>gr_context);
-<a href=#94 id=94 data-nosnippet>94</a>
-<a href=#95 id=95 data-nosnippet>95</a>        <span class="kw">let </span>dirty_surface =
-<a href=#96 id=96 data-nosnippet>96</a>            surface.new_surface_with_dimensions((initial_width, initial_height)).unwrap();
-<a href=#97 id=97 data-nosnippet>97</a>
-<a href=#98 id=98 data-nosnippet>98</a>        <span class="comment">// Scaling is a combination of the window's current scale factor (system-provided unless
-<a href=#99 id=99 data-nosnippet>99</a>        // explicitly overridden by the hosting application) and a custom user scale factor.
-<a href=#100 id=100 data-nosnippet>100</a>        </span><span class="kw">let </span>(use_system_scaling, window_scale_factor) = <span class="kw">match </span>window_scale_policy {
-<a href=#101 id=101 data-nosnippet>101</a>            WindowScalePolicy::ScaleFactor(scale) =&gt; (<span class="bool-val">false</span>, scale),
-<a href=#102 id=102 data-nosnippet>102</a>            WindowScalePolicy::SystemScaleFactor =&gt; (<span class="bool-val">true</span>, window.scale_factor()),
-<a href=#103 id=103 data-nosnippet>103</a>        };
-<a href=#104 id=104 data-nosnippet>104</a>        <span class="kw">let </span>dpi_factor = window_scale_factor * win_desc.user_scale_factor;
-<a href=#105 id=105 data-nosnippet>105</a>
-<a href=#106 id=106 data-nosnippet>106</a>        cx.add_main_window(Entity::root(), <span class="kw-2">&amp;</span>win_desc, dpi_factor <span class="kw">as </span>f32);
-<a href=#107 id=107 data-nosnippet>107</a>        cx.add_window(WindowView {});
-<a href=#108 id=108 data-nosnippet>108</a>
-<a href=#109 id=109 data-nosnippet>109</a>        cx.<span class="number">0</span>.windows.insert(
-<a href=#110 id=110 data-nosnippet>110</a>            Entity::root(),
-<a href=#111 id=111 data-nosnippet>111</a>            WindowState { window_description: win_desc.clone(), ..Default::default() },
-<a href=#112 id=112 data-nosnippet>112</a>        );
+<a href=#93 id=93 data-nosnippet>93</a>        <span class="kw">let </span>initial_size = window.size();
+<a href=#94 id=94 data-nosnippet>94</a>        <span class="kw">let </span>initial_width = initial_size.physical.width.max(<span class="number">1</span>) <span class="kw">as </span>i32;
+<a href=#95 id=95 data-nosnippet>95</a>        <span class="kw">let </span>initial_height = initial_size.physical.height.max(<span class="number">1</span>) <span class="kw">as </span>i32;
+<a href=#96 id=96 data-nosnippet>96</a>
+<a href=#97 id=97 data-nosnippet>97</a>        <span class="kw">let </span><span class="kw-2">mut </span>surface = create_surface((initial_width, initial_height), fb_info, <span class="kw-2">&amp;mut </span>gr_context);
+<a href=#98 id=98 data-nosnippet>98</a>
+<a href=#99 id=99 data-nosnippet>99</a>        <span class="kw">let </span>dirty_surface =
+<a href=#100 id=100 data-nosnippet>100</a>            surface.new_surface_with_dimensions((initial_width, initial_height)).unwrap();
+<a href=#101 id=101 data-nosnippet>101</a>
+<a href=#102 id=102 data-nosnippet>102</a>        <span class="comment">// baseview determines the scale factor from the platform. The
+<a href=#103 id=103 data-nosnippet>103</a>        // `WindowScalePolicy::ScaleFactor(scale)`
+<a href=#104 id=104 data-nosnippet>104</a>        // value is only used as a fallback (via
+<a href=#105 id=105 data-nosnippet>105</a>        // `with_fallback_scale_factor` in `open_parented`/`open_blocking`) when the platform
+<a href=#106 id=106 data-nosnippet>106</a>        // cannot report one, so always read the actual scale factor here to keep vizia's layout consistent with the
+<a href=#107 id=107 data-nosnippet>107</a>        // real window.
+<a href=#108 id=108 data-nosnippet>108</a>        </span><span class="kw">let </span>window_scale_factor = window.scale_factor();
+<a href=#109 id=109 data-nosnippet>109</a>        <span class="kw">let </span>dpi_factor = window_scale_factor * win_desc.user_scale_factor;
+<a href=#110 id=110 data-nosnippet>110</a>
+<a href=#111 id=111 data-nosnippet>111</a>        cx.add_main_window(Entity::root(), <span class="kw-2">&amp;</span>win_desc, dpi_factor <span class="kw">as </span>f32);
+<a href=#112 id=112 data-nosnippet>112</a>        cx.add_window(WindowView {});
 <a href=#113 id=113 data-nosnippet>113</a>
-<a href=#114 id=114 data-nosnippet>114</a>        cx.context().add_built_in_styles();
-<a href=#115 id=115 data-nosnippet>115</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(builder) = builder {
-<a href=#116 id=116 data-nosnippet>116</a>            (builder)(cx.context());
-<a href=#117 id=117 data-nosnippet>117</a>        }
+<a href=#114 id=114 data-nosnippet>114</a>        cx.<span class="number">0</span>.windows.insert(
+<a href=#115 id=115 data-nosnippet>115</a>            Entity::root(),
+<a href=#116 id=116 data-nosnippet>116</a>            WindowState { window_description: win_desc.clone(), ..Default::default() },
+<a href=#117 id=117 data-nosnippet>117</a>        );
 <a href=#118 id=118 data-nosnippet>118</a>
-<a href=#119 id=119 data-nosnippet>119</a>        <span class="kw">let </span>application = ApplicationRunner::new(
-<a href=#120 id=120 data-nosnippet>120</a>            cx,
-<a href=#121 id=121 data-nosnippet>121</a>            gr_context,
-<a href=#122 id=122 data-nosnippet>122</a>            use_system_scaling,
-<a href=#123 id=123 data-nosnippet>123</a>            window_scale_factor,
-<a href=#124 id=124 data-nosnippet>124</a>            surface,
-<a href=#125 id=125 data-nosnippet>125</a>            dirty_surface,
-<a href=#126 id=126 data-nosnippet>126</a>            win_desc,
-<a href=#127 id=127 data-nosnippet>127</a>            is_parented,
-<a href=#128 id=128 data-nosnippet>128</a>            window,
-<a href=#129 id=129 data-nosnippet>129</a>        );
-<a href=#130 id=130 data-nosnippet>130</a>        <span class="kw">unsafe </span>{ context.make_not_current() };
-<a href=#131 id=131 data-nosnippet>131</a>
-<a href=#132 id=132 data-nosnippet>132</a>        ViziaWindow { application: RefCell::new(application), on_idle }
-<a href=#133 id=133 data-nosnippet>133</a>    }
-<a href=#134 id=134 data-nosnippet>134</a>
-<a href=#135 id=135 data-nosnippet>135</a>    <span class="doccomment">/// Open a new child window.
-<a href=#136 id=136 data-nosnippet>136</a>    ///
-<a href=#137 id=137 data-nosnippet>137</a>    /// * `parent` - The parent window.
-<a href=#138 id=138 data-nosnippet>138</a>    /// * `app` - The Vizia application builder.
-<a href=#139 id=139 data-nosnippet>139</a>    </span><span class="kw">pub fn </span>open_parented&lt;P, F&gt;(
-<a href=#140 id=140 data-nosnippet>140</a>        parent: <span class="kw-2">&amp;</span>P,
-<a href=#141 id=141 data-nosnippet>141</a>        win_desc: WindowDescription,
-<a href=#142 id=142 data-nosnippet>142</a>        scale_policy: WindowScalePolicy,
-<a href=#143 id=143 data-nosnippet>143</a>        app: F,
-<a href=#144 id=144 data-nosnippet>144</a>        on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
-<a href=#145 id=145 data-nosnippet>145</a>        ignore_default_theme: bool,
-<a href=#146 id=146 data-nosnippet>146</a>    ) -&gt; WindowHandle
-<a href=#147 id=147 data-nosnippet>147</a>    <span class="kw">where
-<a href=#148 id=148 data-nosnippet>148</a>        </span>P: HasWindowHandle,
-<a href=#149 id=149 data-nosnippet>149</a>        F: Fn(<span class="kw-2">&amp;mut </span>Context),
-<a href=#150 id=150 data-nosnippet>150</a>        F: <span class="lifetime">'static </span>+ Send,
-<a href=#151 id=151 data-nosnippet>151</a>    {
-<a href=#152 id=152 data-nosnippet>152</a>        <span class="kw">let </span>window_settings = WindowOpenOptions::new()
-<a href=#153 id=153 data-nosnippet>153</a>            .with_title(win_desc.title.clone())
-<a href=#154 id=154 data-nosnippet>154</a>            .with_size(baseview::dpi::LogicalSize::new(
-<a href=#155 id=155 data-nosnippet>155</a>                <span class="comment">// We have our own uniform non-DPI scaling factor that gets applied in addition to
-<a href=#156 id=156 data-nosnippet>156</a>                // the DPI scaling since both can change independently at runtime
-<a href=#157 id=157 data-nosnippet>157</a>                </span>win_desc.inner_size.width <span class="kw">as </span>f64 * win_desc.user_scale_factor,
-<a href=#158 id=158 data-nosnippet>158</a>                win_desc.inner_size.height <span class="kw">as </span>f64 * win_desc.user_scale_factor,
-<a href=#159 id=159 data-nosnippet>159</a>            ))
-<a href=#160 id=160 data-nosnippet>160</a>            .with_scale_policy(scale_policy)
-<a href=#161 id=161 data-nosnippet>161</a>            .with_gl_config(GlConfig { vsync: <span class="bool-val">true</span>, ..GlConfig::default() });
-<a href=#162 id=162 data-nosnippet>162</a>
-<a href=#163 id=163 data-nosnippet>163</a>        Window::open_parented(
-<a href=#164 id=164 data-nosnippet>164</a>            parent,
-<a href=#165 id=165 data-nosnippet>165</a>            window_settings,
-<a href=#166 id=166 data-nosnippet>166</a>            <span class="kw">move </span>|window: WindowContext| -&gt; ViziaWindow {
-<a href=#167 id=167 data-nosnippet>167</a>                Runtime::init_on_ui_thread();
-<a href=#168 id=168 data-nosnippet>168</a>                <span class="kw">let </span><span class="kw-2">mut </span>cx = Context::new();
-<a href=#169 id=169 data-nosnippet>169</a>
-<a href=#170 id=170 data-nosnippet>170</a>                cx.ignore_default_theme = ignore_default_theme;
-<a href=#171 id=171 data-nosnippet>171</a>                cx.add_built_in_styles();
-<a href=#172 id=172 data-nosnippet>172</a>
-<a href=#173 id=173 data-nosnippet>173</a>                <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(cx);
-<a href=#174 id=174 data-nosnippet>174</a>
-<a href=#175 id=175 data-nosnippet>175</a>                cx.set_event_proxy(Box::new(BaseviewProxy));
-<a href=#176 id=176 data-nosnippet>176</a>                ViziaWindow::new(
-<a href=#177 id=177 data-nosnippet>177</a>                    cx,
-<a href=#178 id=178 data-nosnippet>178</a>                    win_desc,
-<a href=#179 id=179 data-nosnippet>179</a>                    scale_policy,
-<a href=#180 id=180 data-nosnippet>180</a>                    window,
-<a href=#181 id=181 data-nosnippet>181</a>                    <span class="prelude-val">Some</span>(Box::new(app)),
-<a href=#182 id=182 data-nosnippet>182</a>                    on_idle,
-<a href=#183 id=183 data-nosnippet>183</a>                    <span class="bool-val">true</span>, <span class="comment">// is_parented
-<a href=#184 id=184 data-nosnippet>184</a>                </span>)
-<a href=#185 id=185 data-nosnippet>185</a>            },
-<a href=#186 id=186 data-nosnippet>186</a>        )
-<a href=#187 id=187 data-nosnippet>187</a>    }
-<a href=#188 id=188 data-nosnippet>188</a>
-<a href=#189 id=189 data-nosnippet>189</a>    <span class="doccomment">/// Open a new window that blocks the current thread until the window is destroyed.
-<a href=#190 id=190 data-nosnippet>190</a>    ///
-<a href=#191 id=191 data-nosnippet>191</a>    /// * `app` - The Vizia application builder.
-<a href=#192 id=192 data-nosnippet>192</a>    </span><span class="kw">pub fn </span>open_blocking&lt;F&gt;(
-<a href=#193 id=193 data-nosnippet>193</a>        win_desc: WindowDescription,
-<a href=#194 id=194 data-nosnippet>194</a>        scale_policy: WindowScalePolicy,
-<a href=#195 id=195 data-nosnippet>195</a>        app: F,
-<a href=#196 id=196 data-nosnippet>196</a>        on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
-<a href=#197 id=197 data-nosnippet>197</a>        ignore_default_theme: bool,
-<a href=#198 id=198 data-nosnippet>198</a>    ) <span class="kw">where
-<a href=#199 id=199 data-nosnippet>199</a>        </span>F: Fn(<span class="kw-2">&amp;mut </span>Context),
-<a href=#200 id=200 data-nosnippet>200</a>        F: <span class="lifetime">'static </span>+ Send,
-<a href=#201 id=201 data-nosnippet>201</a>    {
-<a href=#202 id=202 data-nosnippet>202</a>        <span class="kw">let </span>window_settings = WindowOpenOptions::new()
-<a href=#203 id=203 data-nosnippet>203</a>            .with_title(win_desc.title.clone())
-<a href=#204 id=204 data-nosnippet>204</a>            .with_size(baseview::dpi::LogicalSize::new(
-<a href=#205 id=205 data-nosnippet>205</a>                win_desc.inner_size.width <span class="kw">as </span>f64 * win_desc.user_scale_factor,
-<a href=#206 id=206 data-nosnippet>206</a>                win_desc.inner_size.height <span class="kw">as </span>f64 * win_desc.user_scale_factor,
-<a href=#207 id=207 data-nosnippet>207</a>            ))
-<a href=#208 id=208 data-nosnippet>208</a>            .with_scale_policy(scale_policy)
-<a href=#209 id=209 data-nosnippet>209</a>            .with_gl_config(GlConfig { vsync: <span class="bool-val">true</span>, ..GlConfig::default() });
-<a href=#210 id=210 data-nosnippet>210</a>
-<a href=#211 id=211 data-nosnippet>211</a>        Window::open_blocking(window_settings, <span class="kw">move </span>|window: WindowContext| -&gt; ViziaWindow {
-<a href=#212 id=212 data-nosnippet>212</a>            Runtime::init_on_ui_thread();
-<a href=#213 id=213 data-nosnippet>213</a>            <span class="kw">let </span><span class="kw-2">mut </span>cx = Context::new();
-<a href=#214 id=214 data-nosnippet>214</a>
-<a href=#215 id=215 data-nosnippet>215</a>            cx.ignore_default_theme = ignore_default_theme;
-<a href=#216 id=216 data-nosnippet>216</a>            cx.add_built_in_styles();
-<a href=#217 id=217 data-nosnippet>217</a>
-<a href=#218 id=218 data-nosnippet>218</a>            <span class="kw">let </span><span class="kw-2">mut </span>cx = BackendContext::new(cx);
-<a href=#219 id=219 data-nosnippet>219</a>
-<a href=#220 id=220 data-nosnippet>220</a>            cx.set_event_proxy(Box::new(BaseviewProxy));
-<a href=#221 id=221 data-nosnippet>221</a>            ViziaWindow::new(
-<a href=#222 id=222 data-nosnippet>222</a>                cx,
-<a href=#223 id=223 data-nosnippet>223</a>                win_desc,
-<a href=#224 id=224 data-nosnippet>224</a>                scale_policy,
-<a href=#225 id=225 data-nosnippet>225</a>                window,
-<a href=#226 id=226 data-nosnippet>226</a>                <span class="prelude-val">Some</span>(Box::new(app)),
-<a href=#227 id=227 data-nosnippet>227</a>                on_idle,
-<a href=#228 id=228 data-nosnippet>228</a>                <span class="bool-val">false</span>, <span class="comment">// is_parented
-<a href=#229 id=229 data-nosnippet>229</a>            </span>)
-<a href=#230 id=230 data-nosnippet>230</a>        })
-<a href=#231 id=231 data-nosnippet>231</a>    }
-<a href=#232 id=232 data-nosnippet>232</a>}
+<a href=#119 id=119 data-nosnippet>119</a>        cx.context().add_built_in_styles();
+<a href=#120 id=120 data-nosnippet>120</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(builder) = builder {
+<a href=#121 id=121 data-nosnippet>121</a>            (builder)(cx.context());
+<a href=#122 id=122 data-nosnippet>122</a>        }
+<a href=#123 id=123 data-nosnippet>123</a>
+<a href=#124 id=124 data-nosnippet>124</a>        <span class="kw">let </span>application = ApplicationRunner::new(
+<a href=#125 id=125 data-nosnippet>125</a>            cx,
+<a href=#126 id=126 data-nosnippet>126</a>            gr_context,
+<a href=#127 id=127 data-nosnippet>127</a>            window_scale_factor,
+<a href=#128 id=128 data-nosnippet>128</a>            frame_policy,
+<a href=#129 id=129 data-nosnippet>129</a>            proxy_queue,
+<a href=#130 id=130 data-nosnippet>130</a>            surface,
+<a href=#131 id=131 data-nosnippet>131</a>            dirty_surface,
+<a href=#132 id=132 data-nosnippet>132</a>            win_desc,
+<a href=#133 id=133 data-nosnippet>133</a>            is_parented,
+<a href=#134 id=134 data-nosnippet>134</a>            window,
+<a href=#135 id=135 data-nosnippet>135</a>        );
+<a href=#136 id=136 data-nosnippet>136</a>        <span class="kw">unsafe </span>{ context.make_not_current() }.expect(<span class="string">"Failed to make GL context not current"</span>);
+<a href=#137 id=137 data-nosnippet>137</a>
+<a href=#138 id=138 data-nosnippet>138</a>        ViziaWindow { application: RefCell::new(application), on_idle, _sync_waker: guard }
+<a href=#139 id=139 data-nosnippet>139</a>    }
+<a href=#140 id=140 data-nosnippet>140</a>
+<a href=#141 id=141 data-nosnippet>141</a>    <span class="doccomment">/// Open a new child window.
+<a href=#142 id=142 data-nosnippet>142</a>    ///
+<a href=#143 id=143 data-nosnippet>143</a>    /// * `parent` - The parent window.
+<a href=#144 id=144 data-nosnippet>144</a>    /// * `app` - The Vizia application builder.
+<a href=#145 id=145 data-nosnippet>145</a>    </span><span class="kw">pub fn </span>open_parented&lt;P, F&gt;(
+<a href=#146 id=146 data-nosnippet>146</a>        parent: <span class="kw-2">&amp;</span>P,
+<a href=#147 id=147 data-nosnippet>147</a>        win_desc: WindowDescription,
+<a href=#148 id=148 data-nosnippet>148</a>        scale_policy: WindowScalePolicy,
+<a href=#149 id=149 data-nosnippet>149</a>        frame_policy: FramePolicy,
+<a href=#150 id=150 data-nosnippet>150</a>        app: F,
+<a href=#151 id=151 data-nosnippet>151</a>        on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
+<a href=#152 id=152 data-nosnippet>152</a>        ignore_default_theme: bool,
+<a href=#153 id=153 data-nosnippet>153</a>    ) -&gt; Window
+<a href=#154 id=154 data-nosnippet>154</a>    <span class="kw">where
+<a href=#155 id=155 data-nosnippet>155</a>        </span>P: HasWindowHandle,
+<a href=#156 id=156 data-nosnippet>156</a>        F: Fn(<span class="kw-2">&amp;mut </span>Context),
+<a href=#157 id=157 data-nosnippet>157</a>        F: <span class="lifetime">'static </span>+ Send,
+<a href=#158 id=158 data-nosnippet>158</a>    {
+<a href=#159 id=159 data-nosnippet>159</a>        <span class="kw">let </span>window_settings = WindowSettings::new()
+<a href=#160 id=160 data-nosnippet>160</a>            .with_title(win_desc.title.clone())
+<a href=#161 id=161 data-nosnippet>161</a>            .with_size(baseview::dpi::LogicalSize::new(
+<a href=#162 id=162 data-nosnippet>162</a>                <span class="comment">// We have our own uniform non-DPI scaling factor that gets applied in addition to
+<a href=#163 id=163 data-nosnippet>163</a>                // the DPI scaling since both can change independently at runtime
+<a href=#164 id=164 data-nosnippet>164</a>                </span>win_desc.inner_size.width <span class="kw">as </span>f64 * win_desc.user_scale_factor,
+<a href=#165 id=165 data-nosnippet>165</a>                win_desc.inner_size.height <span class="kw">as </span>f64 * win_desc.user_scale_factor,
+<a href=#166 id=166 data-nosnippet>166</a>            ))
+<a href=#167 id=167 data-nosnippet>167</a>            .with_parent(<span class="prelude-val">Some</span>(parent))
+<a href=#168 id=168 data-nosnippet>168</a>            .with_fallback_scale_factor(<span class="kw">match </span>scale_policy {
+<a href=#169 id=169 data-nosnippet>169</a>                WindowScalePolicy::ScaleFactor(scale) =&gt; <span class="prelude-val">Some</span>(scale),
+<a href=#170 id=170 data-nosnippet>170</a>                WindowScalePolicy::SystemScaleFactor =&gt; <span class="prelude-val">None</span>,
+<a href=#171 id=171 data-nosnippet>171</a>            })
+<a href=#172 id=172 data-nosnippet>172</a>            .with_gl_config(GlConfig::default());
+<a href=#173 id=173 data-nosnippet>173</a>
+<a href=#174 id=174 data-nosnippet>174</a>        <span class="kw">let </span>window = Window::create(
+<a href=#175 id=175 data-nosnippet>175</a>            window_settings,
+<a href=#176 id=176 data-nosnippet>176</a>            <span class="kw">move </span>|window: WindowContext| -&gt; <span class="prelude-ty">Result</span>&lt;ViziaWindow, HandlerError&gt; {
+<a href=#177 id=177 data-nosnippet>177</a>                Runtime::init_on_ui_thread();
+<a href=#178 id=178 data-nosnippet>178</a>                <span class="kw">let </span><span class="kw-2">mut </span>cx = Context::new();
+<a href=#179 id=179 data-nosnippet>179</a>
+<a href=#180 id=180 data-nosnippet>180</a>                cx.ignore_default_theme = ignore_default_theme;
+<a href=#181 id=181 data-nosnippet>181</a>                cx.add_built_in_styles();
+<a href=#182 id=182 data-nosnippet>182</a>
+<a href=#183 id=183 data-nosnippet>183</a>                <span class="kw">let </span>cx = BackendContext::new(cx);
+<a href=#184 id=184 data-nosnippet>184</a>
+<a href=#185 id=185 data-nosnippet>185</a>                <span class="prelude-val">Ok</span>(ViziaWindow::new(
+<a href=#186 id=186 data-nosnippet>186</a>                    cx,
+<a href=#187 id=187 data-nosnippet>187</a>                    win_desc,
+<a href=#188 id=188 data-nosnippet>188</a>                    frame_policy,
+<a href=#189 id=189 data-nosnippet>189</a>                    window,
+<a href=#190 id=190 data-nosnippet>190</a>                    <span class="prelude-val">Some</span>(Box::new(app)),
+<a href=#191 id=191 data-nosnippet>191</a>                    on_idle,
+<a href=#192 id=192 data-nosnippet>192</a>                    <span class="bool-val">true</span>, <span class="comment">// is_parented
+<a href=#193 id=193 data-nosnippet>193</a>                </span>))
+<a href=#194 id=194 data-nosnippet>194</a>            },
+<a href=#195 id=195 data-nosnippet>195</a>        )
+<a href=#196 id=196 data-nosnippet>196</a>        .expect(<span class="string">"Failed to create baseview window"</span>);
+<a href=#197 id=197 data-nosnippet>197</a>
+<a href=#198 id=198 data-nosnippet>198</a>        window.show().expect(<span class="string">"Failed to show baseview window"</span>);
+<a href=#199 id=199 data-nosnippet>199</a>        window
+<a href=#200 id=200 data-nosnippet>200</a>    }
+<a href=#201 id=201 data-nosnippet>201</a>
+<a href=#202 id=202 data-nosnippet>202</a>    <span class="doccomment">/// Open a new window that blocks the current thread until the window is destroyed.
+<a href=#203 id=203 data-nosnippet>203</a>    ///
+<a href=#204 id=204 data-nosnippet>204</a>    /// * `app` - The Vizia application builder.
+<a href=#205 id=205 data-nosnippet>205</a>    </span><span class="kw">pub fn </span>open_blocking&lt;F&gt;(
+<a href=#206 id=206 data-nosnippet>206</a>        win_desc: WindowDescription,
+<a href=#207 id=207 data-nosnippet>207</a>        scale_policy: WindowScalePolicy,
+<a href=#208 id=208 data-nosnippet>208</a>        frame_policy: FramePolicy,
+<a href=#209 id=209 data-nosnippet>209</a>        app: F,
+<a href=#210 id=210 data-nosnippet>210</a>        on_idle: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;,
+<a href=#211 id=211 data-nosnippet>211</a>        ignore_default_theme: bool,
+<a href=#212 id=212 data-nosnippet>212</a>    ) <span class="kw">where
+<a href=#213 id=213 data-nosnippet>213</a>        </span>F: Fn(<span class="kw-2">&amp;mut </span>Context),
+<a href=#214 id=214 data-nosnippet>214</a>        F: <span class="lifetime">'static </span>+ Send,
+<a href=#215 id=215 data-nosnippet>215</a>    {
+<a href=#216 id=216 data-nosnippet>216</a>        <span class="kw">let </span>window_settings = WindowSettings::new()
+<a href=#217 id=217 data-nosnippet>217</a>            .with_title(win_desc.title.clone())
+<a href=#218 id=218 data-nosnippet>218</a>            .with_size(baseview::dpi::LogicalSize::new(
+<a href=#219 id=219 data-nosnippet>219</a>                win_desc.inner_size.width <span class="kw">as </span>f64 * win_desc.user_scale_factor,
+<a href=#220 id=220 data-nosnippet>220</a>                win_desc.inner_size.height <span class="kw">as </span>f64 * win_desc.user_scale_factor,
+<a href=#221 id=221 data-nosnippet>221</a>            ))
+<a href=#222 id=222 data-nosnippet>222</a>            .with_fallback_scale_factor(<span class="kw">match </span>scale_policy {
+<a href=#223 id=223 data-nosnippet>223</a>                WindowScalePolicy::ScaleFactor(scale) =&gt; <span class="prelude-val">Some</span>(scale),
+<a href=#224 id=224 data-nosnippet>224</a>                WindowScalePolicy::SystemScaleFactor =&gt; <span class="prelude-val">None</span>,
+<a href=#225 id=225 data-nosnippet>225</a>            })
+<a href=#226 id=226 data-nosnippet>226</a>            .with_gl_config(GlConfig::default());
+<a href=#227 id=227 data-nosnippet>227</a>
+<a href=#228 id=228 data-nosnippet>228</a>        <span class="kw">let </span>window = Window::create(
+<a href=#229 id=229 data-nosnippet>229</a>            window_settings,
+<a href=#230 id=230 data-nosnippet>230</a>            <span class="kw">move </span>|window: WindowContext| -&gt; <span class="prelude-ty">Result</span>&lt;ViziaWindow, HandlerError&gt; {
+<a href=#231 id=231 data-nosnippet>231</a>                Runtime::init_on_ui_thread();
+<a href=#232 id=232 data-nosnippet>232</a>                <span class="kw">let </span><span class="kw-2">mut </span>cx = Context::new();
 <a href=#233 id=233 data-nosnippet>233</a>
-<a href=#234 id=234 data-nosnippet>234</a><span class="kw">impl </span>WindowHandler <span class="kw">for </span>ViziaWindow {
-<a href=#235 id=235 data-nosnippet>235</a>    <span class="kw">fn </span>on_frame(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-<a href=#236 id=236 data-nosnippet>236</a>        <span class="comment">// Some hosts dispatch baseview callbacks from a different UI thread than
-<a href=#237 id=237 data-nosnippet>237</a>        // window construction; ensure this callback thread is registered.
-<a href=#238 id=238 data-nosnippet>238</a>        </span>Runtime::init_on_ui_thread();
-<a href=#239 id=239 data-nosnippet>239</a>        <span class="kw">let </span><span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>application) = <span class="self">self</span>.application.try_borrow_mut() <span class="kw">else </span>{
-<a href=#240 id=240 data-nosnippet>240</a>            <span class="kw">return</span>;
-<a href=#241 id=241 data-nosnippet>241</a>        };
-<a href=#242 id=242 data-nosnippet>242</a>        application.on_frame_update();
-<a href=#243 id=243 data-nosnippet>243</a>
-<a href=#244 id=244 data-nosnippet>244</a>        <span class="comment">// Run the embedder's idle callback on every frame tick, not only after
-<a href=#245 id=245 data-nosnippet>245</a>        // an AppKit event. Mirrors what `vizia_winit` does in its
-<a href=#246 id=246 data-nosnippet>246</a>        // `about_to_wait` handler: the idle callback is the documented hook
-<a href=#247 id=247 data-nosnippet>247</a>        // for embedders to drain work queued from off-UI threads (e.g. a
-<a href=#248 id=248 data-nosnippet>248</a>        // plugin host delivering keys on the host thread), and invoking it
-<a href=#249 id=249 data-nosnippet>249</a>        // only from `on_event` means such work can stall indefinitely when
-<a href=#250 id=250 data-nosnippet>250</a>        // AppKit events are sparse — observed in a macOS VST3 host where
-<a href=#251 id=251 data-nosnippet>251</a>        // keystrokes queued from `IPlugView::onKeyDown` only drained when
-<a href=#252 id=252 data-nosnippet>252</a>        // the next mouse move or key event happened to arrive.
-<a href=#253 id=253 data-nosnippet>253</a>        </span>application.handle_idle(<span class="kw-2">&amp;</span><span class="self">self</span>.on_idle);
-<a href=#254 id=254 data-nosnippet>254</a>
-<a href=#255 id=255 data-nosnippet>255</a>        application.render();
-<a href=#256 id=256 data-nosnippet>256</a>    }
-<a href=#257 id=257 data-nosnippet>257</a>
-<a href=#258 id=258 data-nosnippet>258</a>    <span class="kw">fn </span>resized(<span class="kw-2">&amp;</span><span class="self">self</span>, new_size: baseview::WindowSize) {
-<a href=#259 id=259 data-nosnippet>259</a>        Runtime::init_on_ui_thread();
-<a href=#260 id=260 data-nosnippet>260</a>        <span class="kw">if let </span><span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>application) = <span class="self">self</span>.application.try_borrow_mut() {
-<a href=#261 id=261 data-nosnippet>261</a>            application.handle_resized(new_size);
-<a href=#262 id=262 data-nosnippet>262</a>        }
-<a href=#263 id=263 data-nosnippet>263</a>    }
-<a href=#264 id=264 data-nosnippet>264</a>
-<a href=#265 id=265 data-nosnippet>265</a>    <span class="kw">fn </span>on_event(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Event) -&gt; EventStatus {
-<a href=#266 id=266 data-nosnippet>266</a>        <span class="comment">// Some hosts dispatch baseview callbacks from a different UI thread than
-<a href=#267 id=267 data-nosnippet>267</a>        // window construction; ensure this callback thread is registered.
-<a href=#268 id=268 data-nosnippet>268</a>        </span>Runtime::init_on_ui_thread();
-<a href=#269 id=269 data-nosnippet>269</a>        <span class="kw">let </span><span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>application) = <span class="self">self</span>.application.try_borrow_mut() <span class="kw">else </span>{
-<a href=#270 id=270 data-nosnippet>270</a>            <span class="kw">return </span>EventStatus::Ignored;
-<a href=#271 id=271 data-nosnippet>271</a>        };
-<a href=#272 id=272 data-nosnippet>272</a>
-<a href=#273 id=273 data-nosnippet>273</a>        <span class="comment">// If a text input currently holds focus, a native keyboard event is
-<a href=#274 id=274 data-nosnippet>274</a>        // intended for the plugin. Report it as `Captured` so the backend
-<a href=#275 id=275 data-nosnippet>275</a>        // does not forward the platform event further — otherwise the host
-<a href=#276 id=276 data-nosnippet>276</a>        // (e.g. a DAW) also processes the same keystroke, producing double
-<a href=#277 id=277 data-nosnippet>277</a>        // handling and a system beep on macOS.
-<a href=#278 id=278 data-nosnippet>278</a>        </span><span class="kw">let </span>captured =
-<a href=#279 id=279 data-nosnippet>279</a>            <span class="macro">matches!</span>(event, Event::Keyboard(<span class="kw">_</span>)) &amp;&amp; application.focused_element() == <span class="prelude-val">Some</span>(<span class="string">"textbox"</span>);
-<a href=#280 id=280 data-nosnippet>280</a>
-<a href=#281 id=281 data-nosnippet>281</a>        application.handle_event(event);
-<a href=#282 id=282 data-nosnippet>282</a>
-<a href=#283 id=283 data-nosnippet>283</a>        application.handle_idle(<span class="kw-2">&amp;</span><span class="self">self</span>.on_idle);
+<a href=#234 id=234 data-nosnippet>234</a>                cx.ignore_default_theme = ignore_default_theme;
+<a href=#235 id=235 data-nosnippet>235</a>                cx.add_built_in_styles();
+<a href=#236 id=236 data-nosnippet>236</a>
+<a href=#237 id=237 data-nosnippet>237</a>                <span class="kw">let </span>cx = BackendContext::new(cx);
+<a href=#238 id=238 data-nosnippet>238</a>
+<a href=#239 id=239 data-nosnippet>239</a>                <span class="prelude-val">Ok</span>(ViziaWindow::new(
+<a href=#240 id=240 data-nosnippet>240</a>                    cx,
+<a href=#241 id=241 data-nosnippet>241</a>                    win_desc,
+<a href=#242 id=242 data-nosnippet>242</a>                    frame_policy,
+<a href=#243 id=243 data-nosnippet>243</a>                    window,
+<a href=#244 id=244 data-nosnippet>244</a>                    <span class="prelude-val">Some</span>(Box::new(app)),
+<a href=#245 id=245 data-nosnippet>245</a>                    on_idle,
+<a href=#246 id=246 data-nosnippet>246</a>                    <span class="bool-val">false</span>, <span class="comment">// is_parented
+<a href=#247 id=247 data-nosnippet>247</a>                </span>))
+<a href=#248 id=248 data-nosnippet>248</a>            },
+<a href=#249 id=249 data-nosnippet>249</a>        )
+<a href=#250 id=250 data-nosnippet>250</a>        .expect(<span class="string">"Failed to create baseview window"</span>);
+<a href=#251 id=251 data-nosnippet>251</a>
+<a href=#252 id=252 data-nosnippet>252</a>        window.run_until_closed().expect(<span class="string">"baseview event loop failed"</span>);
+<a href=#253 id=253 data-nosnippet>253</a>    }
+<a href=#254 id=254 data-nosnippet>254</a>}
+<a href=#255 id=255 data-nosnippet>255</a>
+<a href=#256 id=256 data-nosnippet>256</a><span class="kw">impl </span>WindowHandler <span class="kw">for </span>ViziaWindow {
+<a href=#257 id=257 data-nosnippet>257</a>    <span class="kw">fn </span>damage(<span class="kw-2">&amp;</span><span class="self">self</span>, _area: baseview::DamageArea) {
+<a href=#258 id=258 data-nosnippet>258</a>        <span class="comment">// Some hosts dispatch baseview callbacks from a different UI thread than
+<a href=#259 id=259 data-nosnippet>259</a>        // window construction; ensure this callback thread is registered.
+<a href=#260 id=260 data-nosnippet>260</a>        </span>Runtime::init_on_ui_thread();
+<a href=#261 id=261 data-nosnippet>261</a>        <span class="kw">if let </span><span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>application) = <span class="self">self</span>.application.try_borrow_mut() {
+<a href=#262 id=262 data-nosnippet>262</a>            application.mark_damaged();
+<a href=#263 id=263 data-nosnippet>263</a>        }
+<a href=#264 id=264 data-nosnippet>264</a>    }
+<a href=#265 id=265 data-nosnippet>265</a>
+<a href=#266 id=266 data-nosnippet>266</a>    <span class="kw">fn </span>draw(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), HandlerError&gt; {
+<a href=#267 id=267 data-nosnippet>267</a>        <span class="comment">// Some hosts dispatch baseview callbacks from a different UI thread than
+<a href=#268 id=268 data-nosnippet>268</a>        // window construction; ensure this callback thread is registered.
+<a href=#269 id=269 data-nosnippet>269</a>        </span>Runtime::init_on_ui_thread();
+<a href=#270 id=270 data-nosnippet>270</a>        <span class="kw">let </span><span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>application) = <span class="self">self</span>.application.try_borrow_mut() <span class="kw">else </span>{
+<a href=#271 id=271 data-nosnippet>271</a>            <span class="kw">return </span><span class="prelude-val">Ok</span>(());
+<a href=#272 id=272 data-nosnippet>272</a>        };
+<a href=#273 id=273 data-nosnippet>273</a>
+<a href=#274 id=274 data-nosnippet>274</a>        <span class="comment">// Run the embedder's idle callback on every frame tick, not only after
+<a href=#275 id=275 data-nosnippet>275</a>        // an AppKit event. Mirrors what `vizia_winit` does in its
+<a href=#276 id=276 data-nosnippet>276</a>        // `about_to_wait` handler: the idle callback is the documented hook
+<a href=#277 id=277 data-nosnippet>277</a>        // for embedders to drain work queued from off-UI threads (e.g. a
+<a href=#278 id=278 data-nosnippet>278</a>        // plugin host delivering keys on the host thread), and invoking it
+<a href=#279 id=279 data-nosnippet>279</a>        // only from `on_event` means such work can stall indefinitely when
+<a href=#280 id=280 data-nosnippet>280</a>        // AppKit events are sparse — observed in a macOS VST3 host where
+<a href=#281 id=281 data-nosnippet>281</a>        // keystrokes queued from `IPlugView::onKeyDown` only drained when
+<a href=#282 id=282 data-nosnippet>282</a>        // the next mouse move or key event happened to arrive.
+<a href=#283 id=283 data-nosnippet>283</a>        </span>application.handle_idle(<span class="kw-2">&amp;</span><span class="self">self</span>.on_idle);
 <a href=#284 id=284 data-nosnippet>284</a>
-<a href=#285 id=285 data-nosnippet>285</a>        <span class="kw">if </span>captured { EventStatus::Captured } <span class="kw">else </span>{ EventStatus::Ignored }
-<a href=#286 id=286 data-nosnippet>286</a>    }
-<a href=#287 id=287 data-nosnippet>287</a>}
+<a href=#285 id=285 data-nosnippet>285</a>        <span class="comment">// Compute needs redraw after the idle callback so
+<a href=#286 id=286 data-nosnippet>286</a>        // event queued during on idle now trigger the cb.
+<a href=#287 id=287 data-nosnippet>287</a>        </span><span class="kw">let </span>needs_redraw = application.on_frame_update();
 <a href=#288 id=288 data-nosnippet>288</a>
-<a href=#289 id=289 data-nosnippet>289</a><span class="kw">impl </span>Drop <span class="kw">for </span>ViziaWindow {
-<a href=#290 id=290 data-nosnippet>290</a>    <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-<a href=#291 id=291 data-nosnippet>291</a>        Runtime::deinit_on_ui_thread();
-<a href=#292 id=292 data-nosnippet>292</a>    }
-<a href=#293 id=293 data-nosnippet>293</a>}
-<a href=#294 id=294 data-nosnippet>294</a>
-<a href=#295 id=295 data-nosnippet>295</a><span class="kw">pub struct </span>WindowView {}
+<a href=#289 id=289 data-nosnippet>289</a>        application.render();
+<a href=#290 id=290 data-nosnippet>290</a>
+<a href=#291 id=291 data-nosnippet>291</a>        <span class="comment">// Schedule the next frame according to the configured frame policy.
+<a href=#292 id=292 data-nosnippet>292</a>        </span>application.schedule_next_frame(needs_redraw);
+<a href=#293 id=293 data-nosnippet>293</a>
+<a href=#294 id=294 data-nosnippet>294</a>        <span class="prelude-val">Ok</span>(())
+<a href=#295 id=295 data-nosnippet>295</a>    }
 <a href=#296 id=296 data-nosnippet>296</a>
-<a href=#297 id=297 data-nosnippet>297</a><span class="kw">impl </span>View <span class="kw">for </span>WindowView {}
-<a href=#298 id=298 data-nosnippet>298</a>
-<a href=#299 id=299 data-nosnippet>299</a><span class="kw">pub fn </span>create_surface(
-<a href=#300 id=300 data-nosnippet>300</a>    size: (i32, i32),
-<a href=#301 id=301 data-nosnippet>301</a>    fb_info: FramebufferInfo,
-<a href=#302 id=302 data-nosnippet>302</a>    gr_context: <span class="kw-2">&amp;mut </span>skia_safe::gpu::DirectContext,
-<a href=#303 id=303 data-nosnippet>303</a>) -&gt; Surface {
-<a href=#304 id=304 data-nosnippet>304</a>    <span class="kw">let </span>backend_render_target = backend_render_targets::make_gl(size, <span class="prelude-val">None</span>, <span class="number">8</span>, fb_info);
-<a href=#305 id=305 data-nosnippet>305</a>
-<a href=#306 id=306 data-nosnippet>306</a>    <span class="kw">let </span>surface_props = SurfaceProps::new_with_text_properties(
-<a href=#307 id=307 data-nosnippet>307</a>        SurfacePropsFlags::default(),
-<a href=#308 id=308 data-nosnippet>308</a>        PixelGeometry::default(),
-<a href=#309 id=309 data-nosnippet>309</a>        <span class="number">0.5</span>,
-<a href=#310 id=310 data-nosnippet>310</a>        <span class="number">0.0</span>,
-<a href=#311 id=311 data-nosnippet>311</a>    );
-<a href=#312 id=312 data-nosnippet>312</a>
-<a href=#313 id=313 data-nosnippet>313</a>    gpu::surfaces::wrap_backend_render_target(
-<a href=#314 id=314 data-nosnippet>314</a>        gr_context,
-<a href=#315 id=315 data-nosnippet>315</a>        <span class="kw-2">&amp;</span>backend_render_target,
-<a href=#316 id=316 data-nosnippet>316</a>        SurfaceOrigin::BottomLeft,
-<a href=#317 id=317 data-nosnippet>317</a>        ColorType::RGBA8888,
-<a href=#318 id=318 data-nosnippet>318</a>        ColorSpace::new_srgb(),
-<a href=#319 id=319 data-nosnippet>319</a>        <span class="prelude-val">Some</span>(surface_props).as_ref(),
-<a href=#320 id=320 data-nosnippet>320</a>        <span class="comment">// None,
-<a href=#321 id=321 data-nosnippet>321</a>    </span>)
-<a href=#322 id=322 data-nosnippet>322</a>    .expect(<span class="string">"Could not create skia surface"</span>)
-<a href=#323 id=323 data-nosnippet>323</a>}
+<a href=#297 id=297 data-nosnippet>297</a>    <span class="kw">fn </span>resized(<span class="kw-2">&amp;</span><span class="self">self</span>, new_size: baseview::WindowSize) -&gt; <span class="prelude-ty">Result</span>&lt;(), HandlerError&gt; {
+<a href=#298 id=298 data-nosnippet>298</a>        Runtime::init_on_ui_thread();
+<a href=#299 id=299 data-nosnippet>299</a>        <span class="kw">if let </span><span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>application) = <span class="self">self</span>.application.try_borrow_mut() {
+<a href=#300 id=300 data-nosnippet>300</a>            application.handle_resized(new_size);
+<a href=#301 id=301 data-nosnippet>301</a>            application.request_redraw();
+<a href=#302 id=302 data-nosnippet>302</a>        }
+<a href=#303 id=303 data-nosnippet>303</a>
+<a href=#304 id=304 data-nosnippet>304</a>        <span class="prelude-val">Ok</span>(())
+<a href=#305 id=305 data-nosnippet>305</a>    }
+<a href=#306 id=306 data-nosnippet>306</a>
+<a href=#307 id=307 data-nosnippet>307</a>    <span class="kw">fn </span>on_event(<span class="kw-2">&amp;</span><span class="self">self</span>, event: Event) -&gt; EventStatus {
+<a href=#308 id=308 data-nosnippet>308</a>        <span class="comment">// Some hosts dispatch baseview callbacks from a different UI thread than
+<a href=#309 id=309 data-nosnippet>309</a>        // window construction; ensure this callback thread is registered.
+<a href=#310 id=310 data-nosnippet>310</a>        </span>Runtime::init_on_ui_thread();
+<a href=#311 id=311 data-nosnippet>311</a>        <span class="kw">let </span><span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>application) = <span class="self">self</span>.application.try_borrow_mut() <span class="kw">else </span>{
+<a href=#312 id=312 data-nosnippet>312</a>            <span class="kw">return </span>EventStatus::Ignored;
+<a href=#313 id=313 data-nosnippet>313</a>        };
+<a href=#314 id=314 data-nosnippet>314</a>
+<a href=#315 id=315 data-nosnippet>315</a>        <span class="kw">let </span>status = application.handle_event(event);
+<a href=#316 id=316 data-nosnippet>316</a>
+<a href=#317 id=317 data-nosnippet>317</a>        application.handle_idle(<span class="kw-2">&amp;</span><span class="self">self</span>.on_idle);
+<a href=#318 id=318 data-nosnippet>318</a>
+<a href=#319 id=319 data-nosnippet>319</a>        <span class="comment">// Wake the loop so the event is rendered on the next frame.
+<a href=#320 id=320 data-nosnippet>320</a>        </span>application.request_redraw();
+<a href=#321 id=321 data-nosnippet>321</a>
+<a href=#322 id=322 data-nosnippet>322</a>        status
+<a href=#323 id=323 data-nosnippet>323</a>    }
+<a href=#324 id=324 data-nosnippet>324</a>}
+<a href=#325 id=325 data-nosnippet>325</a>
+<a href=#326 id=326 data-nosnippet>326</a><span class="kw">impl </span>Drop <span class="kw">for </span>ViziaWindow {
+<a href=#327 id=327 data-nosnippet>327</a>    <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+<a href=#328 id=328 data-nosnippet>328</a>        Runtime::deinit_on_ui_thread();
+<a href=#329 id=329 data-nosnippet>329</a>    }
+<a href=#330 id=330 data-nosnippet>330</a>}
+<a href=#331 id=331 data-nosnippet>331</a>
+<a href=#332 id=332 data-nosnippet>332</a><span class="kw">pub struct </span>WindowView {}
+<a href=#333 id=333 data-nosnippet>333</a>
+<a href=#334 id=334 data-nosnippet>334</a><span class="kw">impl </span>View <span class="kw">for </span>WindowView {}
+<a href=#335 id=335 data-nosnippet>335</a>
+<a href=#336 id=336 data-nosnippet>336</a><span class="kw">pub fn </span>create_surface(
+<a href=#337 id=337 data-nosnippet>337</a>    size: (i32, i32),
+<a href=#338 id=338 data-nosnippet>338</a>    fb_info: FramebufferInfo,
+<a href=#339 id=339 data-nosnippet>339</a>    gr_context: <span class="kw-2">&amp;mut </span>skia_safe::gpu::DirectContext,
+<a href=#340 id=340 data-nosnippet>340</a>) -&gt; Surface {
+<a href=#341 id=341 data-nosnippet>341</a>    <span class="kw">let </span>backend_render_target = backend_render_targets::make_gl(size, <span class="prelude-val">None</span>, <span class="number">8</span>, fb_info);
+<a href=#342 id=342 data-nosnippet>342</a>
+<a href=#343 id=343 data-nosnippet>343</a>    <span class="kw">let </span>surface_props = SurfaceProps::new_with_text_properties(
+<a href=#344 id=344 data-nosnippet>344</a>        SurfacePropsFlags::default(),
+<a href=#345 id=345 data-nosnippet>345</a>        PixelGeometry::default(),
+<a href=#346 id=346 data-nosnippet>346</a>        <span class="number">0.5</span>,
+<a href=#347 id=347 data-nosnippet>347</a>        <span class="number">0.0</span>,
+<a href=#348 id=348 data-nosnippet>348</a>    );
+<a href=#349 id=349 data-nosnippet>349</a>
+<a href=#350 id=350 data-nosnippet>350</a>    gpu::surfaces::wrap_backend_render_target(
+<a href=#351 id=351 data-nosnippet>351</a>        gr_context,
+<a href=#352 id=352 data-nosnippet>352</a>        <span class="kw-2">&amp;</span>backend_render_target,
+<a href=#353 id=353 data-nosnippet>353</a>        SurfaceOrigin::BottomLeft,
+<a href=#354 id=354 data-nosnippet>354</a>        ColorType::RGBA8888,
+<a href=#355 id=355 data-nosnippet>355</a>        ColorSpace::new_srgb(),
+<a href=#356 id=356 data-nosnippet>356</a>        <span class="prelude-val">Some</span>(surface_props).as_ref(),
+<a href=#357 id=357 data-nosnippet>357</a>        <span class="comment">// None,
+<a href=#358 id=358 data-nosnippet>358</a>    </span>)
+<a href=#359 id=359 data-nosnippet>359</a>    .expect(<span class="string">"Could not create skia surface"</span>)
+<a href=#360 id=360 data-nosnippet>360</a>}
 </code></pre></div></section></main></body></html>

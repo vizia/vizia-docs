@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["ENABLED"],"fn":["is_capturing","scope","start_capture","stop_capture"],"struct":["Capture","Scope","ScopeRecord"]};

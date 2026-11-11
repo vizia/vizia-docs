@@ -300,517 +300,521 @@
 <a href=#300 id=300 data-nosnippet>300</a>    <span class="doccomment">/// Handle all reactivity within a frame. The window instance is used to resize the window when
 <a href=#301 id=301 data-nosnippet>301</a>    /// needed.
 <a href=#302 id=302 data-nosnippet>302</a>    </span><span class="kw">pub fn </span>on_frame_update(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; bool {
-<a href=#303 id=303 data-nosnippet>303</a>        <span class="comment">// Pick up any effects enqueued by off-UI-thread `SyncSignal` writes since the last
-<a href=#304 id=304 data-nosnippet>304</a>        // frame. These sit in `SYNC_RUNTIME` until a UI-thread call processes them — this
-<a href=#305 id=305 data-nosnippet>305</a>        // is the analogue of the `drain_pending_work` call in `vizia_winit`'s frame loop.
-<a href=#306 id=306 data-nosnippet>306</a>        </span>Runtime::drain_pending_work();
-<a href=#307 id=307 data-nosnippet>307</a>
-<a href=#308 id=308 data-nosnippet>308</a>        <span class="kw">for </span>event <span class="kw">in </span><span class="self">self</span>.proxy_queue.take_events() {
-<a href=#309 id=309 data-nosnippet>309</a>            <span class="self">self</span>.cx.send_event(event.into_event());
-<a href=#310 id=310 data-nosnippet>310</a>        }
-<a href=#311 id=311 data-nosnippet>311</a>
-<a href=#312 id=312 data-nosnippet>312</a>        <span class="comment">// Fire due timers and scheduled events before flushing so they're handled this
-<a href=#313 id=313 data-nosnippet>313</a>        // frame, mirroring `vizia_winit`'s `new_events`.
-<a href=#314 id=314 data-nosnippet>314</a>        </span><span class="self">self</span>.cx.process_timers();
-<a href=#315 id=315 data-nosnippet>315</a>        <span class="self">self</span>.cx.emit_scheduled_events();
-<a href=#316 id=316 data-nosnippet>316</a>
-<a href=#317 id=317 data-nosnippet>317</a>        <span class="comment">// Events. The flush callback can't borrow `&amp;mut self`, so size /
-<a href=#318 id=318 data-nosnippet>318</a>        // scale change requests get latched into locals here and applied
-<a href=#319 id=319 data-nosnippet>319</a>        // after the drain.
-<a href=#320 id=320 data-nosnippet>320</a>        </span><span class="kw">let </span><span class="kw-2">mut </span>pending_user_scale: <span class="prelude-ty">Option</span>&lt;f64&gt; = <span class="prelude-val">None</span>;
-<a href=#321 id=321 data-nosnippet>321</a>        <span class="self">self</span>.event_manager.flush_events(<span class="self">self</span>.cx.context(), |window_event| {
-<a href=#322 id=322 data-nosnippet>322</a>            <span class="comment">// For some reason calling window.close() crashes baseview on macos
-<a href=#323 id=323 data-nosnippet>323</a>            // WindowEvent::WindowClose =&gt; *should_close = true,
-<a href=#324 id=324 data-nosnippet>324</a>            </span><span class="kw">match </span>window_event {
-<a href=#325 id=325 data-nosnippet>325</a>                WindowEvent::FocusIn =&gt; {
-<a href=#326 id=326 data-nosnippet>326</a>                    <span class="attr">#[cfg(not(target_os = <span class="string">"linux"</span>))] </span><span class="comment">// not implemented for linux yet
-<a href=#327 id=327 data-nosnippet>327</a>                    </span><span class="kw">if </span>!<span class="self">self</span>.window_context.has_focus() {
-<a href=#328 id=328 data-nosnippet>328</a>                        <span class="self">self</span>.window_context.focus().expect(<span class="string">"Failed to focus window"</span>);
-<a href=#329 id=329 data-nosnippet>329</a>                    }
-<a href=#330 id=330 data-nosnippet>330</a>                }
-<a href=#331 id=331 data-nosnippet>331</a>                WindowEvent::SetUserScale(factor) =&gt; {
-<a href=#332 id=332 data-nosnippet>332</a>                    pending_user_scale = <span class="prelude-val">Some</span>(<span class="kw-2">*</span>factor);
-<a href=#333 id=333 data-nosnippet>333</a>                }
-<a href=#334 id=334 data-nosnippet>334</a>                WindowEvent::SetCursor(icon) =&gt; {
-<a href=#335 id=335 data-nosnippet>335</a>                    <span class="kw">_ </span>= <span class="self">self</span>.window_context.set_mouse_cursor(translate_mouse_cursor(<span class="kw-2">*</span>icon))
-<a href=#336 id=336 data-nosnippet>336</a>                }
-<a href=#337 id=337 data-nosnippet>337</a>                <span class="kw">_ </span>=&gt; {}
-<a href=#338 id=338 data-nosnippet>338</a>            }
-<a href=#339 id=339 data-nosnippet>339</a>        });
-<a href=#340 id=340 data-nosnippet>340</a>
-<a href=#341 id=341 data-nosnippet>341</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(new_user_scale) = pending_user_scale {
-<a href=#342 id=342 data-nosnippet>342</a>            <span class="self">self</span>.apply_user_scale(new_user_scale);
-<a href=#343 id=343 data-nosnippet>343</a>        }
-<a href=#344 id=344 data-nosnippet>344</a>
-<a href=#345 id=345 data-nosnippet>345</a>        <span class="comment">// We need to resize the window to make sure that the new size is applied. This is a workaround
-<a href=#346 id=346 data-nosnippet>346</a>        // for the fact that baseview does not resize the window when the scale factor changes.
-<a href=#347 id=347 data-nosnippet>347</a>        </span><span class="kw">if </span>!<span class="self">self</span>.is_initialized {
-<a href=#348 id=348 data-nosnippet>348</a>            <span class="comment">// Resizing the window doesn't apply unless the size has actually changed.
-<a href=#349 id=349 data-nosnippet>349</a>            // So we resize the window slightly larger and then back again to force a resize event.
-<a href=#350 id=350 data-nosnippet>350</a>            </span><span class="self">self</span>.window_context
-<a href=#351 id=351 data-nosnippet>351</a>                .resize(baseview::dpi::LogicalSize::new(
-<a href=#352 id=352 data-nosnippet>352</a>                    <span class="self">self</span>.window_description.inner_size.width <span class="kw">as </span>f64 + <span class="number">1.0</span>,
-<a href=#353 id=353 data-nosnippet>353</a>                    <span class="self">self</span>.window_description.inner_size.height <span class="kw">as </span>f64 + <span class="number">1.0</span>,
-<a href=#354 id=354 data-nosnippet>354</a>                ))
-<a href=#355 id=355 data-nosnippet>355</a>                .expect(<span class="string">"Failed to resize window"</span>);
-<a href=#356 id=356 data-nosnippet>356</a>
-<a href=#357 id=357 data-nosnippet>357</a>            <span class="self">self</span>.window_context
-<a href=#358 id=358 data-nosnippet>358</a>                .resize(baseview::dpi::LogicalSize::new(
-<a href=#359 id=359 data-nosnippet>359</a>                    <span class="self">self</span>.window_description.inner_size.width <span class="kw">as </span>f64,
-<a href=#360 id=360 data-nosnippet>360</a>                    <span class="self">self</span>.window_description.inner_size.height <span class="kw">as </span>f64,
-<a href=#361 id=361 data-nosnippet>361</a>                ))
-<a href=#362 id=362 data-nosnippet>362</a>                .expect(<span class="string">"Failed to resize window"</span>);
-<a href=#363 id=363 data-nosnippet>363</a>            <span class="self">self</span>.is_initialized = <span class="bool-val">true</span>;
-<a href=#364 id=364 data-nosnippet>364</a>        }
-<a href=#365 id=365 data-nosnippet>365</a>
-<a href=#366 id=366 data-nosnippet>366</a>        <span class="comment">// if *cx.window_size() != self.current_window_size
-<a href=#367 id=367 data-nosnippet>367</a>        //     || cx.user_scale_factor() != self.current_user_scale_factor
-<a href=#368 id=368 data-nosnippet>368</a>        // {
-<a href=#369 id=369 data-nosnippet>369</a>        //     self.current_window_size = *cx.window_size();
-<a href=#370 id=370 data-nosnippet>370</a>        //     self.current_user_scale_factor = cx.user_scale_factor();
-<a href=#371 id=371 data-nosnippet>371</a>
-<a href=#372 id=372 data-nosnippet>372</a>        //     // The user scale factor is not part of the HiDPI scaling, so baseview should treat it
-<a href=#373 id=373 data-nosnippet>373</a>        //     // as part of our logical size
-<a href=#374 id=374 data-nosnippet>374</a>        //     window.resize(baseview::Size {
-<a href=#375 id=375 data-nosnippet>375</a>        //         width: self.current_window_size.width as f64 * self.current_user_scale_factor,
-<a href=#376 id=376 data-nosnippet>376</a>        //         height: self.current_window_size.height as f64 * self.current_user_scale_factor,
-<a href=#377 id=377 data-nosnippet>377</a>        //     });
-<a href=#378 id=378 data-nosnippet>378</a>
-<a href=#379 id=379 data-nosnippet>379</a>        //     // TODO: These calculations are now repeated in three places, should probably be moved
-<a href=#380 id=380 data-nosnippet>380</a>        //     //       to a function
-<a href=#381 id=381 data-nosnippet>381</a>        //     cx.set_scale_factor(self.window_scale_factor * self.current_user_scale_factor);
-<a href=#382 id=382 data-nosnippet>382</a>        //     let new_physical_width =
-<a href=#383 id=383 data-nosnippet>383</a>        //         self.current_window_size.width as f32 * cx.style().scale_factor();
-<a href=#384 id=384 data-nosnippet>384</a>        //     let new_physical_height =
-<a href=#385 id=385 data-nosnippet>385</a>        //         self.current_window_size.height as f32 * cx.style().scale_factor();
-<a href=#386 id=386 data-nosnippet>386</a>
-<a href=#387 id=387 data-nosnippet>387</a>        //     cx.set_window_size(new_physical_width, new_physical_height);
+<a href=#303 id=303 data-nosnippet>303</a>        <span class="kw">let </span>update_scope = vizia_core::profiling::scope(<span class="string">"update"</span>);
+<a href=#304 id=304 data-nosnippet>304</a>
+<a href=#305 id=305 data-nosnippet>305</a>        <span class="comment">// Pick up any effects enqueued by off-UI-thread `SyncSignal` writes since the last
+<a href=#306 id=306 data-nosnippet>306</a>        // frame. These sit in `SYNC_RUNTIME` until a UI-thread call processes them — this
+<a href=#307 id=307 data-nosnippet>307</a>        // is the analogue of the `drain_pending_work` call in `vizia_winit`'s frame loop.
+<a href=#308 id=308 data-nosnippet>308</a>        </span>Runtime::drain_pending_work();
+<a href=#309 id=309 data-nosnippet>309</a>
+<a href=#310 id=310 data-nosnippet>310</a>        <span class="kw">for </span>event <span class="kw">in </span><span class="self">self</span>.proxy_queue.take_events() {
+<a href=#311 id=311 data-nosnippet>311</a>            <span class="self">self</span>.cx.send_event(event.into_event());
+<a href=#312 id=312 data-nosnippet>312</a>        }
+<a href=#313 id=313 data-nosnippet>313</a>
+<a href=#314 id=314 data-nosnippet>314</a>        <span class="comment">// Fire due timers and scheduled events before flushing so they're handled this
+<a href=#315 id=315 data-nosnippet>315</a>        // frame, mirroring `vizia_winit`'s `new_events`.
+<a href=#316 id=316 data-nosnippet>316</a>        </span><span class="self">self</span>.cx.process_timers();
+<a href=#317 id=317 data-nosnippet>317</a>        <span class="self">self</span>.cx.emit_scheduled_events();
+<a href=#318 id=318 data-nosnippet>318</a>
+<a href=#319 id=319 data-nosnippet>319</a>        <span class="comment">// Events. The flush callback can't borrow `&amp;mut self`, so size /
+<a href=#320 id=320 data-nosnippet>320</a>        // scale change requests get latched into locals here and applied
+<a href=#321 id=321 data-nosnippet>321</a>        // after the drain.
+<a href=#322 id=322 data-nosnippet>322</a>        </span><span class="kw">let </span><span class="kw-2">mut </span>pending_user_scale: <span class="prelude-ty">Option</span>&lt;f64&gt; = <span class="prelude-val">None</span>;
+<a href=#323 id=323 data-nosnippet>323</a>        <span class="self">self</span>.event_manager.flush_events(<span class="self">self</span>.cx.context(), |window_event| {
+<a href=#324 id=324 data-nosnippet>324</a>            <span class="comment">// For some reason calling window.close() crashes baseview on macos
+<a href=#325 id=325 data-nosnippet>325</a>            // WindowEvent::WindowClose =&gt; *should_close = true,
+<a href=#326 id=326 data-nosnippet>326</a>            </span><span class="kw">match </span>window_event {
+<a href=#327 id=327 data-nosnippet>327</a>                WindowEvent::FocusIn =&gt; {
+<a href=#328 id=328 data-nosnippet>328</a>                    <span class="attr">#[cfg(not(target_os = <span class="string">"linux"</span>))] </span><span class="comment">// not implemented for linux yet
+<a href=#329 id=329 data-nosnippet>329</a>                    </span><span class="kw">if </span>!<span class="self">self</span>.window_context.has_focus() {
+<a href=#330 id=330 data-nosnippet>330</a>                        <span class="self">self</span>.window_context.focus().expect(<span class="string">"Failed to focus window"</span>);
+<a href=#331 id=331 data-nosnippet>331</a>                    }
+<a href=#332 id=332 data-nosnippet>332</a>                }
+<a href=#333 id=333 data-nosnippet>333</a>                WindowEvent::SetUserScale(factor) =&gt; {
+<a href=#334 id=334 data-nosnippet>334</a>                    pending_user_scale = <span class="prelude-val">Some</span>(<span class="kw-2">*</span>factor);
+<a href=#335 id=335 data-nosnippet>335</a>                }
+<a href=#336 id=336 data-nosnippet>336</a>                WindowEvent::SetCursor(icon) =&gt; {
+<a href=#337 id=337 data-nosnippet>337</a>                    <span class="kw">_ </span>= <span class="self">self</span>.window_context.set_mouse_cursor(translate_mouse_cursor(<span class="kw-2">*</span>icon))
+<a href=#338 id=338 data-nosnippet>338</a>                }
+<a href=#339 id=339 data-nosnippet>339</a>                <span class="kw">_ </span>=&gt; {}
+<a href=#340 id=340 data-nosnippet>340</a>            }
+<a href=#341 id=341 data-nosnippet>341</a>        });
+<a href=#342 id=342 data-nosnippet>342</a>
+<a href=#343 id=343 data-nosnippet>343</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(new_user_scale) = pending_user_scale {
+<a href=#344 id=344 data-nosnippet>344</a>            <span class="self">self</span>.apply_user_scale(new_user_scale);
+<a href=#345 id=345 data-nosnippet>345</a>        }
+<a href=#346 id=346 data-nosnippet>346</a>
+<a href=#347 id=347 data-nosnippet>347</a>        <span class="comment">// We need to resize the window to make sure that the new size is applied. This is a workaround
+<a href=#348 id=348 data-nosnippet>348</a>        // for the fact that baseview does not resize the window when the scale factor changes.
+<a href=#349 id=349 data-nosnippet>349</a>        </span><span class="kw">if </span>!<span class="self">self</span>.is_initialized {
+<a href=#350 id=350 data-nosnippet>350</a>            <span class="comment">// Resizing the window doesn't apply unless the size has actually changed.
+<a href=#351 id=351 data-nosnippet>351</a>            // So we resize the window slightly larger and then back again to force a resize event.
+<a href=#352 id=352 data-nosnippet>352</a>            </span><span class="self">self</span>.window_context
+<a href=#353 id=353 data-nosnippet>353</a>                .resize(baseview::dpi::LogicalSize::new(
+<a href=#354 id=354 data-nosnippet>354</a>                    <span class="self">self</span>.window_description.inner_size.width <span class="kw">as </span>f64 + <span class="number">1.0</span>,
+<a href=#355 id=355 data-nosnippet>355</a>                    <span class="self">self</span>.window_description.inner_size.height <span class="kw">as </span>f64 + <span class="number">1.0</span>,
+<a href=#356 id=356 data-nosnippet>356</a>                ))
+<a href=#357 id=357 data-nosnippet>357</a>                .expect(<span class="string">"Failed to resize window"</span>);
+<a href=#358 id=358 data-nosnippet>358</a>
+<a href=#359 id=359 data-nosnippet>359</a>            <span class="self">self</span>.window_context
+<a href=#360 id=360 data-nosnippet>360</a>                .resize(baseview::dpi::LogicalSize::new(
+<a href=#361 id=361 data-nosnippet>361</a>                    <span class="self">self</span>.window_description.inner_size.width <span class="kw">as </span>f64,
+<a href=#362 id=362 data-nosnippet>362</a>                    <span class="self">self</span>.window_description.inner_size.height <span class="kw">as </span>f64,
+<a href=#363 id=363 data-nosnippet>363</a>                ))
+<a href=#364 id=364 data-nosnippet>364</a>                .expect(<span class="string">"Failed to resize window"</span>);
+<a href=#365 id=365 data-nosnippet>365</a>            <span class="self">self</span>.is_initialized = <span class="bool-val">true</span>;
+<a href=#366 id=366 data-nosnippet>366</a>        }
+<a href=#367 id=367 data-nosnippet>367</a>
+<a href=#368 id=368 data-nosnippet>368</a>        <span class="comment">// if *cx.window_size() != self.current_window_size
+<a href=#369 id=369 data-nosnippet>369</a>        //     || cx.user_scale_factor() != self.current_user_scale_factor
+<a href=#370 id=370 data-nosnippet>370</a>        // {
+<a href=#371 id=371 data-nosnippet>371</a>        //     self.current_window_size = *cx.window_size();
+<a href=#372 id=372 data-nosnippet>372</a>        //     self.current_user_scale_factor = cx.user_scale_factor();
+<a href=#373 id=373 data-nosnippet>373</a>
+<a href=#374 id=374 data-nosnippet>374</a>        //     // The user scale factor is not part of the HiDPI scaling, so baseview should treat it
+<a href=#375 id=375 data-nosnippet>375</a>        //     // as part of our logical size
+<a href=#376 id=376 data-nosnippet>376</a>        //     window.resize(baseview::Size {
+<a href=#377 id=377 data-nosnippet>377</a>        //         width: self.current_window_size.width as f64 * self.current_user_scale_factor,
+<a href=#378 id=378 data-nosnippet>378</a>        //         height: self.current_window_size.height as f64 * self.current_user_scale_factor,
+<a href=#379 id=379 data-nosnippet>379</a>        //     });
+<a href=#380 id=380 data-nosnippet>380</a>
+<a href=#381 id=381 data-nosnippet>381</a>        //     // TODO: These calculations are now repeated in three places, should probably be moved
+<a href=#382 id=382 data-nosnippet>382</a>        //     //       to a function
+<a href=#383 id=383 data-nosnippet>383</a>        //     cx.set_scale_factor(self.window_scale_factor * self.current_user_scale_factor);
+<a href=#384 id=384 data-nosnippet>384</a>        //     let new_physical_width =
+<a href=#385 id=385 data-nosnippet>385</a>        //         self.current_window_size.width as f32 * cx.style().scale_factor();
+<a href=#386 id=386 data-nosnippet>386</a>        //     let new_physical_height =
+<a href=#387 id=387 data-nosnippet>387</a>        //         self.current_window_size.height as f32 * cx.style().scale_factor();
 <a href=#388 id=388 data-nosnippet>388</a>
-<a href=#389 id=389 data-nosnippet>389</a>        //     if let Some(surface) = cx.get_surface_mut(Entity::root()) {
-<a href=#390 id=390 data-nosnippet>390</a>        //         if new_physical_width != 0.0 || new_physical_height != 0.0 {
-<a href=#391 id=391 data-nosnippet>391</a>        //             let fb_info = {
-<a href=#392 id=392 data-nosnippet>392</a>        //                 let mut fboid: GLint = 0;
-<a href=#393 id=393 data-nosnippet>393</a>        //                 unsafe { gl::GetIntegerv(gl::FRAMEBUFFER_BINDING, &amp;mut fboid) };
-<a href=#394 id=394 data-nosnippet>394</a>
-<a href=#395 id=395 data-nosnippet>395</a>        //                 FramebufferInfo {
-<a href=#396 id=396 data-nosnippet>396</a>        //                     fboid: fboid.try_into().unwrap(),
-<a href=#397 id=397 data-nosnippet>397</a>        //                     format: skia_safe::gpu::gl::Format::RGBA8.into(),
-<a href=#398 id=398 data-nosnippet>398</a>        //                     ..Default::default()
-<a href=#399 id=399 data-nosnippet>399</a>        //                 }
-<a href=#400 id=400 data-nosnippet>400</a>        //             };
-<a href=#401 id=401 data-nosnippet>401</a>
-<a href=#402 id=402 data-nosnippet>402</a>        //             let backend_render_target = backend_render_targets::make_gl(
-<a href=#403 id=403 data-nosnippet>403</a>        //                 (new_physical_width as i32, new_physical_height as i32),
-<a href=#404 id=404 data-nosnippet>404</a>        //                 None,
-<a href=#405 id=405 data-nosnippet>405</a>        //                 8,
-<a href=#406 id=406 data-nosnippet>406</a>        //                 fb_info,
-<a href=#407 id=407 data-nosnippet>407</a>        //             );
-<a href=#408 id=408 data-nosnippet>408</a>
-<a href=#409 id=409 data-nosnippet>409</a>        //             surface.0 = gpu::surfaces::wrap_backend_render_target(
-<a href=#410 id=410 data-nosnippet>410</a>        //                 &amp;mut self.gr_context,
-<a href=#411 id=411 data-nosnippet>411</a>        //                 &amp;backend_render_target,
-<a href=#412 id=412 data-nosnippet>412</a>        //                 SurfaceOrigin::BottomLeft,
-<a href=#413 id=413 data-nosnippet>413</a>        //                 ColorType::RGBA8888,
-<a href=#414 id=414 data-nosnippet>414</a>        //                 None,
-<a href=#415 id=415 data-nosnippet>415</a>        //                 None,
-<a href=#416 id=416 data-nosnippet>416</a>        //             )
-<a href=#417 id=417 data-nosnippet>417</a>        //             .expect("Could not create skia surface");
-<a href=#418 id=418 data-nosnippet>418</a>
-<a href=#419 id=419 data-nosnippet>419</a>        //             surface.1 = surface
-<a href=#420 id=420 data-nosnippet>420</a>        //                 .0
-<a href=#421 id=421 data-nosnippet>421</a>        //                 .new_surface_with_dimensions((
-<a href=#422 id=422 data-nosnippet>422</a>        //                     new_physical_width.max(1.0) as i32,
-<a href=#423 id=423 data-nosnippet>423</a>        //                     new_physical_height.max(1.0) as i32,
-<a href=#424 id=424 data-nosnippet>424</a>        //                 ))
-<a href=#425 id=425 data-nosnippet>425</a>        //                 .unwrap();
-<a href=#426 id=426 data-nosnippet>426</a>        //         }
-<a href=#427 id=427 data-nosnippet>427</a>        //     }
-<a href=#428 id=428 data-nosnippet>428</a>
-<a href=#429 id=429 data-nosnippet>429</a>        //     cx.needs_refresh();
+<a href=#389 id=389 data-nosnippet>389</a>        //     cx.set_window_size(new_physical_width, new_physical_height);
+<a href=#390 id=390 data-nosnippet>390</a>
+<a href=#391 id=391 data-nosnippet>391</a>        //     if let Some(surface) = cx.get_surface_mut(Entity::root()) {
+<a href=#392 id=392 data-nosnippet>392</a>        //         if new_physical_width != 0.0 || new_physical_height != 0.0 {
+<a href=#393 id=393 data-nosnippet>393</a>        //             let fb_info = {
+<a href=#394 id=394 data-nosnippet>394</a>        //                 let mut fboid: GLint = 0;
+<a href=#395 id=395 data-nosnippet>395</a>        //                 unsafe { gl::GetIntegerv(gl::FRAMEBUFFER_BINDING, &amp;mut fboid) };
+<a href=#396 id=396 data-nosnippet>396</a>
+<a href=#397 id=397 data-nosnippet>397</a>        //                 FramebufferInfo {
+<a href=#398 id=398 data-nosnippet>398</a>        //                     fboid: fboid.try_into().unwrap(),
+<a href=#399 id=399 data-nosnippet>399</a>        //                     format: skia_safe::gpu::gl::Format::RGBA8.into(),
+<a href=#400 id=400 data-nosnippet>400</a>        //                     ..Default::default()
+<a href=#401 id=401 data-nosnippet>401</a>        //                 }
+<a href=#402 id=402 data-nosnippet>402</a>        //             };
+<a href=#403 id=403 data-nosnippet>403</a>
+<a href=#404 id=404 data-nosnippet>404</a>        //             let backend_render_target = backend_render_targets::make_gl(
+<a href=#405 id=405 data-nosnippet>405</a>        //                 (new_physical_width as i32, new_physical_height as i32),
+<a href=#406 id=406 data-nosnippet>406</a>        //                 None,
+<a href=#407 id=407 data-nosnippet>407</a>        //                 8,
+<a href=#408 id=408 data-nosnippet>408</a>        //                 fb_info,
+<a href=#409 id=409 data-nosnippet>409</a>        //             );
+<a href=#410 id=410 data-nosnippet>410</a>
+<a href=#411 id=411 data-nosnippet>411</a>        //             surface.0 = gpu::surfaces::wrap_backend_render_target(
+<a href=#412 id=412 data-nosnippet>412</a>        //                 &amp;mut self.gr_context,
+<a href=#413 id=413 data-nosnippet>413</a>        //                 &amp;backend_render_target,
+<a href=#414 id=414 data-nosnippet>414</a>        //                 SurfaceOrigin::BottomLeft,
+<a href=#415 id=415 data-nosnippet>415</a>        //                 ColorType::RGBA8888,
+<a href=#416 id=416 data-nosnippet>416</a>        //                 None,
+<a href=#417 id=417 data-nosnippet>417</a>        //                 None,
+<a href=#418 id=418 data-nosnippet>418</a>        //             )
+<a href=#419 id=419 data-nosnippet>419</a>        //             .expect("Could not create skia surface");
+<a href=#420 id=420 data-nosnippet>420</a>
+<a href=#421 id=421 data-nosnippet>421</a>        //             surface.1 = surface
+<a href=#422 id=422 data-nosnippet>422</a>        //                 .0
+<a href=#423 id=423 data-nosnippet>423</a>        //                 .new_surface_with_dimensions((
+<a href=#424 id=424 data-nosnippet>424</a>        //                     new_physical_width.max(1.0) as i32,
+<a href=#425 id=425 data-nosnippet>425</a>        //                     new_physical_height.max(1.0) as i32,
+<a href=#426 id=426 data-nosnippet>426</a>        //                 ))
+<a href=#427 id=427 data-nosnippet>427</a>        //                 .unwrap();
+<a href=#428 id=428 data-nosnippet>428</a>        //         }
+<a href=#429 id=429 data-nosnippet>429</a>        //     }
 <a href=#430 id=430 data-nosnippet>430</a>
-<a href=#431 id=431 data-nosnippet>431</a>        //     // hmmm why are we flushing events again?
-<a href=#432 id=432 data-nosnippet>432</a>        //     // self.event_manager.flush_events(cx.context());
-<a href=#433 id=433 data-nosnippet>433</a>        // }
-<a href=#434 id=434 data-nosnippet>434</a>
-<a href=#435 id=435 data-nosnippet>435</a>        </span><span class="kw">let </span>context =
-<a href=#436 id=436 data-nosnippet>436</a>            <span class="self">self</span>.window_context.gl_context().expect(<span class="string">"Window was created without OpenGL support"</span>);
-<a href=#437 id=437 data-nosnippet>437</a>        <span class="kw">unsafe </span>{ context.make_current() }.expect(<span class="string">"Failed to make GL context current"</span>);
-<a href=#438 id=438 data-nosnippet>438</a>        <span class="self">self</span>.cx.process_style_updates();
-<a href=#439 id=439 data-nosnippet>439</a>        <span class="kw">unsafe </span>{ context.make_not_current() }.expect(<span class="string">"Failed to make GL context not current"</span>);
-<a href=#440 id=440 data-nosnippet>440</a>
-<a href=#441 id=441 data-nosnippet>441</a>        <span class="kw">let </span>animations_playing = <span class="self">self</span>.cx.process_animations();
+<a href=#431 id=431 data-nosnippet>431</a>        //     cx.needs_refresh();
+<a href=#432 id=432 data-nosnippet>432</a>
+<a href=#433 id=433 data-nosnippet>433</a>        //     // hmmm why are we flushing events again?
+<a href=#434 id=434 data-nosnippet>434</a>        //     // self.event_manager.flush_events(cx.context());
+<a href=#435 id=435 data-nosnippet>435</a>        // }
+<a href=#436 id=436 data-nosnippet>436</a>
+<a href=#437 id=437 data-nosnippet>437</a>        </span><span class="kw">let </span>context =
+<a href=#438 id=438 data-nosnippet>438</a>            <span class="self">self</span>.window_context.gl_context().expect(<span class="string">"Window was created without OpenGL support"</span>);
+<a href=#439 id=439 data-nosnippet>439</a>        <span class="kw">unsafe </span>{ context.make_current() }.expect(<span class="string">"Failed to make GL context current"</span>);
+<a href=#440 id=440 data-nosnippet>440</a>        <span class="self">self</span>.cx.process_style_updates();
+<a href=#441 id=441 data-nosnippet>441</a>        <span class="kw">unsafe </span>{ context.make_not_current() }.expect(<span class="string">"Failed to make GL context not current"</span>);
 <a href=#442 id=442 data-nosnippet>442</a>
-<a href=#443 id=443 data-nosnippet>443</a>        <span class="self">self</span>.cx.process_visual_updates();
+<a href=#443 id=443 data-nosnippet>443</a>        <span class="kw">let </span>animations_playing = <span class="self">self</span>.cx.process_animations();
 <a href=#444 id=444 data-nosnippet>444</a>
-<a href=#445 id=445 data-nosnippet>445</a>        <span class="kw">let </span>has_redraw =
-<a href=#446 id=446 data-nosnippet>446</a>            <span class="self">self</span>.cx.<span class="number">0</span>.windows.iter().any(|(<span class="kw">_</span>, window_state)| !window_state.redraw_list.is_empty());
-<a href=#447 id=447 data-nosnippet>447</a>        <span class="kw">if </span>has_redraw {
-<a href=#448 id=448 data-nosnippet>448</a>            <span class="self">self</span>.should_redraw = <span class="bool-val">true</span>;
-<a href=#449 id=449 data-nosnippet>449</a>        }
-<a href=#450 id=450 data-nosnippet>450</a>
-<a href=#451 id=451 data-nosnippet>451</a>        animations_playing || <span class="self">self</span>.cx.has_queued_events() || has_redraw
-<a href=#452 id=452 data-nosnippet>452</a>    }
+<a href=#445 id=445 data-nosnippet>445</a>        <span class="self">self</span>.cx.process_visual_updates();
+<a href=#446 id=446 data-nosnippet>446</a>
+<a href=#447 id=447 data-nosnippet>447</a>        <span class="kw">let </span>has_redraw =
+<a href=#448 id=448 data-nosnippet>448</a>            <span class="self">self</span>.cx.<span class="number">0</span>.windows.iter().any(|(<span class="kw">_</span>, window_state)| !window_state.redraw_list.is_empty());
+<a href=#449 id=449 data-nosnippet>449</a>        <span class="kw">if </span>has_redraw {
+<a href=#450 id=450 data-nosnippet>450</a>            <span class="self">self</span>.should_redraw = <span class="bool-val">true</span>;
+<a href=#451 id=451 data-nosnippet>451</a>        }
+<a href=#452 id=452 data-nosnippet>452</a>        drop(update_scope);
 <a href=#453 id=453 data-nosnippet>453</a>
-<a href=#454 id=454 data-nosnippet>454</a>    <span class="kw">pub fn </span>render(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-<a href=#455 id=455 data-nosnippet>455</a>        <span class="kw">if </span><span class="self">self</span>.should_redraw {
-<a href=#456 id=456 data-nosnippet>456</a>            <span class="kw">let </span>context = <span class="self">self
-<a href=#457 id=457 data-nosnippet>457</a>                </span>.window_context
-<a href=#458 id=458 data-nosnippet>458</a>                .gl_context()
-<a href=#459 id=459 data-nosnippet>459</a>                .expect(<span class="string">"Window was created without OpenGL support"</span>);
-<a href=#460 id=460 data-nosnippet>460</a>            <span class="kw">unsafe </span>{ context.make_current() }.expect(<span class="string">"Failed to make GL context current"</span>);
-<a href=#461 id=461 data-nosnippet>461</a>            <span class="self">self</span>.cx.draw(Entity::root(), <span class="kw-2">&amp;mut </span><span class="self">self</span>.surface, <span class="kw-2">&amp;mut </span><span class="self">self</span>.dirty_surface);
-<a href=#462 id=462 data-nosnippet>462</a>            <span class="self">self</span>.gr_context.flush_and_submit();
-<a href=#463 id=463 data-nosnippet>463</a>            <span class="self">self</span>.should_redraw = <span class="bool-val">false</span>;
-<a href=#464 id=464 data-nosnippet>464</a>            context.swap_buffers().expect(<span class="string">"Failed to swap buffers"</span>);
-<a href=#465 id=465 data-nosnippet>465</a>            <span class="kw">unsafe </span>{ context.make_not_current() }.expect(<span class="string">"Failed to make GL context not current"</span>);
-<a href=#466 id=466 data-nosnippet>466</a>        }
-<a href=#467 id=467 data-nosnippet>467</a>    }
-<a href=#468 id=468 data-nosnippet>468</a>
-<a href=#469 id=469 data-nosnippet>469</a>    <span class="kw">pub fn </span>handle_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: baseview::Event) -&gt; baseview::EventStatus {
-<a href=#470 id=470 data-nosnippet>470</a>        <span class="kw">let </span>status = <span class="self">self</span>.event_status(<span class="kw-2">&amp;</span>event);
-<a href=#471 id=471 data-nosnippet>471</a>
-<a href=#472 id=472 data-nosnippet>472</a>        <span class="kw">if </span>requests_exit(<span class="kw-2">&amp;</span>event, <span class="self">self</span>.is_parented) {
-<a href=#473 id=473 data-nosnippet>473</a>            <span class="self">self</span>.cx.send_event(Event::new(WindowEvent::WindowClose));
-<a href=#474 id=474 data-nosnippet>474</a>            <span class="self">self</span>.window_context.request_close();
-<a href=#475 id=475 data-nosnippet>475</a>        }
-<a href=#476 id=476 data-nosnippet>476</a>
-<a href=#477 id=477 data-nosnippet>477</a>        <span class="kw">let </span><span class="kw-2">mut </span>update_modifiers = |modifiers: vizia_input::KeyboardModifiers| {
-<a href=#478 id=478 data-nosnippet>478</a>            <span class="self">self</span>.cx
-<a href=#479 id=479 data-nosnippet>479</a>                .modifiers()
-<a href=#480 id=480 data-nosnippet>480</a>                .set(Modifiers::SHIFT, modifiers.contains(vizia_input::KeyboardModifiers::SHIFT));
-<a href=#481 id=481 data-nosnippet>481</a>            <span class="self">self</span>.cx
-<a href=#482 id=482 data-nosnippet>482</a>                .modifiers()
-<a href=#483 id=483 data-nosnippet>483</a>                .set(Modifiers::CTRL, modifiers.contains(vizia_input::KeyboardModifiers::CONTROL));
-<a href=#484 id=484 data-nosnippet>484</a>            <span class="self">self</span>.cx
-<a href=#485 id=485 data-nosnippet>485</a>                .modifiers()
-<a href=#486 id=486 data-nosnippet>486</a>                .set(Modifiers::SUPER, modifiers.contains(vizia_input::KeyboardModifiers::META));
-<a href=#487 id=487 data-nosnippet>487</a>            <span class="self">self</span>.cx
-<a href=#488 id=488 data-nosnippet>488</a>                .modifiers()
-<a href=#489 id=489 data-nosnippet>489</a>                .set(Modifiers::ALT, modifiers.contains(vizia_input::KeyboardModifiers::ALT));
-<a href=#490 id=490 data-nosnippet>490</a>        };
-<a href=#491 id=491 data-nosnippet>491</a>
-<a href=#492 id=492 data-nosnippet>492</a>        <span class="kw">match </span>event {
-<a href=#493 id=493 data-nosnippet>493</a>            baseview::Event::Mouse(event) =&gt; <span class="kw">match </span>event {
-<a href=#494 id=494 data-nosnippet>494</a>                baseview::MouseEvent::CursorMoved { position, modifiers } =&gt; {
-<a href=#495 id=495 data-nosnippet>495</a>                    update_modifiers(modifiers);
-<a href=#496 id=496 data-nosnippet>496</a>
-<a href=#497 id=497 data-nosnippet>497</a>                    <span class="comment">// baseview v0.4 delivers cursor coordinates in physical pixels, so no
-<a href=#498 id=498 data-nosnippet>498</a>                    // additional DPI scaling should be applied here.
-<a href=#499 id=499 data-nosnippet>499</a>                    </span><span class="kw">let </span>cursor_x = position.x <span class="kw">as </span>f32;
-<a href=#500 id=500 data-nosnippet>500</a>                    <span class="kw">let </span>cursor_y = position.y <span class="kw">as </span>f32;
-<a href=#501 id=501 data-nosnippet>501</a>                    <span class="self">self</span>.cx.emit_origin(WindowEvent::MouseMove(cursor_x, cursor_y));
-<a href=#502 id=502 data-nosnippet>502</a>                }
-<a href=#503 id=503 data-nosnippet>503</a>                baseview::MouseEvent::ButtonPressed { button, modifiers } =&gt; {
-<a href=#504 id=504 data-nosnippet>504</a>                    update_modifiers(modifiers);
-<a href=#505 id=505 data-nosnippet>505</a>
-<a href=#506 id=506 data-nosnippet>506</a>                    <span class="kw">let </span>b = translate_mouse_button(button);
-<a href=#507 id=507 data-nosnippet>507</a>                    <span class="self">self</span>.cx.emit_origin(WindowEvent::MouseDown(b));
-<a href=#508 id=508 data-nosnippet>508</a>                }
-<a href=#509 id=509 data-nosnippet>509</a>                baseview::MouseEvent::ButtonReleased { button, modifiers } =&gt; {
-<a href=#510 id=510 data-nosnippet>510</a>                    update_modifiers(modifiers);
-<a href=#511 id=511 data-nosnippet>511</a>
-<a href=#512 id=512 data-nosnippet>512</a>                    <span class="kw">let </span>b = translate_mouse_button(button);
-<a href=#513 id=513 data-nosnippet>513</a>                    <span class="self">self</span>.cx.emit_origin(WindowEvent::MouseUp(b));
-<a href=#514 id=514 data-nosnippet>514</a>                }
-<a href=#515 id=515 data-nosnippet>515</a>                baseview::MouseEvent::WheelScrolled { delta, modifiers } =&gt; {
-<a href=#516 id=516 data-nosnippet>516</a>                    update_modifiers(modifiers);
-<a href=#517 id=517 data-nosnippet>517</a>
-<a href=#518 id=518 data-nosnippet>518</a>                    <span class="kw">let </span>(lines_x, lines_y) = <span class="kw">match </span>delta {
-<a href=#519 id=519 data-nosnippet>519</a>                        baseview::ScrollDelta::Lines { x, y } =&gt; (x, y),
-<a href=#520 id=520 data-nosnippet>520</a>                        baseview::ScrollDelta::Pixels { x, y } =&gt; (
-<a href=#521 id=521 data-nosnippet>521</a>                            <span class="kw">if </span>x &lt; <span class="number">0.0 </span>{
-<a href=#522 id=522 data-nosnippet>522</a>                                -<span class="number">1.0
-<a href=#523 id=523 data-nosnippet>523</a>                            </span>} <span class="kw">else if </span>x &gt; <span class="number">1.0 </span>{
-<a href=#524 id=524 data-nosnippet>524</a>                                <span class="number">1.0
-<a href=#525 id=525 data-nosnippet>525</a>                            </span>} <span class="kw">else </span>{
-<a href=#526 id=526 data-nosnippet>526</a>                                <span class="number">0.0
-<a href=#527 id=527 data-nosnippet>527</a>                            </span>},
-<a href=#528 id=528 data-nosnippet>528</a>                            <span class="kw">if </span>y &lt; <span class="number">0.0 </span>{
-<a href=#529 id=529 data-nosnippet>529</a>                                -<span class="number">1.0
-<a href=#530 id=530 data-nosnippet>530</a>                            </span>} <span class="kw">else if </span>y &gt; <span class="number">1.0 </span>{
-<a href=#531 id=531 data-nosnippet>531</a>                                <span class="number">1.0
-<a href=#532 id=532 data-nosnippet>532</a>                            </span>} <span class="kw">else </span>{
-<a href=#533 id=533 data-nosnippet>533</a>                                <span class="number">0.0
-<a href=#534 id=534 data-nosnippet>534</a>                            </span>},
-<a href=#535 id=535 data-nosnippet>535</a>                        ),
-<a href=#536 id=536 data-nosnippet>536</a>                    };
-<a href=#537 id=537 data-nosnippet>537</a>
-<a href=#538 id=538 data-nosnippet>538</a>                    <span class="self">self</span>.cx.emit_origin(WindowEvent::MouseScroll(lines_x, lines_y));
-<a href=#539 id=539 data-nosnippet>539</a>                }
-<a href=#540 id=540 data-nosnippet>540</a>
-<a href=#541 id=541 data-nosnippet>541</a>                baseview::MouseEvent::CursorEntered =&gt; {
-<a href=#542 id=542 data-nosnippet>542</a>                    <span class="self">self</span>.cx.emit_origin(WindowEvent::MouseEnter);
+<a href=#454 id=454 data-nosnippet>454</a>        animations_playing || <span class="self">self</span>.cx.has_queued_events() || has_redraw
+<a href=#455 id=455 data-nosnippet>455</a>    }
+<a href=#456 id=456 data-nosnippet>456</a>
+<a href=#457 id=457 data-nosnippet>457</a>    <span class="kw">pub fn </span>render(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+<a href=#458 id=458 data-nosnippet>458</a>        <span class="kw">if </span><span class="self">self</span>.should_redraw {
+<a href=#459 id=459 data-nosnippet>459</a>            <span class="kw">let </span>_scope = vizia_core::profiling::scope(<span class="string">"draw"</span>);
+<a href=#460 id=460 data-nosnippet>460</a>            <span class="kw">let </span>context = <span class="self">self
+<a href=#461 id=461 data-nosnippet>461</a>                </span>.window_context
+<a href=#462 id=462 data-nosnippet>462</a>                .gl_context()
+<a href=#463 id=463 data-nosnippet>463</a>                .expect(<span class="string">"Window was created without OpenGL support"</span>);
+<a href=#464 id=464 data-nosnippet>464</a>            <span class="kw">unsafe </span>{ context.make_current() }.expect(<span class="string">"Failed to make GL context current"</span>);
+<a href=#465 id=465 data-nosnippet>465</a>            <span class="self">self</span>.cx.draw(Entity::root(), <span class="kw-2">&amp;mut </span><span class="self">self</span>.surface, <span class="kw-2">&amp;mut </span><span class="self">self</span>.dirty_surface);
+<a href=#466 id=466 data-nosnippet>466</a>            <span class="self">self</span>.gr_context.flush_and_submit();
+<a href=#467 id=467 data-nosnippet>467</a>            <span class="self">self</span>.should_redraw = <span class="bool-val">false</span>;
+<a href=#468 id=468 data-nosnippet>468</a>            context.swap_buffers().expect(<span class="string">"Failed to swap buffers"</span>);
+<a href=#469 id=469 data-nosnippet>469</a>            <span class="kw">unsafe </span>{ context.make_not_current() }.expect(<span class="string">"Failed to make GL context not current"</span>);
+<a href=#470 id=470 data-nosnippet>470</a>        }
+<a href=#471 id=471 data-nosnippet>471</a>    }
+<a href=#472 id=472 data-nosnippet>472</a>
+<a href=#473 id=473 data-nosnippet>473</a>    <span class="kw">pub fn </span>handle_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: baseview::Event) -&gt; baseview::EventStatus {
+<a href=#474 id=474 data-nosnippet>474</a>        <span class="kw">let </span>status = <span class="self">self</span>.event_status(<span class="kw-2">&amp;</span>event);
+<a href=#475 id=475 data-nosnippet>475</a>
+<a href=#476 id=476 data-nosnippet>476</a>        <span class="kw">if </span>requests_exit(<span class="kw-2">&amp;</span>event, <span class="self">self</span>.is_parented) {
+<a href=#477 id=477 data-nosnippet>477</a>            <span class="self">self</span>.cx.send_event(Event::new(WindowEvent::WindowClose));
+<a href=#478 id=478 data-nosnippet>478</a>            <span class="self">self</span>.window_context.request_close();
+<a href=#479 id=479 data-nosnippet>479</a>        }
+<a href=#480 id=480 data-nosnippet>480</a>
+<a href=#481 id=481 data-nosnippet>481</a>        <span class="kw">let </span><span class="kw-2">mut </span>update_modifiers = |modifiers: vizia_input::KeyboardModifiers| {
+<a href=#482 id=482 data-nosnippet>482</a>            <span class="self">self</span>.cx
+<a href=#483 id=483 data-nosnippet>483</a>                .modifiers()
+<a href=#484 id=484 data-nosnippet>484</a>                .set(Modifiers::SHIFT, modifiers.contains(vizia_input::KeyboardModifiers::SHIFT));
+<a href=#485 id=485 data-nosnippet>485</a>            <span class="self">self</span>.cx
+<a href=#486 id=486 data-nosnippet>486</a>                .modifiers()
+<a href=#487 id=487 data-nosnippet>487</a>                .set(Modifiers::CTRL, modifiers.contains(vizia_input::KeyboardModifiers::CONTROL));
+<a href=#488 id=488 data-nosnippet>488</a>            <span class="self">self</span>.cx
+<a href=#489 id=489 data-nosnippet>489</a>                .modifiers()
+<a href=#490 id=490 data-nosnippet>490</a>                .set(Modifiers::SUPER, modifiers.contains(vizia_input::KeyboardModifiers::META));
+<a href=#491 id=491 data-nosnippet>491</a>            <span class="self">self</span>.cx
+<a href=#492 id=492 data-nosnippet>492</a>                .modifiers()
+<a href=#493 id=493 data-nosnippet>493</a>                .set(Modifiers::ALT, modifiers.contains(vizia_input::KeyboardModifiers::ALT));
+<a href=#494 id=494 data-nosnippet>494</a>        };
+<a href=#495 id=495 data-nosnippet>495</a>
+<a href=#496 id=496 data-nosnippet>496</a>        <span class="kw">match </span>event {
+<a href=#497 id=497 data-nosnippet>497</a>            baseview::Event::Mouse(event) =&gt; <span class="kw">match </span>event {
+<a href=#498 id=498 data-nosnippet>498</a>                baseview::MouseEvent::CursorMoved { position, modifiers } =&gt; {
+<a href=#499 id=499 data-nosnippet>499</a>                    update_modifiers(modifiers);
+<a href=#500 id=500 data-nosnippet>500</a>
+<a href=#501 id=501 data-nosnippet>501</a>                    <span class="comment">// baseview v0.4 delivers cursor coordinates in physical pixels, so no
+<a href=#502 id=502 data-nosnippet>502</a>                    // additional DPI scaling should be applied here.
+<a href=#503 id=503 data-nosnippet>503</a>                    </span><span class="kw">let </span>cursor_x = position.x <span class="kw">as </span>f32;
+<a href=#504 id=504 data-nosnippet>504</a>                    <span class="kw">let </span>cursor_y = position.y <span class="kw">as </span>f32;
+<a href=#505 id=505 data-nosnippet>505</a>                    <span class="self">self</span>.cx.emit_origin(WindowEvent::MouseMove(cursor_x, cursor_y));
+<a href=#506 id=506 data-nosnippet>506</a>                }
+<a href=#507 id=507 data-nosnippet>507</a>                baseview::MouseEvent::ButtonPressed { button, modifiers } =&gt; {
+<a href=#508 id=508 data-nosnippet>508</a>                    update_modifiers(modifiers);
+<a href=#509 id=509 data-nosnippet>509</a>
+<a href=#510 id=510 data-nosnippet>510</a>                    <span class="kw">let </span>b = translate_mouse_button(button);
+<a href=#511 id=511 data-nosnippet>511</a>                    <span class="self">self</span>.cx.emit_origin(WindowEvent::MouseDown(b));
+<a href=#512 id=512 data-nosnippet>512</a>                }
+<a href=#513 id=513 data-nosnippet>513</a>                baseview::MouseEvent::ButtonReleased { button, modifiers } =&gt; {
+<a href=#514 id=514 data-nosnippet>514</a>                    update_modifiers(modifiers);
+<a href=#515 id=515 data-nosnippet>515</a>
+<a href=#516 id=516 data-nosnippet>516</a>                    <span class="kw">let </span>b = translate_mouse_button(button);
+<a href=#517 id=517 data-nosnippet>517</a>                    <span class="self">self</span>.cx.emit_origin(WindowEvent::MouseUp(b));
+<a href=#518 id=518 data-nosnippet>518</a>                }
+<a href=#519 id=519 data-nosnippet>519</a>                baseview::MouseEvent::WheelScrolled { delta, modifiers } =&gt; {
+<a href=#520 id=520 data-nosnippet>520</a>                    update_modifiers(modifiers);
+<a href=#521 id=521 data-nosnippet>521</a>
+<a href=#522 id=522 data-nosnippet>522</a>                    <span class="kw">let </span>(lines_x, lines_y) = <span class="kw">match </span>delta {
+<a href=#523 id=523 data-nosnippet>523</a>                        baseview::ScrollDelta::Lines { x, y } =&gt; (x, y),
+<a href=#524 id=524 data-nosnippet>524</a>                        baseview::ScrollDelta::Pixels { x, y } =&gt; (
+<a href=#525 id=525 data-nosnippet>525</a>                            <span class="kw">if </span>x &lt; <span class="number">0.0 </span>{
+<a href=#526 id=526 data-nosnippet>526</a>                                -<span class="number">1.0
+<a href=#527 id=527 data-nosnippet>527</a>                            </span>} <span class="kw">else if </span>x &gt; <span class="number">1.0 </span>{
+<a href=#528 id=528 data-nosnippet>528</a>                                <span class="number">1.0
+<a href=#529 id=529 data-nosnippet>529</a>                            </span>} <span class="kw">else </span>{
+<a href=#530 id=530 data-nosnippet>530</a>                                <span class="number">0.0
+<a href=#531 id=531 data-nosnippet>531</a>                            </span>},
+<a href=#532 id=532 data-nosnippet>532</a>                            <span class="kw">if </span>y &lt; <span class="number">0.0 </span>{
+<a href=#533 id=533 data-nosnippet>533</a>                                -<span class="number">1.0
+<a href=#534 id=534 data-nosnippet>534</a>                            </span>} <span class="kw">else if </span>y &gt; <span class="number">1.0 </span>{
+<a href=#535 id=535 data-nosnippet>535</a>                                <span class="number">1.0
+<a href=#536 id=536 data-nosnippet>536</a>                            </span>} <span class="kw">else </span>{
+<a href=#537 id=537 data-nosnippet>537</a>                                <span class="number">0.0
+<a href=#538 id=538 data-nosnippet>538</a>                            </span>},
+<a href=#539 id=539 data-nosnippet>539</a>                        ),
+<a href=#540 id=540 data-nosnippet>540</a>                    };
+<a href=#541 id=541 data-nosnippet>541</a>
+<a href=#542 id=542 data-nosnippet>542</a>                    <span class="self">self</span>.cx.emit_origin(WindowEvent::MouseScroll(lines_x, lines_y));
 <a href=#543 id=543 data-nosnippet>543</a>                }
 <a href=#544 id=544 data-nosnippet>544</a>
-<a href=#545 id=545 data-nosnippet>545</a>                baseview::MouseEvent::CursorLeft =&gt; {
-<a href=#546 id=546 data-nosnippet>546</a>                    <span class="self">self</span>.cx.emit_origin(WindowEvent::MouseLeave);
+<a href=#545 id=545 data-nosnippet>545</a>                baseview::MouseEvent::CursorEntered =&gt; {
+<a href=#546 id=546 data-nosnippet>546</a>                    <span class="self">self</span>.cx.emit_origin(WindowEvent::MouseEnter);
 <a href=#547 id=547 data-nosnippet>547</a>                }
 <a href=#548 id=548 data-nosnippet>548</a>
-<a href=#549 id=549 data-nosnippet>549</a>                baseview::MouseEvent::DragDropped { modifiers, data, .. } =&gt; {
-<a href=#550 id=550 data-nosnippet>550</a>                    update_modifiers(modifiers);
-<a href=#551 id=551 data-nosnippet>551</a>
-<a href=#552 id=552 data-nosnippet>552</a>                    <span class="kw">if let </span>baseview::DropData::Files(files) = data {
-<a href=#553 id=553 data-nosnippet>553</a>                        <span class="kw">for </span>file <span class="kw">in </span>files {
-<a href=#554 id=554 data-nosnippet>554</a>                            <span class="comment">// Try mimic vizia winit drop handling
-<a href=#555 id=555 data-nosnippet>555</a>                            </span><span class="self">self</span>.cx.emit_window_event(
-<a href=#556 id=556 data-nosnippet>556</a>                                Entity::root(),
-<a href=#557 id=557 data-nosnippet>557</a>                                WindowEvent::Drop(DropData::File(file)),
-<a href=#558 id=558 data-nosnippet>558</a>                            );
-<a href=#559 id=559 data-nosnippet>559</a>                        }
-<a href=#560 id=560 data-nosnippet>560</a>                    }
-<a href=#561 id=561 data-nosnippet>561</a>                }
-<a href=#562 id=562 data-nosnippet>562</a>
-<a href=#563 id=563 data-nosnippet>563</a>                <span class="comment">// Vizia winit discard HoveredFile | HoveredFileCancelled
-<a href=#564 id=564 data-nosnippet>564</a>                // so we mirror the behavior on baseview.
-<a href=#565 id=565 data-nosnippet>565</a>                </span>baseview::MouseEvent::DragEntered { .. }
-<a href=#566 id=566 data-nosnippet>566</a>                | baseview::MouseEvent::DragLeft
-<a href=#567 id=567 data-nosnippet>567</a>                | baseview::MouseEvent::DragMoved { .. } =&gt; {}
-<a href=#568 id=568 data-nosnippet>568</a>
-<a href=#569 id=569 data-nosnippet>569</a>                <span class="kw">_ </span>=&gt; {}
-<a href=#570 id=570 data-nosnippet>570</a>            },
-<a href=#571 id=571 data-nosnippet>571</a>            baseview::Event::Keyboard(event) =&gt; {
-<a href=#572 id=572 data-nosnippet>572</a>                <span class="kw">let </span>(s, pressed) = <span class="kw">match </span>event.state {
-<a href=#573 id=573 data-nosnippet>573</a>                    vizia_input::KeyState::Down =&gt; (MouseButtonState::Pressed, <span class="bool-val">true</span>),
-<a href=#574 id=574 data-nosnippet>574</a>                    vizia_input::KeyState::Up =&gt; (MouseButtonState::Released, <span class="bool-val">false</span>),
-<a href=#575 id=575 data-nosnippet>575</a>                };
-<a href=#576 id=576 data-nosnippet>576</a>
-<a href=#577 id=577 data-nosnippet>577</a>                <span class="kw">match </span>event.code {
-<a href=#578 id=578 data-nosnippet>578</a>                    Code::ShiftLeft | Code::ShiftRight =&gt; {
-<a href=#579 id=579 data-nosnippet>579</a>                        <span class="self">self</span>.cx.modifiers().set(Modifiers::SHIFT, pressed)
-<a href=#580 id=580 data-nosnippet>580</a>                    }
-<a href=#581 id=581 data-nosnippet>581</a>                    Code::ControlLeft | Code::ControlRight =&gt; {
-<a href=#582 id=582 data-nosnippet>582</a>                        <span class="self">self</span>.cx.modifiers().set(Modifiers::CTRL, pressed)
-<a href=#583 id=583 data-nosnippet>583</a>                    }
-<a href=#584 id=584 data-nosnippet>584</a>                    Code::AltLeft | Code::AltRight =&gt; {
-<a href=#585 id=585 data-nosnippet>585</a>                        <span class="self">self</span>.cx.modifiers().set(Modifiers::ALT, pressed)
-<a href=#586 id=586 data-nosnippet>586</a>                    }
-<a href=#587 id=587 data-nosnippet>587</a>                    Code::MetaLeft | Code::MetaRight =&gt; {
-<a href=#588 id=588 data-nosnippet>588</a>                        <span class="self">self</span>.cx.modifiers().set(Modifiers::SUPER, pressed)
-<a href=#589 id=589 data-nosnippet>589</a>                    }
-<a href=#590 id=590 data-nosnippet>590</a>                    <span class="kw">_ </span>=&gt; (),
-<a href=#591 id=591 data-nosnippet>591</a>                }
-<a href=#592 id=592 data-nosnippet>592</a>
-<a href=#593 id=593 data-nosnippet>593</a>                <span class="kw">match </span>s {
-<a href=#594 id=594 data-nosnippet>594</a>                    MouseButtonState::Pressed =&gt; {
-<a href=#595 id=595 data-nosnippet>595</a>                        <span class="kw">if let </span>vizia_input::Key::Character(written) = <span class="kw-2">&amp;</span>event.key {
-<a href=#596 id=596 data-nosnippet>596</a>                            <span class="kw">for </span>chr <span class="kw">in </span>written.chars() {
-<a href=#597 id=597 data-nosnippet>597</a>                                <span class="self">self</span>.cx.emit_origin(WindowEvent::CharInput(chr));
-<a href=#598 id=598 data-nosnippet>598</a>                            }
-<a href=#599 id=599 data-nosnippet>599</a>                        }
-<a href=#600 id=600 data-nosnippet>600</a>
-<a href=#601 id=601 data-nosnippet>601</a>                        <span class="self">self</span>.cx.emit_origin(WindowEvent::KeyDown(event.code, <span class="prelude-val">Some</span>(event.key)));
-<a href=#602 id=602 data-nosnippet>602</a>                    }
-<a href=#603 id=603 data-nosnippet>603</a>
-<a href=#604 id=604 data-nosnippet>604</a>                    MouseButtonState::Released =&gt; {
-<a href=#605 id=605 data-nosnippet>605</a>                        <span class="self">self</span>.cx.emit_origin(WindowEvent::KeyUp(event.code, <span class="prelude-val">Some</span>(event.key)));
+<a href=#549 id=549 data-nosnippet>549</a>                baseview::MouseEvent::CursorLeft =&gt; {
+<a href=#550 id=550 data-nosnippet>550</a>                    <span class="self">self</span>.cx.emit_origin(WindowEvent::MouseLeave);
+<a href=#551 id=551 data-nosnippet>551</a>                }
+<a href=#552 id=552 data-nosnippet>552</a>
+<a href=#553 id=553 data-nosnippet>553</a>                baseview::MouseEvent::DragDropped { modifiers, data, .. } =&gt; {
+<a href=#554 id=554 data-nosnippet>554</a>                    update_modifiers(modifiers);
+<a href=#555 id=555 data-nosnippet>555</a>
+<a href=#556 id=556 data-nosnippet>556</a>                    <span class="kw">if let </span>baseview::DropData::Files(files) = data {
+<a href=#557 id=557 data-nosnippet>557</a>                        <span class="kw">for </span>file <span class="kw">in </span>files {
+<a href=#558 id=558 data-nosnippet>558</a>                            <span class="comment">// Try mimic vizia winit drop handling
+<a href=#559 id=559 data-nosnippet>559</a>                            </span><span class="self">self</span>.cx.emit_window_event(
+<a href=#560 id=560 data-nosnippet>560</a>                                Entity::root(),
+<a href=#561 id=561 data-nosnippet>561</a>                                WindowEvent::Drop(DropData::File(file)),
+<a href=#562 id=562 data-nosnippet>562</a>                            );
+<a href=#563 id=563 data-nosnippet>563</a>                        }
+<a href=#564 id=564 data-nosnippet>564</a>                    }
+<a href=#565 id=565 data-nosnippet>565</a>                }
+<a href=#566 id=566 data-nosnippet>566</a>
+<a href=#567 id=567 data-nosnippet>567</a>                <span class="comment">// Vizia winit discard HoveredFile | HoveredFileCancelled
+<a href=#568 id=568 data-nosnippet>568</a>                // so we mirror the behavior on baseview.
+<a href=#569 id=569 data-nosnippet>569</a>                </span>baseview::MouseEvent::DragEntered { .. }
+<a href=#570 id=570 data-nosnippet>570</a>                | baseview::MouseEvent::DragLeft
+<a href=#571 id=571 data-nosnippet>571</a>                | baseview::MouseEvent::DragMoved { .. } =&gt; {}
+<a href=#572 id=572 data-nosnippet>572</a>
+<a href=#573 id=573 data-nosnippet>573</a>                <span class="kw">_ </span>=&gt; {}
+<a href=#574 id=574 data-nosnippet>574</a>            },
+<a href=#575 id=575 data-nosnippet>575</a>            baseview::Event::Keyboard(event) =&gt; {
+<a href=#576 id=576 data-nosnippet>576</a>                <span class="kw">let </span>(s, pressed) = <span class="kw">match </span>event.state {
+<a href=#577 id=577 data-nosnippet>577</a>                    vizia_input::KeyState::Down =&gt; (MouseButtonState::Pressed, <span class="bool-val">true</span>),
+<a href=#578 id=578 data-nosnippet>578</a>                    vizia_input::KeyState::Up =&gt; (MouseButtonState::Released, <span class="bool-val">false</span>),
+<a href=#579 id=579 data-nosnippet>579</a>                };
+<a href=#580 id=580 data-nosnippet>580</a>
+<a href=#581 id=581 data-nosnippet>581</a>                <span class="kw">match </span>event.code {
+<a href=#582 id=582 data-nosnippet>582</a>                    Code::ShiftLeft | Code::ShiftRight =&gt; {
+<a href=#583 id=583 data-nosnippet>583</a>                        <span class="self">self</span>.cx.modifiers().set(Modifiers::SHIFT, pressed)
+<a href=#584 id=584 data-nosnippet>584</a>                    }
+<a href=#585 id=585 data-nosnippet>585</a>                    Code::ControlLeft | Code::ControlRight =&gt; {
+<a href=#586 id=586 data-nosnippet>586</a>                        <span class="self">self</span>.cx.modifiers().set(Modifiers::CTRL, pressed)
+<a href=#587 id=587 data-nosnippet>587</a>                    }
+<a href=#588 id=588 data-nosnippet>588</a>                    Code::AltLeft | Code::AltRight =&gt; {
+<a href=#589 id=589 data-nosnippet>589</a>                        <span class="self">self</span>.cx.modifiers().set(Modifiers::ALT, pressed)
+<a href=#590 id=590 data-nosnippet>590</a>                    }
+<a href=#591 id=591 data-nosnippet>591</a>                    Code::MetaLeft | Code::MetaRight =&gt; {
+<a href=#592 id=592 data-nosnippet>592</a>                        <span class="self">self</span>.cx.modifiers().set(Modifiers::SUPER, pressed)
+<a href=#593 id=593 data-nosnippet>593</a>                    }
+<a href=#594 id=594 data-nosnippet>594</a>                    <span class="kw">_ </span>=&gt; (),
+<a href=#595 id=595 data-nosnippet>595</a>                }
+<a href=#596 id=596 data-nosnippet>596</a>
+<a href=#597 id=597 data-nosnippet>597</a>                <span class="kw">match </span>s {
+<a href=#598 id=598 data-nosnippet>598</a>                    MouseButtonState::Pressed =&gt; {
+<a href=#599 id=599 data-nosnippet>599</a>                        <span class="kw">if let </span>vizia_input::Key::Character(written) = <span class="kw-2">&amp;</span>event.key {
+<a href=#600 id=600 data-nosnippet>600</a>                            <span class="kw">for </span>chr <span class="kw">in </span>written.chars() {
+<a href=#601 id=601 data-nosnippet>601</a>                                <span class="self">self</span>.cx.emit_origin(WindowEvent::CharInput(chr));
+<a href=#602 id=602 data-nosnippet>602</a>                            }
+<a href=#603 id=603 data-nosnippet>603</a>                        }
+<a href=#604 id=604 data-nosnippet>604</a>
+<a href=#605 id=605 data-nosnippet>605</a>                        <span class="self">self</span>.cx.emit_origin(WindowEvent::KeyDown(event.code, <span class="prelude-val">Some</span>(event.key)));
 <a href=#606 id=606 data-nosnippet>606</a>                    }
-<a href=#607 id=607 data-nosnippet>607</a>                }
-<a href=#608 id=608 data-nosnippet>608</a>            }
-<a href=#609 id=609 data-nosnippet>609</a>            baseview::Event::Window(event) =&gt; <span class="kw">match </span>event {
-<a href=#610 id=610 data-nosnippet>610</a>                baseview::WindowEvent::Focused =&gt; <span class="self">self</span>.cx.needs_refresh(Entity::root()),
-<a href=#611 id=611 data-nosnippet>611</a>                baseview::WindowEvent::WillClose =&gt; {
-<a href=#612 id=612 data-nosnippet>612</a>                    <span class="self">self</span>.cx.send_event(Event::new(WindowEvent::WindowClose));
-<a href=#613 id=613 data-nosnippet>613</a>                }
-<a href=#614 id=614 data-nosnippet>614</a>                <span class="kw">_ </span>=&gt; {}
-<a href=#615 id=615 data-nosnippet>615</a>            },
-<a href=#616 id=616 data-nosnippet>616</a>            <span class="kw">_ </span>=&gt; {}
-<a href=#617 id=617 data-nosnippet>617</a>        }
-<a href=#618 id=618 data-nosnippet>618</a>
-<a href=#619 id=619 data-nosnippet>619</a>        status
-<a href=#620 id=620 data-nosnippet>620</a>    }
-<a href=#621 id=621 data-nosnippet>621</a>
-<a href=#622 id=622 data-nosnippet>622</a>    <span class="kw">pub fn </span>handle_resized(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_size: baseview::WindowSize) {
-<a href=#623 id=623 data-nosnippet>623</a>        <span class="kw">let </span>context =
-<a href=#624 id=624 data-nosnippet>624</a>            <span class="self">self</span>.window_context.gl_context().expect(<span class="string">"Window was created without OpenGL support"</span>);
-<a href=#625 id=625 data-nosnippet>625</a>        <span class="kw">unsafe </span>{ context.make_current() }.expect(<span class="string">"Failed to make GL context current"</span>);
-<a href=#626 id=626 data-nosnippet>626</a>
-<a href=#627 id=627 data-nosnippet>627</a>        <span class="kw">let </span>fb_info = {
-<a href=#628 id=628 data-nosnippet>628</a>            <span class="kw">let </span><span class="kw-2">mut </span>fboid: GLint = <span class="number">0</span>;
-<a href=#629 id=629 data-nosnippet>629</a>            <span class="kw">unsafe </span>{ gl::GetIntegerv(gl::FRAMEBUFFER_BINDING, <span class="kw-2">&amp;mut </span>fboid) };
+<a href=#607 id=607 data-nosnippet>607</a>
+<a href=#608 id=608 data-nosnippet>608</a>                    MouseButtonState::Released =&gt; {
+<a href=#609 id=609 data-nosnippet>609</a>                        <span class="self">self</span>.cx.emit_origin(WindowEvent::KeyUp(event.code, <span class="prelude-val">Some</span>(event.key)));
+<a href=#610 id=610 data-nosnippet>610</a>                    }
+<a href=#611 id=611 data-nosnippet>611</a>                }
+<a href=#612 id=612 data-nosnippet>612</a>            }
+<a href=#613 id=613 data-nosnippet>613</a>            baseview::Event::Window(event) =&gt; <span class="kw">match </span>event {
+<a href=#614 id=614 data-nosnippet>614</a>                baseview::WindowEvent::Focused =&gt; <span class="self">self</span>.cx.needs_refresh(Entity::root()),
+<a href=#615 id=615 data-nosnippet>615</a>                baseview::WindowEvent::WillClose =&gt; {
+<a href=#616 id=616 data-nosnippet>616</a>                    <span class="self">self</span>.cx.send_event(Event::new(WindowEvent::WindowClose));
+<a href=#617 id=617 data-nosnippet>617</a>                }
+<a href=#618 id=618 data-nosnippet>618</a>                <span class="kw">_ </span>=&gt; {}
+<a href=#619 id=619 data-nosnippet>619</a>            },
+<a href=#620 id=620 data-nosnippet>620</a>            <span class="kw">_ </span>=&gt; {}
+<a href=#621 id=621 data-nosnippet>621</a>        }
+<a href=#622 id=622 data-nosnippet>622</a>
+<a href=#623 id=623 data-nosnippet>623</a>        status
+<a href=#624 id=624 data-nosnippet>624</a>    }
+<a href=#625 id=625 data-nosnippet>625</a>
+<a href=#626 id=626 data-nosnippet>626</a>    <span class="kw">pub fn </span>handle_resized(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_size: baseview::WindowSize) {
+<a href=#627 id=627 data-nosnippet>627</a>        <span class="kw">let </span>context =
+<a href=#628 id=628 data-nosnippet>628</a>            <span class="self">self</span>.window_context.gl_context().expect(<span class="string">"Window was created without OpenGL support"</span>);
+<a href=#629 id=629 data-nosnippet>629</a>        <span class="kw">unsafe </span>{ context.make_current() }.expect(<span class="string">"Failed to make GL context current"</span>);
 <a href=#630 id=630 data-nosnippet>630</a>
-<a href=#631 id=631 data-nosnippet>631</a>            FramebufferInfo {
-<a href=#632 id=632 data-nosnippet>632</a>                fboid: fboid.try_into().unwrap(),
-<a href=#633 id=633 data-nosnippet>633</a>                format: skia_safe::gpu::gl::Format::RGBA8.into(),
-<a href=#634 id=634 data-nosnippet>634</a>                ..Default::default()
-<a href=#635 id=635 data-nosnippet>635</a>            }
-<a href=#636 id=636 data-nosnippet>636</a>        };
-<a href=#637 id=637 data-nosnippet>637</a>
-<a href=#638 id=638 data-nosnippet>638</a>        <span class="kw">let </span>width = new_size.physical.width.max(<span class="number">1</span>) <span class="kw">as </span>i32;
-<a href=#639 id=639 data-nosnippet>639</a>        <span class="kw">let </span>height = new_size.physical.height.max(<span class="number">1</span>) <span class="kw">as </span>i32;
-<a href=#640 id=640 data-nosnippet>640</a>
-<a href=#641 id=641 data-nosnippet>641</a>        <span class="self">self</span>.surface = create_surface((width, height), fb_info, <span class="kw-2">&amp;mut </span><span class="self">self</span>.gr_context);
-<a href=#642 id=642 data-nosnippet>642</a>
-<a href=#643 id=643 data-nosnippet>643</a>        <span class="self">self</span>.dirty_surface = <span class="self">self</span>.surface.new_surface_with_dimensions((width, height)).unwrap();
+<a href=#631 id=631 data-nosnippet>631</a>        <span class="kw">let </span>fb_info = {
+<a href=#632 id=632 data-nosnippet>632</a>            <span class="kw">let </span><span class="kw-2">mut </span>fboid: GLint = <span class="number">0</span>;
+<a href=#633 id=633 data-nosnippet>633</a>            <span class="kw">unsafe </span>{ gl::GetIntegerv(gl::FRAMEBUFFER_BINDING, <span class="kw-2">&amp;mut </span>fboid) };
+<a href=#634 id=634 data-nosnippet>634</a>
+<a href=#635 id=635 data-nosnippet>635</a>            FramebufferInfo {
+<a href=#636 id=636 data-nosnippet>636</a>                fboid: fboid.try_into().unwrap(),
+<a href=#637 id=637 data-nosnippet>637</a>                format: skia_safe::gpu::gl::Format::RGBA8.into(),
+<a href=#638 id=638 data-nosnippet>638</a>                ..Default::default()
+<a href=#639 id=639 data-nosnippet>639</a>            }
+<a href=#640 id=640 data-nosnippet>640</a>        };
+<a href=#641 id=641 data-nosnippet>641</a>
+<a href=#642 id=642 data-nosnippet>642</a>        <span class="kw">let </span>width = new_size.physical.width.max(<span class="number">1</span>) <span class="kw">as </span>i32;
+<a href=#643 id=643 data-nosnippet>643</a>        <span class="kw">let </span>height = new_size.physical.height.max(<span class="number">1</span>) <span class="kw">as </span>i32;
 <a href=#644 id=644 data-nosnippet>644</a>
-<a href=#645 id=645 data-nosnippet>645</a>        <span class="kw">unsafe </span>{ context.make_not_current() }.expect(<span class="string">"Failed to make GL context not current"</span>);
+<a href=#645 id=645 data-nosnippet>645</a>        <span class="self">self</span>.surface = create_surface((width, height), fb_info, <span class="kw-2">&amp;mut </span><span class="self">self</span>.gr_context);
 <a href=#646 id=646 data-nosnippet>646</a>
-<a href=#647 id=647 data-nosnippet>647</a>        <span class="self">self</span>.window_scale_factor = new_size.scale_factor;
+<a href=#647 id=647 data-nosnippet>647</a>        <span class="self">self</span>.dirty_surface = <span class="self">self</span>.surface.new_surface_with_dimensions((width, height)).unwrap();
 <a href=#648 id=648 data-nosnippet>648</a>
-<a href=#649 id=649 data-nosnippet>649</a>        <span class="self">self</span>.cx
-<a href=#650 id=650 data-nosnippet>650</a>            .set_scale_factor(<span class="self">self</span>.window_scale_factor * <span class="self">self</span>.window_description.user_scale_factor);
-<a href=#651 id=651 data-nosnippet>651</a>
-<a href=#652 id=652 data-nosnippet>652</a>        <span class="self">self</span>.cx.set_window_size(
-<a href=#653 id=653 data-nosnippet>653</a>            Entity::root(),
-<a href=#654 id=654 data-nosnippet>654</a>            new_size.physical.width <span class="kw">as </span>f32,
-<a href=#655 id=655 data-nosnippet>655</a>            new_size.physical.height <span class="kw">as </span>f32,
-<a href=#656 id=656 data-nosnippet>656</a>        );
-<a href=#657 id=657 data-nosnippet>657</a>
-<a href=#658 id=658 data-nosnippet>658</a>        <span class="self">self</span>.cx.needs_refresh(Entity::root());
-<a href=#659 id=659 data-nosnippet>659</a>    }
-<a href=#660 id=660 data-nosnippet>660</a>
-<a href=#661 id=661 data-nosnippet>661</a>    <span class="kw">pub fn </span>handle_idle(<span class="kw-2">&amp;mut </span><span class="self">self</span>, on_idle: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;) {
-<a href=#662 id=662 data-nosnippet>662</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(idle_callback) = on_idle {
-<a href=#663 id=663 data-nosnippet>663</a>            <span class="self">self</span>.cx.set_current(Entity::root());
-<a href=#664 id=664 data-nosnippet>664</a>            (idle_callback)(<span class="self">self</span>.cx.context());
-<a href=#665 id=665 data-nosnippet>665</a>        }
-<a href=#666 id=666 data-nosnippet>666</a>    }
-<a href=#667 id=667 data-nosnippet>667</a>
-<a href=#668 id=668 data-nosnippet>668</a>    <span class="doccomment">/// How long until the next vizia timer or scheduled event needs to fire.
-<a href=#669 id=669 data-nosnippet>669</a>    </span><span class="kw">fn </span>next_timer_wake(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Duration&gt; {
-<a href=#670 id=670 data-nosnippet>670</a>        <span class="kw">let </span>next = <span class="self">self</span>.cx.get_next_timer_time()<span class="question-mark">?</span>;
-<a href=#671 id=671 data-nosnippet>671</a>        <span class="prelude-val">Some</span>(next.saturating_duration_since(Instant::now()))
-<a href=#672 id=672 data-nosnippet>672</a>    }
-<a href=#673 id=673 data-nosnippet>673</a>
-<a href=#674 id=674 data-nosnippet>674</a>    <span class="doccomment">/// Wake the event loop so [`WindowHandler::draw`] is called.
-<a href=#675 id=675 data-nosnippet>675</a>    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>request_redraw(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-<a href=#676 id=676 data-nosnippet>676</a>        <span class="self">self</span>.window_context.request_redraw();
-<a href=#677 id=677 data-nosnippet>677</a>    }
-<a href=#678 id=678 data-nosnippet>678</a>
-<a href=#679 id=679 data-nosnippet>679</a>    <span class="doccomment">/// Force the next [`WindowHandler::draw`] to re-render the window even when
-<a href=#680 id=680 data-nosnippet>680</a>    /// no vizia-level redraw was requested. This doesn't request a redraw.
-<a href=#681 id=681 data-nosnippet>681</a>    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>mark_damaged(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-<a href=#682 id=682 data-nosnippet>682</a>        <span class="self">self</span>.should_redraw = <span class="bool-val">true</span>;
-<a href=#683 id=683 data-nosnippet>683</a>    }
-<a href=#684 id=684 data-nosnippet>684</a>
-<a href=#685 id=685 data-nosnippet>685</a>    <span class="doccomment">/// Schedule the next frame according to the configured [`FramePolicy`].
-<a href=#686 id=686 data-nosnippet>686</a>    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>schedule_next_frame(<span class="kw-2">&amp;</span><span class="self">self</span>, needs_redraw: bool) {
-<a href=#687 id=687 data-nosnippet>687</a>        <span class="kw">if </span><span class="self">self</span>.frame_policy == FramePolicy::Continuous || needs_redraw {
-<a href=#688 id=688 data-nosnippet>688</a>            <span class="self">self</span>.window_context.request_redraw();
-<a href=#689 id=689 data-nosnippet>689</a>        } <span class="kw">else if let </span><span class="prelude-val">Some</span>(duration) = <span class="self">self</span>.next_timer_wake() {
-<a href=#690 id=690 data-nosnippet>690</a>            <span class="self">self</span>.window_context.request_redraw_after(duration);
-<a href=#691 id=691 data-nosnippet>691</a>        }
-<a href=#692 id=692 data-nosnippet>692</a>    }
-<a href=#693 id=693 data-nosnippet>693</a>
-<a href=#694 id=694 data-nosnippet>694</a>    <span class="doccomment">/// Element name of the view that currently has keyboard focus.
-<a href=#695 id=695 data-nosnippet>695</a>    </span><span class="kw">pub fn </span>focused_element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
-<a href=#696 id=696 data-nosnippet>696</a>        <span class="self">self</span>.cx.focused_element()
-<a href=#697 id=697 data-nosnippet>697</a>    }
-<a href=#698 id=698 data-nosnippet>698</a>
-<a href=#699 id=699 data-nosnippet>699</a>    <span class="doccomment">/// Returns the [`EventStatus`](`baseview::EventStatus`) for this `event`
-<a href=#700 id=700 data-nosnippet>700</a>    </span><span class="kw">fn </span>event_status(<span class="kw-2">&amp;</span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>baseview::Event) -&gt; baseview::EventStatus {
-<a href=#701 id=701 data-nosnippet>701</a>        <span class="kw">match </span>event {
-<a href=#702 id=702 data-nosnippet>702</a>            <span class="comment">// macOS and Windows only perform the drop if
-<a href=#703 id=703 data-nosnippet>703</a>            // the drag-enter/move callbacks report an acceptable operation.
-<a href=#704 id=704 data-nosnippet>704</a>            // The events can still be ignored inside `handle_event`.
-<a href=#705 id=705 data-nosnippet>705</a>            // (X11 ignores the return status.)
-<a href=#706 id=706 data-nosnippet>706</a>            </span>baseview::Event::Mouse(
-<a href=#707 id=707 data-nosnippet>707</a>                baseview::MouseEvent::DragEntered { .. }
-<a href=#708 id=708 data-nosnippet>708</a>                | baseview::MouseEvent::DragMoved { .. }
-<a href=#709 id=709 data-nosnippet>709</a>                | baseview::MouseEvent::DragDropped { .. },
-<a href=#710 id=710 data-nosnippet>710</a>            ) =&gt; baseview::EventStatus::AcceptDrop(baseview::DropEffect::Copy),
-<a href=#711 id=711 data-nosnippet>711</a>
-<a href=#712 id=712 data-nosnippet>712</a>            <span class="comment">// If a text input currently holds focus, a native keyboard event is
-<a href=#713 id=713 data-nosnippet>713</a>            // intended for the plugin. Report it as `Captured` so the backend
-<a href=#714 id=714 data-nosnippet>714</a>            // does not forward the platform event further — otherwise the host
-<a href=#715 id=715 data-nosnippet>715</a>            // (e.g. a DAW) also processes the same keystroke, producing double
-<a href=#716 id=716 data-nosnippet>716</a>            // handling and a system beep on macOS.
-<a href=#717 id=717 data-nosnippet>717</a>            </span>baseview::Event::Keyboard(<span class="kw">_</span>) <span class="kw">if </span><span class="self">self</span>.focused_element() == <span class="prelude-val">Some</span>(<span class="string">"textbox"</span>) =&gt; {
-<a href=#718 id=718 data-nosnippet>718</a>                baseview::EventStatus::Captured
-<a href=#719 id=719 data-nosnippet>719</a>            }
-<a href=#720 id=720 data-nosnippet>720</a>
-<a href=#721 id=721 data-nosnippet>721</a>            <span class="kw">_ </span>=&gt; baseview::EventStatus::Ignored,
-<a href=#722 id=722 data-nosnippet>722</a>        }
-<a href=#723 id=723 data-nosnippet>723</a>    }
-<a href=#724 id=724 data-nosnippet>724</a>}
-<a href=#725 id=725 data-nosnippet>725</a>
-<a href=#726 id=726 data-nosnippet>726</a><span class="doccomment">/// Returns true if the provided event should cause an [`Application`] to
-<a href=#727 id=727 data-nosnippet>727</a>/// exit.
-<a href=#728 id=728 data-nosnippet>728</a>///
-<a href=#729 id=729 data-nosnippet>729</a>/// `WindowEvent::WillClose` is honoured in both standalone and parented
-<a href=#730 id=730 data-nosnippet>730</a>/// modes — it's a legitimate close signal from baseview / the host.
-<a href=#731 id=731 data-nosnippet>731</a>///
-<a href=#732 id=732 data-nosnippet>732</a>/// On macOS, Cmd+Q is recognized as a quit shortcut **only when the
-<a href=#733 id=733 data-nosnippet>733</a>/// application is standalone** (`is_parented == false`). When
-<a href=#734 id=734 data-nosnippet>734</a>/// vizia_baseview is embedded as a child window inside a host (the
-<a href=#735 id=735 data-nosnippet>735</a>/// usual audio-plug-in setup), the host owns the application
-<a href=#736 id=736 data-nosnippet>736</a>/// lifecycle: pressing Cmd+Q should quit the host, not close the
-<a href=#737 id=737 data-nosnippet>737</a>/// plug-in's child window. Most hosts on macOS bind Cmd+Q to their
-<a href=#738 id=738 data-nosnippet>738</a>/// own menu's "Quit" item, so AppKit's `performKeyEquivalent:`
-<a href=#739 id=739 data-nosnippet>739</a>/// dispatch claims the key before the plug-in's NSView sees it.
-<a href=#740 id=740 data-nosnippet>740</a>/// Hosts with looser key dispatch (Bitwig observed 2026-04-28) do
-<a href=#741 id=741 data-nosnippet>741</a>/// forward it through, in which case the previous unconditional
-<a href=#742 id=742 data-nosnippet>742</a>/// match would tear down the plug-in's GL surface and leave the
-<a href=#743 id=743 data-nosnippet>743</a>/// host with an empty plug-in shell.
-<a href=#744 id=744 data-nosnippet>744</a></span><span class="kw">pub fn </span>requests_exit(
-<a href=#745 id=745 data-nosnippet>745</a>    event: <span class="kw-2">&amp;</span>baseview::Event,
-<a href=#746 id=746 data-nosnippet>746</a>    <span class="attr">#[cfg_attr(not(target_os = <span class="string">"macos"</span>), allow(unused_variables))] </span>is_parented: bool,
-<a href=#747 id=747 data-nosnippet>747</a>) -&gt; bool {
-<a href=#748 id=748 data-nosnippet>748</a>    <span class="kw">match </span>event {
-<a href=#749 id=749 data-nosnippet>749</a>        baseview::Event::Window(baseview::WindowEvent::WillClose) =&gt; <span class="bool-val">true</span>,
-<a href=#750 id=750 data-nosnippet>750</a>        <span class="attr">#[cfg(target_os = <span class="string">"macos"</span>)]
-<a href=#751 id=751 data-nosnippet>751</a>        </span>baseview::Event::Keyboard(event) <span class="kw">if </span>!is_parented =&gt; {
-<a href=#752 id=752 data-nosnippet>752</a>            <span class="kw">if </span>event.code == vizia_input::Code::KeyQ
-<a href=#753 id=753 data-nosnippet>753</a>                &amp;&amp; event.modifiers == vizia_input::KeyboardModifiers::META
-<a href=#754 id=754 data-nosnippet>754</a>                &amp;&amp; event.state == vizia_input::KeyState::Down
-<a href=#755 id=755 data-nosnippet>755</a>            {
-<a href=#756 id=756 data-nosnippet>756</a>                <span class="kw">return </span><span class="bool-val">true</span>;
-<a href=#757 id=757 data-nosnippet>757</a>            }
-<a href=#758 id=758 data-nosnippet>758</a>
-<a href=#759 id=759 data-nosnippet>759</a>            <span class="bool-val">false
-<a href=#760 id=760 data-nosnippet>760</a>        </span>}
-<a href=#761 id=761 data-nosnippet>761</a>        <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
-<a href=#762 id=762 data-nosnippet>762</a>    }
-<a href=#763 id=763 data-nosnippet>763</a>}
-<a href=#764 id=764 data-nosnippet>764</a>
-<a href=#765 id=765 data-nosnippet>765</a><span class="kw">fn </span>translate_mouse_button(button: baseview::MouseButton) -&gt; MouseButton {
-<a href=#766 id=766 data-nosnippet>766</a>    <span class="kw">match </span>button {
-<a href=#767 id=767 data-nosnippet>767</a>        baseview::MouseButton::Left =&gt; MouseButton::Left,
-<a href=#768 id=768 data-nosnippet>768</a>        baseview::MouseButton::Right =&gt; MouseButton::Right,
-<a href=#769 id=769 data-nosnippet>769</a>        baseview::MouseButton::Middle =&gt; MouseButton::Middle,
-<a href=#770 id=770 data-nosnippet>770</a>        baseview::MouseButton::Other(id) =&gt; MouseButton::Other(id <span class="kw">as </span>u16),
-<a href=#771 id=771 data-nosnippet>771</a>        baseview::MouseButton::Back =&gt; MouseButton::Other(<span class="number">4</span>),
-<a href=#772 id=772 data-nosnippet>772</a>        baseview::MouseButton::Forward =&gt; MouseButton::Other(<span class="number">5</span>),
-<a href=#773 id=773 data-nosnippet>773</a>        <span class="kw">_ </span>=&gt; MouseButton::Other(<span class="number">0</span>),
-<a href=#774 id=774 data-nosnippet>774</a>    }
-<a href=#775 id=775 data-nosnippet>775</a>}
-<a href=#776 id=776 data-nosnippet>776</a>
-<a href=#777 id=777 data-nosnippet>777</a><span class="kw">fn </span>translate_mouse_cursor(icon: CursorIcon) -&gt; baseview::MouseCursor {
-<a href=#778 id=778 data-nosnippet>778</a>    <span class="kw">match </span>icon {
-<a href=#779 id=779 data-nosnippet>779</a>        CursorIcon::Default | CursorIcon::Arrow =&gt; baseview::MouseCursor::Default,
-<a href=#780 id=780 data-nosnippet>780</a>        CursorIcon::None =&gt; baseview::MouseCursor::Hidden,
-<a href=#781 id=781 data-nosnippet>781</a>        CursorIcon::Cell =&gt; baseview::MouseCursor::Cell,
-<a href=#782 id=782 data-nosnippet>782</a>        CursorIcon::Crosshair =&gt; baseview::MouseCursor::Crosshair,
-<a href=#783 id=783 data-nosnippet>783</a>        CursorIcon::Text =&gt; baseview::MouseCursor::Text,
-<a href=#784 id=784 data-nosnippet>784</a>        CursorIcon::VerticalText =&gt; baseview::MouseCursor::VerticalText,
-<a href=#785 id=785 data-nosnippet>785</a>        CursorIcon::ContextMenu =&gt; baseview::MouseCursor::Default,
-<a href=#786 id=786 data-nosnippet>786</a>        CursorIcon::Help =&gt; baseview::MouseCursor::Help,
-<a href=#787 id=787 data-nosnippet>787</a>        CursorIcon::Hand =&gt; baseview::MouseCursor::Hand,
-<a href=#788 id=788 data-nosnippet>788</a>        CursorIcon::Progress =&gt; baseview::MouseCursor::PtrWorking,
-<a href=#789 id=789 data-nosnippet>789</a>        CursorIcon::Wait =&gt; baseview::MouseCursor::Working,
-<a href=#790 id=790 data-nosnippet>790</a>        CursorIcon::Alias =&gt; baseview::MouseCursor::Alias,
-<a href=#791 id=791 data-nosnippet>791</a>        CursorIcon::Copy =&gt; baseview::MouseCursor::Copy,
-<a href=#792 id=792 data-nosnippet>792</a>        CursorIcon::Move =&gt; baseview::MouseCursor::Move,
-<a href=#793 id=793 data-nosnippet>793</a>        CursorIcon::NoDrop =&gt; baseview::MouseCursor::NotAllowed,
-<a href=#794 id=794 data-nosnippet>794</a>        CursorIcon::NotAllowed =&gt; baseview::MouseCursor::NotAllowed,
-<a href=#795 id=795 data-nosnippet>795</a>        CursorIcon::Grab =&gt; baseview::MouseCursor::Hand,
-<a href=#796 id=796 data-nosnippet>796</a>        CursorIcon::Grabbing =&gt; baseview::MouseCursor::HandGrabbing,
-<a href=#797 id=797 data-nosnippet>797</a>        CursorIcon::ZoomIn =&gt; baseview::MouseCursor::ZoomIn,
-<a href=#798 id=798 data-nosnippet>798</a>        CursorIcon::ZoomOut =&gt; baseview::MouseCursor::ZoomOut,
-<a href=#799 id=799 data-nosnippet>799</a>        CursorIcon::NResize =&gt; baseview::MouseCursor::NResize,
-<a href=#800 id=800 data-nosnippet>800</a>        CursorIcon::EResize =&gt; baseview::MouseCursor::EResize,
-<a href=#801 id=801 data-nosnippet>801</a>        CursorIcon::SResize =&gt; baseview::MouseCursor::SResize,
-<a href=#802 id=802 data-nosnippet>802</a>        CursorIcon::WResize =&gt; baseview::MouseCursor::WResize,
-<a href=#803 id=803 data-nosnippet>803</a>        CursorIcon::NeResize =&gt; baseview::MouseCursor::NeResize,
-<a href=#804 id=804 data-nosnippet>804</a>        CursorIcon::NwResize =&gt; baseview::MouseCursor::NwResize,
-<a href=#805 id=805 data-nosnippet>805</a>        CursorIcon::SeResize =&gt; baseview::MouseCursor::SeResize,
-<a href=#806 id=806 data-nosnippet>806</a>        CursorIcon::SwResize =&gt; baseview::MouseCursor::SwResize,
-<a href=#807 id=807 data-nosnippet>807</a>        CursorIcon::EwResize =&gt; baseview::MouseCursor::EwResize,
-<a href=#808 id=808 data-nosnippet>808</a>        CursorIcon::NsResize =&gt; baseview::MouseCursor::NsResize,
-<a href=#809 id=809 data-nosnippet>809</a>        CursorIcon::NeswResize =&gt; baseview::MouseCursor::NeswResize,
-<a href=#810 id=810 data-nosnippet>810</a>        CursorIcon::NwseResize =&gt; baseview::MouseCursor::NwseResize,
-<a href=#811 id=811 data-nosnippet>811</a>        CursorIcon::AllScroll =&gt; baseview::MouseCursor::AllScroll,
-<a href=#812 id=812 data-nosnippet>812</a>        CursorIcon::ColResize =&gt; baseview::MouseCursor::ColResize,
-<a href=#813 id=813 data-nosnippet>813</a>        CursorIcon::RowResize =&gt; baseview::MouseCursor::RowResize,
-<a href=#814 id=814 data-nosnippet>814</a>    }
-<a href=#815 id=815 data-nosnippet>815</a>}
+<a href=#649 id=649 data-nosnippet>649</a>        <span class="kw">unsafe </span>{ context.make_not_current() }.expect(<span class="string">"Failed to make GL context not current"</span>);
+<a href=#650 id=650 data-nosnippet>650</a>
+<a href=#651 id=651 data-nosnippet>651</a>        <span class="self">self</span>.window_scale_factor = new_size.scale_factor;
+<a href=#652 id=652 data-nosnippet>652</a>
+<a href=#653 id=653 data-nosnippet>653</a>        <span class="self">self</span>.cx
+<a href=#654 id=654 data-nosnippet>654</a>            .set_scale_factor(<span class="self">self</span>.window_scale_factor * <span class="self">self</span>.window_description.user_scale_factor);
+<a href=#655 id=655 data-nosnippet>655</a>
+<a href=#656 id=656 data-nosnippet>656</a>        <span class="self">self</span>.cx.set_window_size(
+<a href=#657 id=657 data-nosnippet>657</a>            Entity::root(),
+<a href=#658 id=658 data-nosnippet>658</a>            new_size.physical.width <span class="kw">as </span>f32,
+<a href=#659 id=659 data-nosnippet>659</a>            new_size.physical.height <span class="kw">as </span>f32,
+<a href=#660 id=660 data-nosnippet>660</a>        );
+<a href=#661 id=661 data-nosnippet>661</a>
+<a href=#662 id=662 data-nosnippet>662</a>        <span class="self">self</span>.cx.needs_refresh(Entity::root());
+<a href=#663 id=663 data-nosnippet>663</a>    }
+<a href=#664 id=664 data-nosnippet>664</a>
+<a href=#665 id=665 data-nosnippet>665</a>    <span class="kw">pub fn </span>handle_idle(<span class="kw-2">&amp;mut </span><span class="self">self</span>, on_idle: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>Context) + Send&gt;&gt;) {
+<a href=#666 id=666 data-nosnippet>666</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(idle_callback) = on_idle {
+<a href=#667 id=667 data-nosnippet>667</a>            <span class="self">self</span>.cx.set_current(Entity::root());
+<a href=#668 id=668 data-nosnippet>668</a>            (idle_callback)(<span class="self">self</span>.cx.context());
+<a href=#669 id=669 data-nosnippet>669</a>        }
+<a href=#670 id=670 data-nosnippet>670</a>    }
+<a href=#671 id=671 data-nosnippet>671</a>
+<a href=#672 id=672 data-nosnippet>672</a>    <span class="doccomment">/// How long until the next vizia timer or scheduled event needs to fire.
+<a href=#673 id=673 data-nosnippet>673</a>    </span><span class="kw">fn </span>next_timer_wake(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Duration&gt; {
+<a href=#674 id=674 data-nosnippet>674</a>        <span class="kw">let </span>next = <span class="self">self</span>.cx.get_next_timer_time()<span class="question-mark">?</span>;
+<a href=#675 id=675 data-nosnippet>675</a>        <span class="prelude-val">Some</span>(next.saturating_duration_since(Instant::now()))
+<a href=#676 id=676 data-nosnippet>676</a>    }
+<a href=#677 id=677 data-nosnippet>677</a>
+<a href=#678 id=678 data-nosnippet>678</a>    <span class="doccomment">/// Wake the event loop so [`WindowHandler::draw`] is called.
+<a href=#679 id=679 data-nosnippet>679</a>    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>request_redraw(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+<a href=#680 id=680 data-nosnippet>680</a>        <span class="self">self</span>.window_context.request_redraw();
+<a href=#681 id=681 data-nosnippet>681</a>    }
+<a href=#682 id=682 data-nosnippet>682</a>
+<a href=#683 id=683 data-nosnippet>683</a>    <span class="doccomment">/// Force the next [`WindowHandler::draw`] to re-render the window even when
+<a href=#684 id=684 data-nosnippet>684</a>    /// no vizia-level redraw was requested. This doesn't request a redraw.
+<a href=#685 id=685 data-nosnippet>685</a>    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>mark_damaged(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+<a href=#686 id=686 data-nosnippet>686</a>        <span class="self">self</span>.should_redraw = <span class="bool-val">true</span>;
+<a href=#687 id=687 data-nosnippet>687</a>    }
+<a href=#688 id=688 data-nosnippet>688</a>
+<a href=#689 id=689 data-nosnippet>689</a>    <span class="doccomment">/// Schedule the next frame according to the configured [`FramePolicy`].
+<a href=#690 id=690 data-nosnippet>690</a>    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>schedule_next_frame(<span class="kw-2">&amp;</span><span class="self">self</span>, needs_redraw: bool) {
+<a href=#691 id=691 data-nosnippet>691</a>        <span class="kw">if </span><span class="self">self</span>.frame_policy == FramePolicy::Continuous || needs_redraw {
+<a href=#692 id=692 data-nosnippet>692</a>            <span class="self">self</span>.window_context.request_redraw();
+<a href=#693 id=693 data-nosnippet>693</a>        } <span class="kw">else if let </span><span class="prelude-val">Some</span>(duration) = <span class="self">self</span>.next_timer_wake() {
+<a href=#694 id=694 data-nosnippet>694</a>            <span class="self">self</span>.window_context.request_redraw_after(duration);
+<a href=#695 id=695 data-nosnippet>695</a>        }
+<a href=#696 id=696 data-nosnippet>696</a>    }
+<a href=#697 id=697 data-nosnippet>697</a>
+<a href=#698 id=698 data-nosnippet>698</a>    <span class="doccomment">/// Element name of the view that currently has keyboard focus.
+<a href=#699 id=699 data-nosnippet>699</a>    </span><span class="kw">pub fn </span>focused_element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+<a href=#700 id=700 data-nosnippet>700</a>        <span class="self">self</span>.cx.focused_element()
+<a href=#701 id=701 data-nosnippet>701</a>    }
+<a href=#702 id=702 data-nosnippet>702</a>
+<a href=#703 id=703 data-nosnippet>703</a>    <span class="doccomment">/// Returns the [`EventStatus`](`baseview::EventStatus`) for this `event`
+<a href=#704 id=704 data-nosnippet>704</a>    </span><span class="kw">fn </span>event_status(<span class="kw-2">&amp;</span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>baseview::Event) -&gt; baseview::EventStatus {
+<a href=#705 id=705 data-nosnippet>705</a>        <span class="kw">match </span>event {
+<a href=#706 id=706 data-nosnippet>706</a>            <span class="comment">// macOS and Windows only perform the drop if
+<a href=#707 id=707 data-nosnippet>707</a>            // the drag-enter/move callbacks report an acceptable operation.
+<a href=#708 id=708 data-nosnippet>708</a>            // The events can still be ignored inside `handle_event`.
+<a href=#709 id=709 data-nosnippet>709</a>            // (X11 ignores the return status.)
+<a href=#710 id=710 data-nosnippet>710</a>            </span>baseview::Event::Mouse(
+<a href=#711 id=711 data-nosnippet>711</a>                baseview::MouseEvent::DragEntered { .. }
+<a href=#712 id=712 data-nosnippet>712</a>                | baseview::MouseEvent::DragMoved { .. }
+<a href=#713 id=713 data-nosnippet>713</a>                | baseview::MouseEvent::DragDropped { .. },
+<a href=#714 id=714 data-nosnippet>714</a>            ) =&gt; baseview::EventStatus::AcceptDrop(baseview::DropEffect::Copy),
+<a href=#715 id=715 data-nosnippet>715</a>
+<a href=#716 id=716 data-nosnippet>716</a>            <span class="comment">// If a text input currently holds focus, a native keyboard event is
+<a href=#717 id=717 data-nosnippet>717</a>            // intended for the plugin. Report it as `Captured` so the backend
+<a href=#718 id=718 data-nosnippet>718</a>            // does not forward the platform event further — otherwise the host
+<a href=#719 id=719 data-nosnippet>719</a>            // (e.g. a DAW) also processes the same keystroke, producing double
+<a href=#720 id=720 data-nosnippet>720</a>            // handling and a system beep on macOS.
+<a href=#721 id=721 data-nosnippet>721</a>            </span>baseview::Event::Keyboard(<span class="kw">_</span>) <span class="kw">if </span><span class="self">self</span>.focused_element() == <span class="prelude-val">Some</span>(<span class="string">"textbox"</span>) =&gt; {
+<a href=#722 id=722 data-nosnippet>722</a>                baseview::EventStatus::Captured
+<a href=#723 id=723 data-nosnippet>723</a>            }
+<a href=#724 id=724 data-nosnippet>724</a>
+<a href=#725 id=725 data-nosnippet>725</a>            <span class="kw">_ </span>=&gt; baseview::EventStatus::Ignored,
+<a href=#726 id=726 data-nosnippet>726</a>        }
+<a href=#727 id=727 data-nosnippet>727</a>    }
+<a href=#728 id=728 data-nosnippet>728</a>}
+<a href=#729 id=729 data-nosnippet>729</a>
+<a href=#730 id=730 data-nosnippet>730</a><span class="doccomment">/// Returns true if the provided event should cause an [`Application`] to
+<a href=#731 id=731 data-nosnippet>731</a>/// exit.
+<a href=#732 id=732 data-nosnippet>732</a>///
+<a href=#733 id=733 data-nosnippet>733</a>/// `WindowEvent::WillClose` is honoured in both standalone and parented
+<a href=#734 id=734 data-nosnippet>734</a>/// modes — it's a legitimate close signal from baseview / the host.
+<a href=#735 id=735 data-nosnippet>735</a>///
+<a href=#736 id=736 data-nosnippet>736</a>/// On macOS, Cmd+Q is recognized as a quit shortcut **only when the
+<a href=#737 id=737 data-nosnippet>737</a>/// application is standalone** (`is_parented == false`). When
+<a href=#738 id=738 data-nosnippet>738</a>/// vizia_baseview is embedded as a child window inside a host (the
+<a href=#739 id=739 data-nosnippet>739</a>/// usual audio-plug-in setup), the host owns the application
+<a href=#740 id=740 data-nosnippet>740</a>/// lifecycle: pressing Cmd+Q should quit the host, not close the
+<a href=#741 id=741 data-nosnippet>741</a>/// plug-in's child window. Most hosts on macOS bind Cmd+Q to their
+<a href=#742 id=742 data-nosnippet>742</a>/// own menu's "Quit" item, so AppKit's `performKeyEquivalent:`
+<a href=#743 id=743 data-nosnippet>743</a>/// dispatch claims the key before the plug-in's NSView sees it.
+<a href=#744 id=744 data-nosnippet>744</a>/// Hosts with looser key dispatch (Bitwig observed 2026-04-28) do
+<a href=#745 id=745 data-nosnippet>745</a>/// forward it through, in which case the previous unconditional
+<a href=#746 id=746 data-nosnippet>746</a>/// match would tear down the plug-in's GL surface and leave the
+<a href=#747 id=747 data-nosnippet>747</a>/// host with an empty plug-in shell.
+<a href=#748 id=748 data-nosnippet>748</a></span><span class="kw">pub fn </span>requests_exit(
+<a href=#749 id=749 data-nosnippet>749</a>    event: <span class="kw-2">&amp;</span>baseview::Event,
+<a href=#750 id=750 data-nosnippet>750</a>    <span class="attr">#[cfg_attr(not(target_os = <span class="string">"macos"</span>), allow(unused_variables))] </span>is_parented: bool,
+<a href=#751 id=751 data-nosnippet>751</a>) -&gt; bool {
+<a href=#752 id=752 data-nosnippet>752</a>    <span class="kw">match </span>event {
+<a href=#753 id=753 data-nosnippet>753</a>        baseview::Event::Window(baseview::WindowEvent::WillClose) =&gt; <span class="bool-val">true</span>,
+<a href=#754 id=754 data-nosnippet>754</a>        <span class="attr">#[cfg(target_os = <span class="string">"macos"</span>)]
+<a href=#755 id=755 data-nosnippet>755</a>        </span>baseview::Event::Keyboard(event) <span class="kw">if </span>!is_parented =&gt; {
+<a href=#756 id=756 data-nosnippet>756</a>            <span class="kw">if </span>event.code == vizia_input::Code::KeyQ
+<a href=#757 id=757 data-nosnippet>757</a>                &amp;&amp; event.modifiers == vizia_input::KeyboardModifiers::META
+<a href=#758 id=758 data-nosnippet>758</a>                &amp;&amp; event.state == vizia_input::KeyState::Down
+<a href=#759 id=759 data-nosnippet>759</a>            {
+<a href=#760 id=760 data-nosnippet>760</a>                <span class="kw">return </span><span class="bool-val">true</span>;
+<a href=#761 id=761 data-nosnippet>761</a>            }
+<a href=#762 id=762 data-nosnippet>762</a>
+<a href=#763 id=763 data-nosnippet>763</a>            <span class="bool-val">false
+<a href=#764 id=764 data-nosnippet>764</a>        </span>}
+<a href=#765 id=765 data-nosnippet>765</a>        <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
+<a href=#766 id=766 data-nosnippet>766</a>    }
+<a href=#767 id=767 data-nosnippet>767</a>}
+<a href=#768 id=768 data-nosnippet>768</a>
+<a href=#769 id=769 data-nosnippet>769</a><span class="kw">fn </span>translate_mouse_button(button: baseview::MouseButton) -&gt; MouseButton {
+<a href=#770 id=770 data-nosnippet>770</a>    <span class="kw">match </span>button {
+<a href=#771 id=771 data-nosnippet>771</a>        baseview::MouseButton::Left =&gt; MouseButton::Left,
+<a href=#772 id=772 data-nosnippet>772</a>        baseview::MouseButton::Right =&gt; MouseButton::Right,
+<a href=#773 id=773 data-nosnippet>773</a>        baseview::MouseButton::Middle =&gt; MouseButton::Middle,
+<a href=#774 id=774 data-nosnippet>774</a>        baseview::MouseButton::Other(id) =&gt; MouseButton::Other(id <span class="kw">as </span>u16),
+<a href=#775 id=775 data-nosnippet>775</a>        baseview::MouseButton::Back =&gt; MouseButton::Other(<span class="number">4</span>),
+<a href=#776 id=776 data-nosnippet>776</a>        baseview::MouseButton::Forward =&gt; MouseButton::Other(<span class="number">5</span>),
+<a href=#777 id=777 data-nosnippet>777</a>        <span class="kw">_ </span>=&gt; MouseButton::Other(<span class="number">0</span>),
+<a href=#778 id=778 data-nosnippet>778</a>    }
+<a href=#779 id=779 data-nosnippet>779</a>}
+<a href=#780 id=780 data-nosnippet>780</a>
+<a href=#781 id=781 data-nosnippet>781</a><span class="kw">fn </span>translate_mouse_cursor(icon: CursorIcon) -&gt; baseview::MouseCursor {
+<a href=#782 id=782 data-nosnippet>782</a>    <span class="kw">match </span>icon {
+<a href=#783 id=783 data-nosnippet>783</a>        CursorIcon::Default | CursorIcon::Arrow =&gt; baseview::MouseCursor::Default,
+<a href=#784 id=784 data-nosnippet>784</a>        CursorIcon::None =&gt; baseview::MouseCursor::Hidden,
+<a href=#785 id=785 data-nosnippet>785</a>        CursorIcon::Cell =&gt; baseview::MouseCursor::Cell,
+<a href=#786 id=786 data-nosnippet>786</a>        CursorIcon::Crosshair =&gt; baseview::MouseCursor::Crosshair,
+<a href=#787 id=787 data-nosnippet>787</a>        CursorIcon::Text =&gt; baseview::MouseCursor::Text,
+<a href=#788 id=788 data-nosnippet>788</a>        CursorIcon::VerticalText =&gt; baseview::MouseCursor::VerticalText,
+<a href=#789 id=789 data-nosnippet>789</a>        CursorIcon::ContextMenu =&gt; baseview::MouseCursor::Default,
+<a href=#790 id=790 data-nosnippet>790</a>        CursorIcon::Help =&gt; baseview::MouseCursor::Help,
+<a href=#791 id=791 data-nosnippet>791</a>        CursorIcon::Hand =&gt; baseview::MouseCursor::Hand,
+<a href=#792 id=792 data-nosnippet>792</a>        CursorIcon::Progress =&gt; baseview::MouseCursor::PtrWorking,
+<a href=#793 id=793 data-nosnippet>793</a>        CursorIcon::Wait =&gt; baseview::MouseCursor::Working,
+<a href=#794 id=794 data-nosnippet>794</a>        CursorIcon::Alias =&gt; baseview::MouseCursor::Alias,
+<a href=#795 id=795 data-nosnippet>795</a>        CursorIcon::Copy =&gt; baseview::MouseCursor::Copy,
+<a href=#796 id=796 data-nosnippet>796</a>        CursorIcon::Move =&gt; baseview::MouseCursor::Move,
+<a href=#797 id=797 data-nosnippet>797</a>        CursorIcon::NoDrop =&gt; baseview::MouseCursor::NotAllowed,
+<a href=#798 id=798 data-nosnippet>798</a>        CursorIcon::NotAllowed =&gt; baseview::MouseCursor::NotAllowed,
+<a href=#799 id=799 data-nosnippet>799</a>        CursorIcon::Grab =&gt; baseview::MouseCursor::Hand,
+<a href=#800 id=800 data-nosnippet>800</a>        CursorIcon::Grabbing =&gt; baseview::MouseCursor::HandGrabbing,
+<a href=#801 id=801 data-nosnippet>801</a>        CursorIcon::ZoomIn =&gt; baseview::MouseCursor::ZoomIn,
+<a href=#802 id=802 data-nosnippet>802</a>        CursorIcon::ZoomOut =&gt; baseview::MouseCursor::ZoomOut,
+<a href=#803 id=803 data-nosnippet>803</a>        CursorIcon::NResize =&gt; baseview::MouseCursor::NResize,
+<a href=#804 id=804 data-nosnippet>804</a>        CursorIcon::EResize =&gt; baseview::MouseCursor::EResize,
+<a href=#805 id=805 data-nosnippet>805</a>        CursorIcon::SResize =&gt; baseview::MouseCursor::SResize,
+<a href=#806 id=806 data-nosnippet>806</a>        CursorIcon::WResize =&gt; baseview::MouseCursor::WResize,
+<a href=#807 id=807 data-nosnippet>807</a>        CursorIcon::NeResize =&gt; baseview::MouseCursor::NeResize,
+<a href=#808 id=808 data-nosnippet>808</a>        CursorIcon::NwResize =&gt; baseview::MouseCursor::NwResize,
+<a href=#809 id=809 data-nosnippet>809</a>        CursorIcon::SeResize =&gt; baseview::MouseCursor::SeResize,
+<a href=#810 id=810 data-nosnippet>810</a>        CursorIcon::SwResize =&gt; baseview::MouseCursor::SwResize,
+<a href=#811 id=811 data-nosnippet>811</a>        CursorIcon::EwResize =&gt; baseview::MouseCursor::EwResize,
+<a href=#812 id=812 data-nosnippet>812</a>        CursorIcon::NsResize =&gt; baseview::MouseCursor::NsResize,
+<a href=#813 id=813 data-nosnippet>813</a>        CursorIcon::NeswResize =&gt; baseview::MouseCursor::NeswResize,
+<a href=#814 id=814 data-nosnippet>814</a>        CursorIcon::NwseResize =&gt; baseview::MouseCursor::NwseResize,
+<a href=#815 id=815 data-nosnippet>815</a>        CursorIcon::AllScroll =&gt; baseview::MouseCursor::AllScroll,
+<a href=#816 id=816 data-nosnippet>816</a>        CursorIcon::ColResize =&gt; baseview::MouseCursor::ColResize,
+<a href=#817 id=817 data-nosnippet>817</a>        CursorIcon::RowResize =&gt; baseview::MouseCursor::RowResize,
+<a href=#818 id=818 data-nosnippet>818</a>    }
+<a href=#819 id=819 data-nosnippet>819</a>}
 </code></pre></div></section></main></body></html>

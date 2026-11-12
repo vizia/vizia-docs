@@ -109,7 +109,7 @@
 <a href=#109 id=109 data-nosnippet>109</a>        <span class="kw">let </span>dpi_factor = window_scale_factor * win_desc.user_scale_factor;
 <a href=#110 id=110 data-nosnippet>110</a>
 <a href=#111 id=111 data-nosnippet>111</a>        cx.add_main_window(Entity::root(), <span class="kw-2">&amp;</span>win_desc, dpi_factor <span class="kw">as </span>f32);
-<a href=#112 id=112 data-nosnippet>112</a>        cx.add_window(WindowView {});
+<a href=#112 id=112 data-nosnippet>112</a>        cx.add_window(Entity::root(), WindowView {});
 <a href=#113 id=113 data-nosnippet>113</a>
 <a href=#114 id=114 data-nosnippet>114</a>        cx.<span class="number">0</span>.windows.insert(
 <a href=#115 id=115 data-nosnippet>115</a>            Entity::root(),
@@ -331,31 +331,35 @@
 <a href=#331 id=331 data-nosnippet>331</a>
 <a href=#332 id=332 data-nosnippet>332</a><span class="kw">pub struct </span>WindowView {}
 <a href=#333 id=333 data-nosnippet>333</a>
-<a href=#334 id=334 data-nosnippet>334</a><span class="kw">impl </span>View <span class="kw">for </span>WindowView {}
-<a href=#335 id=335 data-nosnippet>335</a>
-<a href=#336 id=336 data-nosnippet>336</a><span class="kw">pub fn </span>create_surface(
-<a href=#337 id=337 data-nosnippet>337</a>    size: (i32, i32),
-<a href=#338 id=338 data-nosnippet>338</a>    fb_info: FramebufferInfo,
-<a href=#339 id=339 data-nosnippet>339</a>    gr_context: <span class="kw-2">&amp;mut </span>skia_safe::gpu::DirectContext,
-<a href=#340 id=340 data-nosnippet>340</a>) -&gt; Surface {
-<a href=#341 id=341 data-nosnippet>341</a>    <span class="kw">let </span>backend_render_target = backend_render_targets::make_gl(size, <span class="prelude-val">None</span>, <span class="number">8</span>, fb_info);
-<a href=#342 id=342 data-nosnippet>342</a>
-<a href=#343 id=343 data-nosnippet>343</a>    <span class="kw">let </span>surface_props = SurfaceProps::new_with_text_properties(
-<a href=#344 id=344 data-nosnippet>344</a>        SurfacePropsFlags::default(),
-<a href=#345 id=345 data-nosnippet>345</a>        PixelGeometry::default(),
-<a href=#346 id=346 data-nosnippet>346</a>        <span class="number">0.5</span>,
-<a href=#347 id=347 data-nosnippet>347</a>        <span class="number">0.0</span>,
-<a href=#348 id=348 data-nosnippet>348</a>    );
-<a href=#349 id=349 data-nosnippet>349</a>
-<a href=#350 id=350 data-nosnippet>350</a>    gpu::surfaces::wrap_backend_render_target(
-<a href=#351 id=351 data-nosnippet>351</a>        gr_context,
-<a href=#352 id=352 data-nosnippet>352</a>        <span class="kw-2">&amp;</span>backend_render_target,
-<a href=#353 id=353 data-nosnippet>353</a>        SurfaceOrigin::BottomLeft,
-<a href=#354 id=354 data-nosnippet>354</a>        ColorType::RGBA8888,
-<a href=#355 id=355 data-nosnippet>355</a>        ColorSpace::new_srgb(),
-<a href=#356 id=356 data-nosnippet>356</a>        <span class="prelude-val">Some</span>(surface_props).as_ref(),
-<a href=#357 id=357 data-nosnippet>357</a>        <span class="comment">// None,
-<a href=#358 id=358 data-nosnippet>358</a>    </span>)
-<a href=#359 id=359 data-nosnippet>359</a>    .expect(<span class="string">"Could not create skia surface"</span>)
-<a href=#360 id=360 data-nosnippet>360</a>}
+<a href=#334 id=334 data-nosnippet>334</a><span class="kw">impl </span>View <span class="kw">for </span>WindowView {
+<a href=#335 id=335 data-nosnippet>335</a>    <span class="kw">fn </span>element(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; {
+<a href=#336 id=336 data-nosnippet>336</a>        <span class="prelude-val">Some</span>(<span class="string">"window"</span>)
+<a href=#337 id=337 data-nosnippet>337</a>    }
+<a href=#338 id=338 data-nosnippet>338</a>}
+<a href=#339 id=339 data-nosnippet>339</a>
+<a href=#340 id=340 data-nosnippet>340</a><span class="kw">pub fn </span>create_surface(
+<a href=#341 id=341 data-nosnippet>341</a>    size: (i32, i32),
+<a href=#342 id=342 data-nosnippet>342</a>    fb_info: FramebufferInfo,
+<a href=#343 id=343 data-nosnippet>343</a>    gr_context: <span class="kw-2">&amp;mut </span>skia_safe::gpu::DirectContext,
+<a href=#344 id=344 data-nosnippet>344</a>) -&gt; Surface {
+<a href=#345 id=345 data-nosnippet>345</a>    <span class="kw">let </span>backend_render_target = backend_render_targets::make_gl(size, <span class="prelude-val">None</span>, <span class="number">8</span>, fb_info);
+<a href=#346 id=346 data-nosnippet>346</a>
+<a href=#347 id=347 data-nosnippet>347</a>    <span class="kw">let </span>surface_props = SurfaceProps::new_with_text_properties(
+<a href=#348 id=348 data-nosnippet>348</a>        SurfacePropsFlags::default(),
+<a href=#349 id=349 data-nosnippet>349</a>        PixelGeometry::default(),
+<a href=#350 id=350 data-nosnippet>350</a>        <span class="number">0.5</span>,
+<a href=#351 id=351 data-nosnippet>351</a>        <span class="number">0.0</span>,
+<a href=#352 id=352 data-nosnippet>352</a>    );
+<a href=#353 id=353 data-nosnippet>353</a>
+<a href=#354 id=354 data-nosnippet>354</a>    gpu::surfaces::wrap_backend_render_target(
+<a href=#355 id=355 data-nosnippet>355</a>        gr_context,
+<a href=#356 id=356 data-nosnippet>356</a>        <span class="kw-2">&amp;</span>backend_render_target,
+<a href=#357 id=357 data-nosnippet>357</a>        SurfaceOrigin::BottomLeft,
+<a href=#358 id=358 data-nosnippet>358</a>        ColorType::RGBA8888,
+<a href=#359 id=359 data-nosnippet>359</a>        ColorSpace::new_srgb(),
+<a href=#360 id=360 data-nosnippet>360</a>        <span class="prelude-val">Some</span>(surface_props).as_ref(),
+<a href=#361 id=361 data-nosnippet>361</a>        <span class="comment">// None,
+<a href=#362 id=362 data-nosnippet>362</a>    </span>)
+<a href=#363 id=363 data-nosnippet>363</a>    .expect(<span class="string">"Could not create skia surface"</span>)
+<a href=#364 id=364 data-nosnippet>364</a>}
 </code></pre></div></section></main></body></html>

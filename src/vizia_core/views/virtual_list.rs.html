@@ -926,7 +926,7 @@
 <a href=#926 id=926 data-nosnippet>926</a>                            cx.emit(ListEvent::SelectFocused);
 <a href=#927 id=927 data-nosnippet>927</a>                        }
 <a href=#928 id=928 data-nosnippet>928</a>                    }
-<a href=#929 id=929 data-nosnippet>929</a>                } <span class="kw">else </span>{
+<a href=#929 id=929 data-nosnippet>929</a>                } <span class="kw">else if </span>num_items &gt; <span class="number">0 </span>{
 <a href=#930 id=930 data-nosnippet>930</a>                    focused = <span class="prelude-val">Some</span>(<span class="number">0</span>);
 <a href=#931 id=931 data-nosnippet>931</a>                    moved_focus = <span class="bool-val">true</span>;
 <a href=#932 id=932 data-nosnippet>932</a>                    <span class="kw">if </span><span class="self">self</span>.selection_follows_focus.get() {
@@ -955,7 +955,7 @@
 <a href=#955 id=955 data-nosnippet>955</a>                            cx.emit(ListEvent::SelectFocused);
 <a href=#956 id=956 data-nosnippet>956</a>                        }
 <a href=#957 id=957 data-nosnippet>957</a>                    }
-<a href=#958 id=958 data-nosnippet>958</a>                } <span class="kw">else </span>{
+<a href=#958 id=958 data-nosnippet>958</a>                } <span class="kw">else if </span>num_items &gt; <span class="number">0 </span>{
 <a href=#959 id=959 data-nosnippet>959</a>                    focused = <span class="prelude-val">Some</span>(num_items.saturating_sub(<span class="number">1</span>));
 <a href=#960 id=960 data-nosnippet>960</a>                    moved_focus = <span class="bool-val">true</span>;
 <a href=#961 id=961 data-nosnippet>961</a>                    <span class="kw">if </span><span class="self">self</span>.selection_follows_focus.get() {
@@ -1347,5 +1347,63 @@
 <a href=#1347 id=1347 data-nosnippet>1347</a>
 <a href=#1348 id=1348 data-nosnippet>1348</a>        <span class="macro">assert_eq!</span>(focus_index_on_focus_in(<span class="kw-2">&amp;</span>selection, <span class="number">5</span>, <span class="bool-val">true</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>));
 <a href=#1349 id=1349 data-nosnippet>1349</a>    }
-<a href=#1350 id=1350 data-nosnippet>1350</a>}
+<a href=#1350 id=1350 data-nosnippet>1350</a>
+<a href=#1351 id=1351 data-nosnippet>1351</a>    <span class="doccomment">/// Sends `events` to a fresh list of `num_items` items and returns the indices passed to
+<a href=#1352 id=1352 data-nosnippet>1352</a>    /// `on_focus` and `on_select`, in order.
+<a href=#1353 id=1353 data-nosnippet>1353</a>    </span><span class="kw">fn </span>focus_and_select_callbacks(
+<a href=#1354 id=1354 data-nosnippet>1354</a>        num_items: u32,
+<a href=#1355 id=1355 data-nosnippet>1355</a>        events: <span class="kw">impl </span>IntoIterator&lt;Item = ListEvent&gt;,
+<a href=#1356 id=1356 data-nosnippet>1356</a>    ) -&gt; (Vec&lt;usize&gt;, Vec&lt;usize&gt;) {
+<a href=#1357 id=1357 data-nosnippet>1357</a>        <span class="kw">use </span><span class="kw">crate</span>::context::WindowState;
+<a href=#1358 id=1358 data-nosnippet>1358</a>        <span class="kw">use </span><span class="kw">crate</span>::events::EventManager;
+<a href=#1359 id=1359 data-nosnippet>1359</a>        <span class="kw">use </span>std::{cell::RefCell, rc::Rc};
+<a href=#1360 id=1360 data-nosnippet>1360</a>
+<a href=#1361 id=1361 data-nosnippet>1361</a>        <span class="kw">let </span><span class="kw-2">mut </span>cx = Context::default();
+<a href=#1362 id=1362 data-nosnippet>1362</a>        cx.windows.insert(Entity::root(), WindowState::default());
+<a href=#1363 id=1363 data-nosnippet>1363</a>        <span class="kw">let </span>focused = Rc::new(RefCell::new(Vec::new()));
+<a href=#1364 id=1364 data-nosnippet>1364</a>        <span class="kw">let </span>selected = Rc::new(RefCell::new(Vec::new()));
+<a href=#1365 id=1365 data-nosnippet>1365</a>        <span class="kw">let </span>(focused_in, selected_in) = (focused.clone(), selected.clone());
+<a href=#1366 id=1366 data-nosnippet>1366</a>
+<a href=#1367 id=1367 data-nosnippet>1367</a>        <span class="kw">let </span>list = Signal::new((<span class="number">0</span>..num_items).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;());
+<a href=#1368 id=1368 data-nosnippet>1368</a>        <span class="kw">let </span>list_entity = VirtualList::new(<span class="kw-2">&amp;mut </span>cx, list, <span class="number">24.0</span>, |cx, <span class="kw">_</span>, item| Label::new(cx, item))
+<a href=#1369 id=1369 data-nosnippet>1369</a>            .on_focus(<span class="kw">move </span>|<span class="kw">_</span>, index| focused_in.borrow_mut().push(index))
+<a href=#1370 id=1370 data-nosnippet>1370</a>            .on_select(<span class="kw">move </span>|<span class="kw">_</span>, index| selected_in.borrow_mut().push(index))
+<a href=#1371 id=1371 data-nosnippet>1371</a>            .selectable(Selectable::Single)
+<a href=#1372 id=1372 data-nosnippet>1372</a>            .selection_follows_focus(<span class="bool-val">true</span>)
+<a href=#1373 id=1373 data-nosnippet>1373</a>            .entity();
+<a href=#1374 id=1374 data-nosnippet>1374</a>
+<a href=#1375 id=1375 data-nosnippet>1375</a>        <span class="kw">for </span>event <span class="kw">in </span>events {
+<a href=#1376 id=1376 data-nosnippet>1376</a>            cx.emit_to(list_entity, event);
+<a href=#1377 id=1377 data-nosnippet>1377</a>            EventManager::new().flush_events(<span class="kw-2">&amp;mut </span>cx, |<span class="kw">_</span>| {});
+<a href=#1378 id=1378 data-nosnippet>1378</a>        }
+<a href=#1379 id=1379 data-nosnippet>1379</a>
+<a href=#1380 id=1380 data-nosnippet>1380</a>        (focused.take(), selected.take())
+<a href=#1381 id=1381 data-nosnippet>1381</a>    }
+<a href=#1382 id=1382 data-nosnippet>1382</a>
+<a href=#1383 id=1383 data-nosnippet>1383</a>    <span class="attr">#[test]
+<a href=#1384 id=1384 data-nosnippet>1384</a>    </span><span class="kw">fn </span>focus_next_on_an_empty_list_focuses_nothing() {
+<a href=#1385 id=1385 data-nosnippet>1385</a>        <span class="macro">assert_eq!</span>(focus_and_select_callbacks(<span class="number">0</span>, [ListEvent::FocusNext]), (<span class="macro">vec!</span>[], <span class="macro">vec!</span>[]));
+<a href=#1386 id=1386 data-nosnippet>1386</a>    }
+<a href=#1387 id=1387 data-nosnippet>1387</a>
+<a href=#1388 id=1388 data-nosnippet>1388</a>    <span class="attr">#[test]
+<a href=#1389 id=1389 data-nosnippet>1389</a>    </span><span class="kw">fn </span>focus_prev_on_an_empty_list_focuses_nothing() {
+<a href=#1390 id=1390 data-nosnippet>1390</a>        <span class="macro">assert_eq!</span>(focus_and_select_callbacks(<span class="number">0</span>, [ListEvent::FocusPrev]), (<span class="macro">vec!</span>[], <span class="macro">vec!</span>[]));
+<a href=#1391 id=1391 data-nosnippet>1391</a>    }
+<a href=#1392 id=1392 data-nosnippet>1392</a>
+<a href=#1393 id=1393 data-nosnippet>1393</a>    <span class="attr">#[test]
+<a href=#1394 id=1394 data-nosnippet>1394</a>    </span><span class="kw">fn </span>focus_next_without_focus_starts_at_the_first_item() {
+<a href=#1395 id=1395 data-nosnippet>1395</a>        <span class="macro">assert_eq!</span>(
+<a href=#1396 id=1396 data-nosnippet>1396</a>            focus_and_select_callbacks(<span class="number">3</span>, [ListEvent::FocusNext, ListEvent::FocusNext]),
+<a href=#1397 id=1397 data-nosnippet>1397</a>            (<span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>], <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">1</span>])
+<a href=#1398 id=1398 data-nosnippet>1398</a>        );
+<a href=#1399 id=1399 data-nosnippet>1399</a>    }
+<a href=#1400 id=1400 data-nosnippet>1400</a>
+<a href=#1401 id=1401 data-nosnippet>1401</a>    <span class="attr">#[test]
+<a href=#1402 id=1402 data-nosnippet>1402</a>    </span><span class="kw">fn </span>focus_prev_without_focus_starts_at_the_last_item() {
+<a href=#1403 id=1403 data-nosnippet>1403</a>        <span class="macro">assert_eq!</span>(
+<a href=#1404 id=1404 data-nosnippet>1404</a>            focus_and_select_callbacks(<span class="number">3</span>, [ListEvent::FocusPrev, ListEvent::FocusPrev]),
+<a href=#1405 id=1405 data-nosnippet>1405</a>            (<span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">1</span>], <span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">1</span>])
+<a href=#1406 id=1406 data-nosnippet>1406</a>        );
+<a href=#1407 id=1407 data-nosnippet>1407</a>    }
+<a href=#1408 id=1408 data-nosnippet>1408</a>}
 </code></pre></div></section></main></body></html>

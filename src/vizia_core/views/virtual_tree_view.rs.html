@@ -121,10 +121,10 @@
 <a href=#121 id=121 data-nosnippet>121</a>    </span>T: PartialEq + Clone + <span class="lifetime">'static</span>,
 <a href=#122 id=122 data-nosnippet>122</a>    Id: Clone + Eq + Hash + <span class="lifetime">'static</span>,
 <a href=#123 id=123 data-nosnippet>123</a>{
-<a href=#124 id=124 data-nosnippet>124</a>    <span class="kw">if let </span><span class="prelude-val">Some</span>(focused_row_id) = focused_row_id {
-<a href=#125 id=125 data-nosnippet>125</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(index) = visible_rows.iter().position(|row| <span class="kw-2">&amp;</span>row.id == focused_row_id) {
-<a href=#126 id=126 data-nosnippet>126</a>            <span class="kw">return </span><span class="prelude-val">Some</span>(index);
-<a href=#127 id=127 data-nosnippet>127</a>        }
+<a href=#124 id=124 data-nosnippet>124</a>    <span class="kw">if let </span><span class="prelude-val">Some</span>(focused_row_id) = focused_row_id
+<a href=#125 id=125 data-nosnippet>125</a>        &amp;&amp; <span class="kw">let </span><span class="prelude-val">Some</span>(index) = visible_rows.iter().position(|row| <span class="kw-2">&amp;</span>row.id == focused_row_id)
+<a href=#126 id=126 data-nosnippet>126</a>    {
+<a href=#127 id=127 data-nosnippet>127</a>        <span class="kw">return </span><span class="prelude-val">Some</span>(index);
 <a href=#128 id=128 data-nosnippet>128</a>    }
 <a href=#129 id=129 data-nosnippet>129</a>
 <a href=#130 id=130 data-nosnippet>130</a>    visible_rows
@@ -478,10 +478,10 @@
 <a href=#478 id=478 data-nosnippet>478</a>    <span class="kw">fn </span>focused_or_selected_visible_row(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TreeTableRow&lt;T, Id&gt;&gt; {
 <a href=#479 id=479 data-nosnippet>479</a>        <span class="kw">let </span>visible_rows = <span class="self">self</span>.visible_rows();
 <a href=#480 id=480 data-nosnippet>480</a>
-<a href=#481 id=481 data-nosnippet>481</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(focused_id) = <span class="self">self</span>.focused_row_id.get() {
-<a href=#482 id=482 data-nosnippet>482</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(row) = visible_rows.iter().find(|row| row.id == focused_id) {
-<a href=#483 id=483 data-nosnippet>483</a>                <span class="kw">return </span><span class="prelude-val">Some</span>(row.clone());
-<a href=#484 id=484 data-nosnippet>484</a>            }
+<a href=#481 id=481 data-nosnippet>481</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(focused_id) = <span class="self">self</span>.focused_row_id.get()
+<a href=#482 id=482 data-nosnippet>482</a>            &amp;&amp; <span class="kw">let </span><span class="prelude-val">Some</span>(row) = visible_rows.iter().find(|row| row.id == focused_id)
+<a href=#483 id=483 data-nosnippet>483</a>        {
+<a href=#484 id=484 data-nosnippet>484</a>            <span class="kw">return </span><span class="prelude-val">Some</span>(row.clone());
 <a href=#485 id=485 data-nosnippet>485</a>        }
 <a href=#486 id=486 data-nosnippet>486</a>
 <a href=#487 id=487 data-nosnippet>487</a>        <span class="kw">let </span>selected_id = <span class="self">self</span>.selected_row_ids.get().first().cloned()<span class="question-mark">?</span>;

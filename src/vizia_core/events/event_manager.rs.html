@@ -97,10 +97,10 @@
 <a href=#97 id=97 data-nosnippet>97</a>                <span class="comment">// Send events to any local listeners.
 <a href=#98 id=98 data-nosnippet>98</a>                </span><span class="kw">let </span>listeners = cx.listeners.keys().copied().collect::&lt;Vec&lt;Entity&gt;&gt;();
 <a href=#99 id=99 data-nosnippet>99</a>                <span class="kw">for </span>entity <span class="kw">in </span>listeners {
-<a href=#100 id=100 data-nosnippet>100</a>                    <span class="kw">if let </span><span class="prelude-val">Some</span>(lock_root) = keyboard_lock_root {
-<a href=#101 id=101 data-nosnippet>101</a>                        <span class="kw">if </span>!entity.is_descendant_of(<span class="kw-2">&amp;</span>cx.tree, lock_root) {
-<a href=#102 id=102 data-nosnippet>102</a>                            <span class="kw">continue</span>;
-<a href=#103 id=103 data-nosnippet>103</a>                        }
+<a href=#100 id=100 data-nosnippet>100</a>                    <span class="kw">if let </span><span class="prelude-val">Some</span>(lock_root) = keyboard_lock_root
+<a href=#101 id=101 data-nosnippet>101</a>                        &amp;&amp; !entity.is_descendant_of(<span class="kw-2">&amp;</span>cx.tree, lock_root)
+<a href=#102 id=102 data-nosnippet>102</a>                    {
+<a href=#103 id=103 data-nosnippet>103</a>                        <span class="kw">continue</span>;
 <a href=#104 id=104 data-nosnippet>104</a>                    }
 <a href=#105 id=105 data-nosnippet>105</a>
 <a href=#106 id=106 data-nosnippet>106</a>                    <span class="kw">if let </span><span class="prelude-val">Some</span>(listener) = cx.listeners.remove(<span class="kw-2">&amp;</span>entity) {
@@ -163,10 +163,10 @@
 <a href=#163 id=163 data-nosnippet>163</a>                    </span><span class="kw">let </span>iter = target.parent_iter(cx.tree).skip(<span class="number">1</span>);
 <a href=#164 id=164 data-nosnippet>164</a>
 <a href=#165 id=165 data-nosnippet>165</a>                    <span class="kw">for </span>entity <span class="kw">in </span>iter {
-<a href=#166 id=166 data-nosnippet>166</a>                        <span class="kw">if let </span><span class="prelude-val">Some</span>(lock_root) = keyboard_lock_root {
-<a href=#167 id=167 data-nosnippet>167</a>                            <span class="kw">if </span>!entity.is_descendant_of(cx.tree, lock_root) {
-<a href=#168 id=168 data-nosnippet>168</a>                                <span class="kw">break</span>;
-<a href=#169 id=169 data-nosnippet>169</a>                            }
+<a href=#166 id=166 data-nosnippet>166</a>                        <span class="kw">if let </span><span class="prelude-val">Some</span>(lock_root) = keyboard_lock_root
+<a href=#167 id=167 data-nosnippet>167</a>                            &amp;&amp; !entity.is_descendant_of(cx.tree, lock_root)
+<a href=#168 id=168 data-nosnippet>168</a>                        {
+<a href=#169 id=169 data-nosnippet>169</a>                            <span class="kw">break</span>;
 <a href=#170 id=170 data-nosnippet>170</a>                        }
 <a href=#171 id=171 data-nosnippet>171</a>
 <a href=#172 id=172 data-nosnippet>172</a>                        <span class="comment">// Send event to all ancestors of the target.
@@ -343,11 +343,11 @@
 <a href=#343 id=343 data-nosnippet>343</a>
 <a href=#344 id=344 data-nosnippet>344</a>                    <span class="kw">let </span>disabled = cx.style.disabled.get(cx.hovered).copied().unwrap_or_default();
 <a href=#345 id=345 data-nosnippet>345</a>
-<a href=#346 id=346 data-nosnippet>346</a>                    <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(cx.triggered) {
-<a href=#347 id=347 data-nosnippet>347</a>                        <span class="kw">if </span>!disabled {
-<a href=#348 id=348 data-nosnippet>348</a>                            pseudo_classes.set(PseudoClassFlags::ACTIVE, <span class="bool-val">true</span>);
-<a href=#349 id=349 data-nosnippet>349</a>                            cx.needs_restyle(cx.triggered);
-<a href=#350 id=350 data-nosnippet>350</a>                        }
+<a href=#346 id=346 data-nosnippet>346</a>                    <span class="kw">if let </span><span class="prelude-val">Some</span>(pseudo_classes) = cx.style.pseudo_classes.get_mut(cx.triggered)
+<a href=#347 id=347 data-nosnippet>347</a>                        &amp;&amp; !disabled
+<a href=#348 id=348 data-nosnippet>348</a>                    {
+<a href=#349 id=349 data-nosnippet>349</a>                        pseudo_classes.set(PseudoClassFlags::ACTIVE, <span class="bool-val">true</span>);
+<a href=#350 id=350 data-nosnippet>350</a>                        cx.needs_restyle(cx.triggered);
 <a href=#351 id=351 data-nosnippet>351</a>                    }
 <a href=#352 id=352 data-nosnippet>352</a>                    <span class="kw">let </span>focusable = cx
 <a href=#353 id=353 data-nosnippet>353</a>                        .style
@@ -499,12 +499,12 @@
 <a href=#499 id=499 data-nosnippet>499</a>            <span class="attr">#[cfg(debug_assertions)]
 <a href=#500 id=500 data-nosnippet>500</a>            </span><span class="kw">if </span><span class="kw-2">*</span>code == Code::KeyP &amp;&amp; cx.modifiers.ctrl() {
 <a href=#501 id=501 data-nosnippet>501</a>                <span class="kw">for </span>entity <span class="kw">in </span>TreeIterator::full(<span class="kw-2">&amp;</span>cx.tree) {
-<a href=#502 id=502 data-nosnippet>502</a>                    <span class="kw">if let </span><span class="prelude-val">Some</span>(models) = cx.models.get(<span class="kw-2">&amp;</span>entity) {
-<a href=#503 id=503 data-nosnippet>503</a>                        <span class="kw">if </span>!models.is_empty() {
-<a href=#504 id=504 data-nosnippet>504</a>                            <span class="macro">debug!</span>(<span class="string">"Models for {}"</span>, entity);
-<a href=#505 id=505 data-nosnippet>505</a>                            <span class="kw">for </span>(<span class="kw">_</span>, model) <span class="kw">in </span>models.iter() {
-<a href=#506 id=506 data-nosnippet>506</a>                                <span class="macro">debug!</span>(<span class="string">"M: {:?}"</span>, model.name())
-<a href=#507 id=507 data-nosnippet>507</a>                            }
+<a href=#502 id=502 data-nosnippet>502</a>                    <span class="kw">if let </span><span class="prelude-val">Some</span>(models) = cx.models.get(<span class="kw-2">&amp;</span>entity)
+<a href=#503 id=503 data-nosnippet>503</a>                        &amp;&amp; !models.is_empty()
+<a href=#504 id=504 data-nosnippet>504</a>                    {
+<a href=#505 id=505 data-nosnippet>505</a>                        <span class="macro">debug!</span>(<span class="string">"Models for {}"</span>, entity);
+<a href=#506 id=506 data-nosnippet>506</a>                        <span class="kw">for </span>(<span class="kw">_</span>, model) <span class="kw">in </span>models.iter() {
+<a href=#507 id=507 data-nosnippet>507</a>                            <span class="macro">debug!</span>(<span class="string">"M: {:?}"</span>, model.name())
 <a href=#508 id=508 data-nosnippet>508</a>                        }
 <a href=#509 id=509 data-nosnippet>509</a>                    }
 <a href=#510 id=510 data-nosnippet>510</a>                }

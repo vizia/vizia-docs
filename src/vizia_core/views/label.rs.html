@@ -159,23 +159,23 @@
 <a href=#159 id=159 data-nosnippet>159</a>    <span class="kw">fn </span>event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>EventContext, event: <span class="kw-2">&amp;mut </span>Event) {
 <a href=#160 id=160 data-nosnippet>160</a>        event.map(|window_event, meta| <span class="kw">match </span>window_event {
 <a href=#161 id=161 data-nosnippet>161</a>            WindowEvent::Press { .. } | WindowEvent::PressDown { .. } =&gt; {
-<a href=#162 id=162 data-nosnippet>162</a>                <span class="kw">if </span>cx.current() == cx.mouse.left.pressed &amp;&amp; meta.target == cx.current() {
-<a href=#163 id=163 data-nosnippet>163</a>                    <span class="kw">if let </span><span class="prelude-val">Some</span>(describing) = <span class="self">self
-<a href=#164 id=164 data-nosnippet>164</a>                        </span>.describing
-<a href=#165 id=165 data-nosnippet>165</a>                        .as_ref()
-<a href=#166 id=166 data-nosnippet>166</a>                        .and_then(|identity| cx.resolve_entity_identifier(identity))
-<a href=#167 id=167 data-nosnippet>167</a>                    {
-<a href=#168 id=168 data-nosnippet>168</a>                        <span class="kw">let </span>old = cx.current;
-<a href=#169 id=169 data-nosnippet>169</a>                        cx.current = describing;
-<a href=#170 id=170 data-nosnippet>170</a>                        cx.focus_with_visibility(<span class="bool-val">false</span>);
-<a href=#171 id=171 data-nosnippet>171</a>                        <span class="kw">let </span>message = <span class="kw">if </span><span class="macro">matches!</span>(window_event, WindowEvent::Press { .. }) {
-<a href=#172 id=172 data-nosnippet>172</a>                            WindowEvent::Press { mouse: <span class="bool-val">false </span>}
-<a href=#173 id=173 data-nosnippet>173</a>                        } <span class="kw">else </span>{
-<a href=#174 id=174 data-nosnippet>174</a>                            WindowEvent::PressDown { mouse: <span class="bool-val">false </span>}
-<a href=#175 id=175 data-nosnippet>175</a>                        };
-<a href=#176 id=176 data-nosnippet>176</a>                        cx.emit_to(describing, message);
-<a href=#177 id=177 data-nosnippet>177</a>                        cx.current = old;
-<a href=#178 id=178 data-nosnippet>178</a>                    }
+<a href=#162 id=162 data-nosnippet>162</a>                <span class="kw">if </span>cx.current() == cx.mouse.left.pressed
+<a href=#163 id=163 data-nosnippet>163</a>                    &amp;&amp; meta.target == cx.current()
+<a href=#164 id=164 data-nosnippet>164</a>                    &amp;&amp; <span class="kw">let </span><span class="prelude-val">Some</span>(describing) = <span class="self">self
+<a href=#165 id=165 data-nosnippet>165</a>                        </span>.describing
+<a href=#166 id=166 data-nosnippet>166</a>                        .as_ref()
+<a href=#167 id=167 data-nosnippet>167</a>                        .and_then(|identity| cx.resolve_entity_identifier(identity))
+<a href=#168 id=168 data-nosnippet>168</a>                {
+<a href=#169 id=169 data-nosnippet>169</a>                    <span class="kw">let </span>old = cx.current;
+<a href=#170 id=170 data-nosnippet>170</a>                    cx.current = describing;
+<a href=#171 id=171 data-nosnippet>171</a>                    cx.focus_with_visibility(<span class="bool-val">false</span>);
+<a href=#172 id=172 data-nosnippet>172</a>                    <span class="kw">let </span>message = <span class="kw">if </span><span class="macro">matches!</span>(window_event, WindowEvent::Press { .. }) {
+<a href=#173 id=173 data-nosnippet>173</a>                        WindowEvent::Press { mouse: <span class="bool-val">false </span>}
+<a href=#174 id=174 data-nosnippet>174</a>                    } <span class="kw">else </span>{
+<a href=#175 id=175 data-nosnippet>175</a>                        WindowEvent::PressDown { mouse: <span class="bool-val">false </span>}
+<a href=#176 id=176 data-nosnippet>176</a>                    };
+<a href=#177 id=177 data-nosnippet>177</a>                    cx.emit_to(describing, message);
+<a href=#178 id=178 data-nosnippet>178</a>                    cx.current = old;
 <a href=#179 id=179 data-nosnippet>179</a>                }
 <a href=#180 id=180 data-nosnippet>180</a>            }
 <a href=#181 id=181 data-nosnippet>181</a>            <span class="kw">_ </span>=&gt; {}

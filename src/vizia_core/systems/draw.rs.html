@@ -291,10 +291,10 @@
 <a href=#291 id=291 data-nosnippet>291</a>    // include z-indexed and clip-escaping descendants, so it is safe to cull before they would be
 <a href=#292 id=292 data-nosnippet>292</a>    // deferred to the z-order queue.
 <a href=#293 id=293 data-nosnippet>293</a>    </span><span class="kw">let </span>draw_bounds = dirty_rect.map(|<span class="kw">_</span>| cached_bounds(cx.style, cx.cache, cx.tree, current));
-<a href=#294 id=294 data-nosnippet>294</a>    <span class="kw">if let </span>(<span class="prelude-val">Some</span>(dirty_rect), <span class="prelude-val">Some</span>(bounds)) = (dirty_rect, <span class="kw-2">&amp;</span>draw_bounds) {
-<a href=#295 id=295 data-nosnippet>295</a>        <span class="kw">if </span>!parent.intersects_dirty(bounds, dirty_rect) {
-<a href=#296 id=296 data-nosnippet>296</a>            <span class="kw">return</span>;
-<a href=#297 id=297 data-nosnippet>297</a>        }
+<a href=#294 id=294 data-nosnippet>294</a>    <span class="kw">if let </span>(<span class="prelude-val">Some</span>(dirty_rect), <span class="prelude-val">Some</span>(bounds)) = (dirty_rect, <span class="kw-2">&amp;</span>draw_bounds)
+<a href=#295 id=295 data-nosnippet>295</a>        &amp;&amp; !parent.intersects_dirty(bounds, dirty_rect)
+<a href=#296 id=296 data-nosnippet>296</a>    {
+<a href=#297 id=297 data-nosnippet>297</a>        <span class="kw">return</span>;
 <a href=#298 id=298 data-nosnippet>298</a>    }
 <a href=#299 id=299 data-nosnippet>299</a>
 <a href=#300 id=300 data-nosnippet>300</a>    <span class="kw">match </span>Stacking::of(cx.style, current, current_z, ancestor_backdrop_clip) {
@@ -405,10 +405,10 @@
 <a href=#405 id=405 data-nosnippet>405</a>    // only needs to be configured when this view actually paints.
 <a href=#406 id=406 data-nosnippet>406</a>    </span><span class="kw">if </span>should_draw {
 <a href=#407 id=407 data-nosnippet>407</a>        canvas.save();
-<a href=#408 id=408 data-nosnippet>408</a>        <span class="kw">if </span>backdrop_clip_count.is_none() {
-<a href=#409 id=409 data-nosnippet>409</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(clip_path)) = cx.cache.clip_path.get(current) {
-<a href=#410 id=410 data-nosnippet>410</a>                canvas.clip_path(clip_path, ClipOp::Intersect, <span class="bool-val">true</span>);
-<a href=#411 id=411 data-nosnippet>411</a>            }
+<a href=#408 id=408 data-nosnippet>408</a>        <span class="kw">if </span>backdrop_clip_count.is_none()
+<a href=#409 id=409 data-nosnippet>409</a>            &amp;&amp; <span class="kw">let </span><span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(clip_path)) = cx.cache.clip_path.get(current)
+<a href=#410 id=410 data-nosnippet>410</a>        {
+<a href=#411 id=411 data-nosnippet>411</a>            canvas.clip_path(clip_path, ClipOp::Intersect, <span class="bool-val">true</span>);
 <a href=#412 id=412 data-nosnippet>412</a>        }
 <a href=#413 id=413 data-nosnippet>413</a>        canvas.set_matrix(<span class="kw-2">&amp;</span>(transform.into()));
 <a href=#414 id=414 data-nosnippet>414</a>
@@ -662,10 +662,10 @@
 <a href=#662 id=662 data-nosnippet>662</a>        escaped = union_non_empty(escaped, child_bounds.escaped);
 <a href=#663 id=663 data-nosnippet>663</a>    }
 <a href=#664 id=664 data-nosnippet>664</a>
-<a href=#665 id=665 data-nosnippet>665</a>    <span class="kw">if </span>is_non_empty(<span class="kw-2">&amp;</span>clipped) {
-<a href=#666 id=666 data-nosnippet>666</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(clip) = own_clip_bounds(style, cache, tree, entity) {
-<a href=#667 id=667 data-nosnippet>667</a>            clipped = clipped.intersection(<span class="kw-2">&amp;</span>clip);
-<a href=#668 id=668 data-nosnippet>668</a>        }
+<a href=#665 id=665 data-nosnippet>665</a>    <span class="kw">if </span>is_non_empty(<span class="kw-2">&amp;</span>clipped)
+<a href=#666 id=666 data-nosnippet>666</a>        &amp;&amp; <span class="kw">let </span><span class="prelude-val">Some</span>(clip) = own_clip_bounds(style, cache, tree, entity)
+<a href=#667 id=667 data-nosnippet>667</a>    {
+<a href=#668 id=668 data-nosnippet>668</a>        clipped = clipped.intersection(<span class="kw-2">&amp;</span>clip);
 <a href=#669 id=669 data-nosnippet>669</a>    }
 <a href=#670 id=670 data-nosnippet>670</a>    <span class="kw">let </span><span class="kw-2">mut </span>clipped = union_non_empty(own, clipped);
 <a href=#671 id=671 data-nosnippet>671</a>

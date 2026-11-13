@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ChildPtr","Mode"],"mod":["attribute","varying"],"type":["Attribute","Child","IndexBuffer","Mesh","MeshSpecification","Uniform","Varying","VertexBuffer"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["copy_index_buffer","copy_vertex_buffer","make_index_buffer","make_vertex_buffer","make_zero_initialized_index_buffer","make_zero_initialized_vertex_buffer"]};

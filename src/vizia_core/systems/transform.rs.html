@@ -113,15 +113,15 @@
 <a href=#113 id=113 data-nosnippet>113</a>        // Get the animation state
 <a href=#114 id=114 data-nosnippet>114</a>        // Manually interpolate the value to get the overall transform for the current frame
 <a href=#115 id=115 data-nosnippet>115</a>        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(animation_state) = style.transform.get_active_animation(entity) {
-<a href=#116 id=116 data-nosnippet>116</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(start) = animation_state.keyframes.first() {
-<a href=#117 id=117 data-nosnippet>117</a>                <span class="kw">if let </span><span class="prelude-val">Some</span>(end) = animation_state.keyframes.last() {
-<a href=#118 id=118 data-nosnippet>118</a>                    <span class="kw">let </span>start_transform = start.value.as_transform(bounds, scale_factor);
-<a href=#119 id=119 data-nosnippet>119</a>                    <span class="kw">let </span>end_transform = end.value.as_transform(bounds, scale_factor);
-<a href=#120 id=120 data-nosnippet>120</a>                    <span class="kw">let </span>t = animation_state.t;
-<a href=#121 id=121 data-nosnippet>121</a>                    <span class="kw">let </span>animated_transform =
-<a href=#122 id=122 data-nosnippet>122</a>                        skia_safe::Matrix::interpolate(<span class="kw-2">&amp;</span>start_transform, <span class="kw-2">&amp;</span>end_transform, t);
-<a href=#123 id=123 data-nosnippet>123</a>                    transform = transform * animated_transform;
-<a href=#124 id=124 data-nosnippet>124</a>                }
+<a href=#116 id=116 data-nosnippet>116</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(start) = animation_state.keyframes.first()
+<a href=#117 id=117 data-nosnippet>117</a>                &amp;&amp; <span class="kw">let </span><span class="prelude-val">Some</span>(end) = animation_state.keyframes.last()
+<a href=#118 id=118 data-nosnippet>118</a>            {
+<a href=#119 id=119 data-nosnippet>119</a>                <span class="kw">let </span>start_transform = start.value.as_transform(bounds, scale_factor);
+<a href=#120 id=120 data-nosnippet>120</a>                <span class="kw">let </span>end_transform = end.value.as_transform(bounds, scale_factor);
+<a href=#121 id=121 data-nosnippet>121</a>                <span class="kw">let </span>t = animation_state.t;
+<a href=#122 id=122 data-nosnippet>122</a>                <span class="kw">let </span>animated_transform =
+<a href=#123 id=123 data-nosnippet>123</a>                    skia_safe::Matrix::interpolate(<span class="kw-2">&amp;</span>start_transform, <span class="kw-2">&amp;</span>end_transform, t);
+<a href=#124 id=124 data-nosnippet>124</a>                transform = transform * animated_transform;
 <a href=#125 id=125 data-nosnippet>125</a>            }
 <a href=#126 id=126 data-nosnippet>126</a>        } <span class="kw">else </span>{
 <a href=#127 id=127 data-nosnippet>127</a>            transform = transform * transforms.as_transform(bounds, scale_factor);

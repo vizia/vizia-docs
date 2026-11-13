@@ -201,10 +201,10 @@
 <a href=#201 id=201 data-nosnippet>201</a>    </span><span class="kw">pub fn </span>get_entity_by_element_id(<span class="kw-2">&amp;</span><span class="self">self</span>, element: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;Entity&gt; {
 <a href=#202 id=202 data-nosnippet>202</a>        <span class="kw">let </span>descendants = LayoutTreeIterator::subtree(<span class="self">self</span>.tree, <span class="self">self</span>.current);
 <a href=#203 id=203 data-nosnippet>203</a>        <span class="kw">for </span>descendant <span class="kw">in </span>descendants {
-<a href=#204 id=204 data-nosnippet>204</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(id) = <span class="self">self</span>.views.get(<span class="kw-2">&amp;</span>descendant).and_then(|view| view.element()) {
-<a href=#205 id=205 data-nosnippet>205</a>                <span class="kw">if </span>id == element {
-<a href=#206 id=206 data-nosnippet>206</a>                    <span class="kw">return </span><span class="prelude-val">Some</span>(descendant);
-<a href=#207 id=207 data-nosnippet>207</a>                }
+<a href=#204 id=204 data-nosnippet>204</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(id) = <span class="self">self</span>.views.get(<span class="kw-2">&amp;</span>descendant).and_then(|view| view.element())
+<a href=#205 id=205 data-nosnippet>205</a>                &amp;&amp; id == element
+<a href=#206 id=206 data-nosnippet>206</a>            {
+<a href=#207 id=207 data-nosnippet>207</a>                <span class="kw">return </span><span class="prelude-val">Some</span>(descendant);
 <a href=#208 id=208 data-nosnippet>208</a>            }
 <a href=#209 id=209 data-nosnippet>209</a>        }
 <a href=#210 id=210 data-nosnippet>210</a>
@@ -216,10 +216,10 @@
 <a href=#216 id=216 data-nosnippet>216</a>        <span class="kw">let </span><span class="kw-2">mut </span>entities = Vec::new();
 <a href=#217 id=217 data-nosnippet>217</a>        <span class="kw">let </span>descendants = LayoutTreeIterator::subtree(<span class="self">self</span>.tree, <span class="self">self</span>.current);
 <a href=#218 id=218 data-nosnippet>218</a>        <span class="kw">for </span>descendant <span class="kw">in </span>descendants {
-<a href=#219 id=219 data-nosnippet>219</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(class_list) = <span class="self">self</span>.style.classes.get(descendant) {
-<a href=#220 id=220 data-nosnippet>220</a>                <span class="kw">if </span>class_list.contains(class) {
-<a href=#221 id=221 data-nosnippet>221</a>                    entities.push(descendant);
-<a href=#222 id=222 data-nosnippet>222</a>                }
+<a href=#219 id=219 data-nosnippet>219</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(class_list) = <span class="self">self</span>.style.classes.get(descendant)
+<a href=#220 id=220 data-nosnippet>220</a>                &amp;&amp; class_list.contains(class)
+<a href=#221 id=221 data-nosnippet>221</a>            {
+<a href=#222 id=222 data-nosnippet>222</a>                entities.push(descendant);
 <a href=#223 id=223 data-nosnippet>223</a>            }
 <a href=#224 id=224 data-nosnippet>224</a>        }
 <a href=#225 id=225 data-nosnippet>225</a>
@@ -397,10 +397,10 @@
 <a href=#397 id=397 data-nosnippet>397</a>        duration: Duration,
 <a href=#398 id=398 data-nosnippet>398</a>        delay: Duration,
 <a href=#399 id=399 data-nosnippet>399</a>    ) {
-<a href=#400 id=400 data-nosnippet>400</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(target_entity) = <span class="self">self</span>.resolve_entity_identifier(target) {
-<a href=#401 id=401 data-nosnippet>401</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(animation_id) = anim_id.get(<span class="self">self</span>) {
-<a href=#402 id=402 data-nosnippet>402</a>                <span class="self">self</span>.style.enqueue_animation(target_entity, animation_id, duration, delay)
-<a href=#403 id=403 data-nosnippet>403</a>            }
+<a href=#400 id=400 data-nosnippet>400</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(target_entity) = <span class="self">self</span>.resolve_entity_identifier(target)
+<a href=#401 id=401 data-nosnippet>401</a>            &amp;&amp; <span class="kw">let </span><span class="prelude-val">Some</span>(animation_id) = anim_id.get(<span class="self">self</span>)
+<a href=#402 id=402 data-nosnippet>402</a>        {
+<a href=#403 id=403 data-nosnippet>403</a>            <span class="self">self</span>.style.enqueue_animation(target_entity, animation_id, duration, delay)
 <a href=#404 id=404 data-nosnippet>404</a>        }
 <a href=#405 id=405 data-nosnippet>405</a>    }
 <a href=#406 id=406 data-nosnippet>406</a>
@@ -1474,17 +1474,17 @@
 <a href=#1474 id=1474 data-nosnippet>1474</a>
 <a href=#1475 id=1475 data-nosnippet>1475</a>        <span class="kw">for </span>entity <span class="kw">in </span><span class="self">self</span>.current.parent_iter(<span class="self">self</span>.tree) {
 <a href=#1476 id=1476 data-nosnippet>1476</a>            <span class="comment">// Return model data.
-<a href=#1477 id=1477 data-nosnippet>1477</a>            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(models) = <span class="self">self</span>.models.get(<span class="kw-2">&amp;</span>entity) {
-<a href=#1478 id=1478 data-nosnippet>1478</a>                <span class="kw">if let </span><span class="prelude-val">Some</span>(model) = models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;T&gt;()) {
-<a href=#1479 id=1479 data-nosnippet>1479</a>                    <span class="kw">return </span>model.downcast_ref::&lt;T&gt;();
-<a href=#1480 id=1480 data-nosnippet>1480</a>                }
+<a href=#1477 id=1477 data-nosnippet>1477</a>            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(models) = <span class="self">self</span>.models.get(<span class="kw-2">&amp;</span>entity)
+<a href=#1478 id=1478 data-nosnippet>1478</a>                &amp;&amp; <span class="kw">let </span><span class="prelude-val">Some</span>(model) = models.get(<span class="kw-2">&amp;</span>TypeId::of::&lt;T&gt;())
+<a href=#1479 id=1479 data-nosnippet>1479</a>            {
+<a href=#1480 id=1480 data-nosnippet>1480</a>                <span class="kw">return </span>model.downcast_ref::&lt;T&gt;();
 <a href=#1481 id=1481 data-nosnippet>1481</a>            }
 <a href=#1482 id=1482 data-nosnippet>1482</a>
 <a href=#1483 id=1483 data-nosnippet>1483</a>            <span class="comment">// Return view data.
-<a href=#1484 id=1484 data-nosnippet>1484</a>            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = <span class="self">self</span>.views.get(<span class="kw-2">&amp;</span>entity) {
-<a href=#1485 id=1485 data-nosnippet>1485</a>                <span class="kw">if let </span><span class="prelude-val">Some</span>(data) = view_handler.downcast_ref::&lt;T&gt;() {
-<a href=#1486 id=1486 data-nosnippet>1486</a>                    <span class="kw">return </span><span class="prelude-val">Some</span>(data);
-<a href=#1487 id=1487 data-nosnippet>1487</a>                }
+<a href=#1484 id=1484 data-nosnippet>1484</a>            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(view_handler) = <span class="self">self</span>.views.get(<span class="kw-2">&amp;</span>entity)
+<a href=#1485 id=1485 data-nosnippet>1485</a>                &amp;&amp; <span class="kw">let </span><span class="prelude-val">Some</span>(data) = view_handler.downcast_ref::&lt;T&gt;()
+<a href=#1486 id=1486 data-nosnippet>1486</a>            {
+<a href=#1487 id=1487 data-nosnippet>1487</a>                <span class="kw">return </span><span class="prelude-val">Some</span>(data);
 <a href=#1488 id=1488 data-nosnippet>1488</a>            }
 <a href=#1489 id=1489 data-nosnippet>1489</a>        }
 <a href=#1490 id=1490 data-nosnippet>1490</a>

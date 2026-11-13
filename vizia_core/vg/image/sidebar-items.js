@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["BitDepth","CachingHint","CompressionType"],"struct":["CubicResampler","RequiredProperties"],"type":["Image"]};
+window.SIDEBAR_ITEMS = {"enum":["BitDepth","CachingHint","CompressionType","RescaleGamma","RescaleMode"],"struct":["CubicResampler","RequiredProperties"],"type":["AsyncReadResult","Image"]};

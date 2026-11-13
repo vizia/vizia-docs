@@ -108,11 +108,11 @@
 <a href=#108 id=108 data-nosnippet>108</a>
 <a href=#109 id=109 data-nosnippet>109</a>                cx.resource_manager.set_resource_status(req.path.clone(), LoadingStatus::Loading);
 <a href=#110 id=110 data-nosnippet>110</a>
-<a href=#111 id=111 data-nosnippet>111</a>                <span class="kw">if let </span><span class="prelude-val">Ok</span>(data) = std::fs::read(<span class="kw-2">&amp;</span>path) {
-<a href=#112 id=112 data-nosnippet>112</a>                    <span class="kw">if let </span><span class="prelude-val">Ok</span>(ftl) = String::from_utf8(data) {
-<a href=#113 id=113 data-nosnippet>113</a>                        cx.load_translation(req.lang, req.path.clone(), <span class="kw-2">&amp;</span>ftl);
-<a href=#114 id=114 data-nosnippet>114</a>                        <span class="kw">return </span><span class="bool-val">true</span>;
-<a href=#115 id=115 data-nosnippet>115</a>                    }
+<a href=#111 id=111 data-nosnippet>111</a>                <span class="kw">if let </span><span class="prelude-val">Ok</span>(data) = std::fs::read(<span class="kw-2">&amp;</span>path)
+<a href=#112 id=112 data-nosnippet>112</a>                    &amp;&amp; <span class="kw">let </span><span class="prelude-val">Ok</span>(ftl) = String::from_utf8(data)
+<a href=#113 id=113 data-nosnippet>113</a>                {
+<a href=#114 id=114 data-nosnippet>114</a>                    cx.load_translation(req.lang, req.path.clone(), <span class="kw-2">&amp;</span>ftl);
+<a href=#115 id=115 data-nosnippet>115</a>                    <span class="kw">return </span><span class="bool-val">true</span>;
 <a href=#116 id=116 data-nosnippet>116</a>                }
 <a href=#117 id=117 data-nosnippet>117</a>
 <a href=#118 id=118 data-nosnippet>118</a>                cx.resource_manager.set_resource_status(req.path.clone(), LoadingStatus::Error);
@@ -160,12 +160,12 @@
 <a href=#160 id=160 data-nosnippet>160</a>                                .set_resource_status(req_path, LoadingStatus::Loaded);
 <a href=#161 id=161 data-nosnippet>161</a>                            <span class="kw">return </span><span class="bool-val">true</span>;
 <a href=#162 id=162 data-nosnippet>162</a>                        }
-<a href=#163 id=163 data-nosnippet>163</a>                        <span class="kw">if </span>is_likely_svg(<span class="kw-2">&amp;</span>req_path, <span class="kw-2">&amp;</span>data) {
-<a href=#164 id=164 data-nosnippet>164</a>                            <span class="kw">if </span>cx.load_svg(req_name, <span class="kw-2">&amp;</span>data, policy).is_some() {
-<a href=#165 id=165 data-nosnippet>165</a>                                cx.resource_manager
-<a href=#166 id=166 data-nosnippet>166</a>                                    .set_resource_status(req_path, LoadingStatus::Loaded);
-<a href=#167 id=167 data-nosnippet>167</a>                                <span class="kw">return </span><span class="bool-val">true</span>;
-<a href=#168 id=168 data-nosnippet>168</a>                            }
+<a href=#163 id=163 data-nosnippet>163</a>                        <span class="kw">if </span>is_likely_svg(<span class="kw-2">&amp;</span>req_path, <span class="kw-2">&amp;</span>data)
+<a href=#164 id=164 data-nosnippet>164</a>                            &amp;&amp; cx.load_svg(req_name, <span class="kw-2">&amp;</span>data, policy).is_some()
+<a href=#165 id=165 data-nosnippet>165</a>                        {
+<a href=#166 id=166 data-nosnippet>166</a>                            cx.resource_manager
+<a href=#167 id=167 data-nosnippet>167</a>                                .set_resource_status(req_path, LoadingStatus::Loaded);
+<a href=#168 id=168 data-nosnippet>168</a>                            <span class="kw">return </span><span class="bool-val">true</span>;
 <a href=#169 id=169 data-nosnippet>169</a>                        }
 <a href=#170 id=170 data-nosnippet>170</a>                    }
 <a href=#171 id=171 data-nosnippet>171</a>
@@ -280,11 +280,11 @@
 <a href=#280 id=280 data-nosnippet>280</a>                    cx.resource_manager
 <a href=#281 id=281 data-nosnippet>281</a>                        .set_resource_status(req_path.clone(), LoadingStatus::Loading);
 <a href=#282 id=282 data-nosnippet>282</a>
-<a href=#283 id=283 data-nosnippet>283</a>                    <span class="kw">if let </span><span class="prelude-val">Ok</span>(data) = std::fs::read(<span class="kw-2">&amp;</span>path) {
-<a href=#284 id=284 data-nosnippet>284</a>                        <span class="kw">if let </span><span class="prelude-val">Ok</span>(ftl) = String::from_utf8(data) {
-<a href=#285 id=285 data-nosnippet>285</a>                            cx.load_translation(lang, req_path, <span class="kw-2">&amp;</span>ftl);
-<a href=#286 id=286 data-nosnippet>286</a>                            <span class="kw">return </span><span class="bool-val">true</span>;
-<a href=#287 id=287 data-nosnippet>287</a>                        }
+<a href=#283 id=283 data-nosnippet>283</a>                    <span class="kw">if let </span><span class="prelude-val">Ok</span>(data) = std::fs::read(<span class="kw-2">&amp;</span>path)
+<a href=#284 id=284 data-nosnippet>284</a>                        &amp;&amp; <span class="kw">let </span><span class="prelude-val">Ok</span>(ftl) = String::from_utf8(data)
+<a href=#285 id=285 data-nosnippet>285</a>                    {
+<a href=#286 id=286 data-nosnippet>286</a>                        cx.load_translation(lang, req_path, <span class="kw-2">&amp;</span>ftl);
+<a href=#287 id=287 data-nosnippet>287</a>                        <span class="kw">return </span><span class="bool-val">true</span>;
 <a href=#288 id=288 data-nosnippet>288</a>                    }
 <a href=#289 id=289 data-nosnippet>289</a>
 <a href=#290 id=290 data-nosnippet>290</a>                    cx.resource_manager.set_resource_status(req_path, LoadingStatus::Error);

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["number_with_fraction","percentage"],"struct":["FluentDateTime","FluentNaiveDateTime","Localized"],"trait":["ToStringLocalized"]};
+window.SIDEBAR_ITEMS = {"fn":["number_with_fraction","percentage"],"struct":["FluentCivilDateTime","FluentDateTime","Localized"],"trait":["ToStringLocalized"]};
